@@ -1,0 +1,56 @@
+{
+  ".claude/settings.json": {
+    "mtime": 1791307623.0898004,
+    "seen": 1791308102.7404938,
+    "ast_hash": "3ac995fbf93552a991ecab9b63f776aa",
+    "semantic_hash": "3ac995fbf93552a991ecab9b63f776aa"
+  },
+  ".codex/hooks.json": {
+    "mtime": 1791307628.3004787,
+    "seen": 1791308102.7414763,
+    "ast_hash": "5ebef3dd159986e465ab65e4014107ec",
+    "semantic_hash": "5ebef3dd159986e465ab65e4014107ec"
+  },
+  "main.py": {
+    "mtime": 1789304885.4409215,
+    "seen": 1791308102.7414763,
+    "ast_hash": "aa091c0a2a28c1f3c00e9b4d555f820f",
+    "semantic_hash": "aa091c0a2a28c1f3c00e9b4d555f820f"
+  },
+  "pyproject.toml": {
+    "mtime": 1791306958.7669203,
+    "seen": 1791308102.7414763,
+    "ast_hash": "c0de9c9e4639b94436a3e23a6917624c",
+    "semantic_hash": "c0de9c9e4639b94436a3e23a6917624c"
+  },
+  "CLAUDE.md": {
+    "mtime": 1791307623.0807996,
+    "seen": 1791308102.7414763,
+    "ast_hash": "8a6643a420fdad6bfb583523bc6cef16",
+    "semantic_hash": "8a6643a420fdad6bfb583523bc6cef16"
+  },
+  "Cloud Portfolio \u2014 Master Agent Prompt.md": {
+    "mtime": 1789304574.9171472,
+    "seen": 1791308102.7414763,
+    "ast_hash": "3e7d0201d8beb9e6c9848e3f0d6c1760",
+    "semantic_hash": "3e7d0201d8beb9e6c9848e3f0d6c1760"
+  },
+  "GCP.md": {
+    "mtime": 1789304574.9182827,
+    "seen": 1791308102.7414763,
+    "ast_hash": "7e6ed4bd7b3c8e08651d0666a16dbae3",
+    "semantic_hash": "7e6ed4bd7b3c8e08651d0666a16dbae3"
+  },
+  "Google Cloud Project \u2014 Retail Analytics, Forecasting & Customer Intelligence Platform.md": {
+    "mtime": 1789304574.9202805,
+    "seen": 1791308102.7414763,
+    "ast_hash": "dabe52e996c03d8a7b3a7bcfa89e4357",
+    "semantic_hash": "dabe52e996c03d8a7b3a7bcfa89e4357"
+  },
+  "docs/architecture-philosophy.md": {
+    "mtime": 1789304574.9222848,
+    "seen": 1791308102.7414763,
+    "ast_hash": "3845a19428d4b986a34c519e160113a5",
+    "semantic_hash": "3845a19428d4b986a34c519e160113a5"
+  }
+}

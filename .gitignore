@@ -1,0 +1,6 @@
+# Local DuckDB warehouse is rebuilt from data/ + sql/ by src/transformation/build_warehouse.py
+*.duckdb
+*.duckdb.wal
+
+__pycache__/
+.ipynb_checkpoints/
