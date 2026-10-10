@@ -25,6 +25,26 @@ def run_sql_file(con: duckdb.DuckDBPyConnection, path: Path, data_dir: Path) -> 
     con.execute(sql)
 
 
+def ensure_geolocation_parquet(con: duckdb.DuckDBPyConnection, data_dir: Path) -> None:
+    """Kaggle ships geolocation as CSV; staging reads Parquet. Convert once if only the CSV is present.
+
+    The zip prefix is forced to VARCHAR so leading zeros (e.g. '01046') survive.
+    """
+    parquet = data_dir / "olist_geolocation_dataset.parquet"
+    csv = data_dir / "olist_geolocation_dataset.csv"
+    if parquet.exists():
+        return
+    if not csv.exists():
+        raise FileNotFoundError(f"Neither {parquet.name} nor {csv.name} found in {data_dir}. See README.md section 1.")
+    con.execute(
+        f"""copy (
+                select * from read_csv('{csv.as_posix()}', header=true, quote='"',
+                                       types={{'geolocation_zip_code_prefix': 'VARCHAR'}})
+            ) to '{parquet.as_posix()}' (format parquet)"""
+    )
+    print(f"converted {csv.name} -> {parquet.name}")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--db", type=Path, default=ROOT / "warehouse.duckdb")
@@ -33,6 +53,7 @@ def main() -> int:
 
     args.db.unlink(missing_ok=True)
     con = duckdb.connect(str(args.db))
+    ensure_geolocation_parquet(con, args.data_dir)
 
     layers = [
         ("staging", sorted((SQL_DIR / "staging").glob("*.sql"))),
