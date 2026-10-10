@@ -22,10 +22,11 @@ _Last updated: 2026-10-10_
 - Local DuckDB star schema (`sql/staging|dimensions|facts|validation`, `src/transformation/build_warehouse.py`, `docs/data/DATA_MODEL.md`, `EDA_FINDINGS.md`) — **verified 2026-10-10**: build succeeds, all 9 tables populated, 22/22 reconciliation checks pass.
 - `.gitignore` covers `*.duckdb`, caches, `data/` and credential patterns.
 - `README.md` written (dataset download from Kaggle, build steps); `docs/HANDOFF.md` written.
+- `notebooks/01_dataset_discovery.ipynb` repaired and stored with a clean run (commit `d5e8d1e`): 44 cells, no errors, findings, decisions table and date-outlier check included.
 - `build_warehouse.py` converts the Kaggle geolocation CSV to Parquet on first run; tested for CSV-only, Parquet-present and missing-file cases.
 
 **In progress**
-- `notebooks/01_dataset_discovery.ipynb`: outputs not yet verified. It may be an older generation: it lacks the Finding cells, the decisions table and the date-outlier check, and uses DuckDB reserved-word aliases (`share`, `month`, `rows`) and a `.style` call (needs `jinja2`) that fail when run.
+- Nothing.
 
 **Blocked / waiting on user**
 - ML target: low review score, or late delivery plus the weekly forecast.
@@ -34,8 +35,7 @@ _Last updated: 2026-10-10_
 **Next**
 1. Decide the ML target.
 2. Untrack `data/` with `git rm -r --cached data/` (files stay on disk) if the user agrees.
-3. Check `notebooks/01_dataset_discovery.ipynb`, repair it in place if needed, then execute it so its outputs are reproducible. (The separate notebook generator script is not wanted.)
-4. Phase 1 — Architecture (`ARCHITECTURE.md`, `DECISIONS.md`, `LEAKAGE_ANALYSIS.md`), written for a local DuckDB design.
+3. Phase 1 — Architecture (`ARCHITECTURE.md`, `DECISIONS.md`, `LEAKAGE_ANALYSIS.md`), written for a local DuckDB design.
 
 **Tests:** warehouse build runs 22 in-script reconciliation checks (all pass). No `tests/` directory or pytest suite yet.
 
@@ -49,4 +49,4 @@ _Last updated: 2026-10-10_
 
 **Open decisions:** ML target; untracking `data/` and any history rewrite.
 
-**Known limitations:** the project docs (Master Agent Prompt, GCP child prompt, `GCP.md`) still describe BigQuery, Dataflow, Vertex AI and monitoring services. They are the original brief and have not been rewritten to match D-002 to D-005; discovery notebook unexecuted.
+**Known limitations:** the project docs (Master Agent Prompt, GCP child prompt, `GCP.md`) still describe BigQuery, Dataflow, Vertex AI and monitoring services. They are the original brief and have not been rewritten to match D-002 to D-005.

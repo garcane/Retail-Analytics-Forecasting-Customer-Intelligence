@@ -37,7 +37,7 @@ A **local implementation of what would have been built on BigQuery**. DuckDB rep
 
 ## Open work
 
-1. **Discovery notebook.** `notebooks/01_dataset_discovery.ipynb` may still be an older generation. It can lack the Finding cells, the decisions table and the date-outlier check, and may contain DuckDB reserved-word aliases (`share`, `month`, `rows`) and a `.style` call that fail when run. The user does not want the separate notebook generator script recovered. Check the notebook, repair it in place if needed, then execute it so its outputs are reproducible.
+1. **Discovery notebook: done.** Repaired and stored with a clean run in commit `d5e8d1e` (44 cells, no errors, findings, decisions table and date-outlier check). The separate notebook generator script is not wanted and does not need recovering.
 2. **Geolocation step: done.** `build_warehouse.py` now converts the Kaggle CSV to Parquet on first run if only the CSV is present (tested for CSV-only, Parquet-present and missing-file cases).
 3. **Decide the ML target** and untracking of `data/`.
 4. **Tests.** No `tests/` directory or pytest suite yet.
