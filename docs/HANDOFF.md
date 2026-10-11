@@ -1,6 +1,6 @@
 # Handover: GCP Retail Analytics (local DuckDB build)
 
-_Written 2026-10-10 to consolidate several separate Claude chats into one. Read this first in a new chat, then `PROJECT_STATUS.md`._
+_Written 2026-10-10 to consolidate several separate Claude chats into one; updated 2026-10-11. Read this first in a new chat, then `PROJECT_STATUS.md`._
 
 ## What this project is now
 
@@ -16,13 +16,15 @@ A **local implementation of what would have been built on BigQuery**. DuckDB rep
 | D-004 | No dbt. Plain SQL files in `sql/`, run by `src/transformation/build_warehouse.py`. |
 | D-005 | No Prometheus, Grafana or FastAPI. |
 | D-006 | `.gitignore` covers `*.duckdb`, `data/` and credential patterns. |
+| D-007 | ML target: late delivery (one order, predicted at purchase) plus a weekly order forecast. |
+| D-008 | `data/` untracked from Git (commit `d8f6954`); history not rewritten. |
 
-**Still open:** the ML target (low review score, or late delivery plus the weekly forecast), and whether to untrack the 9 files in `data/` that Git already tracks (`git rm -r --cached data/`; history rewrite not proposed).
+Full entries, with design decisions DD-01 to DD-07, are in `DECISIONS.md`. No decisions are open.
 
 ## Current state
 
-- **Warehouse:** star schema with 4 facts and 5 dimensions in DuckDB. `build_warehouse.py` builds it and runs 22 reconciliation checks, all passing as of 2026-10-10.
-- **Layout:** `sql/{staging,dimensions,facts,validation}/`, `src/transformation/`, `scripts/visualize_schema.py`, `docs/data/` (data model, EDA findings, `star_schema.png`), `docs/phase0/PHASE0_DISCOVERY.md`.
+- **Warehouse:** star schema with 4 facts and 5 dimensions in DuckDB. `build_warehouse.py` builds it and runs 22 reconciliation checks, all passing as of 2026-10-11.
+- **Layout:** `sql/{staging,dimensions,facts,validation}/`, `src/transformation/`, `scripts/visualize_schema.py`, `docs/data/` (data model, EDA findings, `star_schema.png`), `docs/phase0/PHASE0_DISCOVERY.md`, `docs/ml/LEAKAGE_ANALYSIS.md`, and `ARCHITECTURE.md` and `DECISIONS.md` at the root.
 - **Knowledge graph:** graphify is installed for Claude and Codex (`.claude/`, `.codex/`, `CLAUDE.md`, `AGENTS.md`). `graphify-out/` was built on 2026-10-06 from the docs and is now stale. Refresh with `graphify update .`.
 - **Dataset download:** see `README.md`.
 
@@ -39,10 +41,11 @@ A **local implementation of what would have been built on BigQuery**. DuckDB rep
 
 1. **Discovery notebook: done.** Repaired and stored with a clean run in commit `d5e8d1e` (44 cells, no errors, findings, decisions table and date-outlier check). The separate notebook generator script is not wanted and does not need recovering.
 2. **Geolocation step: done.** `build_warehouse.py` now converts the Kaggle CSV to Parquet on first run if only the CSV is present (tested for CSV-only, Parquet-present and missing-file cases).
-3. **Decide the ML target** and untracking of `data/`.
-4. **Tests.** No `tests/` directory or pytest suite yet.
-5. **Phase 1 documents:** `ARCHITECTURE.md`, `DECISIONS.md`, `LEAKAGE_ANALYSIS.md`, written for the local DuckDB design.
-6. **Unverified:** BigQuery, Dataflow and Vertex AI pricing; Apache Beam on Python 3.13 on Windows. Both only matter if the cloud returns.
+3. **ML target and `data/`: done** (D-007, D-008).
+4. **Phase 1 documents: done** (2026-10-11): `ARCHITECTURE.md`, `DECISIONS.md`, `docs/ml/LEAKAGE_ANALYSIS.md`.
+5. **Tests.** No `tests/` directory or pytest suite yet. Next up.
+6. **Phase 2 baselines:** late-delivery baseline and naïve / moving-average forecast, following the rules in `LEAKAGE_ANALYSIS.md`.
+7. **Unverified:** BigQuery, Dataflow and Vertex AI pricing; Apache Beam on Python 3.13 on Windows. Both only matter if the cloud returns.
 
 ## Environment notes
 
