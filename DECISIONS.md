@@ -21,6 +21,8 @@ Later decisions can supersede earlier ones; when that happens the entry says so.
 | DD-05 | 2026-10-10 | Surrogate keys with an unknown member (-1) | Active |
 | DD-06 | 2026-10-10 | Convert geolocation CSV to Parquet in the build | Active |
 | DD-07 | 2026-10-11 | Customer segmentation is optional and may be dropped | Active |
+| DD-08 | 2026-10-11 | Add scikit-learn for the ML baselines | Active |
+| DD-09 | 2026-10-11 | Report backtest metrics as a per-month macro-average | Active |
 
 ---
 
@@ -154,3 +156,21 @@ Evidence for these entries is in [docs/data/EDA_FINDINGS.md](docs/data/EDA_FINDI
 - **Context:** 96.9% of customers ordered once, so frequency-based clusters carry little information (Phase 0 §7).
 - **Chosen:** K-Means segmentation is tried honestly and dropped if it adds little. It is not a committed deliverable.
 - **Rejected:** Committing to RFM segmentation up front.
+
+### DD-08: Add scikit-learn
+
+- **Context:** Phase 2 needs a logistic regression and a gradient-boosting baseline. Neither was installed.
+- **Options:** scikit-learn; hand-written numpy models; only rate-based baselines.
+- **Chosen:** scikit-learn 1.9.1 (adds scipy, joblib, threadpoolctl; recorded in `pyproject.toml` and `uv.lock`).
+- **Reason:** Standard, well-tested implementations. A baseline that has to be debugged is a poor baseline.
+- **Trade-offs:** Larger environment. statsmodels, lightgbm and xgboost were not added; the forecast baselines use numpy only.
+- **Cost / Security:** None beyond a PyPI install.
+- **Rejected:** Hand-written models; rate baselines only (they cannot show what a feature-based model adds).
+
+### DD-09: Macro-average of per-month metrics
+
+- **Context:** The late-delivery backtest refits the models for each test month. A first version pooled all test orders, which gave the constant baseline a ROC-AUC of 0.36, because pooling ranks the different months' constants against each other.
+- **Chosen:** Compute each metric per test month and report the mean, with the per-month table beside it.
+- **Reason:** Each month is scored by a model trained at one date, and the late rate moves a lot from month to month (1.4% to 21.4%).
+- **Trade-offs:** Months with fewer orders count as much as larger ones.
+- **Rejected:** Pooled metrics (misleading, as above).

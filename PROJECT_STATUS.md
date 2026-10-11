@@ -4,9 +4,9 @@ _Last updated: 2026-10-11_
 
 **Scope:** this is a **local implementation of what would have been built on BigQuery**. DuckDB replaces Google Cloud and BigQuery as the warehouse and query engine. There is no GCP project, and no cloud resources are used or planned.
 
-**Current phase:** Phase 1 (architecture documents) complete; next is the pytest suite, then Phase 2 baselines
+**Current phase:** Phase 2 (local prototype) baselines complete; next is the pytest suite and improving on the baselines
 
-**Decisions made:** D-001 to D-008 and design decisions DD-01 to DD-07, all recorded in [DECISIONS.md](DECISIONS.md). Latest: D-007 (2026-10-11) sets the ML target to late delivery plus a weekly order forecast; D-008 (2026-10-11) untracks `data/` from Git without rewriting history.
+**Decisions made:** D-001 to D-008 and design decisions DD-01 to DD-09, all recorded in [DECISIONS.md](DECISIONS.md). Latest: D-007 (2026-10-11) sets the ML target to late delivery plus a weekly order forecast; D-008 (2026-10-11) untracks `data/` from Git without rewriting history.
 
 **Completed**
 - Read governing docs (Master Agent Prompt, GCP child prompt, `GCP.md`).
@@ -21,6 +21,8 @@ _Last updated: 2026-10-11_
 - `data/` untracked from Git (commit `d8f6954`, files kept on disk); build re-verified 22/22 afterwards.
 - Phase 1 documents written: `ARCHITECTURE.md`, `DECISIONS.md`, `docs/ml/LEAKAGE_ANALYSIS.md` (target figures checked against `warehouse.duckdb`).
 
+- Phase 2 baselines (2026-10-11): late-delivery features and rolling-origin backtest (logistic regression PR-AUC 0.184 against a base rate of 0.085), and weekly forecast baselines (naive best at one week, 8-week average best at four). Details in `docs/ml/PHASE2_BASELINES.md`. scikit-learn added (DD-08).
+
 **In progress**
 - Nothing.
 
@@ -28,11 +30,11 @@ _Last updated: 2026-10-11_
 - Nothing.
 
 **Next**
-1. pytest suite (`tests/`): build, validation checks, geolocation conversion.
-2. Phase 2: late-delivery baseline and naïve / moving-average weekly forecast, following `docs/ml/LEAKAGE_ANALYSIS.md`.
-3. Refresh the graphify graph (`graphify update .`).
+1. pytest suite (`tests/`): build, validation checks, geolocation conversion, and the leakage rules for the feature SQL.
+2. Improve on the baselines (see "Suggested next steps" in `docs/ml/PHASE2_BASELINES.md`): route and category features, calibration, a better forecast model.
+3. Add the new docs to the graphify graph (`/graphify --update`).
 
-**Tests:** warehouse build runs 22 in-script reconciliation checks (all pass). No `tests/` directory or pytest suite yet.
+**Tests:** warehouse build runs 22 in-script reconciliation checks (all pass). No `tests/` directory or pytest suite yet; pytest is not installed.
 
 **Evidence:** local only. Phase 0 report and warehouse validation output.
 

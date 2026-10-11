@@ -15,7 +15,7 @@ This is a local implementation of what would have been built on BigQuery. It is 
 | Warehouse | `warehouse.duckdb` | The single local database file. Git-ignored and fully reproducible from `data/` and `sql/`. | Built |
 | Schema diagram | `scripts/visualize_schema.py` | Draws `docs/data/star_schema.png` from the foreign keys in the database catalogue, so the diagram cannot drift from the DDL. | Built |
 | Notebooks | `notebooks/` | `01_dataset_discovery.ipynb` holds the EDA evidence. Later notebooks hold baselines and model evaluation. | Partly built |
-| ML layer | `src/ml/` (planned) | Builds point-in-time features from the warehouse, trains the late-delivery classifier and the weekly forecast, and writes metrics and artefacts to local files. Design constraints are in [docs/ml/LEAKAGE_ANALYSIS.md](docs/ml/LEAKAGE_ANALYSIS.md). | Planned |
+| ML layer | `src/ml/`, `sql/ml/` | `late_delivery_features.sql` builds point-in-time features from the warehouse. `late_delivery_baseline.py` and `forecast_baseline.py` run the rolling-origin backtests and write metrics to `reports/`. Design constraints are in [docs/ml/LEAKAGE_ANALYSIS.md](docs/ml/LEAKAGE_ANALYSIS.md); results in [docs/ml/PHASE2_BASELINES.md](docs/ml/PHASE2_BASELINES.md). | Baselines built |
 | Tests | `tests/` (planned) | pytest suite for the build, the checks and the geolocation conversion. | Planned |
 
 ## Data flow
@@ -47,14 +47,14 @@ flowchart LR
 
 - One DuckDB file, rebuilt from scratch on every run, so there is no migration logic and no state to drift.
 - Raw files stay in their Kaggle format, except geolocation, which is converted to Parquet once (DD-06).
-- Model artefacts (planned) will go in a git-ignored local folder, together with a small metrics file that is committed so results stay visible.
+- Metrics are written as small JSON files in `reports/`, which are committed so results stay visible. No model artefacts are saved yet; when they are, they go in a git-ignored folder.
 
 ## Processing
 
-- Everything is SQL executed by DuckDB, except the geolocation conversion and the planned ML code, which use Python with pandas or polars.
+- Everything is SQL executed by DuckDB, except the geolocation conversion and the ML code, which use Python with pandas and scikit-learn.
 - The full build takes about 25 seconds on this laptop (measured 2026-10-11). There is no incremental processing, because the dataset does not change.
 
-## ML (planned, D-007)
+## ML (baselines built, D-007)
 
 - **Late-delivery classifier:** one row per order, predicted at purchase. Features are restricted to what is known at the purchase timestamp, and rolling seller and route statistics are computed point-in-time. The data is split by purchase date, not at random. Evaluation uses precision-recall metrics against a naïve baseline (the historical late rate).
 - **Weekly order forecast:** weekly order count over the complete weeks of 2017-01 to 2018-08, with revenue as a secondary target. Naïve and moving-average baselines come first, and validation uses rolling origins in time order.
