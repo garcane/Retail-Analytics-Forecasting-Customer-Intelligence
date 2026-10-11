@@ -55,9 +55,21 @@ This rebuilds `warehouse.duckdb` from scratch (it is git-ignored), running `sql/
 
 On a network that intercepts TLS, `uv` may need the `--native-tls` flag.
 
-## 3. Explore
+## 3. Run the baselines and tests
+
+```
+uv run python src/ml/late_delivery_baseline.py
+uv run python src/ml/forecast_baseline.py
+uv run pytest
+```
+
+Metrics are written to `reports/`, and `docs/ml/PHASE2_BASELINES.md` explains them. The tests that read the real warehouse are skipped if `warehouse.duckdb` has not been built.
+
+## 4. Explore
 
 - `notebooks/01_dataset_discovery.ipynb`: dataset discovery and EDA.
+- `docs/ml/LEAKAGE_ANALYSIS.md` and `docs/ml/PHASE2_BASELINES.md`: ML targets, leakage rules and baseline results.
+- `ARCHITECTURE.md` and `DECISIONS.md`: design and decision log.
 - `docs/data/DATA_MODEL.md`: star schema, grains and design decisions.
 - `docs/data/EDA_FINDINGS.md`: EDA findings.
 - `docs/phase0/PHASE0_DISCOVERY.md`: Phase 0 discovery report.

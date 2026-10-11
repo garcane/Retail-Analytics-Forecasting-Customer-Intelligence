@@ -106,6 +106,8 @@ Seller, product, category and route statistics are the strongest likely features
 3. Use a minimum count (for example, at least 5 resolved orders) and fall back to the global rate; record which rows used the fallback.
 4. Compute these statistics in SQL with a time-bounded window or a self-join on `delivered_customer_ts < purchase_ts`, never with a group-by over the whole table.
 
+Implemented in [sql/ml/late_delivery_features.sql](../../sql/ml/late_delivery_features.sql): the seller rate uses the self-join, and the route, category and trailing-28-day statistics use running totals read with a strict `ASOF` join. Both follow rules 1-3, and [tests/test_feature_leakage.py](../../tests/test_feature_leakage.py) checks each rule. Results are in [PHASE2_BASELINES.md](PHASE2_BASELINES.md).
+
 ### Customer history
 
 93,356 distinct customers account for the 96,476 labelled orders, and 96.9% of all customers ordered once. Customer-history features (previous orders, previous late deliveries) are empty for almost every row. If they are used, compute them point-in-time by `customer_key` (`customer_unique_id`, DD-02), never by `customer_id`.

@@ -47,10 +47,11 @@ def test_seller_history_matches_a_direct_recount_on_real_data(warehouse, feature
         if len(sellers) != 1:
             continue  # the feature averages over sellers; the recount below is for single-seller orders
         n, rate = warehouse.execute(
-            """select count(distinct o.order_id), avg(o.is_late::int) from fact_order_items oi
-               join fact_orders o using (order_id)
-               where oi.seller_key = ? and o.order_status = 'delivered' and o.is_late is not null
-                 and o.delivered_customer_ts < ? and o.order_id <> ?""",
+            """select count(*), avg(is_late::int) from (
+                   select distinct o.order_id, o.is_late from fact_order_items oi   -- one row per order, not per item
+                   join fact_orders o using (order_id)
+                   where oi.seller_key = ? and o.order_status = 'delivered' and o.is_late is not null
+                     and o.delivered_customer_ts < ? and o.order_id <> ?)""",
             [sellers[0][0], r["purchase_ts"], r["order_id"]],
         ).fetchone()
         assert n == r["seller_prior_n"] and rate == pytest.approx(r["seller_prior_late_rate"])

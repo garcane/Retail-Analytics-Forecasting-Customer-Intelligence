@@ -23,6 +23,7 @@ Later decisions can supersede earlier ones; when that happens the entry says so.
 | DD-07 | 2026-10-11 | Customer segmentation is optional and may be dropped | Active |
 | DD-08 | 2026-10-11 | Add scikit-learn for the ML baselines | Active |
 | DD-09 | 2026-10-11 | Report backtest metrics as a per-month macro-average | Active |
+| DD-10 | 2026-10-11 | Keep v1 features as the reference late-delivery model | Active |
 
 ---
 
@@ -174,3 +175,11 @@ Evidence for these entries is in [docs/data/EDA_FINDINGS.md](docs/data/EDA_FINDI
 - **Reason:** Each month is scored by a model trained at one date, and the late rate moves a lot from month to month (1.4% to 21.4%).
 - **Trade-offs:** Months with fewer orders count as much as larger ones.
 - **Rejected:** Pooled metrics (misleading, as above).
+
+### DD-10: v1 features stay the reference model
+
+- **Context:** Route and category history (v2) and a trailing 28-day system late rate (v3) were added to the late-delivery model as the most promising improvement. Neither helped: logistic-regression PR-AUC fell from 0.184 to 0.174 and 0.178, and calibration at the top of the score range got worse (see [docs/ml/PHASE2_BASELINES.md](docs/ml/PHASE2_BASELINES.md)).
+- **Chosen:** v1 (calendar, promise, basket, route geometry, payment, seller history) stays the reference. The v2 and v3 features stay in the SQL and the script, so the comparison can be rerun.
+- **Reason:** A model should not get more complex without a measured gain.
+- **Trade-offs:** A plausible explanation (drift between regimes) is untested.
+- **Rejected:** Adopting v3 because it uses more information; deleting v2 and v3 and losing the record of what was tried.
