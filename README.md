@@ -34,7 +34,13 @@ olist_sellers_dataset.csv
 product_category_name_translation.csv
 ```
 
-Kaggle ships geolocation as a CSV, while the staging SQL reads `data/olist_geolocation_dataset.parquet`. You do not need to convert it yourself: the build script converts the CSV to Parquet on first run (keeping zip prefixes as text so leading zeros such as `01046` survive) and skips the step if the Parquet file already exists. The conversion reproduced the existing Parquet file exactly (1,000,163 rows) when tested on a CSV generated from it. It has not been run against Kaggle's original download, so if the build fails on geolocation, check this step first.
+**Geolocation: download the CSV, the build converts it for you.** Kaggle ships geolocation as a CSV with about a million rows, by far the largest file in the dataset. The project stores it as Parquet (16.6 MB here, compressed and typed), and the staging SQL reads `data/olist_geolocation_dataset.parquet`. You do not convert it yourself:
+
+1. Put the original `olist_geolocation_dataset.csv` in `data/` with the other files.
+2. Run the build (section 2). On the first run it prints `converted olist_geolocation_dataset.csv -> olist_geolocation_dataset.parquet`, keeping zip prefixes as text so leading zeros such as `01046` survive.
+3. Later runs find the Parquet file and skip the step. You can delete the CSV afterwards if you want the space back.
+
+If neither file is present, the build stops with an error that points back to this section. The conversion reproduced the existing Parquet file exactly (1,000,163 rows) when tested on a CSV generated from it. It has not been run against Kaggle's original download, so if the build fails on geolocation, check this step first.
 
 ## 2. Set up and build the warehouse
 
