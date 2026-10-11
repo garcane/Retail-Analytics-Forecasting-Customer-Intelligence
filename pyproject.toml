@@ -17,3 +17,13 @@ dependencies = [
     "scikit-learn>=1.9.1",
     "seaborn>=0.13.2",
 ]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src/ml", "src/transformation", "tests"]
+markers = ["warehouse: needs the built warehouse.duckdb (skipped when it is missing)"]
