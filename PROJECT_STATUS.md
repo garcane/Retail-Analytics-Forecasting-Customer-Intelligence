@@ -4,7 +4,7 @@ _Last updated: 2026-10-11_
 
 **Scope:** this is a **local implementation of what would have been built on BigQuery**. DuckDB replaces Google Cloud and BigQuery as the warehouse and query engine. There is no GCP project, and no cloud resources are used or planned.
 
-**Current phase:** Phase 2 (local prototype): baselines, a feature experiment and a pytest suite are done; next is testing the drift explanation and recalibration
+**Current phase:** Phase 2 (local prototype): baselines, a feature experiment and a pytest suite are done; next is recalibration and a short-window v1
 
 **Decisions made:** D-001 to D-008 and design decisions DD-01 to DD-10, all recorded in [DECISIONS.md](DECISIONS.md). Latest: D-007 (2026-10-11) sets the ML target to late delivery plus a weekly order forecast; D-008 (2026-10-11) untracks `data/` from Git without rewriting history.
 
@@ -23,6 +23,7 @@ _Last updated: 2026-10-11_
 
 - Phase 2 baselines (2026-10-11): late-delivery features and rolling-origin backtest (logistic regression PR-AUC 0.184 against a base rate of 0.085), and weekly forecast baselines (naive best at one week, 8-week average best at four). Details in `docs/ml/PHASE2_BASELINES.md`. scikit-learn added (DD-08).
 - Feature experiment and tests (2026-10-11): route, category and trailing-28-day history did not improve the late-delivery model (DD-10); calibration checked; pytest suite of 27 tests added, with leakage-rule tests that were verified to fail when leaks are planted. pytest 9.1.1 is a dev dependency.
+- Drift analysis (2026-10-11, `docs/ml/DRIFT_ANALYSIS.md`): tested the drift explanation for the failed history features. Partly supported (trailing rate, category) and partly not (route history is stable but redundant with state and distance). The promise-length relationship flipped in August 2018. A system-level shift hurts calibration, not ranking.
 
 **In progress**
 - Nothing.
@@ -31,11 +32,11 @@ _Last updated: 2026-10-11_
 - Nothing.
 
 **Next**
-1. Test the drift explanation (history over a fixed earlier window) and recalibrate the v1 model; see "Suggested next steps" in `docs/ml/PHASE2_BASELINES.md`.
+1. Recalibrate the v1 model on the latest resolved period and tune a short training window (two months scored best); see "Suggested next steps" in `docs/ml/PHASE2_BASELINES.md` and `docs/ml/DRIFT_ANALYSIS.md`.
 2. Better forecast models (damped trend, exponential smoothing, calendar regression) against the same backtest.
 3. Add the new docs to the graphify graph (`/graphify --update`).
 
-**Tests:** warehouse build runs 22 in-script reconciliation checks (all pass). `uv run pytest`: 27 tests pass (about 30 seconds).
+**Tests:** warehouse build runs 22 in-script reconciliation checks (all pass). `uv run pytest`: 31 tests pass (about 15 to 30 seconds).
 
 **Evidence:** local only. Phase 0 report and warehouse validation output.
 

@@ -79,7 +79,7 @@ Each group of added features leaves the logistic model no better and the boosted
 
 (Mean over the six test months, logistic regression.) Predicted risk in the top quintile rises from 0.215 to 0.283 while the observed rate stays near 0.165.
 
-One explanation is drift, but I have **not** tested it. The late rate jumps by regime (a spike around 2017-11 and another in 2018-02 to 2018-03), so route, category and recent-rate values may learn the regime of the training period, which then does not carry into the test months. The seller history result above points the same way. A test would be to refit with the history features computed over a fixed, earlier window.
+I suspected drift, and tested it in [DRIFT_ANALYSIS.md](DRIFT_ANALYSIS.md). The answer is mixed. The trailing 28-day rate (v3) and category rate do fail because they track the regime, which does not persist. Route history does not: it is stable, but it repeats what v1 already holds in seller state, customer state and distance, so adding it only adds noise. The system-wide level shift hurts calibration, not ranking. And the ordinary promise-length feature itself flipped in August 2018, which is why that month is the weakest.
 
 The v2 and v3 features stay in the SQL and the script so the comparison can be rerun; v1 remains the reference model (DD-10 in [DECISIONS.md](../../DECISIONS.md)).
 
@@ -111,7 +111,7 @@ The v2 and v3 features stay in the SQL and the script so the comparison can be r
 
 ## Tests
 
-`uv run pytest` runs 27 tests in about 30 seconds. They cover:
+`uv run pytest` runs 31 tests in about 15 to 30 seconds. They cover:
 
 - **Leakage rules on a tiny hand-built warehouse** ([tests/test_feature_leakage.py](../../tests/test_feature_leakage.py)): history counts orders by delivery time, not purchase time; an order never sees its own outcome, or one delivered at the instant of its purchase; the seller rate needs five resolved orders; the 28-day window includes its first instant and excludes the last; unlabelled, canceled and anomalous orders are neither rows nor history; no post-outcome columns are returned.
 - **Forecast** ([tests/test_forecast_baseline.py](../../tests/test_forecast_baseline.py)): changing weeks after the forecast origin cannot change an earlier forecast, and each baseline gives the value computed by hand.
@@ -129,7 +129,8 @@ To check the tests themselves, I planted two leaks in the feature SQL. Loosening
 
 ## Suggested next steps
 
-1. Test the drift explanation above before adding more history features: refit with the history computed over a fixed earlier window, and see whether the top-quintile over-confidence disappears. The one untried idea from the first list is the promised window relative to the route's typical delivery time.
-2. Recalibrate the v1 model (for example isotonic regression fitted on the most recent resolved month) and decide on an operating threshold for the "flag the riskiest 10%" use.
-3. For the forecast, try a damped-trend or exponential-smoothing model and a regression on calendar features, then compare against the 8-week average and the naive forecast with the same backtest.
-4. Decide whether the segmentation experiment (DD-07) is worth running; the 96.9% single-order customers make it unlikely.
+1. Recalibrate the v1 model (for example isotonic regression or a level correction fitted on the most recent resolved month) and decide on an operating threshold for the "flag the riskiest 10%" use. The drift analysis says the level is the main thing that moves.
+2. Tune a short training window for v1: two months gave the best PR-AUC in the drift analysis (0.205 against 0.184), at the cost of a noisier model.
+3. Do not add more history features; see [DRIFT_ANALYSIS.md](DRIFT_ANALYSIS.md). The one untried idea from the first list is the promised window relative to the route's typical delivery time, but the promise relationship itself is unstable.
+4. For the forecast, try a damped-trend or exponential-smoothing model and a regression on calendar features, then compare against the 8-week average and the naive forecast with the same backtest.
+5. Decide whether the segmentation experiment (DD-07) is worth running; the 96.9% single-order customers make it unlikely.

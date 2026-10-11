@@ -98,20 +98,21 @@ def evaluate(y: np.ndarray, score: np.ndarray) -> dict[str, float]:
     return out
 
 
-def make_models(numeric: list[str], suffix: str) -> dict[str, object]:
+def make_models(numeric: list[str], suffix: str, categorical: list[str] | None = None) -> dict[str, object]:
+    categorical = CATEGORICAL if categorical is None else categorical
     linear_pre = ColumnTransformer(
         [
             ("num", make_pipeline(SimpleImputer(strategy="median"), StandardScaler()), numeric),
-            ("cat", OneHotEncoder(handle_unknown="ignore", min_frequency=50), CATEGORICAL),
+            ("cat", OneHotEncoder(handle_unknown="ignore", min_frequency=50), categorical),
         ]
     )
     tree_pre = ColumnTransformer(
         [
             ("num", "passthrough", numeric),
-            ("cat", OrdinalEncoder(handle_unknown="use_encoded_value", unknown_value=-1), CATEGORICAL),
+            ("cat", OrdinalEncoder(handle_unknown="use_encoded_value", unknown_value=-1), categorical),
         ]
     )
-    cat_idx = list(range(len(numeric), len(numeric) + len(CATEGORICAL)))
+    cat_idx = list(range(len(numeric), len(numeric) + len(categorical)))
     return {
         f"logistic_regression_{suffix}": make_pipeline(linear_pre, LogisticRegression(max_iter=2000, C=0.5)),
         f"gradient_boosting_{suffix}": make_pipeline(

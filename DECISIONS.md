@@ -181,5 +181,5 @@ Evidence for these entries is in [docs/data/EDA_FINDINGS.md](docs/data/EDA_FINDI
 - **Context:** Route and category history (v2) and a trailing 28-day system late rate (v3) were added to the late-delivery model as the most promising improvement. Neither helped: logistic-regression PR-AUC fell from 0.184 to 0.174 and 0.178, and calibration at the top of the score range got worse (see [docs/ml/PHASE2_BASELINES.md](docs/ml/PHASE2_BASELINES.md)).
 - **Chosen:** v1 (calendar, promise, basket, route geometry, payment, seller history) stays the reference. The v2 and v3 features stay in the SQL and the script, so the comparison can be rerun.
 - **Reason:** A model should not get more complex without a measured gain.
-- **Trade-offs:** A plausible explanation (drift between regimes) is untested.
+- **Trade-offs:** The drift explanation was tested afterwards ([docs/ml/DRIFT_ANALYSIS.md](docs/ml/DRIFT_ANALYSIS.md)) and holds only in part: v3 and category history fail because they track regime, route history fails because it repeats the state and distance columns already in v1.
 - **Rejected:** Adopting v3 because it uses more information; deleting v2 and v3 and losing the record of what was tried.

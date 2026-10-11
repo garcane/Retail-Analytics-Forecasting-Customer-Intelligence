@@ -72,33 +72,33 @@
     "semantic_hash": ""
   },
   "ARCHITECTURE.md": {
-    "mtime": 1791753826.3921523,
-    "seen": 1791753856.5813594,
-    "ast_hash": "a9238565f8aa009cb7d92f56c4f65718",
+    "mtime": 1791754888.9634154,
+    "seen": 1791754914.3083463,
+    "ast_hash": "6c770c9afdfb031055c8f2a3aab07b3a",
     "semantic_hash": ""
   },
   "DECISIONS.md": {
-    "mtime": 1791753826.4050066,
-    "seen": 1791753856.5823593,
-    "ast_hash": "7d09b84e1ab1a48147df7fbcc2c18806",
+    "mtime": 1791754888.9624164,
+    "seen": 1791754914.3083463,
+    "ast_hash": "5434244ffdb7a8ea2a999045b5df2ae8",
     "semantic_hash": ""
   },
   "PROJECT_STATUS.md": {
-    "mtime": 1791753826.4060059,
-    "seen": 1791753856.583359,
-    "ast_hash": "bffad35f24c99bd46de4c3fd9106c816",
+    "mtime": 1791754888.9654162,
+    "seen": 1791754914.3083463,
+    "ast_hash": "5bb2421657f658f832c283079630c933",
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1791753826.409006,
-    "seen": 1791753856.583359,
-    "ast_hash": "ab25fae26d6f0cdf4d7e489e297274f5",
+    "mtime": 1791754888.968941,
+    "seen": 1791754914.3083463,
+    "ast_hash": "b2273212106e5b2693bf3c60da8eb5cb",
     "semantic_hash": ""
   },
   "docs/HANDOFF.md": {
-    "mtime": 1791753826.408007,
-    "seen": 1791753856.583359,
-    "ast_hash": "312e516adfacbe05a0a846e8ac654e13",
+    "mtime": 1791754888.966423,
+    "seen": 1791754914.3083463,
+    "ast_hash": "637ca03ffda57bc449a0e02c85783b47",
     "semantic_hash": ""
   },
   "docs/data/DATA_MODEL.md": {
@@ -150,9 +150,9 @@
     "semantic_hash": ""
   },
   "src/ml/late_delivery_baseline.py": {
-    "mtime": 1791753200.8420339,
-    "seen": 1791753856.5803614,
-    "ast_hash": "caa830a117ba7e7420c8247a44e3228f",
+    "mtime": 1791754638.6207244,
+    "seen": 1791754914.3083463,
+    "ast_hash": "47c36138b837c78b2948cc87eba61e17",
     "semantic_hash": ""
   },
   "tests/conftest.py": {
@@ -192,9 +192,33 @@
     "semantic_hash": ""
   },
   "docs/ml/PHASE2_BASELINES.md": {
-    "mtime": 1791753826.388149,
-    "seen": 1791753856.5853615,
-    "ast_hash": "25ceae91ac1ac05e790653636b021dca",
+    "mtime": 1791754888.959719,
+    "seen": 1791754914.3083463,
+    "ast_hash": "baf0b4d3f6091f47cecfaf5a991daa4f",
+    "semantic_hash": ""
+  },
+  "reports/drift_metrics.json": {
+    "mtime": 1791754782.050471,
+    "seen": 1791754914.3083463,
+    "ast_hash": "d02012c20152500c8dc9be0be6237a98",
+    "semantic_hash": ""
+  },
+  "src/ml/drift_analysis.py": {
+    "mtime": 1791754666.5827253,
+    "seen": 1791754914.3083463,
+    "ast_hash": "df6f9f7bf1ba6049f690e127ce6819b9",
+    "semantic_hash": ""
+  },
+  "tests/test_drift_helpers.py": {
+    "mtime": 1791754806.6717286,
+    "seen": 1791754914.3083463,
+    "ast_hash": "da5273bde47657af119ee01da66846a0",
+    "semantic_hash": ""
+  },
+  "docs/ml/DRIFT_ANALYSIS.md": {
+    "mtime": 1791754888.9525473,
+    "seen": 1791754914.3083463,
+    "ast_hash": "d1fcd6e7e245c2b2c0420bc2f974fd81",
     "semantic_hash": ""
   }
 }

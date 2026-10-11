@@ -58,11 +58,119 @@
       "_callable_class": true,
       "_origin": "ast",
       "community": 21,
-      "community_name": "pytest",
+      "community_name": "duckdb",
       "file_type": "code",
       "norm_label": "miniwarehouse",
       "source_file": "tests/conftest.py",
       "source_location": "L14"
+    },
+    {
+      "id": "src_ml_drift_analysis_add_relative_rates",
+      "label": "add_relative_rates()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 19,
+      "community_name": "late_delivery_baseline.py",
+      "file_type": "code",
+      "norm_label": "add_relative_rates()",
+      "source_file": "src/ml/drift_analysis.py",
+      "source_location": "L75"
+    },
+    {
+      "id": "src_ml_drift_analysis_e1_feature_skill",
+      "label": "e1_feature_skill()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 19,
+      "community_name": "late_delivery_baseline.py",
+      "file_type": "code",
+      "norm_label": "e1_feature_skill()",
+      "source_file": "src/ml/drift_analysis.py",
+      "source_location": "L87"
+    },
+    {
+      "id": "src_ml_drift_analysis_e1_feature_skill_pooled",
+      "label": "pooled()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 19,
+      "community_name": "late_delivery_baseline.py",
+      "file_type": "code",
+      "norm_label": "pooled()",
+      "source_file": "src/ml/drift_analysis.py",
+      "source_location": "L100"
+    },
+    {
+      "id": "src_ml_drift_analysis_e2_persistence",
+      "label": "e2_persistence()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 19,
+      "community_name": "late_delivery_baseline.py",
+      "file_type": "code",
+      "norm_label": "e2_persistence()",
+      "source_file": "src/ml/drift_analysis.py",
+      "source_location": "L116"
+    },
+    {
+      "id": "src_ml_drift_analysis_e_lag",
+      "label": "e_lag()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 19,
+      "community_name": "late_delivery_baseline.py",
+      "file_type": "code",
+      "norm_label": "e_lag()",
+      "source_file": "src/ml/drift_analysis.py",
+      "source_location": "L175"
+    },
+    {
+      "id": "src_ml_drift_analysis_fit_score",
+      "label": "fit_score()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 19,
+      "community_name": "late_delivery_baseline.py",
+      "file_type": "code",
+      "norm_label": "fit_score()",
+      "source_file": "src/ml/drift_analysis.py",
+      "source_location": "L148"
+    },
+    {
+      "id": "src_ml_drift_analysis_macro",
+      "label": "macro()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 19,
+      "community_name": "late_delivery_baseline.py",
+      "file_type": "code",
+      "norm_label": "macro()",
+      "source_file": "src/ml/drift_analysis.py",
+      "source_location": "L169"
+    },
+    {
+      "id": "src_ml_drift_analysis_main",
+      "label": "main()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 19,
+      "community_name": "late_delivery_baseline.py",
+      "file_type": "code",
+      "norm_label": "main()",
+      "source_file": "src/ml/drift_analysis.py",
+      "source_location": "L189"
+    },
+    {
+      "id": "src_ml_drift_analysis_with_system_counts",
+      "label": "with_system_counts()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 19,
+      "community_name": "late_delivery_baseline.py",
+      "file_type": "code",
+      "norm_label": "with_system_counts()",
+      "source_file": "src/ml/drift_analysis.py",
+      "source_location": "L64"
     },
     {
       "id": "src_ml_late_delivery_baseline_add_smoothed_rates",
@@ -86,7 +194,7 @@
       "file_type": "code",
       "norm_label": "calibration_table()",
       "source_file": "src/ml/late_delivery_baseline.py",
-      "source_location": "L127"
+      "source_location": "L128"
     },
     {
       "id": "src_ml_late_delivery_baseline_evaluate",
@@ -113,6 +221,18 @@
       "source_location": "L50"
     },
     {
+      "id": "src_ml_late_delivery_baseline_main",
+      "label": "main()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 19,
+      "community_name": "late_delivery_baseline.py",
+      "file_type": "code",
+      "norm_label": "main()",
+      "source_file": "src/ml/late_delivery_baseline.py",
+      "source_location": "L177"
+    },
+    {
       "id": "src_ml_late_delivery_baseline_make_models",
       "label": "make_models()",
       "_callable": true,
@@ -134,7 +254,7 @@
       "file_type": "code",
       "norm_label": "run()",
       "source_file": "src/ml/late_delivery_baseline.py",
-      "source_location": "L135"
+      "source_location": "L136"
     },
     {
       "id": "src_ml_late_delivery_baseline_top_share_metrics",
@@ -226,7 +346,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 2,
-      "community_name": "duckdb",
+      "community_name": "visualize_schema.py",
       "file_type": "code",
       "norm_label": "draw()",
       "source_file": "scripts/visualize_schema.py",
@@ -238,7 +358,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 2,
-      "community_name": "duckdb",
+      "community_name": "visualize_schema.py",
       "file_type": "code",
       "norm_label": "border_point()",
       "source_file": "scripts/visualize_schema.py",
@@ -250,7 +370,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 2,
-      "community_name": "duckdb",
+      "community_name": "visualize_schema.py",
       "file_type": "code",
       "norm_label": "load_graph()",
       "source_file": "scripts/visualize_schema.py",
@@ -262,7 +382,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 2,
-      "community_name": "duckdb",
+      "community_name": "visualize_schema.py",
       "file_type": "code",
       "norm_label": "main()",
       "source_file": "scripts/visualize_schema.py",
@@ -274,23 +394,11 @@
       "_callable": true,
       "_origin": "ast",
       "community": 2,
-      "community_name": "duckdb",
+      "community_name": "visualize_schema.py",
       "file_type": "code",
       "norm_label": "node_label()",
       "source_file": "scripts/visualize_schema.py",
       "source_location": "L63"
-    },
-    {
-      "id": "src_ml_late_delivery_baseline_main",
-      "label": "main()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 2,
-      "community_name": "duckdb",
-      "file_type": "code",
-      "norm_label": "main()",
-      "source_file": "src/ml/late_delivery_baseline.py",
-      "source_location": "L176"
     },
     {
       "id": "src_transformation_build_warehouse_ensure_geolocation_parquet",
@@ -298,7 +406,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 2,
-      "community_name": "duckdb",
+      "community_name": "visualize_schema.py",
       "file_type": "code",
       "norm_label": "ensure_geolocation_parquet()",
       "source_file": "src/transformation/build_warehouse.py",
@@ -310,7 +418,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 2,
-      "community_name": "duckdb",
+      "community_name": "visualize_schema.py",
       "file_type": "code",
       "norm_label": "main()",
       "source_file": "src/transformation/build_warehouse.py",
@@ -322,59 +430,11 @@
       "_callable": true,
       "_origin": "ast",
       "community": 2,
-      "community_name": "duckdb",
+      "community_name": "visualize_schema.py",
       "file_type": "code",
       "norm_label": "run_sql_file()",
       "source_file": "src/transformation/build_warehouse.py",
       "source_location": "L23"
-    },
-    {
-      "id": "tests_test_geolocation_conversion_con",
-      "label": "con()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 2,
-      "community_name": "duckdb",
-      "file_type": "code",
-      "norm_label": "con()",
-      "source_file": "tests/test_geolocation_conversion.py",
-      "source_location": "L15"
-    },
-    {
-      "id": "tests_test_geolocation_conversion_test_csv_only_is_converted_and_keeps_leading_zeros",
-      "label": "test_csv_only_is_converted_and_keeps_leading_zeros()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 2,
-      "community_name": "duckdb",
-      "file_type": "code",
-      "norm_label": "test_csv_only_is_converted_and_keeps_leading_zeros()",
-      "source_file": "tests/test_geolocation_conversion.py",
-      "source_location": "L21"
-    },
-    {
-      "id": "tests_test_geolocation_conversion_test_existing_parquet_is_left_untouched",
-      "label": "test_existing_parquet_is_left_untouched()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 2,
-      "community_name": "duckdb",
-      "file_type": "code",
-      "norm_label": "test_existing_parquet_is_left_untouched()",
-      "source_file": "tests/test_geolocation_conversion.py",
-      "source_location": "L32"
-    },
-    {
-      "id": "tests_test_geolocation_conversion_test_missing_both_files_raises_with_pointer_to_readme",
-      "label": "test_missing_both_files_raises_with_pointer_to_readme()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 2,
-      "community_name": "duckdb",
-      "file_type": "code",
-      "norm_label": "test_missing_both_files_raises_with_pointer_to_readme()",
-      "source_file": "tests/test_geolocation_conversion.py",
-      "source_location": "L40"
     },
     {
       "id": "src_ml_forecast_baseline_backtest",
@@ -473,6 +533,66 @@
       "source_location": "L34"
     },
     {
+      "id": "tests_test_drift_helpers_frame",
+      "label": "frame()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 20,
+      "community_name": "forecast_baseline.py",
+      "file_type": "code",
+      "norm_label": "frame()",
+      "source_file": "tests/test_drift_helpers.py",
+      "source_location": "L10"
+    },
+    {
+      "id": "tests_test_drift_helpers_test_relative_rates_are_positive_for_a_late_route",
+      "label": "test_relative_rates_are_positive_for_a_late_route()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 20,
+      "community_name": "forecast_baseline.py",
+      "file_type": "code",
+      "norm_label": "test_relative_rates_are_positive_for_a_late_route()",
+      "source_file": "tests/test_drift_helpers.py",
+      "source_location": "L44"
+    },
+    {
+      "id": "tests_test_drift_helpers_test_relative_rates_are_zero_when_route_matches_the_system",
+      "label": "test_relative_rates_are_zero_when_route_matches_the_system()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 20,
+      "community_name": "forecast_baseline.py",
+      "file_type": "code",
+      "norm_label": "test_relative_rates_are_zero_when_route_matches_the_system()",
+      "source_file": "tests/test_drift_helpers.py",
+      "source_location": "L34"
+    },
+    {
+      "id": "tests_test_drift_helpers_test_system_counts_do_not_depend_on_row_order",
+      "label": "test_system_counts_do_not_depend_on_row_order()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 20,
+      "community_name": "forecast_baseline.py",
+      "file_type": "code",
+      "norm_label": "test_system_counts_do_not_depend_on_row_order()",
+      "source_file": "tests/test_drift_helpers.py",
+      "source_location": "L26"
+    },
+    {
+      "id": "tests_test_drift_helpers_test_system_counts_use_only_orders_delivered_strictly_before_purchase",
+      "label": "test_system_counts_use_only_orders_delivered_strictly_before_purchase()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 20,
+      "community_name": "forecast_baseline.py",
+      "file_type": "code",
+      "norm_label": "test_system_counts_use_only_orders_delivered_strictly_before_purchase()",
+      "source_file": "tests/test_drift_helpers.py",
+      "source_location": "L19"
+    },
+    {
       "id": "tests_test_forecast_baseline_series",
       "label": "series()",
       "_callable": true,
@@ -538,7 +658,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 21,
-      "community_name": "pytest",
+      "community_name": "duckdb",
       "file_type": "code",
       "norm_label": "mini()",
       "source_file": "tests/conftest.py",
@@ -550,7 +670,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 21,
-      "community_name": "pytest",
+      "community_name": "duckdb",
       "file_type": "code",
       "norm_label": ".add_order()",
       "source_file": "tests/conftest.py",
@@ -562,7 +682,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 21,
-      "community_name": "pytest",
+      "community_name": "duckdb",
       "file_type": "code",
       "norm_label": ".features()",
       "source_file": "tests/conftest.py",
@@ -574,7 +694,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 21,
-      "community_name": "pytest",
+      "community_name": "duckdb",
       "file_type": "code",
       "norm_label": ".__init__()",
       "source_file": "tests/conftest.py",
@@ -586,11 +706,59 @@
       "_callable": true,
       "_origin": "ast",
       "community": 21,
-      "community_name": "pytest",
+      "community_name": "duckdb",
       "file_type": "code",
       "norm_label": "warehouse()",
       "source_file": "tests/conftest.py",
       "source_location": "L69"
+    },
+    {
+      "id": "tests_test_geolocation_conversion_con",
+      "label": "con()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 21,
+      "community_name": "duckdb",
+      "file_type": "code",
+      "norm_label": "con()",
+      "source_file": "tests/test_geolocation_conversion.py",
+      "source_location": "L15"
+    },
+    {
+      "id": "tests_test_geolocation_conversion_test_csv_only_is_converted_and_keeps_leading_zeros",
+      "label": "test_csv_only_is_converted_and_keeps_leading_zeros()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 21,
+      "community_name": "duckdb",
+      "file_type": "code",
+      "norm_label": "test_csv_only_is_converted_and_keeps_leading_zeros()",
+      "source_file": "tests/test_geolocation_conversion.py",
+      "source_location": "L21"
+    },
+    {
+      "id": "tests_test_geolocation_conversion_test_existing_parquet_is_left_untouched",
+      "label": "test_existing_parquet_is_left_untouched()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 21,
+      "community_name": "duckdb",
+      "file_type": "code",
+      "norm_label": "test_existing_parquet_is_left_untouched()",
+      "source_file": "tests/test_geolocation_conversion.py",
+      "source_location": "L32"
+    },
+    {
+      "id": "tests_test_geolocation_conversion_test_missing_both_files_raises_with_pointer_to_readme",
+      "label": "test_missing_both_files_raises_with_pointer_to_readme()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 21,
+      "community_name": "duckdb",
+      "file_type": "code",
+      "norm_label": "test_missing_both_files_raises_with_pointer_to_readme()",
+      "source_file": "tests/test_geolocation_conversion.py",
+      "source_location": "L40"
     },
     {
       "id": "tests_test_warehouse_features",
@@ -598,7 +766,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 21,
-      "community_name": "pytest",
+      "community_name": "duckdb",
       "file_type": "code",
       "norm_label": "features()",
       "source_file": "tests/test_warehouse.py",
@@ -610,7 +778,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 21,
-      "community_name": "pytest",
+      "community_name": "duckdb",
       "file_type": "code",
       "norm_label": "test_all_validation_checks_pass()",
       "source_file": "tests/test_warehouse.py",
@@ -622,7 +790,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 21,
-      "community_name": "pytest",
+      "community_name": "duckdb",
       "file_type": "code",
       "norm_label": "test_feature_table_matches_the_documented_population()",
       "source_file": "tests/test_warehouse.py",
@@ -634,7 +802,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 21,
-      "community_name": "pytest",
+      "community_name": "duckdb",
       "file_type": "code",
       "norm_label": "test_recent_28d_matches_a_direct_recount_on_real_data()",
       "source_file": "tests/test_warehouse.py",
@@ -646,7 +814,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 21,
-      "community_name": "pytest",
+      "community_name": "duckdb",
       "file_type": "code",
       "norm_label": "test_seller_history_matches_a_direct_recount_on_real_data()",
       "source_file": "tests/test_warehouse.py",
@@ -658,7 +826,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 21,
-      "community_name": "pytest",
+      "community_name": "duckdb",
       "file_type": "code",
       "norm_label": "test_weekly_series_covers_the_documented_window()",
       "source_file": "tests/test_warehouse.py",
@@ -1375,6 +1543,28 @@
       "source_location": "L1"
     },
     {
+      "id": "src_ml_drift_analysis",
+      "label": "drift_analysis.py",
+      "_origin": "ast",
+      "community": 19,
+      "community_name": "late_delivery_baseline.py",
+      "file_type": "code",
+      "norm_label": "drift_analysis.py",
+      "source_file": "src/ml/drift_analysis.py",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_ml_drift_analysis_py_dataframe",
+      "label": "DataFrame",
+      "_origin": "ast",
+      "community": 19,
+      "community_name": "late_delivery_baseline.py",
+      "file_type": "code",
+      "norm_label": "dataframe",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
       "id": "src_ml_late_delivery_baseline",
       "label": "late_delivery_baseline.py",
       "_origin": "ast",
@@ -1430,6 +1620,39 @@
       "source_location": "L1"
     },
     {
+      "id": "src_ml_drift_analysis_rationale_1",
+      "label": "Test the drift explanation for why route, category and trailing-rate features\u2026",
+      "_origin": "ast",
+      "community": 19,
+      "community_name": "late_delivery_baseline.py",
+      "file_type": "rationale",
+      "norm_label": "test the drift explanation for why route, category and trailing-rate features...",
+      "source_file": "src/ml/drift_analysis.py",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_ml_drift_analysis_rationale_176",
+      "label": "Does the trailing 28-day rate at the start of a month predict that month's rate?",
+      "_origin": "ast",
+      "community": 19,
+      "community_name": "late_delivery_baseline.py",
+      "file_type": "rationale",
+      "norm_label": "does the trailing 28-day rate at the start of a month predict that month's rate?",
+      "source_file": "src/ml/drift_analysis.py",
+      "source_location": "L176"
+    },
+    {
+      "id": "src_ml_drift_analysis_rationale_65",
+      "label": "Point-in-time system-wide counts: orders delivered strictly before each\u2026",
+      "_origin": "ast",
+      "community": 19,
+      "community_name": "late_delivery_baseline.py",
+      "file_type": "rationale",
+      "norm_label": "point-in-time system-wide counts: orders delivered strictly before each...",
+      "source_file": "src/ml/drift_analysis.py",
+      "source_location": "L65"
+    },
+    {
       "id": "src_ml_late_delivery_baseline_rationale_1",
       "label": "Late-delivery baselines (D-007), evaluated by monthly rolling origin. For each\u2026",
       "_origin": "ast",
@@ -1441,7 +1664,7 @@
       "source_location": "L1"
     },
     {
-      "id": "src_ml_late_delivery_baseline_rationale_128",
+      "id": "src_ml_late_delivery_baseline_rationale_129",
       "label": "Mean predicted risk against the observed late rate in score quintiles, for one\u2026",
       "_origin": "ast",
       "community": 19,
@@ -1449,10 +1672,10 @@
       "file_type": "rationale",
       "norm_label": "mean predicted risk against the observed late rate in score quintiles, for one...",
       "source_file": "src/ml/late_delivery_baseline.py",
-      "source_location": "L128"
+      "source_location": "L129"
     },
     {
-      "id": "src_ml_late_delivery_baseline_rationale_136",
+      "id": "src_ml_late_delivery_baseline_rationale_137",
       "label": "Return (macro-average over test months, per-month rows) for each model. Metrics\u2026",
       "_origin": "ast",
       "community": 19,
@@ -1460,7 +1683,7 @@
       "file_type": "rationale",
       "norm_label": "return (macro-average over test months, per-month rows) for each model. metrics...",
       "source_file": "src/ml/late_delivery_baseline.py",
-      "source_location": "L136"
+      "source_location": "L137"
     },
     {
       "id": "src_ml_late_delivery_baseline_rationale_60",
@@ -1500,7 +1723,7 @@
       "label": "DiGraph",
       "_origin": "ast",
       "community": 2,
-      "community_name": "duckdb",
+      "community_name": "visualize_schema.py",
       "file_type": "code",
       "norm_label": "digraph",
       "source_file": "",
@@ -1511,7 +1734,7 @@
       "label": "visualize_schema.py",
       "_origin": "ast",
       "community": 2,
-      "community_name": "duckdb",
+      "community_name": "visualize_schema.py",
       "file_type": "code",
       "norm_label": "visualize_schema.py",
       "source_file": "scripts/visualize_schema.py",
@@ -1522,7 +1745,7 @@
       "label": "Path",
       "_origin": "ast",
       "community": 2,
-      "community_name": "duckdb",
+      "community_name": "visualize_schema.py",
       "file_type": "code",
       "norm_label": "path",
       "source_file": "",
@@ -1533,7 +1756,7 @@
       "label": "build_warehouse.py",
       "_origin": "ast",
       "community": 2,
-      "community_name": "duckdb",
+      "community_name": "visualize_schema.py",
       "file_type": "code",
       "norm_label": "build_warehouse.py",
       "source_file": "src/transformation/build_warehouse.py",
@@ -1544,7 +1767,7 @@
       "label": "DuckDBPyConnection",
       "_origin": "ast",
       "community": 2,
-      "community_name": "duckdb",
+      "community_name": "visualize_schema.py",
       "file_type": "code",
       "norm_label": "duckdbpyconnection",
       "source_file": "",
@@ -1555,31 +1778,9 @@
       "label": "Path",
       "_origin": "ast",
       "community": 2,
-      "community_name": "duckdb",
+      "community_name": "visualize_schema.py",
       "file_type": "code",
       "norm_label": "path",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "tests_test_geolocation_conversion",
-      "label": "test_geolocation_conversion.py",
-      "_origin": "ast",
-      "community": 2,
-      "community_name": "duckdb",
-      "file_type": "code",
-      "norm_label": "test_geolocation_conversion.py",
-      "source_file": "tests/test_geolocation_conversion.py",
-      "source_location": "L1"
-    },
-    {
-      "id": "tests_test_geolocation_conversion_py_fixture",
-      "label": "fixture",
-      "_origin": "ast",
-      "community": 2,
-      "community_name": "duckdb",
-      "file_type": "code",
-      "norm_label": "fixture",
       "source_file": "",
       "source_location": ""
     },
@@ -1588,7 +1789,7 @@
       "label": "Components",
       "_origin": "ast",
       "community": 2,
-      "community_name": "duckdb",
+      "community_name": "visualize_schema.py",
       "file_type": "document",
       "node_kind": "heading",
       "norm_label": "components",
@@ -1600,7 +1801,7 @@
       "label": "Draw the star schema in warehouse.duckdb as a NetworkX graph (the \"model\u2026",
       "_origin": "ast",
       "community": 2,
-      "community_name": "duckdb",
+      "community_name": "visualize_schema.py",
       "file_type": "rationale",
       "norm_label": "draw the star schema in warehouse.duckdb as a networkx graph (the \"model...",
       "source_file": "scripts/visualize_schema.py",
@@ -1611,7 +1812,7 @@
       "label": "Build the local Olist star-schema warehouse in DuckDB from the raw files in\u2026",
       "_origin": "ast",
       "community": 2,
-      "community_name": "duckdb",
+      "community_name": "visualize_schema.py",
       "file_type": "rationale",
       "norm_label": "build the local olist star-schema warehouse in duckdb from the raw files in...",
       "source_file": "src/transformation/build_warehouse.py",
@@ -1622,7 +1823,7 @@
       "label": "Kaggle ships geolocation as CSV; staging reads Parquet. Convert once if only\u2026",
       "_origin": "ast",
       "community": 2,
-      "community_name": "duckdb",
+      "community_name": "visualize_schema.py",
       "file_type": "rationale",
       "norm_label": "kaggle ships geolocation as csv; staging reads parquet. convert once if only...",
       "source_file": "src/transformation/build_warehouse.py",
@@ -1684,6 +1885,17 @@
       "source_location": ""
     },
     {
+      "id": "tests_test_drift_helpers",
+      "label": "test_drift_helpers.py",
+      "_origin": "ast",
+      "community": 20,
+      "community_name": "forecast_baseline.py",
+      "file_type": "code",
+      "norm_label": "test_drift_helpers.py",
+      "source_file": "tests/test_drift_helpers.py",
+      "source_location": "L1"
+    },
+    {
       "id": "tests_test_forecast_baseline",
       "label": "test_forecast_baseline.py",
       "_origin": "ast",
@@ -1743,7 +1955,7 @@
       "label": "conftest.py",
       "_origin": "ast",
       "community": 21,
-      "community_name": "pytest",
+      "community_name": "duckdb",
       "file_type": "code",
       "norm_label": "conftest.py",
       "source_file": "tests/conftest.py",
@@ -1754,7 +1966,7 @@
       "label": "datetime",
       "_origin": "ast",
       "community": 21,
-      "community_name": "pytest",
+      "community_name": "duckdb",
       "file_type": "code",
       "norm_label": "datetime",
       "source_file": "",
@@ -1765,7 +1977,29 @@
       "label": "fixture",
       "_origin": "ast",
       "community": 21,
-      "community_name": "pytest",
+      "community_name": "duckdb",
+      "file_type": "code",
+      "norm_label": "fixture",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "tests_test_geolocation_conversion",
+      "label": "test_geolocation_conversion.py",
+      "_origin": "ast",
+      "community": 21,
+      "community_name": "duckdb",
+      "file_type": "code",
+      "norm_label": "test_geolocation_conversion.py",
+      "source_file": "tests/test_geolocation_conversion.py",
+      "source_location": "L1"
+    },
+    {
+      "id": "tests_test_geolocation_conversion_py_fixture",
+      "label": "fixture",
+      "_origin": "ast",
+      "community": 21,
+      "community_name": "duckdb",
       "file_type": "code",
       "norm_label": "fixture",
       "source_file": "",
@@ -1776,7 +2010,7 @@
       "label": "test_warehouse.py",
       "_origin": "ast",
       "community": 21,
-      "community_name": "pytest",
+      "community_name": "duckdb",
       "file_type": "code",
       "norm_label": "test_warehouse.py",
       "source_file": "tests/test_warehouse.py",
@@ -1787,7 +2021,7 @@
       "label": "fixture",
       "_origin": "ast",
       "community": 21,
-      "community_name": "pytest",
+      "community_name": "duckdb",
       "file_type": "code",
       "norm_label": "fixture",
       "source_file": "",
@@ -1798,7 +2032,7 @@
       "label": "Shared fixtures: a tiny hand-built warehouse for the feature SQL, and the real\u2026",
       "_origin": "ast",
       "community": 21,
-      "community_name": "pytest",
+      "community_name": "duckdb",
       "file_type": "rationale",
       "norm_label": "shared fixtures: a tiny hand-built warehouse for the feature sql, and the real...",
       "source_file": "tests/conftest.py",
@@ -1809,7 +2043,7 @@
       "label": "Just the tables and columns the feature SQL reads, filled from a few lines of\u2026",
       "_origin": "ast",
       "community": 21,
-      "community_name": "pytest",
+      "community_name": "duckdb",
       "file_type": "rationale",
       "norm_label": "just the tables and columns the feature sql reads, filled from a few lines of...",
       "source_file": "tests/conftest.py",
@@ -1820,7 +2054,7 @@
       "label": "Checks against the real, built warehouse. Skipped when warehouse.duckdb has not\u2026",
       "_origin": "ast",
       "community": 21,
-      "community_name": "pytest",
+      "community_name": "duckdb",
       "file_type": "rationale",
       "norm_label": "checks against the real, built warehouse. skipped when warehouse.duckdb has not...",
       "source_file": "tests/test_warehouse.py",
@@ -1953,6 +2187,138 @@
       "norm_label": "leakage rules from docs/ml/leakage_analysis.md, checked on a tiny hand-built...",
       "source_file": "tests/test_feature_leakage.py",
       "source_location": "L1"
+    },
+    {
+      "id": "docs_ml_drift_analysis_august_2018_is_a_change_in_promise_policy_not_a_label_problem",
+      "label": "August 2018 is a change in promise policy, not a label problem",
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "What was done and what came out",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "august 2018 is a change in promise policy, not a label problem",
+      "source_file": "docs/ml/DRIFT_ANALYSIS.md",
+      "source_location": "L39"
+    },
+    {
+      "id": "docs_ml_drift_analysis_drift_analysis_why_the_richer_history_features_did_not_help",
+      "label": "Drift analysis: why the richer history features did not help",
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "What was done and what came out",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "drift analysis: why the richer history features did not help",
+      "source_file": "docs/ml/DRIFT_ANALYSIS.md",
+      "source_location": "L1"
+    },
+    {
+      "id": "docs_ml_drift_analysis_e1_single_feature_skill_month_by_month",
+      "label": "E1: single-feature skill, month by month",
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "What was done and what came out",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "e1: single-feature skill, month by month",
+      "source_file": "docs/ml/DRIFT_ANALYSIS.md",
+      "source_location": "L20"
+    },
+    {
+      "id": "docs_ml_drift_analysis_e2_does_a_route_s_category_s_or_seller_s_lateness_persist",
+      "label": "E2: does a route's, category's or seller's lateness persist?",
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "What was done and what came out",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "e2: does a route's, category's or seller's lateness persist?",
+      "source_file": "docs/ml/DRIFT_ANALYSIS.md",
+      "source_location": "L53"
+    },
+    {
+      "id": "docs_ml_drift_analysis_e3_and_e4_shorter_training_windows_and_relative_features",
+      "label": "E3 and E4: shorter training windows, and relative features",
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "What was done and what came out",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "e3 and e4: shorter training windows, and relative features",
+      "source_file": "docs/ml/DRIFT_ANALYSIS.md",
+      "source_location": "L69"
+    },
+    {
+      "id": "docs_ml_drift_analysis_e5_what_a_perfect_regime_signal_would_buy",
+      "label": "E5: what a perfect regime signal would buy",
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "What was done and what came out",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "e5: what a perfect regime signal would buy",
+      "source_file": "docs/ml/DRIFT_ANALYSIS.md",
+      "source_location": "L85"
+    },
+    {
+      "id": "docs_ml_drift_analysis_e6_is_route_history_redundant_with_the_state_and_distance_columns",
+      "label": "E6: is route history redundant with the state and distance columns?",
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "What was done and what came out",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "e6: is route history redundant with the state and distance columns?",
+      "source_file": "docs/ml/DRIFT_ANALYSIS.md",
+      "source_location": "L97"
+    },
+    {
+      "id": "docs_ml_drift_analysis_limits",
+      "label": "Limits",
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "What was done and what came out",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "limits",
+      "source_file": "docs/ml/DRIFT_ANALYSIS.md",
+      "source_location": "L115"
+    },
+    {
+      "id": "docs_ml_drift_analysis_verdict",
+      "label": "Verdict",
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "What was done and what came out",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "verdict",
+      "source_file": "docs/ml/DRIFT_ANALYSIS.md",
+      "source_location": "L7"
+    },
+    {
+      "id": "docs_ml_drift_analysis_what_this_changes",
+      "label": "What this changes",
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "What was done and what came out",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "what this changes",
+      "source_file": "docs/ml/DRIFT_ANALYSIS.md",
+      "source_location": "L108"
+    },
+    {
+      "id": "docs_ml_drift_analysis_what_was_done_and_what_came_out",
+      "label": "What was done and what came out",
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "What was done and what came out",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "what was done and what came out",
+      "source_file": "docs/ml/DRIFT_ANALYSIS.md",
+      "source_location": "L18"
     },
     {
       "id": "docs_phase0_phase0_discovery_10_current_gcp_services_pricing_and_free_tier_implications",
@@ -2339,6 +2705,18 @@
       "source_location": "L5"
     },
     {
+      "id": "docs_ml_drift_analysis",
+      "label": "DRIFT_ANALYSIS.md",
+      "_origin": "ast",
+      "community": 7,
+      "community_name": "DECISIONS.md",
+      "file_type": "document",
+      "node_kind": "page",
+      "norm_label": "drift_analysis.md",
+      "source_file": "docs/ml/DRIFT_ANALYSIS.md",
+      "source_location": "L1"
+    },
+    {
       "id": "docs_ml_leakage_analysis",
       "label": "LEAKAGE_ANALYSIS.md",
       "_origin": "ast",
@@ -2456,7 +2834,7 @@
       "node_kind": "heading",
       "norm_label": "4. explore",
       "source_file": "README.md",
-      "source_location": "L68"
+      "source_location": "L69"
     },
     {
       "id": "readme_attribution",
@@ -2468,7 +2846,7 @@
       "node_kind": "heading",
       "norm_label": "attribution",
       "source_file": "README.md",
-      "source_location": "L79"
+      "source_location": "L80"
     },
     {
       "id": "readme_retail_analytics_forecasting_customer_intelligence_local_duckdb_build",
@@ -2765,6 +3143,51 @@
       "source_url": null
     },
     {
+      "id": "cloud_portfolio_master_agent_prompt_ml_methodology",
+      "label": "ML Methodology (target, leakage, baseline first)",
+      "_origin": "semantic",
+      "author": null,
+      "captured_at": null,
+      "community": 0,
+      "community_name": "Cloud vs Local Architecture Mapping",
+      "contributor": null,
+      "file_type": "concept",
+      "norm_label": "ml methodology (target, leakage, baseline first)",
+      "source_file": "Cloud Portfolio \u2014 Master Agent Prompt.md",
+      "source_location": null,
+      "source_url": null
+    },
+    {
+      "id": "cloud_portfolio_master_agent_prompt_mlops_lifecycle",
+      "label": "MLOps Lifecycle",
+      "_origin": "semantic",
+      "author": null,
+      "captured_at": null,
+      "community": 0,
+      "community_name": "Cloud vs Local Architecture Mapping",
+      "contributor": null,
+      "file_type": "concept",
+      "norm_label": "mlops lifecycle",
+      "source_file": "Cloud Portfolio \u2014 Master Agent Prompt.md",
+      "source_location": null,
+      "source_url": null
+    },
+    {
+      "id": "cloud_portfolio_master_agent_prompt_model_evaluation_explainability",
+      "label": "Model Evaluation and Explainability",
+      "_origin": "semantic",
+      "author": null,
+      "captured_at": null,
+      "community": 0,
+      "community_name": "Cloud vs Local Architecture Mapping",
+      "contributor": null,
+      "file_type": "concept",
+      "norm_label": "model evaluation and explainability",
+      "source_file": "Cloud Portfolio \u2014 Master Agent Prompt.md",
+      "source_location": null,
+      "source_url": null
+    },
+    {
       "id": "docs_architecture_philosophy_dbt_first_class",
       "label": "dbt as First-Class Component",
       "_origin": "semantic",
@@ -3035,6 +3458,21 @@
       "source_url": null
     },
     {
+      "id": "google_cloud_project_retail_analytics_forecasting_customer_intelligence_platform_model_comparison_threshold_analysis",
+      "label": "Model Comparison, Evaluation and Threshold Analysis",
+      "_origin": "semantic",
+      "author": null,
+      "captured_at": null,
+      "community": 0,
+      "community_name": "Cloud vs Local Architecture Mapping",
+      "contributor": null,
+      "file_type": "concept",
+      "norm_label": "model comparison, evaluation and threshold analysis",
+      "source_file": "Google Cloud Project \u2014 Retail Analytics, Forecasting & Customer Intelligence Platform.md",
+      "source_location": null,
+      "source_url": null
+    },
+    {
       "id": "google_cloud_project_retail_analytics_forecasting_customer_intelligence_platform_model_lifecycle",
       "label": "Model Lifecycle (EXPERIMENT, CANDIDATE, VALIDATED, APPROVED, DEPLOYED)",
       "_origin": "semantic",
@@ -3060,6 +3498,21 @@
       "contributor": null,
       "file_type": "concept",
       "norm_label": "power bi / bi layer",
+      "source_file": "Google Cloud Project \u2014 Retail Analytics, Forecasting & Customer Intelligence Platform.md",
+      "source_location": null,
+      "source_url": null
+    },
+    {
+      "id": "google_cloud_project_retail_analytics_forecasting_customer_intelligence_platform_supervised_ml_and_leakage",
+      "label": "Supervised ML Problem Selection and Leakage Analysis",
+      "_origin": "semantic",
+      "author": null,
+      "captured_at": null,
+      "community": 0,
+      "community_name": "Cloud vs Local Architecture Mapping",
+      "contributor": null,
+      "file_type": "concept",
+      "norm_label": "supervised ml problem selection and leakage analysis",
       "source_file": "Google Cloud Project \u2014 Retail Analytics, Forecasting & Customer Intelligence Platform.md",
       "source_location": null,
       "source_url": null
@@ -3106,6 +3559,36 @@
       "file_type": "document",
       "norm_label": "gcp retail project: local vs cloud architecture",
       "source_file": "GCP.md",
+      "source_location": null,
+      "source_url": null
+    },
+    {
+      "id": "cloud_portfolio_master_agent_prompt_batch_vs_real_time",
+      "label": "Batch vs Real-Time Inference Decision",
+      "_origin": "semantic",
+      "author": null,
+      "captured_at": null,
+      "community": 0,
+      "community_name": "Cloud vs Local Architecture Mapping",
+      "contributor": null,
+      "file_type": "rationale",
+      "norm_label": "batch vs real-time inference decision",
+      "source_file": "Cloud Portfolio \u2014 Master Agent Prompt.md",
+      "source_location": null,
+      "source_url": null
+    },
+    {
+      "id": "google_cloud_project_retail_analytics_forecasting_customer_intelligence_platform_batch_vs_online_inference",
+      "label": "Batch vs Online Inference (batch preferred)",
+      "_origin": "semantic",
+      "author": null,
+      "captured_at": null,
+      "community": 0,
+      "community_name": "Cloud vs Local Architecture Mapping",
+      "contributor": null,
+      "file_type": "rationale",
+      "norm_label": "batch vs online inference (batch preferred)",
+      "source_file": "Google Cloud Project \u2014 Retail Analytics, Forecasting & Customer Intelligence Platform.md",
       "source_location": null,
       "source_url": null
     },
@@ -3470,111 +3953,6 @@
       "source_url": null
     },
     {
-      "id": "cloud_portfolio_master_agent_prompt_ml_methodology",
-      "label": "ML Methodology (target, leakage, baseline first)",
-      "_origin": "semantic",
-      "author": null,
-      "captured_at": null,
-      "community": 3,
-      "community_name": "Batch vs Real-Time Inference Decision",
-      "contributor": null,
-      "file_type": "concept",
-      "norm_label": "ml methodology (target, leakage, baseline first)",
-      "source_file": "Cloud Portfolio \u2014 Master Agent Prompt.md",
-      "source_location": null,
-      "source_url": null
-    },
-    {
-      "id": "cloud_portfolio_master_agent_prompt_mlops_lifecycle",
-      "label": "MLOps Lifecycle",
-      "_origin": "semantic",
-      "author": null,
-      "captured_at": null,
-      "community": 3,
-      "community_name": "Batch vs Real-Time Inference Decision",
-      "contributor": null,
-      "file_type": "concept",
-      "norm_label": "mlops lifecycle",
-      "source_file": "Cloud Portfolio \u2014 Master Agent Prompt.md",
-      "source_location": null,
-      "source_url": null
-    },
-    {
-      "id": "cloud_portfolio_master_agent_prompt_model_evaluation_explainability",
-      "label": "Model Evaluation and Explainability",
-      "_origin": "semantic",
-      "author": null,
-      "captured_at": null,
-      "community": 3,
-      "community_name": "Batch vs Real-Time Inference Decision",
-      "contributor": null,
-      "file_type": "concept",
-      "norm_label": "model evaluation and explainability",
-      "source_file": "Cloud Portfolio \u2014 Master Agent Prompt.md",
-      "source_location": null,
-      "source_url": null
-    },
-    {
-      "id": "google_cloud_project_retail_analytics_forecasting_customer_intelligence_platform_model_comparison_threshold_analysis",
-      "label": "Model Comparison, Evaluation and Threshold Analysis",
-      "_origin": "semantic",
-      "author": null,
-      "captured_at": null,
-      "community": 3,
-      "community_name": "Batch vs Real-Time Inference Decision",
-      "contributor": null,
-      "file_type": "concept",
-      "norm_label": "model comparison, evaluation and threshold analysis",
-      "source_file": "Google Cloud Project \u2014 Retail Analytics, Forecasting & Customer Intelligence Platform.md",
-      "source_location": null,
-      "source_url": null
-    },
-    {
-      "id": "google_cloud_project_retail_analytics_forecasting_customer_intelligence_platform_supervised_ml_and_leakage",
-      "label": "Supervised ML Problem Selection and Leakage Analysis",
-      "_origin": "semantic",
-      "author": null,
-      "captured_at": null,
-      "community": 3,
-      "community_name": "Batch vs Real-Time Inference Decision",
-      "contributor": null,
-      "file_type": "concept",
-      "norm_label": "supervised ml problem selection and leakage analysis",
-      "source_file": "Google Cloud Project \u2014 Retail Analytics, Forecasting & Customer Intelligence Platform.md",
-      "source_location": null,
-      "source_url": null
-    },
-    {
-      "id": "cloud_portfolio_master_agent_prompt_batch_vs_real_time",
-      "label": "Batch vs Real-Time Inference Decision",
-      "_origin": "semantic",
-      "author": null,
-      "captured_at": null,
-      "community": 3,
-      "community_name": "Batch vs Real-Time Inference Decision",
-      "contributor": null,
-      "file_type": "rationale",
-      "norm_label": "batch vs real-time inference decision",
-      "source_file": "Cloud Portfolio \u2014 Master Agent Prompt.md",
-      "source_location": null,
-      "source_url": null
-    },
-    {
-      "id": "google_cloud_project_retail_analytics_forecasting_customer_intelligence_platform_batch_vs_online_inference",
-      "label": "Batch vs Online Inference (batch preferred)",
-      "_origin": "semantic",
-      "author": null,
-      "captured_at": null,
-      "community": 3,
-      "community_name": "Batch vs Real-Time Inference Decision",
-      "contributor": null,
-      "file_type": "rationale",
-      "norm_label": "batch vs online inference (batch preferred)",
-      "source_file": "Google Cloud Project \u2014 Retail Analytics, Forecasting & Customer Intelligence Platform.md",
-      "source_location": null,
-      "source_url": null
-    },
-    {
       "id": "cloud_portfolio_master_agent_prompt_agentic_loop",
       "label": "Agentic Loop (PLAN to DECIDE)",
       "_origin": "semantic",
@@ -3800,91 +4178,21 @@
       "source_url": null
     },
     {
-      "id": "argparse",
-      "label": "argparse",
+      "id": "json",
+      "label": "json",
       "_origin": "semantic",
-      "community": 2,
-      "community_name": "duckdb",
-      "external": true,
-      "file_type": "concept",
-      "norm_label": "argparse",
-      "source_file": "",
-      "type": "external"
-    },
-    {
-      "id": "duckdb",
-      "label": "duckdb",
-      "_origin": "semantic",
-      "community": 2,
-      "community_name": "duckdb",
-      "external": true,
-      "file_type": "concept",
-      "norm_label": "duckdb",
-      "source_file": "",
-      "type": "external"
-    },
-    {
-      "id": "matplotlib_pyplot",
-      "label": "matplotlib_pyplot",
-      "_origin": "semantic",
-      "community": 2,
-      "community_name": "duckdb",
-      "external": true,
-      "file_type": "concept",
-      "norm_label": "matplotlib_pyplot",
-      "source_file": "",
-      "type": "external"
-    },
-    {
-      "id": "networkx",
-      "label": "networkx",
-      "_origin": "semantic",
-      "community": 2,
-      "community_name": "duckdb",
-      "external": true,
-      "file_type": "concept",
-      "norm_label": "networkx",
-      "source_file": "",
-      "type": "external"
-    },
-    {
-      "id": "sys",
-      "label": "sys",
-      "_origin": "semantic",
-      "community": 2,
-      "community_name": "duckdb",
-      "external": true,
-      "file_type": "concept",
-      "norm_label": "sys",
-      "source_file": "",
-      "type": "external"
-    },
-    {
-      "id": "pathlib",
-      "label": "pathlib",
-      "_origin": "semantic",
-      "community": 21,
-      "community_name": "pytest",
-      "external": true,
-      "file_type": "concept",
-      "norm_label": "pathlib",
-      "source_file": "",
-      "type": "external"
-    },
-    {
-      "id": "numpy",
-      "label": "numpy",
       "community": 19,
       "community_name": "late_delivery_baseline.py",
       "external": true,
       "file_type": "concept",
-      "norm_label": "numpy",
+      "norm_label": "json",
       "source_file": "",
       "type": "external"
     },
     {
       "id": "sklearn_compose",
       "label": "sklearn_compose",
+      "_origin": "semantic",
       "community": 19,
       "community_name": "late_delivery_baseline.py",
       "external": true,
@@ -3896,6 +4204,7 @@
     {
       "id": "sklearn_ensemble",
       "label": "sklearn_ensemble",
+      "_origin": "semantic",
       "community": 19,
       "community_name": "late_delivery_baseline.py",
       "external": true,
@@ -3907,6 +4216,7 @@
     {
       "id": "sklearn_impute",
       "label": "sklearn_impute",
+      "_origin": "semantic",
       "community": 19,
       "community_name": "late_delivery_baseline.py",
       "external": true,
@@ -3918,6 +4228,7 @@
     {
       "id": "sklearn_linear_model",
       "label": "sklearn_linear_model",
+      "_origin": "semantic",
       "community": 19,
       "community_name": "late_delivery_baseline.py",
       "external": true,
@@ -3929,6 +4240,7 @@
     {
       "id": "sklearn_metrics",
       "label": "sklearn_metrics",
+      "_origin": "semantic",
       "community": 19,
       "community_name": "late_delivery_baseline.py",
       "external": true,
@@ -3940,6 +4252,7 @@
     {
       "id": "sklearn_pipeline",
       "label": "sklearn_pipeline",
+      "_origin": "semantic",
       "community": 19,
       "community_name": "late_delivery_baseline.py",
       "external": true,
@@ -3951,6 +4264,7 @@
     {
       "id": "sklearn_preprocessing",
       "label": "sklearn_preprocessing",
+      "_origin": "semantic",
       "community": 19,
       "community_name": "late_delivery_baseline.py",
       "external": true,
@@ -3960,19 +4274,81 @@
       "type": "external"
     },
     {
-      "id": "json",
-      "label": "json",
+      "id": "argparse",
+      "label": "argparse",
+      "_origin": "semantic",
+      "community": 2,
+      "community_name": "visualize_schema.py",
+      "external": true,
+      "file_type": "concept",
+      "norm_label": "argparse",
+      "source_file": "",
+      "type": "external"
+    },
+    {
+      "id": "matplotlib_pyplot",
+      "label": "matplotlib_pyplot",
+      "_origin": "semantic",
+      "community": 2,
+      "community_name": "visualize_schema.py",
+      "external": true,
+      "file_type": "concept",
+      "norm_label": "matplotlib_pyplot",
+      "source_file": "",
+      "type": "external"
+    },
+    {
+      "id": "networkx",
+      "label": "networkx",
+      "_origin": "semantic",
+      "community": 2,
+      "community_name": "visualize_schema.py",
+      "external": true,
+      "file_type": "concept",
+      "norm_label": "networkx",
+      "source_file": "",
+      "type": "external"
+    },
+    {
+      "id": "pathlib",
+      "label": "pathlib",
+      "_origin": "semantic",
+      "community": 2,
+      "community_name": "visualize_schema.py",
+      "external": true,
+      "file_type": "concept",
+      "norm_label": "pathlib",
+      "source_file": "",
+      "type": "external"
+    },
+    {
+      "id": "sys",
+      "label": "sys",
+      "_origin": "semantic",
+      "community": 2,
+      "community_name": "visualize_schema.py",
+      "external": true,
+      "file_type": "concept",
+      "norm_label": "sys",
+      "source_file": "",
+      "type": "external"
+    },
+    {
+      "id": "numpy",
+      "label": "numpy",
+      "_origin": "semantic",
       "community": 20,
       "community_name": "forecast_baseline.py",
       "external": true,
       "file_type": "concept",
-      "norm_label": "json",
+      "norm_label": "numpy",
       "source_file": "",
       "type": "external"
     },
     {
       "id": "pandas",
       "label": "pandas",
+      "_origin": "semantic",
       "community": 20,
       "community_name": "forecast_baseline.py",
       "external": true,
@@ -3982,13 +4358,37 @@
       "type": "external"
     },
     {
+      "id": "duckdb",
+      "label": "duckdb",
+      "_origin": "semantic",
+      "community": 21,
+      "community_name": "duckdb",
+      "external": true,
+      "file_type": "concept",
+      "norm_label": "duckdb",
+      "source_file": "",
+      "type": "external"
+    },
+    {
       "id": "pytest",
       "label": "pytest",
+      "_origin": "semantic",
       "community": 21,
-      "community_name": "pytest",
+      "community_name": "duckdb",
       "external": true,
       "file_type": "concept",
       "norm_label": "pytest",
+      "source_file": "",
+      "type": "external"
+    },
+    {
+      "id": "drift_analysis",
+      "label": "drift_analysis",
+      "community": 20,
+      "community_name": "forecast_baseline.py",
+      "external": true,
+      "file_type": "concept",
+      "norm_label": "drift_analysis",
       "source_file": "",
       "type": "external"
     }
@@ -4088,6 +4488,222 @@
       "context": "call",
       "source_file": "scripts/visualize_schema.py",
       "source_location": "L138",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_drift_analysis_add_relative_rates",
+      "target": "src_ml_late_delivery_baseline_add_smoothed_rates",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/ml/drift_analysis.py",
+      "source_location": "L76",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_drift_analysis_e1_feature_skill",
+      "target": "src_ml_drift_analysis_add_relative_rates",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/ml/drift_analysis.py",
+      "source_location": "L88",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_drift_analysis_e1_feature_skill",
+      "target": "pandas",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/ml/drift_analysis.py",
+      "source_location": "L98",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_drift_analysis_fit_score",
+      "target": "src_ml_drift_analysis_add_relative_rates",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/ml/drift_analysis.py",
+      "source_location": "L158",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_drift_analysis_fit_score",
+      "target": "src_ml_late_delivery_baseline_make_models",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/ml/drift_analysis.py",
+      "source_location": "L160",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_drift_analysis_fit_score",
+      "target": "pandas",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/ml/drift_analysis.py",
+      "source_location": "L166",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_drift_analysis_main",
+      "target": "argparse",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/ml/drift_analysis.py",
+      "source_location": "L190",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_drift_analysis_main",
+      "target": "duckdb",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/ml/drift_analysis.py",
+      "source_location": "L195",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_drift_analysis_main",
+      "target": "src_ml_late_delivery_baseline_load",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/ml/drift_analysis.py",
+      "source_location": "L196",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_drift_analysis_main",
+      "target": "src_ml_drift_analysis_with_system_counts",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/ml/drift_analysis.py",
+      "source_location": "L199",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_drift_analysis_main",
+      "target": "pandas",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/ml/drift_analysis.py",
+      "source_location": "L201",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_drift_analysis_main",
+      "target": "src_ml_drift_analysis_e1_feature_skill",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/ml/drift_analysis.py",
+      "source_location": "L206",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_drift_analysis_main",
+      "target": "src_ml_drift_analysis_e2_persistence",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/ml/drift_analysis.py",
+      "source_location": "L212",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_drift_analysis_main",
+      "target": "src_ml_drift_analysis_fit_score",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/ml/drift_analysis.py",
+      "source_location": "L224",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_drift_analysis_main",
+      "target": "src_ml_drift_analysis_macro",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/ml/drift_analysis.py",
+      "source_location": "L224",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_drift_analysis_main",
+      "target": "src_ml_drift_analysis_e_lag",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/ml/drift_analysis.py",
+      "source_location": "L247",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_drift_analysis_main",
+      "target": "json",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/ml/drift_analysis.py",
+      "source_location": "L249",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_drift_analysis_with_system_counts",
+      "target": "numpy",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/ml/drift_analysis.py",
+      "source_location": "L66",
       "weight": 1.0
     },
     {
@@ -4219,7 +4835,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/ml/late_delivery_baseline.py",
-      "source_location": "L129",
+      "source_location": "L130",
       "weight": 1.0
     },
     {
@@ -4255,7 +4871,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/ml/late_delivery_baseline.py",
-      "source_location": "L177",
+      "source_location": "L178",
       "weight": 1.0
     },
     {
@@ -4267,7 +4883,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/ml/late_delivery_baseline.py",
-      "source_location": "L182",
+      "source_location": "L183",
       "weight": 1.0
     },
     {
@@ -4279,7 +4895,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/ml/late_delivery_baseline.py",
-      "source_location": "L183",
+      "source_location": "L184",
       "weight": 1.0
     },
     {
@@ -4291,7 +4907,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/ml/late_delivery_baseline.py",
-      "source_location": "L184",
+      "source_location": "L185",
       "weight": 1.0
     },
     {
@@ -4303,7 +4919,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/ml/late_delivery_baseline.py",
-      "source_location": "L187",
+      "source_location": "L188",
       "weight": 1.0
     },
     {
@@ -4315,7 +4931,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/ml/late_delivery_baseline.py",
-      "source_location": "L193",
+      "source_location": "L194",
       "weight": 1.0
     },
     {
@@ -4327,7 +4943,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/ml/late_delivery_baseline.py",
-      "source_location": "L207",
+      "source_location": "L208",
       "weight": 1.0
     },
     {
@@ -4339,7 +4955,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/ml/late_delivery_baseline.py",
-      "source_location": "L150",
+      "source_location": "L151",
       "weight": 1.0
     },
     {
@@ -4351,7 +4967,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/ml/late_delivery_baseline.py",
-      "source_location": "L153",
+      "source_location": "L154",
       "weight": 1.0
     },
     {
@@ -4363,7 +4979,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/ml/late_delivery_baseline.py",
-      "source_location": "L158",
+      "source_location": "L159",
       "weight": 1.0
     },
     {
@@ -4375,7 +4991,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/ml/late_delivery_baseline.py",
-      "source_location": "L162",
+      "source_location": "L163",
       "weight": 1.0
     },
     {
@@ -4387,7 +5003,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/ml/late_delivery_baseline.py",
-      "source_location": "L165",
+      "source_location": "L166",
       "weight": 1.0
     },
     {
@@ -4399,7 +5015,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/ml/late_delivery_baseline.py",
-      "source_location": "L173",
+      "source_location": "L174",
       "weight": 1.0
     },
     {
@@ -4496,6 +5112,138 @@
       "context": "call",
       "source_file": "tests/conftest.py",
       "source_location": "L72",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_drift_helpers_frame",
+      "target": "pandas",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_drift_helpers.py",
+      "source_location": "L12",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_drift_helpers_test_relative_rates_are_positive_for_a_late_route",
+      "target": "pandas",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_drift_helpers.py",
+      "source_location": "L45",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_drift_helpers_test_relative_rates_are_positive_for_a_late_route",
+      "target": "drift_analysis",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_drift_helpers.py",
+      "source_location": "L49",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_drift_helpers_test_relative_rates_are_positive_for_a_late_route",
+      "target": "numpy",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_drift_helpers.py",
+      "source_location": "L51",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_drift_helpers_test_relative_rates_are_zero_when_route_matches_the_system",
+      "target": "pandas",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_drift_helpers.py",
+      "source_location": "L35",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_drift_helpers_test_relative_rates_are_zero_when_route_matches_the_system",
+      "target": "drift_analysis",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_drift_helpers.py",
+      "source_location": "L39",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_drift_helpers_test_relative_rates_are_zero_when_route_matches_the_system",
+      "target": "pytest",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_drift_helpers.py",
+      "source_location": "L40",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_drift_helpers_test_system_counts_do_not_depend_on_row_order",
+      "target": "tests_test_drift_helpers_frame",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_drift_helpers.py",
+      "source_location": "L27",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_drift_helpers_test_system_counts_do_not_depend_on_row_order",
+      "target": "drift_analysis",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_drift_helpers.py",
+      "source_location": "L29",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_drift_helpers_test_system_counts_use_only_orders_delivered_strictly_before_purchase",
+      "target": "drift_analysis",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_drift_helpers.py",
+      "source_location": "L20",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_drift_helpers_test_system_counts_use_only_orders_delivered_strictly_before_purchase",
+      "target": "tests_test_drift_helpers_frame",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_drift_helpers.py",
+      "source_location": "L20",
       "weight": 1.0
     },
     {
@@ -4895,6 +5643,18 @@
       "weight": 1.0
     },
     {
+      "source": "src_ml_drift_analysis_e1_feature_skill",
+      "target": "src_ml_drift_analysis_e1_feature_skill_pooled",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/ml/drift_analysis.py",
+      "source_location": "L100",
+      "weight": 1.0
+    },
+    {
       "source": "tests_conftest_mini",
       "target": "tests_conftest_py_fixture",
       "relation": "references",
@@ -4963,7 +5723,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "src/ml/late_delivery_baseline.py",
-      "source_location": "L135",
+      "source_location": "L136",
       "weight": 1.0
     },
     {
@@ -5024,6 +5784,90 @@
       "context": "import",
       "source_file": "scripts/visualize_schema.py",
       "source_location": "L17",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_drift_analysis",
+      "target": "argparse",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/ml/drift_analysis.py",
+      "source_location": "L19",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_drift_analysis",
+      "target": "json",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/ml/drift_analysis.py",
+      "source_location": "L20",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_drift_analysis",
+      "target": "sys",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/ml/drift_analysis.py",
+      "source_location": "L21",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_drift_analysis",
+      "target": "duckdb",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/ml/drift_analysis.py",
+      "source_location": "L24",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_drift_analysis",
+      "target": "numpy",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/ml/drift_analysis.py",
+      "source_location": "L25",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_drift_analysis",
+      "target": "pandas",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/ml/drift_analysis.py",
+      "source_location": "L26",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_drift_analysis",
+      "target": "src_ml_late_delivery_baseline",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/ml/drift_analysis.py",
+      "source_location": "L29",
       "weight": 1.0
     },
     {
@@ -5231,6 +6075,54 @@
       "weight": 1.0
     },
     {
+      "source": "tests_test_drift_helpers",
+      "target": "numpy",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "tests/test_drift_helpers.py",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_drift_helpers",
+      "target": "pandas",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "tests/test_drift_helpers.py",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_drift_helpers",
+      "target": "pytest",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "tests/test_drift_helpers.py",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_drift_helpers",
+      "target": "drift_analysis",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "tests/test_drift_helpers.py",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
       "source": "tests_test_feature_leakage",
       "target": "pytest",
       "relation": "imports",
@@ -5396,6 +6288,30 @@
       "context": "import",
       "source_file": "scripts/visualize_schema.py",
       "source_location": "L13",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_drift_analysis",
+      "target": "pathlib",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/ml/drift_analysis.py",
+      "source_location": "L22",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_drift_analysis",
+      "target": "sklearn_metrics",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/ml/drift_analysis.py",
+      "source_location": "L27",
       "weight": 1.0
     },
     {
@@ -5627,6 +6543,54 @@
       "weight": 1.0
     },
     {
+      "source": "src_ml_drift_analysis_e1_feature_skill",
+      "target": "src_ml_drift_analysis_py_dataframe",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "parameter_type",
+      "source_file": "src/ml/drift_analysis.py",
+      "source_location": "L87",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_drift_analysis_e2_persistence",
+      "target": "src_ml_drift_analysis_py_dataframe",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "parameter_type",
+      "source_file": "src/ml/drift_analysis.py",
+      "source_location": "L116",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_drift_analysis_e_lag",
+      "target": "src_ml_drift_analysis_py_dataframe",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "parameter_type",
+      "source_file": "src/ml/drift_analysis.py",
+      "source_location": "L175",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_drift_analysis_macro",
+      "target": "src_ml_drift_analysis_py_dataframe",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "parameter_type",
+      "source_file": "src/ml/drift_analysis.py",
+      "source_location": "L169",
+      "weight": 1.0
+    },
+    {
       "source": "src_ml_forecast_baseline_backtest",
       "target": "series",
       "relation": "references",
@@ -5683,7 +6647,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "src/ml/late_delivery_baseline.py",
-      "source_location": "L127",
+      "source_location": "L128",
       "weight": 1.0
     },
     {
@@ -5807,6 +6771,42 @@
       "weight": 1.0
     },
     {
+      "source": "src_ml_drift_analysis_add_relative_rates",
+      "target": "src_ml_drift_analysis_py_dataframe",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "return_type",
+      "source_file": "src/ml/drift_analysis.py",
+      "source_location": "L75",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_drift_analysis_fit_score",
+      "target": "src_ml_drift_analysis_py_dataframe",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "return_type",
+      "source_file": "src/ml/drift_analysis.py",
+      "source_location": "L148",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_drift_analysis_with_system_counts",
+      "target": "src_ml_drift_analysis_py_dataframe",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "return_type",
+      "source_file": "src/ml/drift_analysis.py",
+      "source_location": "L64",
+      "weight": 1.0
+    },
+    {
       "source": "src_ml_forecast_baseline_backtest",
       "target": "src_ml_forecast_baseline_py_dataframe",
       "relation": "references",
@@ -5851,7 +6851,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "src/ml/late_delivery_baseline.py",
-      "source_location": "L127",
+      "source_location": "L128",
       "weight": 1.0
     },
     {
@@ -6517,6 +7517,127 @@
       "weight": 1.0
     },
     {
+      "source": "docs_ml_drift_analysis",
+      "target": "docs_ml_drift_analysis_drift_analysis_why_the_richer_history_features_did_not_help",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/ml/DRIFT_ANALYSIS.md",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_ml_drift_analysis_drift_analysis_why_the_richer_history_features_did_not_help",
+      "target": "docs_ml_drift_analysis_what_this_changes",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/ml/DRIFT_ANALYSIS.md",
+      "source_location": "L108",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_ml_drift_analysis_drift_analysis_why_the_richer_history_features_did_not_help",
+      "target": "docs_ml_drift_analysis_limits",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/ml/DRIFT_ANALYSIS.md",
+      "source_location": "L115",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_ml_drift_analysis_drift_analysis_why_the_richer_history_features_did_not_help",
+      "target": "docs_ml_drift_analysis_what_was_done_and_what_came_out",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/ml/DRIFT_ANALYSIS.md",
+      "source_location": "L18",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_ml_drift_analysis_drift_analysis_why_the_richer_history_features_did_not_help",
+      "target": "docs_ml_drift_analysis_verdict",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/ml/DRIFT_ANALYSIS.md",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_ml_drift_analysis_what_was_done_and_what_came_out",
+      "target": "docs_ml_drift_analysis_e1_single_feature_skill_month_by_month",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/ml/DRIFT_ANALYSIS.md",
+      "source_location": "L20",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_ml_drift_analysis_what_was_done_and_what_came_out",
+      "target": "docs_ml_drift_analysis_august_2018_is_a_change_in_promise_policy_not_a_label_problem",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/ml/DRIFT_ANALYSIS.md",
+      "source_location": "L39",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_ml_drift_analysis_what_was_done_and_what_came_out",
+      "target": "docs_ml_drift_analysis_e2_does_a_route_s_category_s_or_seller_s_lateness_persist",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/ml/DRIFT_ANALYSIS.md",
+      "source_location": "L53",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_ml_drift_analysis_what_was_done_and_what_came_out",
+      "target": "docs_ml_drift_analysis_e3_and_e4_shorter_training_windows_and_relative_features",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/ml/DRIFT_ANALYSIS.md",
+      "source_location": "L69",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_ml_drift_analysis_what_was_done_and_what_came_out",
+      "target": "docs_ml_drift_analysis_e5_what_a_perfect_regime_signal_would_buy",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/ml/DRIFT_ANALYSIS.md",
+      "source_location": "L85",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_ml_drift_analysis_what_was_done_and_what_came_out",
+      "target": "docs_ml_drift_analysis_e6_is_route_history_redundant_with_the_state_and_distance_columns",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/ml/DRIFT_ANALYSIS.md",
+      "source_location": "L97",
+      "weight": 1.0
+    },
+    {
       "source": "docs_ml_leakage_analysis",
       "target": "docs_ml_leakage_analysis_leakage_analysis",
       "relation": "contains",
@@ -7052,7 +8173,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "README.md",
-      "source_location": "L68",
+      "source_location": "L69",
       "weight": 1.0
     },
     {
@@ -7074,7 +8195,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "README.md",
-      "source_location": "L79",
+      "source_location": "L80",
       "weight": 1.0
     },
     {
@@ -7119,6 +8240,94 @@
       "confidence_score": 1.0,
       "source_file": "scripts/visualize_schema.py",
       "source_location": "L68",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_drift_analysis",
+      "target": "src_ml_drift_analysis_e2_persistence",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/ml/drift_analysis.py",
+      "source_location": "L116",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_drift_analysis",
+      "target": "src_ml_drift_analysis_fit_score",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/ml/drift_analysis.py",
+      "source_location": "L148",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_drift_analysis",
+      "target": "src_ml_drift_analysis_macro",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/ml/drift_analysis.py",
+      "source_location": "L169",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_drift_analysis",
+      "target": "src_ml_drift_analysis_e_lag",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/ml/drift_analysis.py",
+      "source_location": "L175",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_drift_analysis",
+      "target": "src_ml_drift_analysis_main",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/ml/drift_analysis.py",
+      "source_location": "L189",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_drift_analysis",
+      "target": "src_ml_drift_analysis_with_system_counts",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/ml/drift_analysis.py",
+      "source_location": "L64",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_drift_analysis",
+      "target": "src_ml_drift_analysis_add_relative_rates",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/ml/drift_analysis.py",
+      "source_location": "L75",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_drift_analysis",
+      "target": "src_ml_drift_analysis_e1_feature_skill",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/ml/drift_analysis.py",
+      "source_location": "L87",
       "weight": 1.0
     },
     {
@@ -7206,7 +8415,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/ml/late_delivery_baseline.py",
-      "source_location": "L127",
+      "source_location": "L128",
       "weight": 1.0
     },
     {
@@ -7217,7 +8426,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/ml/late_delivery_baseline.py",
-      "source_location": "L135",
+      "source_location": "L136",
       "weight": 1.0
     },
     {
@@ -7228,7 +8437,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/ml/late_delivery_baseline.py",
-      "source_location": "L176",
+      "source_location": "L177",
       "weight": 1.0
     },
     {
@@ -7350,6 +8559,61 @@
       "confidence_score": 1.0,
       "source_file": "tests/conftest.py",
       "source_location": "L69",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_drift_helpers",
+      "target": "tests_test_drift_helpers_frame",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/test_drift_helpers.py",
+      "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_drift_helpers",
+      "target": "tests_test_drift_helpers_test_system_counts_use_only_orders_delivered_strictly_before_purchase",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/test_drift_helpers.py",
+      "source_location": "L19",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_drift_helpers",
+      "target": "tests_test_drift_helpers_test_system_counts_do_not_depend_on_row_order",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/test_drift_helpers.py",
+      "source_location": "L26",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_drift_helpers",
+      "target": "tests_test_drift_helpers_test_relative_rates_are_zero_when_route_matches_the_system",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/test_drift_helpers.py",
+      "source_location": "L34",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_drift_helpers",
+      "target": "tests_test_drift_helpers_test_relative_rates_are_positive_for_a_late_route",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/test_drift_helpers.py",
+      "source_location": "L44",
       "weight": 1.0
     },
     {
@@ -7727,6 +8991,39 @@
       "weight": 1.0
     },
     {
+      "source": "src_ml_drift_analysis_rationale_1",
+      "target": "src_ml_drift_analysis",
+      "relation": "rationale_for",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/ml/drift_analysis.py",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_drift_analysis_rationale_176",
+      "target": "src_ml_drift_analysis_e_lag",
+      "relation": "rationale_for",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/ml/drift_analysis.py",
+      "source_location": "L176",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_drift_analysis_rationale_65",
+      "target": "src_ml_drift_analysis_with_system_counts",
+      "relation": "rationale_for",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/ml/drift_analysis.py",
+      "source_location": "L65",
+      "weight": 1.0
+    },
+    {
       "source": "src_ml_forecast_baseline_rationale_1",
       "target": "src_ml_forecast_baseline",
       "relation": "rationale_for",
@@ -7771,25 +9068,25 @@
       "weight": 1.0
     },
     {
-      "source": "src_ml_late_delivery_baseline_rationale_128",
+      "source": "src_ml_late_delivery_baseline_rationale_129",
       "target": "src_ml_late_delivery_baseline_calibration_table",
       "relation": "rationale_for",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/ml/late_delivery_baseline.py",
-      "source_location": "L128",
+      "source_location": "L129",
       "weight": 1.0
     },
     {
-      "source": "src_ml_late_delivery_baseline_rationale_136",
+      "source": "src_ml_late_delivery_baseline_rationale_137",
       "target": "src_ml_late_delivery_baseline_run",
       "relation": "rationale_for",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/ml/late_delivery_baseline.py",
-      "source_location": "L136",
+      "source_location": "L137",
       "weight": 1.0
     },
     {
@@ -8014,6 +9311,17 @@
     },
     {
       "source": "decisions",
+      "target": "docs_ml_drift_analysis",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DECISIONS.md",
+      "source_location": "L184",
+      "weight": 1.0
+    },
+    {
+      "source": "decisions",
       "target": "docs_data_data_model",
       "relation": "references",
       "_origin": "ast",
@@ -8053,6 +9361,17 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "docs/data/DATA_MODEL.md",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_ml_drift_analysis",
+      "target": "docs_ml_phase2_baselines",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/ml/DRIFT_ANALYSIS.md",
       "source_location": "L3",
       "weight": 1.0
     },
@@ -9158,5 +10477,5 @@
       "source_file": "GCP.md"
     }
   ],
-  "built_at_commit": "095e6455d8155a2c9d55c37adda8b69cc4682be0"
+  "built_at_commit": "b4d4343b069956efcd38ee611d30c2e7c218a7ec"
 }

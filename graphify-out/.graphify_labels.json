@@ -1,8 +1,8 @@
 {
   "0": "Cloud vs Local Architecture Mapping",
   "1": "Architecture Philosophy (Shared Across Cloud Projects)",
-  "2": "duckdb",
-  "3": "Batch vs Real-Time Inference Decision",
+  "2": "visualize_schema.py",
+  "3": "What was done and what came out",
   "4": "Agentic Loop (PLAN to DECIDE)",
   "5": "Evidence Requirement and Evidence Integrity",
   "6": "Phase 0 — Discovery Report",
@@ -20,6 +20,6 @@
   "18": "CLAUDE.md",
   "19": "late_delivery_baseline.py",
   "20": "forecast_baseline.py",
-  "21": "pytest",
+  "21": "duckdb",
   "22": "test_feature_leakage.py"
 }
