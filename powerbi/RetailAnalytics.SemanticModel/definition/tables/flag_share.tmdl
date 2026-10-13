@@ -1,0 +1,19 @@
+/// Disconnected helper table behind the 'flag the riskiest X%' slicer on the risk page (5 to 30).
+table flag_share
+	lineageTag: 53bf5939-e0b3-5c63-873c-efff10e2fa85
+
+	column flag_pct
+		dataType: int64
+		lineageTag: 7c66420b-cb98-5ab6-94fa-07b1c5319ef0
+		summarizeBy: none
+		sourceColumn: flag_pct
+
+	partition flag_share = m
+		mode: import
+		source =
+			let
+				Source = Csv.Document(File.Contents(DataFolder & "\flag_share.csv"), [Delimiter=",", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				Typed = Table.TransformColumnTypes(Promoted, {{"flag_pct", Int64.Type}}, "en-US")
+			in
+				Typed

@@ -1,0 +1,86 @@
+/// One row per product; English category with fallbacks.
+table dim_product
+	lineageTag: 3d12b2d7-c175-5fc2-9f5a-24f91e672e2a
+
+	column product_key
+		dataType: int64
+		isHidden
+		lineageTag: 7b9764a5-4840-597c-9ab1-6b0afd4391cc
+		summarizeBy: none
+		sourceColumn: product_key
+
+	column product_id
+		dataType: string
+		lineageTag: 7b460f87-57e3-5136-8e05-14ec4e7e7bca
+		summarizeBy: none
+		sourceColumn: product_id
+
+	column product_category_name
+		dataType: string
+		lineageTag: 039f376d-7ca4-55ac-9aaf-f6212fbac977
+		summarizeBy: none
+		sourceColumn: product_category_name
+
+	column product_category_name_english
+		dataType: string
+		lineageTag: 5ad064cb-4307-5858-995f-1dc8c26350a5
+		summarizeBy: none
+		sourceColumn: product_category_name_english
+
+	column product_name_length
+		dataType: int64
+		lineageTag: e9aaf73e-35bc-5b21-9520-b0530102afca
+		summarizeBy: none
+		sourceColumn: product_name_length
+
+	column product_description_length
+		dataType: int64
+		lineageTag: 7c66504b-29df-5cf7-83a4-a57ee5bb38f2
+		summarizeBy: none
+		sourceColumn: product_description_length
+
+	column product_photos_qty
+		dataType: int64
+		lineageTag: 510b4a9a-cf1d-5b7f-a01d-1494c098415d
+		summarizeBy: none
+		sourceColumn: product_photos_qty
+
+	column product_weight_g
+		dataType: int64
+		lineageTag: 9741a964-b1bd-5dd7-97ba-d1a25c2e3c16
+		summarizeBy: none
+		sourceColumn: product_weight_g
+
+	column product_length_cm
+		dataType: int64
+		lineageTag: 35b73589-b4a1-5297-b630-ab1c83491c7d
+		summarizeBy: none
+		sourceColumn: product_length_cm
+
+	column product_height_cm
+		dataType: int64
+		lineageTag: ee5eb593-3675-56b5-a5cc-3bcb8483b850
+		summarizeBy: none
+		sourceColumn: product_height_cm
+
+	column product_width_cm
+		dataType: int64
+		lineageTag: 49cb8324-2a83-5e9f-be52-005b936a514a
+		summarizeBy: none
+		sourceColumn: product_width_cm
+
+	column product_volume_cm3
+		dataType: int64
+		lineageTag: 155c37e9-db41-56b1-9d11-2e82fb654d36
+		summarizeBy: none
+		sourceColumn: product_volume_cm3
+
+	partition dim_product = m
+		mode: import
+		source =
+			let
+				Source = Csv.Document(File.Contents(DataFolder & "\dim_product.csv"), [Delimiter=",", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				Typed = Table.TransformColumnTypes(Promoted, {{"product_key", Int64.Type}, {"product_id", type text}, {"product_category_name", type text}, {"product_category_name_english", type text}, {"product_name_length", Int64.Type}, {"product_description_length", Int64.Type}, {"product_photos_qty", Int64.Type}, {"product_weight_g", Int64.Type}, {"product_length_cm", Int64.Type}, {"product_height_cm", Int64.Type}, {"product_width_cm", Int64.Type}, {"product_volume_cm3", Int64.Type}}, "en-US")
+			in
+				Typed

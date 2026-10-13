@@ -1,0 +1,113 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
+  "name": "r_state_bar",
+  "position": {
+    "x": 650,
+    "y": 172,
+    "z": 10000,
+    "height": 250,
+    "width": 610,
+    "tabOrder": 10000
+  },
+  "visual": {
+    "visualType": "clusteredBarChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "late_delivery_scores"
+                    }
+                  },
+                  "Property": "customer_state"
+                }
+              },
+              "queryRef": "late_delivery_scores.customer_state",
+              "nativeQueryRef": "customer_state",
+              "active": true
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "late_delivery_scores"
+                    }
+                  },
+                  "Property": "Late Rate Among Flagged"
+                }
+              },
+              "queryRef": "late_delivery_scores.Late Rate Among Flagged",
+              "nativeQueryRef": "Late Rate Among Flagged",
+              "active": true
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "late_delivery_scores"
+                    }
+                  },
+                  "Property": "Late Rate (scored)"
+                }
+              },
+              "queryRef": "late_delivery_scores.Late Rate (scored)",
+              "nativeQueryRef": "Late Rate (scored)",
+              "active": true
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Measure": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "late_delivery_scores"
+                  }
+                },
+                "Property": "Late Rate Among Flagged"
+              }
+            },
+            "direction": "Descending"
+          }
+        ],
+        "isDefaultSort": false
+      }
+    },
+    "drillFilterOtherVisuals": true,
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Late rate: flagged orders against all orders, by state'"
+                }
+              }
+            },
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

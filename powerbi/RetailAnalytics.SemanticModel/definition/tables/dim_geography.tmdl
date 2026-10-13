@@ -1,0 +1,56 @@
+/// One row per zip-code prefix (median coordinates, most frequent city and state).
+table dim_geography
+	lineageTag: 6a7a8a72-00a4-5b0a-aad4-1648243e37df
+
+	column geography_key
+		dataType: int64
+		isHidden
+		lineageTag: fa566c29-3587-5d51-96ce-a2e6d5cf36ba
+		summarizeBy: none
+		sourceColumn: geography_key
+
+	column zip_prefix
+		dataType: string
+		lineageTag: 0d1c7ea7-5cff-515a-8a48-979b8fc48547
+		summarizeBy: none
+		sourceColumn: zip_prefix
+
+	column city
+		dataType: string
+		lineageTag: 3b9aabb4-6d0e-5697-a08d-0a9a5e62f4b9
+		summarizeBy: none
+		sourceColumn: city
+
+	column state
+		dataType: string
+		lineageTag: 5bae150d-460a-5481-b803-dac9283ca09c
+		summarizeBy: none
+		sourceColumn: state
+
+	column latitude
+		dataType: double
+		lineageTag: b8466fa2-ded2-56e1-945d-967a5958c91a
+		summarizeBy: none
+		sourceColumn: latitude
+
+	column longitude
+		dataType: double
+		lineageTag: 82e38f06-9b94-50d2-99d2-0d820c0b9ab6
+		summarizeBy: none
+		sourceColumn: longitude
+
+	column n_source_points
+		dataType: int64
+		lineageTag: f470eb47-cb3b-5afd-9d0b-1224bb67ae8d
+		summarizeBy: none
+		sourceColumn: n_source_points
+
+	partition dim_geography = m
+		mode: import
+		source =
+			let
+				Source = Csv.Document(File.Contents(DataFolder & "\dim_geography.csv"), [Delimiter=",", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				Typed = Table.TransformColumnTypes(Promoted, {{"geography_key", Int64.Type}, {"zip_prefix", type text}, {"city", type text}, {"state", type text}, {"latitude", type number}, {"longitude", type number}, {"n_source_points", Int64.Type}}, "en-US")
+			in
+				Typed

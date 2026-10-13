@@ -1,0 +1,82 @@
+/// Rolling-origin weekly forecasts: one row per target (orders or revenue), horizon (1 or 4 weeks), method and target week. The method 'actual' repeats the actual value so it can be drawn as a line.
+table forecast_backtest
+	lineageTag: eaf6c9d7-3a12-52b9-92fa-34dee8da18d1
+
+	/// Average forecast of the selected methods.
+	measure Forecast = AVERAGE(forecast_backtest[forecast])
+		formatString: #,0
+		displayFolder: Forecast
+		lineageTag: a5ff05ca-2f99-5d2a-bf87-77aaba567afe
+
+	/// Actual value for the target week.
+	measure Actual = AVERAGE(forecast_backtest[actual])
+		formatString: #,0
+		displayFolder: Forecast
+		lineageTag: c55667ba-cc7a-5e15-8472-9e7504e206fa
+
+	/// Mean absolute error of the selected methods (the 'actual' line is excluded).
+	measure MAE = CALCULATE(AVERAGE(forecast_backtest[abs_error]), KEEPFILTERS(forecast_backtest[method] <> "actual"))
+		formatString: #,0
+		displayFolder: Forecast
+		lineageTag: 17722c11-a77c-51e7-9816-a874e6b212cb
+
+	/// Error relative to repeating last week; below 1 beats naive.
+	measure 'MAE vs Naive' = DIVIDE([MAE], CALCULATE([MAE], forecast_backtest[method] = "naive_last_week"))
+		formatString: "0.00""x"""
+		displayFolder: Forecast
+		lineageTag: 8f54d294-a824-570b-aeeb-1586a36082a0
+
+	column target
+		dataType: string
+		lineageTag: 2743c64c-732e-5dc0-a8ff-84dd4c99563f
+		summarizeBy: none
+		sourceColumn: target
+
+	column horizon
+		dataType: int64
+		lineageTag: fc61ead5-a03a-558b-aa8c-370262508752
+		summarizeBy: none
+		sourceColumn: horizon
+
+	column method
+		dataType: string
+		lineageTag: a1602162-b030-58d5-b953-684833228b99
+		summarizeBy: none
+		sourceColumn: method
+
+	column target_week
+		dataType: dateTime
+		lineageTag: 57162047-d923-586f-a58c-407da785f1e5
+		summarizeBy: none
+		sourceColumn: target_week
+
+	column forecast
+		dataType: double
+		formatString: #,0
+		lineageTag: 7fb552c5-df57-5c83-99f7-f47e0c177fd3
+		summarizeBy: none
+		sourceColumn: forecast
+
+	column actual
+		dataType: double
+		formatString: #,0
+		lineageTag: 3d701fa1-ee0f-5029-a981-bbcf5e833cf7
+		summarizeBy: none
+		sourceColumn: actual
+
+	column abs_error
+		dataType: double
+		formatString: #,0
+		lineageTag: 0484f430-55f6-5af0-a258-f91a46399921
+		summarizeBy: none
+		sourceColumn: abs_error
+
+	partition forecast_backtest = m
+		mode: import
+		source =
+			let
+				Source = Csv.Document(File.Contents(DataFolder & "\forecast_backtest.csv"), [Delimiter=",", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				Typed = Table.TransformColumnTypes(Promoted, {{"target", type text}, {"horizon", Int64.Type}, {"method", type text}, {"target_week", type date}, {"forecast", type number}, {"actual", type number}, {"abs_error", type number}}, "en-US")
+			in
+				Typed

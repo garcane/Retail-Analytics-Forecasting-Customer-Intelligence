@@ -1,0 +1,154 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
+  "name": "r_table",
+  "position": {
+    "x": 20,
+    "y": 432,
+    "z": 11000,
+    "height": 280,
+    "width": 1240,
+    "tabOrder": 11000
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "late_delivery_scores"
+                    }
+                  },
+                  "Property": "order_id"
+                }
+              },
+              "queryRef": "late_delivery_scores.order_id",
+              "nativeQueryRef": "order_id",
+              "active": true
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "late_delivery_scores"
+                    }
+                  },
+                  "Property": "month"
+                }
+              },
+              "queryRef": "late_delivery_scores.month",
+              "nativeQueryRef": "month",
+              "active": true
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "late_delivery_scores"
+                    }
+                  },
+                  "Property": "risk_score"
+                }
+              },
+              "queryRef": "late_delivery_scores.risk_score",
+              "nativeQueryRef": "risk_score",
+              "active": true
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "late_delivery_scores"
+                    }
+                  },
+                  "Property": "customer_state"
+                }
+              },
+              "queryRef": "late_delivery_scores.customer_state",
+              "nativeQueryRef": "customer_state",
+              "active": true
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "late_delivery_scores"
+                    }
+                  },
+                  "Property": "category"
+                }
+              },
+              "queryRef": "late_delivery_scores.category",
+              "nativeQueryRef": "category",
+              "active": true
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "late_delivery_scores"
+                    }
+                  },
+                  "Property": "is_late"
+                }
+              },
+              "queryRef": "late_delivery_scores.is_late",
+              "nativeQueryRef": "is_late",
+              "active": true
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "late_delivery_scores"
+                  }
+                },
+                "Property": "risk_score"
+              }
+            },
+            "direction": "Descending"
+          }
+        ],
+        "isDefaultSort": false
+      }
+    },
+    "drillFilterOtherVisuals": true,
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Riskiest orders (sorted by risk score)'"
+                }
+              }
+            },
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

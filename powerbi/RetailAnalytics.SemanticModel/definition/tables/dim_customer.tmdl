@@ -1,0 +1,44 @@
+/// One row per real customer (customer_unique_id), plus an unknown member.
+table dim_customer
+	lineageTag: a1c38179-9be6-524e-bf84-2a355adb77c7
+
+	column customer_key
+		dataType: int64
+		isHidden
+		lineageTag: 515fa847-1a71-529d-96a1-939caada29e7
+		summarizeBy: none
+		sourceColumn: customer_key
+
+	column customer_unique_id
+		dataType: string
+		lineageTag: e9ac6ea7-ab14-5c59-8f07-e03f1375ba74
+		summarizeBy: none
+		sourceColumn: customer_unique_id
+
+	column customer_zip_code_prefix
+		dataType: string
+		lineageTag: bf52b5dd-92e3-5c46-ac50-fab1b7fca26d
+		summarizeBy: none
+		sourceColumn: customer_zip_code_prefix
+
+	column customer_city
+		dataType: string
+		lineageTag: 5aca88ee-ea15-59d1-823e-c79887b0b366
+		summarizeBy: none
+		sourceColumn: customer_city
+
+	column customer_state
+		dataType: string
+		lineageTag: db0076f6-42e0-5d66-941f-2a5dc5175d32
+		summarizeBy: none
+		sourceColumn: customer_state
+
+	partition dim_customer = m
+		mode: import
+		source =
+			let
+				Source = Csv.Document(File.Contents(DataFolder & "\dim_customer.csv"), [Delimiter=",", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				Typed = Table.TransformColumnTypes(Promoted, {{"customer_key", Int64.Type}, {"customer_unique_id", type text}, {"customer_zip_code_prefix", type text}, {"customer_city", type text}, {"customer_state", type text}}, "en-US")
+			in
+				Typed

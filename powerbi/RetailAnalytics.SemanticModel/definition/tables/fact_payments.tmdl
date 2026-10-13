@@ -1,0 +1,75 @@
+/// One row per payment. Analysed on its own; its total need not equal item revenue.
+table fact_payments
+	lineageTag: 4d0ed7da-ab05-5b73-afb7-fa2a046f3200
+
+	/// Total paid (analysed on its own; does not exactly tie to item revenue).
+	measure 'Payment Value' = SUM(fact_payments[payment_value])
+		formatString: #,0.00
+		displayFolder: Payments
+		lineageTag: d813cfca-fdfa-5e95-80a1-3ec17824a282
+
+	/// Share of payment value by payment type.
+	measure 'Payment Value Share %' = DIVIDE([Payment Value], CALCULATE([Payment Value], ALL(fact_payments[payment_type])))
+		formatString: 0.0%
+		displayFolder: Payments
+		lineageTag: d2ec8acf-8316-5e87-9311-f1908902704e
+
+	/// Average number of instalments.
+	measure 'Average Installments' = AVERAGE(fact_payments[payment_installments])
+		formatString: 0.00
+		displayFolder: Payments
+		lineageTag: f869d275-bb73-5b79-af77-399d88bdf97b
+
+	column order_id
+		dataType: string
+		lineageTag: cad55467-36e4-599f-899a-656f38f4977f
+		summarizeBy: none
+		sourceColumn: order_id
+
+	column payment_sequential
+		dataType: int64
+		lineageTag: 6b9275b0-5007-54d1-bd33-95553fbda049
+		summarizeBy: none
+		sourceColumn: payment_sequential
+
+	column customer_key
+		dataType: int64
+		isHidden
+		lineageTag: c51d59bd-b1a6-5290-b9cc-8d944a3ba69d
+		summarizeBy: none
+		sourceColumn: customer_key
+
+	column purchase_date_key
+		dataType: int64
+		isHidden
+		lineageTag: e206818b-c0ea-5127-9712-fae467888f3c
+		summarizeBy: none
+		sourceColumn: purchase_date_key
+
+	column payment_type
+		dataType: string
+		lineageTag: fc86959f-2daf-5a56-b529-f14d48073b41
+		summarizeBy: none
+		sourceColumn: payment_type
+
+	column payment_installments
+		dataType: int64
+		lineageTag: 033a88bb-5623-53f3-9b6a-4a23620bf552
+		summarizeBy: none
+		sourceColumn: payment_installments
+
+	column payment_value
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: bb1dd17c-d40e-50e9-b726-461a50d39607
+		summarizeBy: none
+		sourceColumn: payment_value
+
+	partition fact_payments = m
+		mode: import
+		source =
+			let
+				Source = Parquet.Document(File.Contents(DataFolder & "\fact_payments.parquet")),
+				Typed = Table.TransformColumnTypes(Source, {{"order_id", type text}, {"payment_sequential", Int64.Type}, {"customer_key", Int64.Type}, {"purchase_date_key", Int64.Type}, {"payment_type", type text}, {"payment_installments", Int64.Type}, {"payment_value", Currency.Type}})
+			in
+				Typed
