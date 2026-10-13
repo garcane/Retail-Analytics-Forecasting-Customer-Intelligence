@@ -21,7 +21,9 @@ Measured on the development laptop (2026-10-13):
 | Forecast backtests | 3 seconds (baselines), about 12 seconds (extra models) |
 | Analytics queries and charts | about 12 seconds |
 | Explainability (permutation importance) | about 43 seconds |
-| Full test suite (61 tests) | 20 to 40 seconds |
+| Full test suite (69 tests) | 20 to 40 seconds |
+| Run the late-delivery notebook (all cells) | about 1 to 1.5 minutes |
+| Run the forecast notebook (all cells) | about 15 seconds |
 | Drift analysis and recalibration | a few minutes each |
 
 Disk: about 79 MB of raw data (Kaggle CSVs, one Parquet) and a 112 MB warehouse file, both git-ignored.

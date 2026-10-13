@@ -10,7 +10,7 @@ This is a local, single-user, batch analytics project. It has no server, no netw
 | Raw data, database files, credential-like files in Git (`data/`, `*.duckdb`, `.env*`, `*.pem`, `*.key`, service-account and credentials JSON) | None tracked; all covered by `.gitignore` |
 | Hard-coded absolute or user-specific paths in code | None; paths are built from the repository root |
 | Network calls from the project code | None. The only network use is installing dependencies with `uv` and, by the user, downloading the dataset from Kaggle |
-| Dependencies | Ten direct runtime dependencies plus `pytest` and `ipykernel` for development, all from PyPI and pinned by `uv.lock`. They have not been scanned for known vulnerabilities (no scanner is installed) |
+| Dependencies | Ten direct runtime dependencies plus `pytest`, `ipykernel`, `nbformat` and `nbclient` for development, all from PyPI and pinned by `uv.lock`. They have not been scanned for known vulnerabilities (no scanner is installed) |
 
 ## Data and privacy
 

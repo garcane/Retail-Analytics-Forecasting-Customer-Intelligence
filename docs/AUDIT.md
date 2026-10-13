@@ -12,7 +12,7 @@ Audit of the local DuckDB build against the review areas in the project brief, r
 | Reproducibility | **Good.** A clean clone plus the raw data rebuilt everything; outputs matched, with documented numeric noise in two ML files |
 | Security | **Good for the scope.** No secrets, no tracked data, no network surface; dependencies not scanned |
 | Cost | **$0**, measured run times recorded |
-| Architecture | **Sound and documented**, with decisions logged (DD-01 to DD-12) |
+| Architecture | **Sound and documented**, with decisions logged (DD-01 to DD-13) |
 | Testing | **61 tests pass**; leakage tests were shown to fail when leaks are planted |
 | Documentation | **Complete** for every in-scope phase; one known inconsistency (original cloud brief left unchanged by design) |
 | Evidence | **Saved** in `reports/` and the docs; figures and tables regenerate byte-for-byte |
@@ -67,7 +67,7 @@ See [ARCHITECTURE.md](../ARCHITECTURE.md) and [DECISIONS.md](../DECISIONS.md). A
 | Document | Purpose |
 |---|---|
 | [README.md](../README.md) | Overview, data download, build, run, repository map |
-| [ARCHITECTURE.md](../ARCHITECTURE.md), [DECISIONS.md](../DECISIONS.md) | Design and the decision log (D-001 to D-008, DD-01 to DD-12) |
+| [ARCHITECTURE.md](../ARCHITECTURE.md), [DECISIONS.md](../DECISIONS.md) | Design and the decision log (D-001 to D-008, DD-01 to DD-13) |
 | [docs/data/](data/) | Data model and discovery findings |
 | [docs/analytics/BUSINESS_INSIGHTS.md](analytics/BUSINESS_INSIGHTS.md) | Findings, with charts |
 | [docs/ml/](ml/) | Leakage analysis, baselines, drift, recalibration, **model card** |
@@ -99,6 +99,10 @@ Raw outputs are committed in `reports/` (ML metrics as JSON, analytics tables as
 - *"What would make it better?"* Information the dataset lacks: carrier backlog or promise-policy changes. The August 2018 promise change is the clearest example.
 - *"What would you do with more time?"* Re-run the discovery notebook in the audit, scan dependencies, test the geolocation step on Kaggle's original file, and add the new documents to the knowledge graph.
 - *"What went wrong?"* A pooled metric gave a nonsense baseline score; a draft insight was backwards; a dependency clean-up removed the notebook kernel. Each was found by checking, and is recorded.
+
+## Addendum (2026-10-13, after the audit)
+
+The two machine-learning notebooks were added: [notebooks/02_late_delivery_model.ipynb](../notebooks/02_late_delivery_model.ipynb) and [notebooks/03_weekly_forecast.ipynb](../notebooks/03_weekly_forecast.ipynb). Both were executed with the project's kernel (27 and 15 cells, 10 and 5 figures, no error outputs), and every figure was inspected by eye; four layout problems were found and fixed before storing. The test suite grew to **69 tests**: a new file checks that each committed notebook ran cleanly, stores its charts and imports only modules that exist. `nbformat` and `nbclient` were added as development dependencies. The notebooks were not part of the clean-clone reproduction above.
 
 ## Open items
 

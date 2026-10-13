@@ -26,6 +26,7 @@ Later decisions can supersede earlier ones; when that happens the entry says so.
 | DD-10 | 2026-10-11 | Keep v1 features as the reference late-delivery model | Active |
 | DD-11 | 2026-10-13 | No recalibration or window tuning; use the model by rank | Active |
 | DD-12 | 2026-10-13 | Close the late-delivery feature search; v1 is final. Forecast: recommend the simple averages | Active |
+| DD-13 | 2026-10-13 | Present the ML in Jupyter notebooks that call the tested `src/ml` code | Active |
 
 ---
 
@@ -203,3 +204,13 @@ Evidence for these entries is in [docs/data/EDA_FINDINGS.md](docs/data/EDA_FINDI
 - **Reason:** Four feature ideas and two post-hoc fixes have been tried against the same six test months. Continuing would mostly fit noise in that sample. The remaining brief phases (analytics, documentation, audit) matter more than another 0.005 of PR-AUC.
 - **Trade-offs:** The ranking is moderate (lift about 2.8 times at the top 10%) and probabilities remain unreliable in level. A better model would need information this dataset does not contain.
 - **Rejected:** Further feature search on the same test months; selecting a forecast model from a single 59-week backtest.
+
+### DD-13: ML presented in notebooks that call the tested code
+
+- **Context:** The ML work existed as scripts and JSON metrics. The project owner wanted to see the output as charts, in a notebook.
+- **Options:** Jupyter notebooks; marimo notebooks; a static report generated from the scripts.
+- **Chosen:** Two Jupyter notebooks (`02_late_delivery_model`, `03_weekly_forecast`) that import the existing modules from `src/ml/` and draw the results, stored with their outputs.
+- **Reason:** Jupyter fits the existing discovery notebook and the declared `ipykernel`, and the logic stays in code that has tests. Marimo would add a dependency and a second file format for little gain here.
+- **Trade-offs:** Stored outputs make the notebooks large (about 0.4 to 0.6 MB each) and can go stale if the code changes; a test checks that they were run without errors, but not that their numbers still match. The notebooks were built and executed with a throwaway script that is not part of the repository.
+- **Cost / Security:** None. `nbformat` and `nbclient` are development dependencies.
+- **Rejected:** Re-implementing the models inside the notebooks (duplicates tested logic); marimo (revisit if reactive notebooks are wanted).
