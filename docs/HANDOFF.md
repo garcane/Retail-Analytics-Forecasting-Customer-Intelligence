@@ -19,7 +19,7 @@ A **local implementation of what would have been built on BigQuery**. DuckDB rep
 | D-007 | ML target: late delivery (one order, predicted at purchase) plus a weekly order forecast. |
 | D-008 | `data/` untracked from Git (commit `d8f6954`); history not rewritten. |
 
-Full entries, with design decisions DD-01 to DD-13, are in `DECISIONS.md`. No decisions are open.
+Full entries, with design decisions DD-01 to DD-14, are in `DECISIONS.md`. No decisions are open.
 
 ## Current state (2026-10-13)
 
@@ -27,8 +27,8 @@ All in-scope phases are complete; see `PROJECT_STATUS.md` for the phase table an
 
 - **Warehouse:** star schema, 4 facts and 5 dimensions. `uv run python src/transformation/build_warehouse.py` builds it and runs 22 reconciliation checks.
 - **Analytics:** `sql/analytics/` (8 queries), `src/analytics/run_analytics.py` (tables to `reports/analytics/`, charts to `docs/analytics/figures/`), findings in `docs/analytics/BUSINESS_INSIGHTS.md`.
-- **ML:** late-delivery ranking model and weekly forecast. **The notebooks `notebooks/02_late_delivery_model.ipynb` and `03_weekly_forecast.ipynb` present the work with charts** (stored with outputs; they call the tested code in `src/ml/`). Written summary: `docs/ml/MODEL_CARD.md`; experiment write-ups are `PHASE2_BASELINES.md`, `DRIFT_ANALYSIS.md` and `RECALIBRATION_AND_WINDOW.md` in the same folder. Code is in `src/ml/` and `sql/ml/`, saved metrics in `reports/`.
-- **Tests:** `uv run pytest`, 69 tests, about 30 seconds.
+- **ML:** late-delivery ranking model and weekly forecast. **The notebooks `notebooks/02_late_delivery_model.ipynb` and `03_weekly_forecast.ipynb` present the work with charts** (stored with outputs; they call the tested code in `src/ml/`). Interactive marimo versions are in `notebooks/marimo/` (run with `uv run marimo edit <file>`). Written summary: `docs/ml/MODEL_CARD.md`; experiment write-ups are `PHASE2_BASELINES.md`, `DRIFT_ANALYSIS.md` and `RECALIBRATION_AND_WINDOW.md` in the same folder. Code is in `src/ml/` and `sql/ml/`, saved metrics in `reports/`.
+- **Tests:** `uv run pytest`, 78 tests, about 30 seconds.
 - **Other documents:** `ARCHITECTURE.md`, `DECISIONS.md` (D-001 to D-008, DD-01 to DD-13), `SECURITY.md`, `COST.md`, `docs/LESSONS_LEARNED.md`.
 - **Knowledge graph:** graphify is installed for Claude and Codex (`.claude/`, `.codex/`, `CLAUDE.md`, `AGENTS.md`). The graph covers the code as of 2026-10-13; the newest documents are not in it until `/graphify --update` is run. The graph's cache and dated backups are git-ignored.
 - **Dataset download:** see `README.md`.

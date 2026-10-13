@@ -27,6 +27,7 @@ Later decisions can supersede earlier ones; when that happens the entry says so.
 | DD-11 | 2026-10-13 | No recalibration or window tuning; use the model by rank | Active |
 | DD-12 | 2026-10-13 | Close the late-delivery feature search; v1 is final. Forecast: recommend the simple averages | Active |
 | DD-13 | 2026-10-13 | Present the ML in Jupyter notebooks that call the tested `src/ml` code | Active |
+| DD-14 | 2026-10-13 | Add interactive marimo versions of the ML notebooks, keeping the Jupyter ones | Active |
 
 ---
 
@@ -214,3 +215,14 @@ Evidence for these entries is in [docs/data/EDA_FINDINGS.md](docs/data/EDA_FINDI
 - **Trade-offs:** Stored outputs make the notebooks large (about 0.4 to 0.6 MB each) and can go stale if the code changes; a test checks that they were run without errors, but not that their numbers still match. The notebooks were built and executed with a throwaway script that is not part of the repository.
 - **Cost / Security:** None. `nbformat` and `nbclient` are development dependencies.
 - **Rejected:** Re-implementing the models inside the notebooks (duplicates tested logic); marimo (revisit if reactive notebooks are wanted).
+
+### DD-14: marimo notebooks alongside the Jupyter ones
+
+- **Context:** The project owner wanted the ML notebooks in marimo as well. DD-13 had chosen Jupyter, and the reasons for it (stored charts, familiar format) still hold.
+- **Options:** Replace the Jupyter notebooks; keep both; convert cell for cell without changes.
+- **Chosen:** Keep both. The marimo versions are `notebooks/marimo/02_late_delivery_model.py` and `03_weekly_forecast.py`, rewritten by hand rather than auto-converted, with interactive controls added.
+- **Reason:** marimo forbids defining a variable in two cells, and the Jupyter cells reuse names such as `fig`, `ax` and `x`, so a mechanical conversion would not run. The rewrite wraps each chart in its own cell with private variables, and adds what marimo is good for: a test-month picker, a "flag the riskiest X%" slider, a measure picker, a feature picker, a button for the one-minute permutation importance, and target, horizon and method pickers for the forecast.
+- **Trade-offs:** Two copies of each notebook to keep in step (both call the same `src/ml` code, so only the presentation can diverge). marimo files store no outputs, so the Jupyter versions stay the quick way to see the charts without running anything.
+- **Cost / Security:** None. `marimo` is a development dependency (it opens a local server only when run).
+- **Verification:** `marimo check` is part of the test suite; both notebooks were also executed headlessly (`marimo export html`) with no cell errors, and the interactive charts were inspected by eye.
+- **Rejected:** Replacing the Jupyter notebooks (loses the stored charts); a mechanical `marimo convert` (does not run as is).

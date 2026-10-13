@@ -10,7 +10,7 @@ The original cloud brief (BigQuery, Dataflow, Vertex AI, monitoring) is kept unc
 - **Analytics** ([docs/analytics/BUSINESS_INSIGHTS.md](docs/analytics/BUSINESS_INSIGHTS.md)): net revenue R$ 13.5 million over about 98,000 orders; 97% of customers buy once; late deliveries are the clearest driver of bad reviews; and in 2018 the delivery promise was shortened sharply (75% of August orders promised in under 20 days), which raised the late rate even as deliveries got faster.
 - **Late-delivery model** ([docs/ml/MODEL_CARD.md](docs/ml/MODEL_CARD.md), walk-through with charts in `notebooks/02_late_delivery_model.ipynb`): ranks orders at purchase time. Flagging the riskiest 10% beats chance by about 2.8 times on average (1.2 times in the worst month). Several attempts to improve it did not help, and the documentation says why. Use it by rank, not by probability.
 - **Weekly forecast** (`notebooks/03_weekly_forecast.ipynb`): simple averages beat the more complex models on this short history.
-- **Quality:** 69 tests, a clean-clone reproduction of the whole pipeline, and a written audit ([docs/AUDIT.md](docs/AUDIT.md)).
+- **Quality:** 78 tests, a clean-clone reproduction of the whole pipeline, and a written audit ([docs/AUDIT.md](docs/AUDIT.md)).
 
 ## Repository map
 
@@ -96,6 +96,7 @@ Metrics are written to `reports/`, and `docs/ml/PHASE2_BASELINES.md` explains th
 
 - `notebooks/01_dataset_discovery.ipynb`: dataset discovery and EDA.
 - `notebooks/02_late_delivery_model.ipynb` and `notebooks/03_weekly_forecast.ipynb`: **the machine learning, with charts** (data, test design, precision-recall curves, calibration, what the model relies on, what did not help, the August 2018 drift; forecast series, backtest and method comparison). Open them in VS Code or JupyterLab with the project's `.venv` as the kernel. They call the tested code in `src/ml/` and are stored with their outputs.
+- `notebooks/marimo/02_late_delivery_model.py` and `03_weekly_forecast.py`: **interactive marimo versions** of the same two notebooks (test-month picker, a "flag the riskiest X%" slider, forecast target, horizon and method pickers). Run with `uv run marimo edit notebooks/marimo/02_late_delivery_model.py` (editable) or `uv run marimo run ...` (app view). They are plain Python files with no stored outputs, so the Jupyter versions remain the quick way to see the charts.
 - `docs/ml/LEAKAGE_ANALYSIS.md`, `docs/ml/PHASE2_BASELINES.md` and `docs/ml/MODEL_CARD.md` (start here for the ML results), `docs/ml/DRIFT_ANALYSIS.md` and `docs/ml/RECALIBRATION_AND_WINDOW.md`: ML targets, leakage rules, baseline results, drift tests and recalibration.
 - `ARCHITECTURE.md` and `DECISIONS.md`: design and decision log.
 - `docs/data/DATA_MODEL.md`: star schema, grains and design decisions.

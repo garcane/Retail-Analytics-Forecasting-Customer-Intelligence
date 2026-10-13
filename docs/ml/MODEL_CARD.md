@@ -2,7 +2,7 @@
 
 Two models trained on the Olist Brazilian e-commerce dataset (about 100,000 orders, 2016 to 2018; CC BY-NC-SA 4.0, non-commercial use only). Both are baselines built to be honest about their limits, not production systems. All numbers come from time-ordered backtests; the supporting analyses are linked.
 
-**See it with charts:** [notebooks/02_late_delivery_model.ipynb](../../notebooks/02_late_delivery_model.ipynb) (late-delivery model) and [notebooks/03_weekly_forecast.ipynb](../../notebooks/03_weekly_forecast.ipynb) (forecast) walk through everything below with the plots, using the same tested code.
+**See it with charts:** [notebooks/02_late_delivery_model.ipynb](../../notebooks/02_late_delivery_model.ipynb) (late-delivery model) and [notebooks/03_weekly_forecast.ipynb](../../notebooks/03_weekly_forecast.ipynb) (forecast) walk through everything below with the plots, using the same tested code. Interactive marimo versions (sliders and pickers) are in [notebooks/marimo/](../../notebooks/marimo/).
 
 ## 1. Late-delivery model
 

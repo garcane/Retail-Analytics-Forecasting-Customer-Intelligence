@@ -104,6 +104,8 @@ Raw outputs are committed in `reports/` (ML metrics as JSON, analytics tables as
 
 The two machine-learning notebooks were added: [notebooks/02_late_delivery_model.ipynb](../notebooks/02_late_delivery_model.ipynb) and [notebooks/03_weekly_forecast.ipynb](../notebooks/03_weekly_forecast.ipynb). Both were executed with the project's kernel (27 and 15 cells, 10 and 5 figures, no error outputs), and every figure was inspected by eye; four layout problems were found and fixed before storing. The test suite grew to **69 tests**: a new file checks that each committed notebook ran cleanly, stores its charts and imports only modules that exist. `nbformat` and `nbclient` were added as development dependencies. The notebooks were not part of the clean-clone reproduction above.
 
+Later the same day, interactive marimo versions of both notebooks were added (`notebooks/marimo/`, DD-14). Each was checked with `marimo check` (now part of the test suite, which grew to 78 tests) and executed headlessly with no cell errors, and the new interactive charts were inspected by eye (two layout flaws, a legend over the data and a label crossing a reference line, were fixed).
+
 ## Open items
 
 | Item | Why it is open |
