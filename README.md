@@ -4,6 +4,27 @@ A local implementation of what would have been built on Google Cloud and BigQuer
 
 The original cloud brief (BigQuery, Dataflow, Vertex AI, monitoring) is kept unchanged in `Cloud Portfolio — Master Agent Prompt.md`, `GCP.md` and the Retail Analytics project document, in case parts of it come back later. Current scope and decisions are in `PROJECT_STATUS.md` and `docs/HANDOFF.md`.
 
+## Results at a glance
+
+- **Warehouse:** a validated star schema (4 facts, 5 dimensions) built in about 25 seconds, with 22 reconciliation checks.
+- **Analytics** ([docs/analytics/BUSINESS_INSIGHTS.md](docs/analytics/BUSINESS_INSIGHTS.md)): net revenue R$ 13.5 million over about 98,000 orders; 97% of customers buy once; late deliveries are the clearest driver of bad reviews; and in 2018 the delivery promise was shortened sharply (75% of August orders promised in under 20 days), which raised the late rate even as deliveries got faster.
+- **Late-delivery model** ([docs/ml/MODEL_CARD.md](docs/ml/MODEL_CARD.md)): ranks orders at purchase time. Flagging the riskiest 10% beats chance by about 2.8 times on average (1.2 times in the worst month). Several attempts to improve it did not help, and the documentation says why. Use it by rank, not by probability.
+- **Weekly forecast:** simple averages beat the more complex models on this short history.
+- **Quality:** 61 tests, a clean-clone reproduction of the whole pipeline, and a written audit ([docs/AUDIT.md](docs/AUDIT.md)).
+
+## Repository map
+
+| Path | What is there |
+|---|---|
+| `sql/` | Staging, dimensions, facts, validation, analytics and ML feature queries, all plain DuckDB SQL |
+| `src/transformation/` | `build_warehouse.py`, which builds the warehouse and runs the checks |
+| `src/analytics/`, `src/ml/` | Analytics runner and charts; ML backtests, drift, recalibration, forecast and explainability scripts |
+| `tests/` | The pytest suite |
+| `reports/` | Saved metrics (JSON) and analytics tables (CSV) |
+| `docs/` | Data model, analytics insights, ML documents, audit, lessons learned |
+| `ARCHITECTURE.md`, `DECISIONS.md`, `SECURITY.md`, `COST.md` | Design, decision log, security and cost |
+| `PROJECT_STATUS.md`, `docs/HANDOFF.md` | Where the project stands, for a new reader |
+
 ## 1. Get the data
 
 The dataset is the **Brazilian E-Commerce Public Dataset by Olist**, published on Kaggle:
@@ -64,6 +85,7 @@ uv run python src/ml/drift_analysis.py   # a few minutes
 uv run python src/ml/recalibration.py  # a few minutes
 uv run python src/ml/forecast_models.py
 uv run python src/ml/explain_late_delivery.py
+uv run python src/analytics/run_analytics.py
 uv run pytest
 ```
 

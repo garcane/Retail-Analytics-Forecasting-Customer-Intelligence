@@ -1,7 +1,7 @@
 {
-  "0": "Cloud vs Local Architecture Mapping",
-  "1": "Architecture Philosophy (Shared Across Cloud Projects)",
-  "2": "visualize_schema.py",
+  "0": "Architecture Philosophy (Shared Across Cloud Projects)",
+  "1": "late_delivery_baseline.py",
+  "2": "run_analytics.py",
   "3": "What was done and what came out",
   "4": "Agentic Loop (PLAN to DECIDE)",
   "5": "Evidence Requirement and Evidence Integrity",
@@ -18,10 +18,13 @@
   "16": "Handover: GCP Retail Analytics (local DuckDB build)",
   "17": "AGENTS.md",
   "18": "CLAUDE.md",
-  "19": "late_delivery_baseline.py",
-  "20": "forecast_baseline.py",
-  "21": "conftest.py",
+  "19": "pandas",
+  "20": "combination",
+  "21": "pytest",
   "22": "test_feature_leakage.py",
-  "23": "recalibration.py",
-  "24": "test_drift_helpers.py"
+  "23": "numpy",
+  "24": "test_drift_helpers.py",
+  "25": "Final audit (Phase 10)",
+  "26": "Business insights: Olist retail analytics",
+  "27": "Retail Analytics, Forecasting & Customer Intelligence (local DuckDB build)"
 }

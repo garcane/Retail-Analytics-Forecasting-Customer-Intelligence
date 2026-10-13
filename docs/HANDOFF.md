@@ -1,6 +1,6 @@
 # Handover: GCP Retail Analytics (local DuckDB build)
 
-_Written 2026-10-10 to consolidate several separate Claude chats into one; updated 2026-10-11. Read this first in a new chat, then `PROJECT_STATUS.md`._
+_Written 2026-10-10 to consolidate several separate Claude chats into one; updated 2026-10-13. Read this first in a new chat, then `PROJECT_STATUS.md`._
 
 ## What this project is now
 
@@ -21,11 +21,16 @@ A **local implementation of what would have been built on BigQuery**. DuckDB rep
 
 Full entries, with design decisions DD-01 to DD-12, are in `DECISIONS.md`. No decisions are open.
 
-## Current state
+## Current state (2026-10-13)
 
-- **Warehouse:** star schema with 4 facts and 5 dimensions in DuckDB. `build_warehouse.py` builds it and runs 22 reconciliation checks, all passing as of 2026-10-11.
-- **Layout:** `sql/{staging,dimensions,facts,validation}/`, `src/transformation/`, `scripts/visualize_schema.py`, `docs/data/` (data model, EDA findings, `star_schema.png`), `docs/phase0/PHASE0_DISCOVERY.md`, `docs/ml/LEAKAGE_ANALYSIS.md`, and `ARCHITECTURE.md` and `DECISIONS.md` at the root.
-- **Knowledge graph:** graphify is installed for Claude and Codex (`.claude/`, `.codex/`, `CLAUDE.md`, `AGENTS.md`). `graphify-out/` was built on 2026-10-06 from the docs and is now stale. Refresh with `graphify update .`.
+All in-scope phases are complete; see `PROJECT_STATUS.md` for the phase table and `docs/AUDIT.md` for the final audit. Nothing is in progress or blocked.
+
+- **Warehouse:** star schema, 4 facts and 5 dimensions. `uv run python src/transformation/build_warehouse.py` builds it and runs 22 reconciliation checks.
+- **Analytics:** `sql/analytics/` (8 queries), `src/analytics/run_analytics.py` (tables to `reports/analytics/`, charts to `docs/analytics/figures/`), findings in `docs/analytics/BUSINESS_INSIGHTS.md`.
+- **ML:** late-delivery ranking model and weekly forecast. Start with `docs/ml/MODEL_CARD.md`; experiment write-ups are `PHASE2_BASELINES.md`, `DRIFT_ANALYSIS.md` and `RECALIBRATION_AND_WINDOW.md` in the same folder. Code is in `src/ml/` and `sql/ml/`, saved metrics in `reports/`.
+- **Tests:** `uv run pytest`, 61 tests, about 30 seconds.
+- **Other documents:** `ARCHITECTURE.md`, `DECISIONS.md` (D-001 to D-008, DD-01 to DD-12), `SECURITY.md`, `COST.md`, `docs/LESSONS_LEARNED.md`.
+- **Knowledge graph:** graphify is installed for Claude and Codex (`.claude/`, `.codex/`, `CLAUDE.md`, `AGENTS.md`). The graph covers the code as of 2026-10-13; the newest documents are not in it until `/graphify --update` is run. The graph's cache and dated backups are git-ignored.
 - **Dataset download:** see `README.md`.
 
 ## Data findings (Phase 0 and EDA)
@@ -34,23 +39,21 @@ Full entries, with design decisions DD-01 to DD-12, are in `DECISIONS.md`. No de
 - 99,441 `customer_id` values map to 96,096 real customers; 96.9% bought once. Use `customer_unique_id` for customer analysis.
 - `review_id` is not unique (814 surplus rows).
 - Joining items, payments and reviews side by side inflates revenue by 5.0%. Aggregate each child table to order grain before joining.
-- Usable forecast window: 2017-01 to 2018-08, about 87 weeks.
+- Usable forecast window: 2017-01 to 2018-08 (85 clean weeks).
 - Late delivery goes with lower review scores (2.57 vs 4.29 average).
+- The delivery promise was shortened sharply in 2018 (75% of August orders promised in under 20 days); this broke the late-delivery model's ranking that month.
 
-## Open work
+## Open items
 
-1. **Discovery notebook: done.** Repaired and stored with a clean run in commit `d5e8d1e` (44 cells, no errors, findings, decisions table and date-outlier check). The separate notebook generator script is not wanted and does not need recovering.
-2. **Geolocation step: done.** `build_warehouse.py` now converts the Kaggle CSV to Parquet on first run if only the CSV is present (tested for CSV-only, Parquet-present and missing-file cases).
-3. **ML target and `data/`: done** (D-007, D-008).
-4. **Phase 1 documents: done** (2026-10-11): `ARCHITECTURE.md`, `DECISIONS.md`, `docs/ml/LEAKAGE_ANALYSIS.md`.
-5. **Phase 2 baselines: done** (2026-10-11). `sql/ml/late_delivery_features.sql`, `src/ml/late_delivery_baseline.py`, `src/ml/forecast_baseline.py`, metrics in `reports/`, write-up in `docs/ml/PHASE2_BASELINES.md`. Logistic regression is the best late-delivery model so far (PR-AUC 0.184 against a base rate of 0.085); seller history adds almost nothing; naive and the 8-week average win the forecast at 1 and 4 weeks.
-6. **Tests: done.** `uv run pytest` runs 52 tests (leakage rules for the feature SQL on a mini warehouse, forecast no-lookahead, geolocation conversion, and recounts on the real warehouse).
-7. **Feature experiment: done.** Route, category and trailing-28-day history did not help (DD-10); v1 stays the reference. The drift explanation was then tested (`docs/ml/DRIFT_ANALYSIS.md`): partly right, partly wrong. Recalibration and window tuning were then tested (`docs/ml/RECALIBRATION_AND_WINDOW.md`) and did not help (DD-11): use the late-delivery model by rank, not by probability. Open next: better forecast models (only baselines exist). Reproduce with `src/ml/drift_analysis.py` and `src/ml/recalibration.py`.
-8. **Unverified:** BigQuery, Dataflow and Vertex AI pricing; Apache Beam on Python 3.13 on Windows. Both only matter if the cloud returns.
+1. Dependency vulnerability scan (no scanner installed).
+2. Re-execute the discovery notebook (no notebook runner installed).
+3. Test the geolocation conversion on Kaggle's original CSV.
+4. Run `/graphify --update` to add the newest documents to the graph.
+5. **Unverified, only matters if the cloud returns:** BigQuery, Dataflow and Vertex AI pricing; Apache Beam on Python 3.13 on Windows.
 
 ## Environment notes
 
 - `uv` may need `--native-tls` on this machine. On Windows, set `PYTHONIOENCODING=utf-8` when printing DuckDB tables, or the console codec raises an error.
-- `nbformat` and `nbconvert` are not project dependencies.
+- `nbformat` and `nbconvert` are not project dependencies. `ipykernel` and `pytest` are declared dev dependencies; do not install packages by hand into `.venv`, because `uv sync` and `uv remove` delete anything undeclared.
 - `main.py` and `main.ipynb` were deleted by the user in commit `ac1ae8d`.
 - Notebooks resolve `data/` relative to the working directory. A relative `data/...` path fails when the kernel starts in `notebooks/`; use a path built from the repo root.

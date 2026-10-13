@@ -96,4 +96,4 @@ uv run python src/ml/explain_late_delivery.py
 uv run pytest
 ```
 
-Results can differ in the third decimal between runs because of multithreaded numerical libraries (the PR-AUC for the same model varied by about 0.0005 across runs), so compare to that tolerance. Metric files are in [reports/](../../reports/).
+Results can differ slightly between runs because of multithreaded numerical code: in a fresh-clone rerun the largest differences were about 0.001 in PR-AUC and 0.002 in ROC-AUC (the v1 logistic model came out identical), so compare to that tolerance. Metric files are in [reports/](../../reports/).
