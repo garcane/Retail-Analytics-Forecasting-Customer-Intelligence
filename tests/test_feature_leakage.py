@@ -98,3 +98,26 @@ def test_one_row_per_order_with_multiple_items_and_sellers(mini):
 def test_label_is_passed_through_as_integer(mini, late_flag):
     oid = mini.add_order(day(0), day(10), late=late_flag)
     assert mini.features().loc[oid, "is_late"] == int(late_flag)
+
+
+def test_delivery_time_history_sums_only_resolved_orders(mini):
+    mini.add_order(day(0), day(10), late=False)    # took 10 days
+    mini.add_order(day(1), day(13), late=False)    # took 12 days
+    mid = mini.add_order(day(11.5), day(40), late=False)   # sees only the first delivery
+    after = mini.add_order(day(20), day(50), late=False)   # sees both
+    f = mini.features()
+    assert f.loc[mid, "route_prior_days"] == pytest.approx(10.0)
+    assert f.loc[after, "route_prior_days"] == pytest.approx(22.0)
+    assert f.loc[after, "recent_days_28d"] == pytest.approx(22.0)
+
+
+def test_slack_features_use_the_training_mean_as_prior():
+    import pandas as pd
+    import late_delivery_baseline as ldb
+    df = pd.DataFrame({c: [0.0] for c in ["route_prior_n", "route_prior_late", "route_prior_days", "category_prior_n",
+                                          "category_prior_late", "recent_n_28d", "recent_late_28d", "recent_days_28d"]})
+    df["promised_days"] = 20.0
+    out = ldb.add_smoothed_rates(df, prior=0.08, prior_days=12.0)
+    assert out.loc[0, "route_mean_days"] == pytest.approx(12.0)   # no history: falls back to the prior
+    assert out.loc[0, "route_slack"] == pytest.approx(8.0)
+    assert out.loc[0, "recent_slack"] == pytest.approx(8.0)

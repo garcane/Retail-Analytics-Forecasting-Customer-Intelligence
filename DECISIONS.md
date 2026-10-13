@@ -25,6 +25,7 @@ Later decisions can supersede earlier ones; when that happens the entry says so.
 | DD-09 | 2026-10-11 | Report backtest metrics as a per-month macro-average | Active |
 | DD-10 | 2026-10-11 | Keep v1 features as the reference late-delivery model | Active |
 | DD-11 | 2026-10-13 | No recalibration or window tuning; use the model by rank | Active |
+| DD-12 | 2026-10-13 | Close the late-delivery feature search; v1 is final. Forecast: recommend the simple averages | Active |
 
 ---
 
@@ -193,3 +194,12 @@ Evidence for these entries is in [docs/data/EDA_FINDINGS.md](docs/data/EDA_FINDI
 - **Reason:** A change is only adopted when it beats the reference out-of-time. Neither did.
 - **Trade-offs:** The level of the predicted probabilities stays off by about 0.06 on average per month (0.14 in March 2018). Short-window adaptation after a policy change such as August 2018 is left for monitoring, not built.
 - **Rejected:** Platt, isotonic and level-shift recalibration; a fixed 2-month window (looked best only in hindsight); a probability cut-off for flagging.
+
+### DD-12: Close the ML experiments; v1 and the simple forecasts are final
+
+- **Context:** After the history features (DD-10) and recalibration and windows (DD-11), one more idea remained: the slack between the promised delivery time and how long deliveries have actually been taking (per route, and system-wide over 28 days). For the weekly forecast, exponential smoothing, a damped trend and an AR(1)-with-trend regression were the untried options.
+- **Findings:** The slack features did not beat v1 (logistic PR-AUC 0.176 against 0.184, Brier equal; top-quintile calibration somewhat closer: 0.191 predicted against 0.165 actual, from 0.215). None of the forecast models clearly beat the simple averages; the ranking of the more complex ones flips between orders and revenue, so the 85-week backtest cannot separate them. See [docs/ml/MODEL_CARD.md](docs/ml/MODEL_CARD.md).
+- **Chosen:** v1 is the final late-delivery model, used by rank. For the forecast: the average of the naive and 8-week-average forecasts at one week, and the 8-week average at four weeks, with the caveat that the combination was assembled after seeing the baseline results.
+- **Reason:** Four feature ideas and two post-hoc fixes have been tried against the same six test months. Continuing would mostly fit noise in that sample. The remaining brief phases (analytics, documentation, audit) matter more than another 0.005 of PR-AUC.
+- **Trade-offs:** The ranking is moderate (lift about 2.8 times at the top 10%) and probabilities remain unreliable in level. A better model would need information this dataset does not contain.
+- **Rejected:** Further feature search on the same test months; selecting a forecast model from a single 59-week backtest.

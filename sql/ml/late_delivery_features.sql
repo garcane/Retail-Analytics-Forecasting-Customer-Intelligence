@@ -93,13 +93,15 @@ seller_agg as (
 -- prior can be taken from the training period only.
 keyed as (
     select pop.order_id, pop.purchase_ts, pop.delivered_customer_ts, pop.is_late,
+           date_diff('second', pop.purchase_ts, pop.delivered_customer_ts) / 86400.0 as days_to_deliver,
            coalesce(ia.seller_state, 'unknown') || '>' || coalesce(ia.customer_state, 'unknown') as route,
            coalesce(ia.category, 'unknown') as category
     from pop join item_agg ia using (order_id)
 ),
 cum_route as (
-    select route, ts, sum(cnt) over w as n, sum(late) over w as late
-    from (select route, delivered_customer_ts as ts, count(*) as cnt, sum(is_late::integer) as late
+    select route, ts, sum(cnt) over w as n, sum(late) over w as late, sum(days) over w as days
+    from (select route, delivered_customer_ts as ts, count(*) as cnt, sum(is_late::integer) as late,
+                 sum(days_to_deliver) as days
           from keyed group by 1, 2)
     window w as (partition by route order by ts)
 ),
@@ -110,17 +112,21 @@ cum_category as (
     window w as (partition by category order by ts)
 ),
 cum_all as (
-    select ts, sum(cnt) over w as n, sum(late) over w as late
-    from (select delivered_customer_ts as ts, count(*) as cnt, sum(is_late::integer) as late from keyed group by 1)
+    select ts, sum(cnt) over w as n, sum(late) over w as late, sum(days) over w as days
+    from (select delivered_customer_ts as ts, count(*) as cnt, sum(is_late::integer) as late,
+                 sum(days_to_deliver) as days
+          from keyed group by 1)
     window w as (order by ts)
 ),
 history as (
     select k.order_id,
            coalesce(r.n, 0)    as route_prior_n,    coalesce(r.late, 0)    as route_prior_late,
+           coalesce(r.days, 0) as route_prior_days,   -- total days purchase-to-delivery over the route's resolved orders
            coalesce(c.n, 0)    as category_prior_n, coalesce(c.late, 0)    as category_prior_late,
            -- trailing 28 days of resolved orders system-wide: totals now minus totals 28 days ago
            coalesce(a.n, 0) - coalesce(a28.n, 0)       as recent_n_28d,
-           coalesce(a.late, 0) - coalesce(a28.late, 0) as recent_late_28d
+           coalesce(a.late, 0) - coalesce(a28.late, 0) as recent_late_28d,
+           coalesce(a.days, 0) - coalesce(a28.days, 0) as recent_days_28d
     from keyed k
     asof left join cum_route r    on k.route = r.route and k.purchase_ts > r.ts
     asof left join cum_category c on k.category = c.category and k.purchase_ts > c.ts
@@ -156,7 +162,9 @@ select
     sa.seller_prior_late_rate,
     -- point-in-time route (seller state > customer state), category and system-wide history (counts and late totals)
     h.route_prior_n, h.route_prior_late, h.category_prior_n, h.category_prior_late,
-    h.recent_n_28d, h.recent_late_28d
+    h.recent_n_28d, h.recent_late_28d,
+    -- delivery-time history, for the slack between the promise and how long this route usually takes
+    h.route_prior_days, h.recent_days_28d
 from pop
 join item_agg ia using (order_id)
 left join pay py using (order_id)

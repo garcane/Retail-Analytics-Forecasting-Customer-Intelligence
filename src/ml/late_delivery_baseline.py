@@ -41,24 +41,42 @@ NUMERIC_V1 = [
 # (SMOOTHING pseudo-orders). Keeping the groups separate shows which one helps and which one hurts.
 NUMERIC_V2 = NUMERIC_V1 + ["route_rate", "route_prior_n", "category_rate", "category_prior_n"]
 NUMERIC_V3 = NUMERIC_V2 + ["recent_rate_28d", "recent_n_28d"]
-FEATURE_SETS = (("v1", NUMERIC_V1), ("v2", NUMERIC_V2), ("v3", NUMERIC_V3))
+# v5 is v1 plus the slack between the promised delivery time and how long deliveries have actually been taking:
+# slack = promised days - mean days to deliver (on this route, and system-wide over the trailing 28 days).
+NUMERIC_V5 = NUMERIC_V1 + ["route_mean_days", "route_slack", "recent_mean_days", "recent_slack", "route_prior_n"]
+FEATURE_SETS = (("v1", NUMERIC_V1), ("v2", NUMERIC_V2), ("v3", NUMERIC_V3), ("v5", NUMERIC_V5))
 CATEGORICAL = ["customer_state", "seller_state", "main_payment_type"]
 SMOOTHING = {"route": 20, "category": 20, "recent": 100}
+HISTORY_COUNTS = ("_prior_n", "_prior_late", "_28d", "_prior_days")
 # purchase_month is deliberately not a feature: with under two years of history it only memorises calendar months.
 
 
 def load(con: duckdb.DuckDBPyConnection) -> pd.DataFrame:
     df = con.execute(FEATURES_SQL.read_text(encoding="utf-8")).df()
     df["month"] = df["purchase_ts"].dt.to_period("M")
-    counts = [c for c in df.columns if c.endswith(("_prior_n", "_prior_late", "_28d"))]
+    counts = [c for c in df.columns if c.endswith(HISTORY_COUNTS)]
     to_float = list(dict.fromkeys(NUMERIC_V1 + counts))
     df[to_float] = df[to_float].astype("float64")  # DuckDB gives nullable Int64
     return df
 
 
-def add_smoothed_rates(df: pd.DataFrame, prior: float) -> pd.DataFrame:
-    """Turn history counts into rates, shrunk toward `prior` (the training late rate) so thin keys stay near it."""
+def mean_days_to_deliver(train: pd.DataFrame) -> float:
+    return float((train["delivered_customer_ts"] - train["purchase_ts"]).dt.total_seconds().mean() / 86400.0)
+
+
+def add_smoothed_rates(df: pd.DataFrame, prior: float, prior_days: float | None = None) -> pd.DataFrame:
+    """Turn history counts into rates, shrunk toward `prior` (the training late rate) so thin keys stay near it.
+
+    With `prior_days` (the training mean of days to deliver) it also derives the delivery-time slack features.
+    """
     out = df.copy()
+    if prior_days is not None:
+        out["route_mean_days"] = (out["route_prior_days"] + SMOOTHING["route"] * prior_days) / (
+            out["route_prior_n"] + SMOOTHING["route"])
+        out["route_slack"] = out["promised_days"] - out["route_mean_days"]
+        out["recent_mean_days"] = (out["recent_days_28d"] + SMOOTHING["recent"] * prior_days) / (
+            out["recent_n_28d"] + SMOOTHING["recent"])
+        out["recent_slack"] = out["promised_days"] - out["recent_mean_days"]
     for name, key in (("route", "route_prior"), ("category", "category_prior")):
         out[f"{name}_rate"] = (out[f"{key}_late"] + SMOOTHING[name] * prior) / (out[f"{key}_n"] + SMOOTHING[name])
     out["recent_rate_28d"] = (out["recent_late_28d"] + SMOOTHING["recent"] * prior) / (
@@ -148,7 +166,8 @@ def run(df: pd.DataFrame) -> tuple[dict[str, dict], dict[str, list[dict]], pd.Da
         test = df[df["month"] == month]
         y_train, y_test = train["is_late"].to_numpy(), test["is_late"].to_numpy()
         train_rate = y_train.mean()
-        train, test = add_smoothed_rates(train, train_rate), add_smoothed_rates(test, train_rate)
+        train_days = mean_days_to_deliver(train)
+        train, test = add_smoothed_rates(train, train_rate, train_days), add_smoothed_rates(test, train_rate, train_days)
 
         scores: dict[str, np.ndarray] = {
             "constant_train_rate": np.full(len(test), train_rate),

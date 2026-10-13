@@ -48,17 +48,18 @@ def weekly_series(con: duckdb.DuckDBPyConnection) -> pd.DataFrame:
     ).df().assign(week=lambda d: pd.to_datetime(d["week"])).set_index("week")
 
 
-# Each forecaster sees only `history` (a 1-d array ending at the origin week) and returns a constant forecast.
-def naive(history: np.ndarray) -> float:
+# Each forecaster sees only `history` (a 1-d array ending at the origin week) and the horizon `h`, and returns the
+# forecast for the week `h` steps after the last observation.
+def naive(history: np.ndarray, h: int = 1) -> float:
     return history[-1]
 
 
 def moving_average(k: int):
-    return lambda history: history[-k:].mean()
+    return lambda history, h=1: history[-k:].mean()
 
 
 def linear_trend(k: int):
-    """Straight line fitted to the last k weeks, extended `h` weeks ahead (h passed via closure at call time)."""
+    """Straight line fitted to the last k weeks, extended `h` weeks ahead."""
     def f(history: np.ndarray, h: int = 1) -> float:
         y = history[-k:]
         slope, intercept = np.polyfit(np.arange(len(y)), y, 1)
@@ -74,15 +75,16 @@ MODELS = {
 }
 
 
-def backtest(series: pd.Series, h: int) -> pd.DataFrame:
+def backtest(series: pd.Series, h: int, models: dict | None = None) -> pd.DataFrame:
     """Rolling-origin forecasts of week t+h made at origin t, for every origin with enough history."""
+    models = MODELS if models is None else models
     values = series.to_numpy(dtype=float)
     rows = []
     for t in range(MIN_HISTORY - 1, len(values) - h):
         history = values[: t + 1]
         row = {"target_week": series.index[t + h], "actual": values[t + h]}
-        for name, f in MODELS.items():
-            row[name] = f(history, h) if f is MODELS["linear_trend_12"] else f(history)
+        for name, f in models.items():
+            row[name] = f(history, h)
         rows.append(row)
     return pd.DataFrame(rows).set_index("target_week")
 
@@ -90,7 +92,7 @@ def backtest(series: pd.Series, h: int) -> pd.DataFrame:
 def score(bt: pd.DataFrame) -> dict[str, dict[str, float]]:
     naive_mae = (bt["actual"] - bt["naive_last_week"]).abs().mean()
     out = {}
-    for name in MODELS:
+    for name in [c for c in bt.columns if c != "actual"]:
         err = bt["actual"] - bt[name]
         out[name] = {
             "mae": float(err.abs().mean()),

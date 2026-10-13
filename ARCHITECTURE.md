@@ -16,7 +16,7 @@ This is a local implementation of what would have been built on BigQuery. It is 
 | Schema diagram | `scripts/visualize_schema.py` | Draws `docs/data/star_schema.png` from the foreign keys in the database catalogue, so the diagram cannot drift from the DDL. | Built |
 | Notebooks | `notebooks/` | `01_dataset_discovery.ipynb` holds the EDA evidence. Later notebooks hold baselines and model evaluation. | Partly built |
 | ML layer | `src/ml/`, `sql/ml/` | `late_delivery_features.sql` builds point-in-time features from the warehouse. `late_delivery_baseline.py` and `forecast_baseline.py` run the rolling-origin backtests and write metrics to `reports/`. Design constraints are in [docs/ml/LEAKAGE_ANALYSIS.md](docs/ml/LEAKAGE_ANALYSIS.md); results in [docs/ml/PHASE2_BASELINES.md](docs/ml/PHASE2_BASELINES.md). | Baselines built |
-| Tests | `tests/` | 42 pytest tests: geolocation conversion cases, the leakage rules for the feature SQL (on a hand-built mini warehouse), forecast no-lookahead, and recounts against the real warehouse (skipped if it is not built). Run with `uv run pytest`. | Built |
+| Tests | `tests/` | 52 pytest tests: geolocation conversion cases, the leakage rules for the feature SQL (on a hand-built mini warehouse), forecast no-lookahead, and recounts against the real warehouse (skipped if it is not built). Run with `uv run pytest`. | Built |
 
 ## Data flow
 

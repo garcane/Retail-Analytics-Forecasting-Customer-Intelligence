@@ -6,7 +6,7 @@ _Last updated: 2026-10-11_
 
 **Current phase:** Phase 2 (local prototype): late-delivery model finished as a ranking baseline (feature, drift, recalibration and window experiments done); the weekly forecast still has only baselines
 
-**Decisions made:** D-001 to D-008 and design decisions DD-01 to DD-11, all recorded in [DECISIONS.md](DECISIONS.md). Latest: D-007 (2026-10-11) sets the ML target to late delivery plus a weekly order forecast; D-008 (2026-10-11) untracks `data/` from Git without rewriting history.
+**Decisions made:** D-001 to D-008 and design decisions DD-01 to DD-12, all recorded in [DECISIONS.md](DECISIONS.md). Latest: D-007 (2026-10-11) sets the ML target to late delivery plus a weekly order forecast; D-008 (2026-10-11) untracks `data/` from Git without rewriting history.
 
 **Completed**
 - Read governing docs (Master Agent Prompt, GCP child prompt, `GCP.md`).
@@ -25,6 +25,7 @@ _Last updated: 2026-10-11_
 - Feature experiment and tests (2026-10-11): route, category and trailing-28-day history did not improve the late-delivery model (DD-10); calibration checked; pytest suite of 27 tests added, with leakage-rule tests that were verified to fail when leaks are planted. pytest 9.1.1 is a dev dependency.
 - Drift analysis (2026-10-11, `docs/ml/DRIFT_ANALYSIS.md`): tested the drift explanation for the failed history features. Partly supported (trailing rate, category) and partly not (route history is stable but redundant with state and distance). The promise-length relationship flipped in August 2018. A system-level shift hurts calibration, not ranking.
 - Recalibration and window tuning (2026-10-13, `docs/ml/RECALIBRATION_AND_WINDOW.md`): neither beat the reference out-of-time (DD-11). The recent late rate does not predict the next month's, so there is no level to learn. The late-delivery model is to be used by rank (flag the riskiest share), not by probability.
+- ML closed out (2026-10-13, `docs/ml/MODEL_CARD.md`, DD-12): delivery-slack features did not help; forecast models (smoothing, damped trend, AR(1)) do not clearly beat the simple averages; grouped permutation importance shows the late-delivery model rests on route and promise length; model card written.
 
 **In progress**
 - Nothing.
@@ -36,7 +37,7 @@ _Last updated: 2026-10-11_
 1. Better forecast models (damped trend, exponential smoothing, calendar regression) against the same backtest.
 2. Add the new docs to the graphify graph (`/graphify --update`).
 
-**Tests:** warehouse build runs 22 in-script reconciliation checks (all pass). `uv run pytest`: 42 tests pass (about 20 to 30 seconds).
+**Tests:** warehouse build runs 22 in-script reconciliation checks (all pass). `uv run pytest`: 52 tests pass (about 20 to 30 seconds).
 
 **Evidence:** local only. Phase 0 report and warehouse validation output.
 

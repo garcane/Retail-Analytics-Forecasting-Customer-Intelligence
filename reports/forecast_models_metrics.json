@@ -1,0 +1,542 @@
+{
+  "orders | main (to 2018-08-13) | h=1": {
+    "naive_last_week": {
+      "mae": 203.61016949152543,
+      "mape": 0.13993148122031357,
+      "mae_vs_naive": 1.0,
+      "bias": 19.406779661016948,
+      "share_of_weeks_beating_naive": 0.0
+    },
+    "moving_average_8": {
+      "mae": 234.3135593220339,
+      "mape": 0.1636992917804732,
+      "mae_vs_naive": 1.1507949721135438,
+      "bias": 75.02542372881356,
+      "share_of_weeks_beating_naive": 0.423728813559322
+    },
+    "simple_exp_smoothing": {
+      "mae": 213.7419696700384,
+      "mape": 0.14828605838219053,
+      "mae_vs_naive": 1.0497607767029273,
+      "bias": 14.81505153534002,
+      "share_of_weeks_beating_naive": 0.4745762711864407
+    },
+    "damped_trend": {
+      "mae": 228.09037375833336,
+      "mape": 0.15730320578314078,
+      "mae_vs_naive": 1.1202307543279504,
+      "bias": -8.183139389297274,
+      "share_of_weeks_beating_naive": 0.4576271186440678
+    },
+    "ar1_trend_26w": {
+      "mae": 230.87300129040773,
+      "mape": 0.15674373436376637,
+      "mae_vs_naive": 1.1338972010433743,
+      "bias": -29.594452255760128,
+      "share_of_weeks_beating_naive": 0.5254237288135594
+    },
+    "combo_naive_ma8": {
+      "mae": 182.60169491525423,
+      "mape": 0.12986160574987787,
+      "mae_vs_naive": 0.8968201115458253,
+      "bias": 47.21610169491525,
+      "share_of_weeks_beating_naive": 0.5084745762711864
+    },
+    "_n_forecasts": {
+      "n": 59.0
+    }
+  },
+  "orders | main, excluding Black Friday week | h=1": {
+    "naive_last_week": {
+      "mae": 177.89655172413794,
+      "mape": 0.13262862157884428,
+      "mae_vs_naive": 1.0,
+      "bias": -9.482758620689655
+    },
+    "moving_average_8": {
+      "mae": 205.0905172413793,
+      "mape": 0.1554635380987719,
+      "mae_vs_naive": 1.1528639271176584,
+      "bias": 43.05603448275862
+    },
+    "simple_exp_smoothing": {
+      "mae": 187.96009901069903,
+      "mape": 0.14104647884544888,
+      "mae_vs_naive": 1.056569659102592,
+      "bias": -14.396593574597597
+    },
+    "damped_trend": {
+      "mae": 202.32155175914068,
+      "mape": 0.15014118951207153,
+      "mae_vs_naive": 1.1372988953314749,
+      "bias": -38.025642649656014
+    },
+    "ar1_trend_26w": {
+      "mae": 203.6745243952071,
+      "mape": 0.1490808382462531,
+      "mae_vs_naive": 1.1449042852221372,
+      "bias": -61.28374731554988
+    },
+    "combo_naive_ma8": {
+      "mae": 154.50646551724137,
+      "mape": 0.1217137856270768,
+      "mae_vs_naive": 0.8685186082574141,
+      "bias": 16.786637931034484
+    },
+    "_n_forecasts": {
+      "n": 58.0
+    }
+  },
+  "orders | main (to 2018-08-13) | h=4": {
+    "naive_last_week": {
+      "mae": 353.10714285714283,
+      "mape": 0.24957634737394058,
+      "mae_vs_naive": 1.0,
+      "bias": 72.75,
+      "share_of_weeks_beating_naive": 0.0
+    },
+    "moving_average_8": {
+      "mae": 271.81473214285717,
+      "mape": 0.18314107265007942,
+      "mae_vs_naive": 0.7697797613027209,
+      "bias": 109.40848214285714,
+      "share_of_weeks_beating_naive": 0.5892857142857143
+    },
+    "simple_exp_smoothing": {
+      "mae": 348.5341851050221,
+      "mape": 0.24742388085760528,
+      "mae_vs_naive": 0.9870493762456377,
+      "bias": 66.56450838676513,
+      "share_of_weeks_beating_naive": 0.6428571428571429
+    },
+    "damped_trend": {
+      "mae": 394.3883935068912,
+      "mape": 0.299173022564763,
+      "mae_vs_naive": 1.1169085686449838,
+      "bias": -27.789868418776127,
+      "share_of_weeks_beating_naive": 0.5535714285714286
+    },
+    "ar1_trend_26w": {
+      "mae": 525.9666421316504,
+      "mape": 0.44228315497183573,
+      "mae_vs_naive": 1.4895383816816234,
+      "bias": -250.94898780411373,
+      "share_of_weeks_beating_naive": 0.5357142857142857
+    },
+    "combo_naive_ma8": {
+      "mae": 299.65736607142856,
+      "mape": 0.20667395050842316,
+      "mae_vs_naive": 0.8486301456457975,
+      "bias": 91.07924107142857,
+      "share_of_weeks_beating_naive": 0.6607142857142857
+    },
+    "_n_forecasts": {
+      "n": 56.0
+    }
+  },
+  "orders | main, excluding Black Friday week | h=4": {
+    "naive_last_week": {
+      "mae": 322.6181818181818,
+      "mape": 0.2418437896666196,
+      "mae_vs_naive": 1.0,
+      "bias": 37.163636363636364
+    },
+    "moving_average_8": {
+      "mae": 240.74772727272727,
+      "mape": 0.17449980298452958,
+      "mae_vs_naive": 0.7462311203787195,
+      "bias": 75.38863636363637
+    },
+    "simple_exp_smoothing": {
+      "mae": 318.3994901966975,
+      "mape": 0.23979760322557434,
+      "mae_vs_naive": 0.9869235775934605,
+      "bias": 31.303092083563087
+    },
+    "damped_trend": {
+      "mae": 366.1875309784928,
+      "mape": 0.2928533696350363,
+      "mae_vs_naive": 1.135049267573101,
+      "bias": -63.66669934582289
+    },
+    "ar1_trend_26w": {
+      "mae": 501.19236109552617,
+      "mape": 0.4389093374611781,
+      "mae_vs_naive": 1.5535155466779722,
+      "bias": -289.8490075663426
+    },
+    "combo_naive_ma8": {
+      "mae": 268.6465909090909,
+      "mape": 0.19831095028555892,
+      "mae_vs_naive": 0.8327075349413886,
+      "bias": 56.27613636363636
+    },
+    "_n_forecasts": {
+      "n": 55.0
+    }
+  },
+  "orders | with suspect week 2018-08-20 | h=1": {
+    "naive_last_week": {
+      "mae": 213.61666666666667,
+      "mape": 0.15011096120184242,
+      "mae_vs_naive": 1.0,
+      "bias": 5.683333333333334,
+      "share_of_weeks_beating_naive": 0.0
+    },
+    "moving_average_8": {
+      "mae": 239.31458333333333,
+      "mape": 0.16928679658133086,
+      "mae_vs_naive": 1.1202992119840836,
+      "bias": 64.86875,
+      "share_of_weeks_beating_naive": 0.43333333333333335
+    },
+    "simple_exp_smoothing": {
+      "mae": 223.8700398709021,
+      "mape": 0.1585974778218814,
+      "mae_vs_naive": 1.0479989383049173,
+      "bias": 0.8776976477199848,
+      "share_of_weeks_beating_naive": 0.4666666666666667
+    },
+    "damped_trend": {
+      "mae": 238.13897968470368,
+      "mape": 0.16761342980970176,
+      "mae_vs_naive": 1.114795878995258,
+      "bias": -21.89686588848486,
+      "share_of_weeks_beating_naive": 0.45
+    },
+    "ar1_trend_26w": {
+      "mae": 238.69169753353376,
+      "mape": 0.16502450368176164,
+      "mae_vs_naive": 1.1173833074831883,
+      "bias": -40.76779098279696,
+      "share_of_weeks_beating_naive": 0.5333333333333333
+    },
+    "combo_naive_ma8": {
+      "mae": 190.71145833333333,
+      "mape": 0.13811099448691305,
+      "mae_vs_naive": 0.8927742451431692,
+      "bias": 35.276041666666664,
+      "share_of_weeks_beating_naive": 0.5166666666666667
+    },
+    "_n_forecasts": {
+      "n": 60.0
+    }
+  },
+  "orders | with suspect week 2018-08-20 | h=4": {
+    "naive_last_week": {
+      "mae": 357.0,
+      "mape": 0.25461678723114095,
+      "mae_vs_naive": 1.0,
+      "bias": 61.3859649122807,
+      "share_of_weeks_beating_naive": 0.0
+    },
+    "moving_average_8": {
+      "mae": 273.10526315789474,
+      "mape": 0.18558559754387868,
+      "mae_vs_naive": 0.76500073713696,
+      "bias": 101.4298245614035,
+      "share_of_weeks_beating_naive": 0.5964912280701754
+    },
+    "simple_exp_smoothing": {
+      "mae": 352.28319718217983,
+      "mape": 0.2522928653630604,
+      "mae_vs_naive": 0.9867876671769743,
+      "bias": 55.533063090453204,
+      "share_of_weeks_beating_naive": 0.6491228070175439
+    },
+    "damped_trend": {
+      "mae": 397.73648197285524,
+      "mape": 0.30351091187791485,
+      "mae_vs_naive": 1.1141077926410512,
+      "bias": -37.569509956461516,
+      "share_of_weeks_beating_naive": 0.543859649122807
+    },
+    "ar1_trend_26w": {
+      "mae": 521.1777163671944,
+      "mape": 0.43866811434056524,
+      "mae_vs_naive": 1.459881558451525,
+      "bias": -250.98493316821109,
+      "share_of_weeks_beating_naive": 0.543859649122807
+    },
+    "combo_naive_ma8": {
+      "mae": 302.4736842105263,
+      "mape": 0.2105863409453894,
+      "mae_vs_naive": 0.847265221878225,
+      "bias": 81.40789473684211,
+      "share_of_weeks_beating_naive": 0.6666666666666666
+    },
+    "_n_forecasts": {
+      "n": 57.0
+    }
+  },
+  "revenue | main (to 2018-08-13) | h=1": {
+    "naive_last_week": {
+      "mae": 30441.53169491525,
+      "mape": 0.15624777296705647,
+      "mae_vs_naive": 1.0,
+      "bias": 2581.522542372881,
+      "share_of_weeks_beating_naive": 0.0
+    },
+    "moving_average_8": {
+      "mae": 31084.110360169496,
+      "mape": 0.16161783768680768,
+      "mae_vs_naive": 1.02110861804505,
+      "bias": 10549.706419491526,
+      "share_of_weeks_beating_naive": 0.4745762711864407
+    },
+    "simple_exp_smoothing": {
+      "mae": 30870.22619183575,
+      "mape": 0.16010265786591107,
+      "mae_vs_naive": 1.0140825534410316,
+      "bias": 2594.1331318841335,
+      "share_of_weeks_beating_naive": 0.4915254237288136
+    },
+    "damped_trend": {
+      "mae": 32598.2142343642,
+      "mape": 0.17175966285973246,
+      "mae_vs_naive": 1.070846715633865,
+      "bias": 314.8639163042703,
+      "share_of_weeks_beating_naive": 0.5084745762711864
+    },
+    "ar1_trend_26w": {
+      "mae": 26341.43105596137,
+      "mape": 0.1404270866792854,
+      "mae_vs_naive": 0.8653122753465544,
+      "bias": 285.0890850850679,
+      "share_of_weeks_beating_naive": 0.576271186440678
+    },
+    "combo_naive_ma8": {
+      "mae": 25292.62554025425,
+      "mape": 0.13294774328895928,
+      "mae_vs_naive": 0.8308591628613404,
+      "bias": 6565.614480932205,
+      "share_of_weeks_beating_naive": 0.559322033898305
+    },
+    "_n_forecasts": {
+      "n": 59.0
+    }
+  },
+  "revenue | main, excluding Black Friday week | h=1": {
+    "naive_last_week": {
+      "mae": 26977.603448275862,
+      "mape": 0.14914532154756288,
+      "mae_vs_naive": 1.0,
+      "bias": -1362.7506896551715
+    },
+    "moving_average_8": {
+      "mae": 27245.35806034483,
+      "mape": 0.15366020266737196,
+      "mae_vs_naive": 1.0099250703489038,
+      "bias": 6356.912672413794
+    },
+    "simple_exp_smoothing": {
+      "mae": 27276.010953411118,
+      "mape": 0.15272853457118873,
+      "mae_vs_naive": 1.0110613051936728,
+      "bias": -1487.6009524017322
+    },
+    "damped_trend": {
+      "mae": 28902.85897034885,
+      "mape": 0.16426495347009784,
+      "mae_vs_naive": 1.071364957445693,
+      "bias": -3937.1008359534917
+    },
+    "ar1_trend_26w": {
+      "mae": 22623.716241954713,
+      "mape": 0.13260218629453666,
+      "mae_vs_naive": 0.83861104583775,
+      "bias": -3881.873004281523
+    },
+    "combo_naive_ma8": {
+      "mae": 21546.97155172414,
+      "mape": 0.1249696817584951,
+      "mae_vs_naive": 0.7986985053374415,
+      "bias": 2497.080991379309
+    },
+    "_n_forecasts": {
+      "n": 58.0
+    }
+  },
+  "revenue | main (to 2018-08-13) | h=4": {
+    "naive_last_week": {
+      "mae": 48536.39339285715,
+      "mape": 0.25647880729426636,
+      "mae_vs_naive": 1.0,
+      "bias": 10837.065535714286,
+      "share_of_weeks_beating_naive": 0.0
+    },
+    "moving_average_8": {
+      "mae": 38338.89194196429,
+      "mape": 0.19223033544717422,
+      "mae_vs_naive": 0.7898998928833972,
+      "bias": 16074.969531250003,
+      "share_of_weeks_beating_naive": 0.5178571428571429
+    },
+    "simple_exp_smoothing": {
+      "mae": 45255.31643885426,
+      "mape": 0.23986471188194872,
+      "mae_vs_naive": 0.9323996546787972,
+      "bias": 10314.181156183782,
+      "share_of_weeks_beating_naive": 0.5357142857142857
+    },
+    "damped_trend": {
+      "mae": 44291.549164882694,
+      "mape": 0.2379271838062971,
+      "mae_vs_naive": 0.9125430644667729,
+      "bias": 5362.166065768413,
+      "share_of_weeks_beating_naive": 0.6428571428571429
+    },
+    "ar1_trend_26w": {
+      "mae": 36729.23518391412,
+      "mape": 0.19132195395717425,
+      "mae_vs_naive": 0.7567359792604486,
+      "bias": -1813.5696858272495,
+      "share_of_weeks_beating_naive": 0.6964285714285714
+    },
+    "combo_naive_ma8": {
+      "mae": 41977.11215401786,
+      "mape": 0.21610441035259928,
+      "mae_vs_naive": 0.8648584952378314,
+      "bias": 13456.017533482142,
+      "share_of_weeks_beating_naive": 0.5178571428571429
+    },
+    "_n_forecasts": {
+      "n": 56.0
+    }
+  },
+  "revenue | main, excluding Black Friday week | h=4": {
+    "naive_last_week": {
+      "mae": 44535.04527272728,
+      "mape": 0.24914746326532333,
+      "mae_vs_naive": 1.0,
+      "bias": 6150.275090909091
+    },
+    "moving_average_8": {
+      "mae": 34292.41090909091,
+      "mape": 0.18407535325858343,
+      "mae_vs_naive": 0.7700095666028473,
+      "bias": 11623.68990909091
+    },
+    "simple_exp_smoothing": {
+      "mae": 41336.637647677766,
+      "mape": 0.23258084174213656,
+      "mae_vs_naive": 0.9281822302983449,
+      "bias": 5760.20899623148
+    },
+    "damped_trend": {
+      "mae": 40436.991020465175,
+      "mape": 0.23080860133528527,
+      "mae_vs_naive": 0.9079813610345266,
+      "bias": 799.8009559124619
+    },
+    "ar1_trend_26w": {
+      "mae": 32918.51176686885,
+      "mape": 0.1838013502430003,
+      "mae_vs_naive": 0.7391597238821658,
+      "bias": -6325.071373231455
+    },
+    "combo_naive_ma8": {
+      "mae": 37926.64247727273,
+      "mape": 0.20821124431623023,
+      "mae_vs_naive": 0.8516134258989638,
+      "bias": 8886.9825
+    },
+    "_n_forecasts": {
+      "n": 55.0
+    }
+  },
+  "revenue | with suspect week 2018-08-20 | h=1": {
+    "naive_last_week": {
+      "mae": 31920.428499999998,
+      "mape": 0.16935342963672903,
+      "mae_vs_naive": 1.0,
+      "bias": 552.2414999999996,
+      "share_of_weeks_beating_naive": 0.0
+    },
+    "moving_average_8": {
+      "mae": 32156.32097916667,
+      "mape": 0.17150211709401772,
+      "mae_vs_naive": 1.0073900160571676,
+      "bias": 8783.598854166665,
+      "share_of_weeks_beating_naive": 0.48333333333333334
+    },
+    "simple_exp_smoothing": {
+      "mae": 32484.188296829037,
+      "mape": 0.17426884208395343,
+      "mae_vs_naive": 1.0176614106802808,
+      "bias": 422.4317048288511,
+      "share_of_weeks_beating_naive": 0.48333333333333334
+    },
+    "damped_trend": {
+      "mae": 34204.41392773912,
+      "mape": 0.18589795356295732,
+      "mae_vs_naive": 1.0715524676537198,
+      "bias": -1839.887079581798,
+      "share_of_weeks_beating_naive": 0.5
+    },
+    "ar1_trend_26w": {
+      "mae": 27699.46475903235,
+      "mape": 0.1523000068919846,
+      "mae_vs_naive": 0.8677660689621493,
+      "bias": -1516.7199536700202,
+      "share_of_weeks_beating_naive": 0.5833333333333334
+    },
+    "combo_naive_ma8": {
+      "mae": 26659.349177083343,
+      "mape": 0.14487579569470013,
+      "mae_vs_naive": 0.8351814317618995,
+      "bias": 4667.920177083334,
+      "share_of_weeks_beating_naive": 0.5666666666666667
+    },
+    "_n_forecasts": {
+      "n": 60.0
+    }
+  },
+  "revenue | with suspect week 2018-08-20 | h=4": {
+    "naive_last_week": {
+      "mae": 49715.20859649123,
+      "mape": 0.268037567031807,
+      "mae_vs_naive": 1.0,
+      "bias": 8616.610701754387,
+      "share_of_weeks_beating_naive": 0.0
+    },
+    "moving_average_8": {
+      "mae": 38935.4532017544,
+      "mape": 0.19889607903137743,
+      "mae_vs_naive": 0.783169864935503,
+      "bias": 14523.77912280702,
+      "share_of_weeks_beating_naive": 0.5263157894736842
+    },
+    "simple_exp_smoothing": {
+      "mae": 46264.50560394022,
+      "mape": 0.2499180547569287,
+      "mae_vs_naive": 0.9305905961180145,
+      "bias": 8330.088524518205,
+      "share_of_weeks_beating_naive": 0.543859649122807
+    },
+    "damped_trend": {
+      "mae": 44934.00521434083,
+      "mape": 0.24498020458231454,
+      "mae_vs_naive": 0.903828154057311,
+      "bias": 3848.592205246221,
+      "share_of_weeks_beating_naive": 0.6491228070175439
+    },
+    "ar1_trend_26w": {
+      "mae": 37383.84527939946,
+      "mape": 0.1982394027212562,
+      "mae_vs_naive": 0.7519599401225867,
+      "bias": -3080.7353163667476,
+      "share_of_weeks_beating_naive": 0.7017543859649122
+    },
+    "combo_naive_ma8": {
+      "mae": 42890.42372807018,
+      "mape": 0.22536140168045576,
+      "mae_vs_naive": 0.8627223929841314,
+      "bias": 11570.194912280702,
+      "share_of_weeks_beating_naive": 0.5263157894736842
+    },
+    "_n_forecasts": {
+      "n": 57.0
+    }
+  }
+}
