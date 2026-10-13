@@ -61,6 +61,7 @@ On a network that intercepts TLS, `uv` may need the `--native-tls` flag.
 uv run python src/ml/late_delivery_baseline.py
 uv run python src/ml/forecast_baseline.py
 uv run python src/ml/drift_analysis.py   # a few minutes
+uv run python src/ml/recalibration.py  # a few minutes
 uv run pytest
 ```
 
@@ -69,7 +70,7 @@ Metrics are written to `reports/`, and `docs/ml/PHASE2_BASELINES.md` explains th
 ## 4. Explore
 
 - `notebooks/01_dataset_discovery.ipynb`: dataset discovery and EDA.
-- `docs/ml/LEAKAGE_ANALYSIS.md`, `docs/ml/PHASE2_BASELINES.md` and `docs/ml/DRIFT_ANALYSIS.md`: ML targets, leakage rules, baseline results and the drift tests.
+- `docs/ml/LEAKAGE_ANALYSIS.md`, `docs/ml/PHASE2_BASELINES.md` and `docs/ml/DRIFT_ANALYSIS.md` and `docs/ml/RECALIBRATION_AND_WINDOW.md`: ML targets, leakage rules, baseline results, drift tests and recalibration.
 - `ARCHITECTURE.md` and `DECISIONS.md`: design and decision log.
 - `docs/data/DATA_MODEL.md`: star schema, grains and design decisions.
 - `docs/data/EDA_FINDINGS.md`: EDA findings.

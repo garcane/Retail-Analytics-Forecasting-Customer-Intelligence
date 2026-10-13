@@ -24,6 +24,7 @@ Later decisions can supersede earlier ones; when that happens the entry says so.
 | DD-08 | 2026-10-11 | Add scikit-learn for the ML baselines | Active |
 | DD-09 | 2026-10-11 | Report backtest metrics as a per-month macro-average | Active |
 | DD-10 | 2026-10-11 | Keep v1 features as the reference late-delivery model | Active |
+| DD-11 | 2026-10-13 | No recalibration or window tuning; use the model by rank | Active |
 
 ---
 
@@ -183,3 +184,12 @@ Evidence for these entries is in [docs/data/EDA_FINDINGS.md](docs/data/EDA_FINDI
 - **Reason:** A model should not get more complex without a measured gain.
 - **Trade-offs:** The drift explanation was tested afterwards ([docs/ml/DRIFT_ANALYSIS.md](docs/ml/DRIFT_ANALYSIS.md)) and holds only in part: v3 and category history fail because they track regime, route history fails because it repeats the state and distance columns already in v1.
 - **Rejected:** Adopting v3 because it uses more information; deleting v2 and v3 and losing the record of what was tried.
+
+### DD-11: No recalibration or window tuning; use the model by rank
+
+- **Context:** The drift analysis suggested recalibrating v1 on the latest resolved orders and shortening its training window. Both were tested out-of-time ([docs/ml/RECALIBRATION_AND_WINDOW.md](docs/ml/RECALIBRATION_AND_WINDOW.md)).
+- **Findings:** Recalibration made Brier, log loss and calibration error worse in every variant: the late rate of the recent past did not predict the next month's (correlation -0.18 over six pairs), and holding orders out for calibration made the base model staler. Choosing the window walk-forward gained +0.010 PR-AUC, but in only three of six months, mostly from August 2018.
+- **Chosen:** v1 trained on all resolved history, uncalibrated. The model is described and used as a **ranker**: the operating point is a share of orders flagged (for example the riskiest 10%), not a probability threshold. Its probabilities are not to be quoted as absolute risks.
+- **Reason:** A change is only adopted when it beats the reference out-of-time. Neither did.
+- **Trade-offs:** The level of the predicted probabilities stays off by about 0.06 on average per month (0.14 in March 2018). Short-window adaptation after a policy change such as August 2018 is left for monitoring, not built.
+- **Rejected:** Platt, isotonic and level-shift recalibration; a fixed 2-month window (looked best only in hindsight); a probability cut-off for flagging.

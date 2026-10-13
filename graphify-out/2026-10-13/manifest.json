@@ -1,0 +1,224 @@
+{
+  ".claude/settings.json": {
+    "mtime": 1791307623.0898004,
+    "seen": 1791308102.7404938,
+    "ast_hash": "3ac995fbf93552a991ecab9b63f776aa",
+    "semantic_hash": "3ac995fbf93552a991ecab9b63f776aa"
+  },
+  ".codex/hooks.json": {
+    "mtime": 1791307628.3004787,
+    "seen": 1791308102.7414763,
+    "ast_hash": "5ebef3dd159986e465ab65e4014107ec",
+    "semantic_hash": "5ebef3dd159986e465ab65e4014107ec"
+  },
+  "pyproject.toml": {
+    "mtime": 1791753482.922447,
+    "seen": 1791753856.5803614,
+    "ast_hash": "bc9a2323e7527f8214f88cb021cfc958",
+    "semantic_hash": ""
+  },
+  "CLAUDE.md": {
+    "mtime": 1791307623.0807996,
+    "seen": 1791308102.7414763,
+    "ast_hash": "8a6643a420fdad6bfb583523bc6cef16",
+    "semantic_hash": "8a6643a420fdad6bfb583523bc6cef16"
+  },
+  "Cloud Portfolio \u2014 Master Agent Prompt.md": {
+    "mtime": 1789304574.9171472,
+    "seen": 1791308102.7414763,
+    "ast_hash": "3e7d0201d8beb9e6c9848e3f0d6c1760",
+    "semantic_hash": "3e7d0201d8beb9e6c9848e3f0d6c1760"
+  },
+  "GCP.md": {
+    "mtime": 1789304574.9182827,
+    "seen": 1791308102.7414763,
+    "ast_hash": "7e6ed4bd7b3c8e08651d0666a16dbae3",
+    "semantic_hash": "7e6ed4bd7b3c8e08651d0666a16dbae3"
+  },
+  "Google Cloud Project \u2014 Retail Analytics, Forecasting & Customer Intelligence Platform.md": {
+    "mtime": 1789304574.9202805,
+    "seen": 1791308102.7414763,
+    "ast_hash": "dabe52e996c03d8a7b3a7bcfa89e4357",
+    "semantic_hash": "dabe52e996c03d8a7b3a7bcfa89e4357"
+  },
+  "docs/architecture-philosophy.md": {
+    "mtime": 1789304574.9222848,
+    "seen": 1791308102.7414763,
+    "ast_hash": "3845a19428d4b986a34c519e160113a5",
+    "semantic_hash": "3845a19428d4b986a34c519e160113a5"
+  },
+  "scripts/visualize_schema.py": {
+    "mtime": 1791310942.1550713,
+    "seen": 1791751442.4604332,
+    "ast_hash": "bec3d431bb391fa6267dc8e6df9b9879",
+    "semantic_hash": ""
+  },
+  "src/transformation/build_warehouse.py": {
+    "mtime": 1791652810.7651,
+    "seen": 1791751442.4604332,
+    "ast_hash": "8f5ac5fbaedf6be5760f03c9c185f4ec",
+    "semantic_hash": ""
+  },
+  ".claude/CLAUDE.md": {
+    "mtime": 1791307623.077802,
+    "seen": 1791751442.4604332,
+    "ast_hash": "9b31786b637be3c13978bec4c2330752",
+    "semantic_hash": ""
+  },
+  "AGENTS.md": {
+    "mtime": 1791307628.2964847,
+    "seen": 1791751442.4604332,
+    "ast_hash": "21ceb6533048be51308e69e7b74a35cf",
+    "semantic_hash": ""
+  },
+  "ARCHITECTURE.md": {
+    "mtime": 1791754888.9634154,
+    "seen": 1791754914.3083463,
+    "ast_hash": "6c770c9afdfb031055c8f2a3aab07b3a",
+    "semantic_hash": ""
+  },
+  "DECISIONS.md": {
+    "mtime": 1791754888.9624164,
+    "seen": 1791754914.3083463,
+    "ast_hash": "5434244ffdb7a8ea2a999045b5df2ae8",
+    "semantic_hash": ""
+  },
+  "PROJECT_STATUS.md": {
+    "mtime": 1791754888.9654162,
+    "seen": 1791754914.3083463,
+    "ast_hash": "5bb2421657f658f832c283079630c933",
+    "semantic_hash": ""
+  },
+  "README.md": {
+    "mtime": 1791754888.968941,
+    "seen": 1791754914.3083463,
+    "ast_hash": "b2273212106e5b2693bf3c60da8eb5cb",
+    "semantic_hash": ""
+  },
+  "docs/HANDOFF.md": {
+    "mtime": 1791754888.966423,
+    "seen": 1791754914.3083463,
+    "ast_hash": "637ca03ffda57bc449a0e02c85783b47",
+    "semantic_hash": ""
+  },
+  "docs/data/DATA_MODEL.md": {
+    "mtime": 1791311008.9932482,
+    "seen": 1791751442.4624321,
+    "ast_hash": "5443c4658075587e99d8ab5f34cb6895",
+    "semantic_hash": ""
+  },
+  "docs/data/EDA_FINDINGS.md": {
+    "mtime": 1791310998.0158064,
+    "seen": 1791751442.4624321,
+    "ast_hash": "ddd7269ce44284f0d32953c35df32e00",
+    "semantic_hash": ""
+  },
+  "docs/ml/LEAKAGE_ANALYSIS.md": {
+    "mtime": 1791753826.389152,
+    "seen": 1791753856.5853615,
+    "ast_hash": "f4bb45794ed39ff03f9bd5077d72b336",
+    "semantic_hash": ""
+  },
+  "docs/phase0/PHASE0_DISCOVERY.md": {
+    "mtime": 1791309975.2122467,
+    "seen": 1791751442.4624321,
+    "ast_hash": "d2ddcedfbb28ee3bc89a7b520fe02b80",
+    "semantic_hash": ""
+  },
+  "docs/data/star_schema.png": {
+    "mtime": 1791310948.3589723,
+    "seen": 1791751442.4624321,
+    "ast_hash": "c4243f2eef41482c41db7909b6825c26",
+    "semantic_hash": ""
+  },
+  "reports/forecast_metrics.json": {
+    "mtime": 1791751936.4615393,
+    "seen": 1791753856.5803614,
+    "ast_hash": "15d6d343b4fc7f13ba0d0d632638f835",
+    "semantic_hash": ""
+  },
+  "reports/late_delivery_metrics.json": {
+    "mtime": 1791753354.405574,
+    "seen": 1791753856.5803614,
+    "ast_hash": "87fbe9a662c664c84ace9cc9fbc7398d",
+    "semantic_hash": ""
+  },
+  "src/ml/forecast_baseline.py": {
+    "mtime": 1791751845.3620627,
+    "seen": 1791753856.5803614,
+    "ast_hash": "7833e30cca42cbdaa00e31e1da4617fd",
+    "semantic_hash": ""
+  },
+  "src/ml/late_delivery_baseline.py": {
+    "mtime": 1791754638.6207244,
+    "seen": 1791754914.3083463,
+    "ast_hash": "47c36138b837c78b2948cc87eba61e17",
+    "semantic_hash": ""
+  },
+  "tests/conftest.py": {
+    "mtime": 1791753484.2819912,
+    "seen": 1791753856.5813594,
+    "ast_hash": "637ca5b79a416ba9abd171782bc4d4c4",
+    "semantic_hash": ""
+  },
+  "tests/test_feature_leakage.py": {
+    "mtime": 1791753485.4725666,
+    "seen": 1791753856.5813594,
+    "ast_hash": "1de521495e75bc2c8bec36403eef1cb0",
+    "semantic_hash": ""
+  },
+  "tests/test_forecast_baseline.py": {
+    "mtime": 1791753486.5865192,
+    "seen": 1791753856.5813594,
+    "ast_hash": "85fcaef8ee6fd7bf1df3ab6a8e846555",
+    "semantic_hash": ""
+  },
+  "tests/test_geolocation_conversion.py": {
+    "mtime": 1791753489.2296183,
+    "seen": 1791753856.5813594,
+    "ast_hash": "50cc3d3aa16dbeb49ed1dbf3097b4010",
+    "semantic_hash": ""
+  },
+  "tests/test_late_delivery_helpers.py": {
+    "mtime": 1791753487.9643533,
+    "seen": 1791753856.5813594,
+    "ast_hash": "fbc2ae8a12aa4406a28e1c5ca94a0d0e",
+    "semantic_hash": ""
+  },
+  "tests/test_warehouse.py": {
+    "mtime": 1791753556.634975,
+    "seen": 1791753856.5813594,
+    "ast_hash": "edf6b0c0ea4bcbe49dae9082fdfccb40",
+    "semantic_hash": ""
+  },
+  "docs/ml/PHASE2_BASELINES.md": {
+    "mtime": 1791754888.959719,
+    "seen": 1791754914.3083463,
+    "ast_hash": "baf0b4d3f6091f47cecfaf5a991daa4f",
+    "semantic_hash": ""
+  },
+  "reports/drift_metrics.json": {
+    "mtime": 1791754782.050471,
+    "seen": 1791754914.3083463,
+    "ast_hash": "d02012c20152500c8dc9be0be6237a98",
+    "semantic_hash": ""
+  },
+  "src/ml/drift_analysis.py": {
+    "mtime": 1791754666.5827253,
+    "seen": 1791754914.3083463,
+    "ast_hash": "df6f9f7bf1ba6049f690e127ce6819b9",
+    "semantic_hash": ""
+  },
+  "tests/test_drift_helpers.py": {
+    "mtime": 1791754806.6717286,
+    "seen": 1791754914.3083463,
+    "ast_hash": "da5273bde47657af119ee01da66846a0",
+    "semantic_hash": ""
+  },
+  "docs/ml/DRIFT_ANALYSIS.md": {
+    "mtime": 1791754888.9525473,
+    "seen": 1791754914.3083463,
+    "ast_hash": "d1fcd6e7e245c2b2c0420bc2f974fd81",
+    "semantic_hash": ""
+  }
+}

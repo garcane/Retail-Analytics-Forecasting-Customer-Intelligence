@@ -58,7 +58,7 @@
       "_callable_class": true,
       "_origin": "ast",
       "community": 21,
-      "community_name": "duckdb",
+      "community_name": "conftest.py",
       "file_type": "code",
       "norm_label": "miniwarehouse",
       "source_file": "tests/conftest.py",
@@ -173,6 +173,18 @@
       "source_location": "L64"
     },
     {
+      "id": "src_ml_forecast_baseline_main",
+      "label": "main()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 19,
+      "community_name": "late_delivery_baseline.py",
+      "file_type": "code",
+      "norm_label": "main()",
+      "source_file": "src/ml/forecast_baseline.py",
+      "source_location": "L105"
+    },
+    {
       "id": "src_ml_late_delivery_baseline_add_smoothed_rates",
       "label": "add_smoothed_rates()",
       "_callable": true,
@@ -279,6 +291,18 @@
       "norm_label": "unlabelled_share()",
       "source_file": "src/ml/late_delivery_baseline.py",
       "source_location": "L70"
+    },
+    {
+      "id": "src_ml_recalibration_main",
+      "label": "main()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 19,
+      "community_name": "late_delivery_baseline.py",
+      "file_type": "code",
+      "norm_label": "main()",
+      "source_file": "src/ml/recalibration.py",
+      "source_location": "L155"
     },
     {
       "id": "tests_test_late_delivery_helpers_test_calendar_month_is_not_a_feature",
@@ -437,6 +461,18 @@
       "source_location": "L23"
     },
     {
+      "id": "tests_test_geolocation_conversion_test_existing_parquet_is_left_untouched",
+      "label": "test_existing_parquet_is_left_untouched()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 2,
+      "community_name": "visualize_schema.py",
+      "file_type": "code",
+      "norm_label": "test_existing_parquet_is_left_untouched()",
+      "source_file": "tests/test_geolocation_conversion.py",
+      "source_location": "L32"
+    },
+    {
       "id": "src_ml_forecast_baseline_backtest",
       "label": "backtest()",
       "_callable": true,
@@ -471,18 +507,6 @@
       "norm_label": "f()",
       "source_file": "src/ml/forecast_baseline.py",
       "source_location": "L62"
-    },
-    {
-      "id": "src_ml_forecast_baseline_main",
-      "label": "main()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 20,
-      "community_name": "forecast_baseline.py",
-      "file_type": "code",
-      "norm_label": "main()",
-      "source_file": "src/ml/forecast_baseline.py",
-      "source_location": "L105"
     },
     {
       "id": "src_ml_forecast_baseline_moving_average",
@@ -531,66 +555,6 @@
       "norm_label": "weekly_series()",
       "source_file": "src/ml/forecast_baseline.py",
       "source_location": "L34"
-    },
-    {
-      "id": "tests_test_drift_helpers_frame",
-      "label": "frame()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 20,
-      "community_name": "forecast_baseline.py",
-      "file_type": "code",
-      "norm_label": "frame()",
-      "source_file": "tests/test_drift_helpers.py",
-      "source_location": "L10"
-    },
-    {
-      "id": "tests_test_drift_helpers_test_relative_rates_are_positive_for_a_late_route",
-      "label": "test_relative_rates_are_positive_for_a_late_route()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 20,
-      "community_name": "forecast_baseline.py",
-      "file_type": "code",
-      "norm_label": "test_relative_rates_are_positive_for_a_late_route()",
-      "source_file": "tests/test_drift_helpers.py",
-      "source_location": "L44"
-    },
-    {
-      "id": "tests_test_drift_helpers_test_relative_rates_are_zero_when_route_matches_the_system",
-      "label": "test_relative_rates_are_zero_when_route_matches_the_system()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 20,
-      "community_name": "forecast_baseline.py",
-      "file_type": "code",
-      "norm_label": "test_relative_rates_are_zero_when_route_matches_the_system()",
-      "source_file": "tests/test_drift_helpers.py",
-      "source_location": "L34"
-    },
-    {
-      "id": "tests_test_drift_helpers_test_system_counts_do_not_depend_on_row_order",
-      "label": "test_system_counts_do_not_depend_on_row_order()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 20,
-      "community_name": "forecast_baseline.py",
-      "file_type": "code",
-      "norm_label": "test_system_counts_do_not_depend_on_row_order()",
-      "source_file": "tests/test_drift_helpers.py",
-      "source_location": "L26"
-    },
-    {
-      "id": "tests_test_drift_helpers_test_system_counts_use_only_orders_delivered_strictly_before_purchase",
-      "label": "test_system_counts_use_only_orders_delivered_strictly_before_purchase()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 20,
-      "community_name": "forecast_baseline.py",
-      "file_type": "code",
-      "norm_label": "test_system_counts_use_only_orders_delivered_strictly_before_purchase()",
-      "source_file": "tests/test_drift_helpers.py",
-      "source_location": "L19"
     },
     {
       "id": "tests_test_forecast_baseline_series",
@@ -653,12 +617,120 @@
       "source_location": "L42"
     },
     {
+      "id": "tests_test_geolocation_conversion_con",
+      "label": "con()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 20,
+      "community_name": "forecast_baseline.py",
+      "file_type": "code",
+      "norm_label": "con()",
+      "source_file": "tests/test_geolocation_conversion.py",
+      "source_location": "L15"
+    },
+    {
+      "id": "tests_test_geolocation_conversion_test_csv_only_is_converted_and_keeps_leading_zeros",
+      "label": "test_csv_only_is_converted_and_keeps_leading_zeros()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 20,
+      "community_name": "forecast_baseline.py",
+      "file_type": "code",
+      "norm_label": "test_csv_only_is_converted_and_keeps_leading_zeros()",
+      "source_file": "tests/test_geolocation_conversion.py",
+      "source_location": "L21"
+    },
+    {
+      "id": "tests_test_geolocation_conversion_test_missing_both_files_raises_with_pointer_to_readme",
+      "label": "test_missing_both_files_raises_with_pointer_to_readme()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 20,
+      "community_name": "forecast_baseline.py",
+      "file_type": "code",
+      "norm_label": "test_missing_both_files_raises_with_pointer_to_readme()",
+      "source_file": "tests/test_geolocation_conversion.py",
+      "source_location": "L40"
+    },
+    {
+      "id": "tests_test_warehouse_features",
+      "label": "features()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 20,
+      "community_name": "forecast_baseline.py",
+      "file_type": "code",
+      "norm_label": "features()",
+      "source_file": "tests/test_warehouse.py",
+      "source_location": "L18"
+    },
+    {
+      "id": "tests_test_warehouse_test_all_validation_checks_pass",
+      "label": "test_all_validation_checks_pass()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 20,
+      "community_name": "forecast_baseline.py",
+      "file_type": "code",
+      "norm_label": "test_all_validation_checks_pass()",
+      "source_file": "tests/test_warehouse.py",
+      "source_location": "L11"
+    },
+    {
+      "id": "tests_test_warehouse_test_feature_table_matches_the_documented_population",
+      "label": "test_feature_table_matches_the_documented_population()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 20,
+      "community_name": "forecast_baseline.py",
+      "file_type": "code",
+      "norm_label": "test_feature_table_matches_the_documented_population()",
+      "source_file": "tests/test_warehouse.py",
+      "source_location": "L22"
+    },
+    {
+      "id": "tests_test_warehouse_test_recent_28d_matches_a_direct_recount_on_real_data",
+      "label": "test_recent_28d_matches_a_direct_recount_on_real_data()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 20,
+      "community_name": "forecast_baseline.py",
+      "file_type": "code",
+      "norm_label": "test_recent_28d_matches_a_direct_recount_on_real_data()",
+      "source_file": "tests/test_warehouse.py",
+      "source_location": "L31"
+    },
+    {
+      "id": "tests_test_warehouse_test_seller_history_matches_a_direct_recount_on_real_data",
+      "label": "test_seller_history_matches_a_direct_recount_on_real_data()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 20,
+      "community_name": "forecast_baseline.py",
+      "file_type": "code",
+      "norm_label": "test_seller_history_matches_a_direct_recount_on_real_data()",
+      "source_file": "tests/test_warehouse.py",
+      "source_location": "L42"
+    },
+    {
+      "id": "tests_test_warehouse_test_weekly_series_covers_the_documented_window",
+      "label": "test_weekly_series_covers_the_documented_window()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 20,
+      "community_name": "forecast_baseline.py",
+      "file_type": "code",
+      "norm_label": "test_weekly_series_covers_the_documented_window()",
+      "source_file": "tests/test_warehouse.py",
+      "source_location": "L62"
+    },
+    {
       "id": "tests_conftest_mini",
       "label": "mini()",
       "_callable": true,
       "_origin": "ast",
       "community": 21,
-      "community_name": "duckdb",
+      "community_name": "conftest.py",
       "file_type": "code",
       "norm_label": "mini()",
       "source_file": "tests/conftest.py",
@@ -670,7 +742,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 21,
-      "community_name": "duckdb",
+      "community_name": "conftest.py",
       "file_type": "code",
       "norm_label": ".add_order()",
       "source_file": "tests/conftest.py",
@@ -682,7 +754,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 21,
-      "community_name": "duckdb",
+      "community_name": "conftest.py",
       "file_type": "code",
       "norm_label": ".features()",
       "source_file": "tests/conftest.py",
@@ -694,7 +766,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 21,
-      "community_name": "duckdb",
+      "community_name": "conftest.py",
       "file_type": "code",
       "norm_label": ".__init__()",
       "source_file": "tests/conftest.py",
@@ -706,131 +778,11 @@
       "_callable": true,
       "_origin": "ast",
       "community": 21,
-      "community_name": "duckdb",
+      "community_name": "conftest.py",
       "file_type": "code",
       "norm_label": "warehouse()",
       "source_file": "tests/conftest.py",
       "source_location": "L69"
-    },
-    {
-      "id": "tests_test_geolocation_conversion_con",
-      "label": "con()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 21,
-      "community_name": "duckdb",
-      "file_type": "code",
-      "norm_label": "con()",
-      "source_file": "tests/test_geolocation_conversion.py",
-      "source_location": "L15"
-    },
-    {
-      "id": "tests_test_geolocation_conversion_test_csv_only_is_converted_and_keeps_leading_zeros",
-      "label": "test_csv_only_is_converted_and_keeps_leading_zeros()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 21,
-      "community_name": "duckdb",
-      "file_type": "code",
-      "norm_label": "test_csv_only_is_converted_and_keeps_leading_zeros()",
-      "source_file": "tests/test_geolocation_conversion.py",
-      "source_location": "L21"
-    },
-    {
-      "id": "tests_test_geolocation_conversion_test_existing_parquet_is_left_untouched",
-      "label": "test_existing_parquet_is_left_untouched()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 21,
-      "community_name": "duckdb",
-      "file_type": "code",
-      "norm_label": "test_existing_parquet_is_left_untouched()",
-      "source_file": "tests/test_geolocation_conversion.py",
-      "source_location": "L32"
-    },
-    {
-      "id": "tests_test_geolocation_conversion_test_missing_both_files_raises_with_pointer_to_readme",
-      "label": "test_missing_both_files_raises_with_pointer_to_readme()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 21,
-      "community_name": "duckdb",
-      "file_type": "code",
-      "norm_label": "test_missing_both_files_raises_with_pointer_to_readme()",
-      "source_file": "tests/test_geolocation_conversion.py",
-      "source_location": "L40"
-    },
-    {
-      "id": "tests_test_warehouse_features",
-      "label": "features()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 21,
-      "community_name": "duckdb",
-      "file_type": "code",
-      "norm_label": "features()",
-      "source_file": "tests/test_warehouse.py",
-      "source_location": "L18"
-    },
-    {
-      "id": "tests_test_warehouse_test_all_validation_checks_pass",
-      "label": "test_all_validation_checks_pass()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 21,
-      "community_name": "duckdb",
-      "file_type": "code",
-      "norm_label": "test_all_validation_checks_pass()",
-      "source_file": "tests/test_warehouse.py",
-      "source_location": "L11"
-    },
-    {
-      "id": "tests_test_warehouse_test_feature_table_matches_the_documented_population",
-      "label": "test_feature_table_matches_the_documented_population()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 21,
-      "community_name": "duckdb",
-      "file_type": "code",
-      "norm_label": "test_feature_table_matches_the_documented_population()",
-      "source_file": "tests/test_warehouse.py",
-      "source_location": "L22"
-    },
-    {
-      "id": "tests_test_warehouse_test_recent_28d_matches_a_direct_recount_on_real_data",
-      "label": "test_recent_28d_matches_a_direct_recount_on_real_data()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 21,
-      "community_name": "duckdb",
-      "file_type": "code",
-      "norm_label": "test_recent_28d_matches_a_direct_recount_on_real_data()",
-      "source_file": "tests/test_warehouse.py",
-      "source_location": "L31"
-    },
-    {
-      "id": "tests_test_warehouse_test_seller_history_matches_a_direct_recount_on_real_data",
-      "label": "test_seller_history_matches_a_direct_recount_on_real_data()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 21,
-      "community_name": "duckdb",
-      "file_type": "code",
-      "norm_label": "test_seller_history_matches_a_direct_recount_on_real_data()",
-      "source_file": "tests/test_warehouse.py",
-      "source_location": "L42"
-    },
-    {
-      "id": "tests_test_warehouse_test_weekly_series_covers_the_documented_window",
-      "label": "test_weekly_series_covers_the_documented_window()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 21,
-      "community_name": "duckdb",
-      "file_type": "code",
-      "norm_label": "test_weekly_series_covers_the_documented_window()",
-      "source_file": "tests/test_warehouse.py",
-      "source_location": "L62"
     },
     {
       "id": "tests_test_feature_leakage_day",
@@ -951,6 +903,318 @@
       "norm_label": "test_unlabelled_and_anomalous_orders_are_neither_rows_nor_history()",
       "source_file": "tests/test_feature_leakage.py",
       "source_location": "L68"
+    },
+    {
+      "id": "src_ml_recalibration_calibration_split",
+      "label": "calibration_split()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 23,
+      "community_name": "recalibration.py",
+      "file_type": "code",
+      "norm_label": "calibration_split()",
+      "source_file": "src/ml/recalibration.py",
+      "source_location": "L51"
+    },
+    {
+      "id": "src_ml_recalibration_expected_calibration_error",
+      "label": "expected_calibration_error()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 23,
+      "community_name": "recalibration.py",
+      "file_type": "code",
+      "norm_label": "expected_calibration_error()",
+      "source_file": "src/ml/recalibration.py",
+      "source_location": "L76"
+    },
+    {
+      "id": "src_ml_recalibration_experiment_recalibration",
+      "label": "experiment_recalibration()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 23,
+      "community_name": "recalibration.py",
+      "file_type": "code",
+      "norm_label": "experiment_recalibration()",
+      "source_file": "src/ml/recalibration.py",
+      "source_location": "L107"
+    },
+    {
+      "id": "src_ml_recalibration_experiment_window",
+      "label": "experiment_window()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 23,
+      "community_name": "recalibration.py",
+      "file_type": "code",
+      "norm_label": "experiment_window()",
+      "source_file": "src/ml/recalibration.py",
+      "source_location": "L131"
+    },
+    {
+      "id": "src_ml_recalibration_fit_v1",
+      "label": "fit_v1()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 23,
+      "community_name": "recalibration.py",
+      "file_type": "code",
+      "norm_label": "fit_v1()",
+      "source_file": "src/ml/recalibration.py",
+      "source_location": "L93"
+    },
+    {
+      "id": "src_ml_recalibration_logit",
+      "label": "logit()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 23,
+      "community_name": "recalibration.py",
+      "file_type": "code",
+      "norm_label": "logit()",
+      "source_file": "src/ml/recalibration.py",
+      "source_location": "L42"
+    },
+    {
+      "id": "src_ml_recalibration_macro",
+      "label": "macro()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 23,
+      "community_name": "recalibration.py",
+      "file_type": "code",
+      "norm_label": "macro()",
+      "source_file": "src/ml/recalibration.py",
+      "source_location": "L102"
+    },
+    {
+      "id": "src_ml_recalibration_make_calibrator",
+      "label": "make_calibrator()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 23,
+      "community_name": "recalibration.py",
+      "file_type": "code",
+      "norm_label": "make_calibrator()",
+      "source_file": "src/ml/recalibration.py",
+      "source_location": "L61"
+    },
+    {
+      "id": "src_ml_recalibration_predict",
+      "label": "predict()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 23,
+      "community_name": "recalibration.py",
+      "file_type": "code",
+      "norm_label": "predict()",
+      "source_file": "src/ml/recalibration.py",
+      "source_location": "L98"
+    },
+    {
+      "id": "src_ml_recalibration_score",
+      "label": "score()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 23,
+      "community_name": "recalibration.py",
+      "file_type": "code",
+      "norm_label": "score()",
+      "source_file": "src/ml/recalibration.py",
+      "source_location": "L82"
+    },
+    {
+      "id": "src_ml_recalibration_sigmoid",
+      "label": "sigmoid()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 23,
+      "community_name": "recalibration.py",
+      "file_type": "code",
+      "norm_label": "sigmoid()",
+      "source_file": "src/ml/recalibration.py",
+      "source_location": "L47"
+    },
+    {
+      "id": "tests_test_recalibration_orders",
+      "label": "orders()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 23,
+      "community_name": "recalibration.py",
+      "file_type": "code",
+      "norm_label": "orders()",
+      "source_file": "tests/test_recalibration.py",
+      "source_location": "L11"
+    },
+    {
+      "id": "tests_test_recalibration_test_base_and_calibration_rows_do_not_overlap",
+      "label": "test_base_and_calibration_rows_do_not_overlap()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 23,
+      "community_name": "recalibration.py",
+      "file_type": "code",
+      "norm_label": "test_base_and_calibration_rows_do_not_overlap()",
+      "source_file": "tests/test_recalibration.py",
+      "source_location": "L34"
+    },
+    {
+      "id": "tests_test_recalibration_test_base_model_outcomes_are_known_before_the_calibration_window_starts",
+      "label": "test_base_model_outcomes_are_known_before_the_calibration_window_starts()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 23,
+      "community_name": "recalibration.py",
+      "file_type": "code",
+      "norm_label": "test_base_model_outcomes_are_known_before_the_calibration_window_starts()",
+      "source_file": "tests/test_recalibration.py",
+      "source_location": "L29"
+    },
+    {
+      "id": "tests_test_recalibration_test_calibrators_return_probabilities",
+      "label": "test_calibrators_return_probabilities()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 23,
+      "community_name": "recalibration.py",
+      "file_type": "code",
+      "norm_label": "test_calibrators_return_probabilities()",
+      "source_file": "tests/test_recalibration.py",
+      "source_location": "L55"
+    },
+    {
+      "id": "tests_test_recalibration_test_ece_is_zero_for_a_perfectly_calibrated_split",
+      "label": "test_ece_is_zero_for_a_perfectly_calibrated_split()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 23,
+      "community_name": "recalibration.py",
+      "file_type": "code",
+      "norm_label": "test_ece_is_zero_for_a_perfectly_calibrated_split()",
+      "source_file": "tests/test_recalibration.py",
+      "source_location": "L78"
+    },
+    {
+      "id": "tests_test_recalibration_test_platt_reduces_overconfidence",
+      "label": "test_platt_reduces_overconfidence()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 23,
+      "community_name": "recalibration.py",
+      "file_type": "code",
+      "norm_label": "test_platt_reduces_overconfidence()",
+      "source_file": "tests/test_recalibration.py",
+      "source_location": "L63"
+    },
+    {
+      "id": "tests_test_recalibration_test_shift_calibrator_matches_the_observed_rate",
+      "label": "test_shift_calibrator_matches_the_observed_rate()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 23,
+      "community_name": "recalibration.py",
+      "file_type": "code",
+      "norm_label": "test_shift_calibrator_matches_the_observed_rate()",
+      "source_file": "tests/test_recalibration.py",
+      "source_location": "L45"
+    },
+    {
+      "id": "tests_test_recalibration_test_split_uses_only_outcomes_known_before_the_test_month",
+      "label": "test_split_uses_only_outcomes_known_before_the_test_month()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 23,
+      "community_name": "recalibration.py",
+      "file_type": "code",
+      "norm_label": "test_split_uses_only_outcomes_known_before_the_test_month()",
+      "source_file": "tests/test_recalibration.py",
+      "source_location": "L21"
+    },
+    {
+      "id": "tests_test_recalibration_test_unknown_calibrator_is_rejected",
+      "label": "test_unknown_calibrator_is_rejected()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 23,
+      "community_name": "recalibration.py",
+      "file_type": "code",
+      "norm_label": "test_unknown_calibrator_is_rejected()",
+      "source_file": "tests/test_recalibration.py",
+      "source_location": "L73"
+    },
+    {
+      "id": "tests_test_recalibration_test_wider_window_gives_more_calibration_rows",
+      "label": "test_wider_window_gives_more_calibration_rows()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 23,
+      "community_name": "recalibration.py",
+      "file_type": "code",
+      "norm_label": "test_wider_window_gives_more_calibration_rows()",
+      "source_file": "tests/test_recalibration.py",
+      "source_location": "L39"
+    },
+    {
+      "id": "tests_test_drift_helpers_frame",
+      "label": "frame()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 24,
+      "community_name": "test_drift_helpers.py",
+      "file_type": "code",
+      "norm_label": "frame()",
+      "source_file": "tests/test_drift_helpers.py",
+      "source_location": "L10"
+    },
+    {
+      "id": "tests_test_drift_helpers_test_relative_rates_are_positive_for_a_late_route",
+      "label": "test_relative_rates_are_positive_for_a_late_route()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 24,
+      "community_name": "test_drift_helpers.py",
+      "file_type": "code",
+      "norm_label": "test_relative_rates_are_positive_for_a_late_route()",
+      "source_file": "tests/test_drift_helpers.py",
+      "source_location": "L44"
+    },
+    {
+      "id": "tests_test_drift_helpers_test_relative_rates_are_zero_when_route_matches_the_system",
+      "label": "test_relative_rates_are_zero_when_route_matches_the_system()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 24,
+      "community_name": "test_drift_helpers.py",
+      "file_type": "code",
+      "norm_label": "test_relative_rates_are_zero_when_route_matches_the_system()",
+      "source_file": "tests/test_drift_helpers.py",
+      "source_location": "L34"
+    },
+    {
+      "id": "tests_test_drift_helpers_test_system_counts_do_not_depend_on_row_order",
+      "label": "test_system_counts_do_not_depend_on_row_order()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 24,
+      "community_name": "test_drift_helpers.py",
+      "file_type": "code",
+      "norm_label": "test_system_counts_do_not_depend_on_row_order()",
+      "source_file": "tests/test_drift_helpers.py",
+      "source_location": "L26"
+    },
+    {
+      "id": "tests_test_drift_helpers_test_system_counts_use_only_orders_delivered_strictly_before_purchase",
+      "label": "test_system_counts_use_only_orders_delivered_strictly_before_purchase()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 24,
+      "community_name": "test_drift_helpers.py",
+      "file_type": "code",
+      "norm_label": "test_system_counts_use_only_orders_delivered_strictly_before_purchase()",
+      "source_file": "tests/test_drift_helpers.py",
+      "source_location": "L19"
     },
     {
       "id": "docs_ml_leakage_analysis_checklist_from_the_brief",
@@ -1885,17 +2149,6 @@
       "source_location": ""
     },
     {
-      "id": "tests_test_drift_helpers",
-      "label": "test_drift_helpers.py",
-      "_origin": "ast",
-      "community": 20,
-      "community_name": "forecast_baseline.py",
-      "file_type": "code",
-      "norm_label": "test_drift_helpers.py",
-      "source_file": "tests/test_drift_helpers.py",
-      "source_location": "L1"
-    },
-    {
       "id": "tests_test_forecast_baseline",
       "label": "test_forecast_baseline.py",
       "_origin": "ast",
@@ -1905,6 +2158,50 @@
       "norm_label": "test_forecast_baseline.py",
       "source_file": "tests/test_forecast_baseline.py",
       "source_location": "L1"
+    },
+    {
+      "id": "tests_test_geolocation_conversion",
+      "label": "test_geolocation_conversion.py",
+      "_origin": "ast",
+      "community": 20,
+      "community_name": "forecast_baseline.py",
+      "file_type": "code",
+      "norm_label": "test_geolocation_conversion.py",
+      "source_file": "tests/test_geolocation_conversion.py",
+      "source_location": "L1"
+    },
+    {
+      "id": "tests_test_geolocation_conversion_py_fixture",
+      "label": "fixture",
+      "_origin": "ast",
+      "community": 20,
+      "community_name": "forecast_baseline.py",
+      "file_type": "code",
+      "norm_label": "fixture",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "tests_test_warehouse",
+      "label": "test_warehouse.py",
+      "_origin": "ast",
+      "community": 20,
+      "community_name": "forecast_baseline.py",
+      "file_type": "code",
+      "norm_label": "test_warehouse.py",
+      "source_file": "tests/test_warehouse.py",
+      "source_location": "L1"
+    },
+    {
+      "id": "tests_test_warehouse_py_fixture",
+      "label": "fixture",
+      "_origin": "ast",
+      "community": 20,
+      "community_name": "forecast_baseline.py",
+      "file_type": "code",
+      "norm_label": "fixture",
+      "source_file": "",
+      "source_location": ""
     },
     {
       "id": "src_ml_forecast_baseline_rationale_1",
@@ -1951,11 +2248,22 @@
       "source_location": "L1"
     },
     {
+      "id": "tests_test_warehouse_rationale_1",
+      "label": "Checks against the real, built warehouse. Skipped when warehouse.duckdb has not\u2026",
+      "_origin": "ast",
+      "community": 20,
+      "community_name": "forecast_baseline.py",
+      "file_type": "rationale",
+      "norm_label": "checks against the real, built warehouse. skipped when warehouse.duckdb has not...",
+      "source_file": "tests/test_warehouse.py",
+      "source_location": "L1"
+    },
+    {
       "id": "tests_conftest",
       "label": "conftest.py",
       "_origin": "ast",
       "community": 21,
-      "community_name": "duckdb",
+      "community_name": "conftest.py",
       "file_type": "code",
       "norm_label": "conftest.py",
       "source_file": "tests/conftest.py",
@@ -1966,7 +2274,7 @@
       "label": "datetime",
       "_origin": "ast",
       "community": 21,
-      "community_name": "duckdb",
+      "community_name": "conftest.py",
       "file_type": "code",
       "norm_label": "datetime",
       "source_file": "",
@@ -1977,51 +2285,7 @@
       "label": "fixture",
       "_origin": "ast",
       "community": 21,
-      "community_name": "duckdb",
-      "file_type": "code",
-      "norm_label": "fixture",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "tests_test_geolocation_conversion",
-      "label": "test_geolocation_conversion.py",
-      "_origin": "ast",
-      "community": 21,
-      "community_name": "duckdb",
-      "file_type": "code",
-      "norm_label": "test_geolocation_conversion.py",
-      "source_file": "tests/test_geolocation_conversion.py",
-      "source_location": "L1"
-    },
-    {
-      "id": "tests_test_geolocation_conversion_py_fixture",
-      "label": "fixture",
-      "_origin": "ast",
-      "community": 21,
-      "community_name": "duckdb",
-      "file_type": "code",
-      "norm_label": "fixture",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "tests_test_warehouse",
-      "label": "test_warehouse.py",
-      "_origin": "ast",
-      "community": 21,
-      "community_name": "duckdb",
-      "file_type": "code",
-      "norm_label": "test_warehouse.py",
-      "source_file": "tests/test_warehouse.py",
-      "source_location": "L1"
-    },
-    {
-      "id": "tests_test_warehouse_py_fixture",
-      "label": "fixture",
-      "_origin": "ast",
-      "community": 21,
-      "community_name": "duckdb",
+      "community_name": "conftest.py",
       "file_type": "code",
       "norm_label": "fixture",
       "source_file": "",
@@ -2032,7 +2296,7 @@
       "label": "Shared fixtures: a tiny hand-built warehouse for the feature SQL, and the real\u2026",
       "_origin": "ast",
       "community": 21,
-      "community_name": "duckdb",
+      "community_name": "conftest.py",
       "file_type": "rationale",
       "norm_label": "shared fixtures: a tiny hand-built warehouse for the feature sql, and the real...",
       "source_file": "tests/conftest.py",
@@ -2043,33 +2307,11 @@
       "label": "Just the tables and columns the feature SQL reads, filled from a few lines of\u2026",
       "_origin": "ast",
       "community": 21,
-      "community_name": "duckdb",
+      "community_name": "conftest.py",
       "file_type": "rationale",
       "norm_label": "just the tables and columns the feature sql reads, filled from a few lines of...",
       "source_file": "tests/conftest.py",
       "source_location": "L15"
-    },
-    {
-      "id": "tests_test_warehouse_rationale_1",
-      "label": "Checks against the real, built warehouse. Skipped when warehouse.duckdb has not\u2026",
-      "_origin": "ast",
-      "community": 21,
-      "community_name": "duckdb",
-      "file_type": "rationale",
-      "norm_label": "checks against the real, built warehouse. skipped when warehouse.duckdb has not...",
-      "source_file": "tests/test_warehouse.py",
-      "source_location": "L1"
-    },
-    {
-      "id": "parametrize",
-      "label": "parametrize",
-      "_origin": "ast",
-      "community": 22,
-      "community_name": "test_feature_leakage.py",
-      "file_type": "code",
-      "norm_label": "parametrize",
-      "source_file": "",
-      "source_location": ""
     },
     {
       "id": "tests_test_feature_leakage",
@@ -2090,6 +2332,17 @@
       "community_name": "test_feature_leakage.py",
       "file_type": "code",
       "norm_label": "datetime",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "tests_test_feature_leakage_py_parametrize",
+      "label": "parametrize",
+      "_origin": "ast",
+      "community": 22,
+      "community_name": "test_feature_leakage.py",
+      "file_type": "code",
+      "norm_label": "parametrize",
       "source_file": "",
       "source_location": ""
     },
@@ -2186,6 +2439,127 @@
       "file_type": "rationale",
       "norm_label": "leakage rules from docs/ml/leakage_analysis.md, checked on a tiny hand-built...",
       "source_file": "tests/test_feature_leakage.py",
+      "source_location": "L1"
+    },
+    {
+      "id": "period",
+      "label": "Period",
+      "_origin": "ast",
+      "community": 23,
+      "community_name": "recalibration.py",
+      "file_type": "code",
+      "norm_label": "period",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "src_ml_recalibration",
+      "label": "recalibration.py",
+      "_origin": "ast",
+      "community": 23,
+      "community_name": "recalibration.py",
+      "file_type": "code",
+      "norm_label": "recalibration.py",
+      "source_file": "src/ml/recalibration.py",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_ml_recalibration_py_dataframe",
+      "label": "DataFrame",
+      "_origin": "ast",
+      "community": 23,
+      "community_name": "recalibration.py",
+      "file_type": "code",
+      "norm_label": "dataframe",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "src_ml_recalibration_py_ndarray",
+      "label": "ndarray",
+      "_origin": "ast",
+      "community": 23,
+      "community_name": "recalibration.py",
+      "file_type": "code",
+      "norm_label": "ndarray",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "tests_test_recalibration",
+      "label": "test_recalibration.py",
+      "_origin": "ast",
+      "community": 23,
+      "community_name": "recalibration.py",
+      "file_type": "code",
+      "norm_label": "test_recalibration.py",
+      "source_file": "tests/test_recalibration.py",
+      "source_location": "L1"
+    },
+    {
+      "id": "tests_test_recalibration_py_parametrize",
+      "label": "parametrize",
+      "_origin": "ast",
+      "community": 23,
+      "community_name": "recalibration.py",
+      "file_type": "code",
+      "norm_label": "parametrize",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "src_ml_recalibration_rationale_1",
+      "label": "Recalibrate the v1 late-delivery model on the latest resolved period, and\u2026",
+      "_origin": "ast",
+      "community": 23,
+      "community_name": "recalibration.py",
+      "file_type": "rationale",
+      "norm_label": "recalibrate the v1 late-delivery model on the latest resolved period, and...",
+      "source_file": "src/ml/recalibration.py",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_ml_recalibration_rationale_52",
+      "label": "(base training rows, calibration rows) for a test month, with the outcome-time\u2026",
+      "_origin": "ast",
+      "community": 23,
+      "community_name": "recalibration.py",
+      "file_type": "rationale",
+      "norm_label": "(base training rows, calibration rows) for a test month, with the outcome-time...",
+      "source_file": "src/ml/recalibration.py",
+      "source_location": "L52"
+    },
+    {
+      "id": "src_ml_recalibration_rationale_62",
+      "label": "Return a function mapping model probabilities to recalibrated ones, fitted on\u2026",
+      "_origin": "ast",
+      "community": 23,
+      "community_name": "recalibration.py",
+      "file_type": "rationale",
+      "norm_label": "return a function mapping model probabilities to recalibrated ones, fitted on...",
+      "source_file": "src/ml/recalibration.py",
+      "source_location": "L62"
+    },
+    {
+      "id": "tests_test_recalibration_rationale_12",
+      "label": "Orders purchased every 5 days from 2017-01-01 to 2018-05-31, each delivered 12\u2026",
+      "_origin": "ast",
+      "community": 23,
+      "community_name": "recalibration.py",
+      "file_type": "rationale",
+      "norm_label": "orders purchased every 5 days from 2017-01-01 to 2018-05-31, each delivered 12...",
+      "source_file": "tests/test_recalibration.py",
+      "source_location": "L12"
+    },
+    {
+      "id": "tests_test_drift_helpers",
+      "label": "test_drift_helpers.py",
+      "_origin": "ast",
+      "community": 24,
+      "community_name": "test_drift_helpers.py",
+      "file_type": "code",
+      "norm_label": "test_drift_helpers.py",
+      "source_file": "tests/test_drift_helpers.py",
       "source_location": "L1"
     },
     {
@@ -2741,6 +3115,78 @@
       "source_location": "L1"
     },
     {
+      "id": "docs_ml_recalibration_and_window",
+      "label": "RECALIBRATION_AND_WINDOW.md",
+      "_origin": "ast",
+      "community": 7,
+      "community_name": "DECISIONS.md",
+      "file_type": "document",
+      "node_kind": "page",
+      "norm_label": "recalibration_and_window.md",
+      "source_file": "docs/ml/RECALIBRATION_AND_WINDOW.md",
+      "source_location": "L1"
+    },
+    {
+      "id": "docs_ml_recalibration_and_window_conclusions",
+      "label": "Conclusions",
+      "_origin": "ast",
+      "community": 7,
+      "community_name": "DECISIONS.md",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "conclusions",
+      "source_file": "docs/ml/RECALIBRATION_AND_WINDOW.md",
+      "source_location": "L72"
+    },
+    {
+      "id": "docs_ml_recalibration_and_window_limits",
+      "label": "Limits",
+      "_origin": "ast",
+      "community": 7,
+      "community_name": "DECISIONS.md",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "limits",
+      "source_file": "docs/ml/RECALIBRATION_AND_WINDOW.md",
+      "source_location": "L90"
+    },
+    {
+      "id": "docs_ml_recalibration_and_window_r_recalibration_on_the_latest_resolved_period",
+      "label": "R: recalibration on the latest resolved period",
+      "_origin": "ast",
+      "community": 7,
+      "community_name": "DECISIONS.md",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "r: recalibration on the latest resolved period",
+      "source_file": "docs/ml/RECALIBRATION_AND_WINDOW.md",
+      "source_location": "L7"
+    },
+    {
+      "id": "docs_ml_recalibration_and_window_recalibration_and_training_window_for_the_v1_late_delivery_model",
+      "label": "Recalibration and training window for the v1 late-delivery model",
+      "_origin": "ast",
+      "community": 7,
+      "community_name": "DECISIONS.md",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "recalibration and training window for the v1 late-delivery model",
+      "source_file": "docs/ml/RECALIBRATION_AND_WINDOW.md",
+      "source_location": "L1"
+    },
+    {
+      "id": "docs_ml_recalibration_and_window_w_choosing_the_training_window",
+      "label": "W: choosing the training window",
+      "_origin": "ast",
+      "community": 7,
+      "community_name": "DECISIONS.md",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "w: choosing the training window",
+      "source_file": "docs/ml/RECALIBRATION_AND_WINDOW.md",
+      "source_location": "L41"
+    },
+    {
       "id": "docs_phase0_phase0_discovery",
       "label": "PHASE0_DISCOVERY.md",
       "_origin": "ast",
@@ -2834,7 +3280,7 @@
       "node_kind": "heading",
       "norm_label": "4. explore",
       "source_file": "README.md",
-      "source_location": "L69"
+      "source_location": "L70"
     },
     {
       "id": "readme_attribution",
@@ -2846,7 +3292,7 @@
       "node_kind": "heading",
       "norm_label": "attribution",
       "source_file": "README.md",
-      "source_location": "L80"
+      "source_location": "L81"
     },
     {
       "id": "readme_retail_analytics_forecasting_customer_intelligence_local_duckdb_build",
@@ -2870,7 +3316,7 @@
       "node_kind": "heading",
       "norm_label": "d-001: implementations use duckdb",
       "source_file": "DECISIONS.md",
-      "source_location": "L32"
+      "source_location": "L33"
     },
     {
       "id": "decisions_d_002_local_only",
@@ -2882,7 +3328,7 @@
       "node_kind": "heading",
       "norm_label": "d-002: local only",
       "source_file": "DECISIONS.md",
-      "source_location": "L44"
+      "source_location": "L45"
     },
     {
       "id": "decisions_d_003_idiomatic_duckdb_sql",
@@ -2894,7 +3340,7 @@
       "node_kind": "heading",
       "norm_label": "d-003: idiomatic duckdb sql",
       "source_file": "DECISIONS.md",
-      "source_location": "L55"
+      "source_location": "L56"
     },
     {
       "id": "decisions_d_004_no_dbt",
@@ -2906,7 +3352,7 @@
       "node_kind": "heading",
       "norm_label": "d-004: no dbt",
       "source_file": "DECISIONS.md",
-      "source_location": "L65"
+      "source_location": "L66"
     },
     {
       "id": "decisions_d_005_no_prometheus_grafana_or_fastapi",
@@ -2918,7 +3364,7 @@
       "node_kind": "heading",
       "norm_label": "d-005: no prometheus, grafana or fastapi",
       "source_file": "DECISIONS.md",
-      "source_location": "L75"
+      "source_location": "L76"
     },
     {
       "id": "decisions_d_006_gitignore_coverage",
@@ -2930,7 +3376,7 @@
       "node_kind": "heading",
       "norm_label": "d-006: `.gitignore` coverage",
       "source_file": "DECISIONS.md",
-      "source_location": "L84"
+      "source_location": "L85"
     },
     {
       "id": "decisions_d_007_ml_target_is_late_delivery_plus_a_weekly_forecast",
@@ -2942,7 +3388,7 @@
       "node_kind": "heading",
       "norm_label": "d-007: ml target is late delivery, plus a weekly forecast",
       "source_file": "DECISIONS.md",
-      "source_location": "L91"
+      "source_location": "L92"
     },
     {
       "id": "decisions_d_008_untrack_data",
@@ -2954,7 +3400,7 @@
       "node_kind": "heading",
       "norm_label": "d-008: untrack `data/`",
       "source_file": "DECISIONS.md",
-      "source_location": "L101"
+      "source_location": "L102"
     },
     {
       "id": "decisions_dd_01_kimball_star_schema_facts_never_join_to_facts",
@@ -2966,7 +3412,7 @@
       "node_kind": "heading",
       "norm_label": "dd-01: kimball star schema; facts never join to facts",
       "source_file": "DECISIONS.md",
-      "source_location": "L117"
+      "source_location": "L118"
     },
     {
       "id": "decisions_dd_02_customer_grain_is_customer_unique_id",
@@ -2978,7 +3424,7 @@
       "node_kind": "heading",
       "norm_label": "dd-02: customer grain is `customer_unique_id`",
       "source_file": "DECISIONS.md",
-      "source_location": "L125"
+      "source_location": "L126"
     },
     {
       "id": "decisions_dd_03_reviews_keyed_on_review_id_order_id",
@@ -2990,7 +3436,7 @@
       "node_kind": "heading",
       "norm_label": "dd-03: reviews keyed on (`review_id`, `order_id`)",
       "source_file": "DECISIONS.md",
-      "source_location": "L131"
+      "source_location": "L132"
     },
     {
       "id": "decisions_dd_04_revenue_from_order_items_only",
@@ -3002,7 +3448,7 @@
       "node_kind": "heading",
       "norm_label": "dd-04: revenue from order items only",
       "source_file": "DECISIONS.md",
-      "source_location": "L137"
+      "source_location": "L138"
     },
     {
       "id": "decisions_dd_05_surrogate_keys_with_an_unknown_member",
@@ -3014,7 +3460,7 @@
       "node_kind": "heading",
       "norm_label": "dd-05: surrogate keys with an unknown member",
       "source_file": "DECISIONS.md",
-      "source_location": "L143"
+      "source_location": "L144"
     },
     {
       "id": "decisions_dd_06_convert_geolocation_csv_to_parquet_in_the_build",
@@ -3026,7 +3472,7 @@
       "node_kind": "heading",
       "norm_label": "dd-06: convert geolocation csv to parquet in the build",
       "source_file": "DECISIONS.md",
-      "source_location": "L149"
+      "source_location": "L150"
     },
     {
       "id": "decisions_dd_07_customer_segmentation_is_optional",
@@ -3038,7 +3484,7 @@
       "node_kind": "heading",
       "norm_label": "dd-07: customer segmentation is optional",
       "source_file": "DECISIONS.md",
-      "source_location": "L155"
+      "source_location": "L156"
     },
     {
       "id": "decisions_dd_08_add_scikit_learn",
@@ -3050,7 +3496,7 @@
       "node_kind": "heading",
       "norm_label": "dd-08: add scikit-learn",
       "source_file": "DECISIONS.md",
-      "source_location": "L161"
+      "source_location": "L162"
     },
     {
       "id": "decisions_dd_09_macro_average_of_per_month_metrics",
@@ -3062,7 +3508,7 @@
       "node_kind": "heading",
       "norm_label": "dd-09: macro-average of per-month metrics",
       "source_file": "DECISIONS.md",
-      "source_location": "L171"
+      "source_location": "L172"
     },
     {
       "id": "decisions_dd_10_v1_features_stay_the_reference_model",
@@ -3074,7 +3520,19 @@
       "node_kind": "heading",
       "norm_label": "dd-10: v1 features stay the reference model",
       "source_file": "DECISIONS.md",
-      "source_location": "L179"
+      "source_location": "L180"
+    },
+    {
+      "id": "decisions_dd_11_no_recalibration_or_window_tuning_use_the_model_by_rank",
+      "label": "DD-11: No recalibration or window tuning; use the model by rank",
+      "_origin": "ast",
+      "community": 8,
+      "community_name": "Design decisions",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "dd-11: no recalibration or window tuning; use the model by rank",
+      "source_file": "DECISIONS.md",
+      "source_location": "L188"
     },
     {
       "id": "decisions_decisions",
@@ -3098,7 +3556,7 @@
       "node_kind": "heading",
       "norm_label": "design decisions",
       "source_file": "DECISIONS.md",
-      "source_location": "L113"
+      "source_location": "L114"
     },
     {
       "id": "decisions_user_decisions",
@@ -3110,7 +3568,7 @@
       "node_kind": "heading",
       "norm_label": "user decisions",
       "source_file": "DECISIONS.md",
-      "source_location": "L30"
+      "source_location": "L31"
     },
     {
       "id": "cloud_portfolio_master_agent_prompt_data_warehousing_analytics",
@@ -4178,6 +4636,30 @@
       "source_url": null
     },
     {
+      "id": "argparse",
+      "label": "argparse",
+      "_origin": "semantic",
+      "community": 19,
+      "community_name": "late_delivery_baseline.py",
+      "external": true,
+      "file_type": "concept",
+      "norm_label": "argparse",
+      "source_file": "",
+      "type": "external"
+    },
+    {
+      "id": "duckdb",
+      "label": "duckdb",
+      "_origin": "semantic",
+      "community": 19,
+      "community_name": "late_delivery_baseline.py",
+      "external": true,
+      "file_type": "concept",
+      "norm_label": "duckdb",
+      "source_file": "",
+      "type": "external"
+    },
+    {
       "id": "json",
       "label": "json",
       "_origin": "semantic",
@@ -4186,6 +4668,18 @@
       "external": true,
       "file_type": "concept",
       "norm_label": "json",
+      "source_file": "",
+      "type": "external"
+    },
+    {
+      "id": "pandas",
+      "label": "pandas",
+      "_origin": "semantic",
+      "community": 19,
+      "community_name": "late_delivery_baseline.py",
+      "external": true,
+      "file_type": "concept",
+      "norm_label": "pandas",
       "source_file": "",
       "type": "external"
     },
@@ -4274,18 +4768,6 @@
       "type": "external"
     },
     {
-      "id": "argparse",
-      "label": "argparse",
-      "_origin": "semantic",
-      "community": 2,
-      "community_name": "visualize_schema.py",
-      "external": true,
-      "file_type": "concept",
-      "norm_label": "argparse",
-      "source_file": "",
-      "type": "external"
-    },
-    {
       "id": "matplotlib_pyplot",
       "label": "matplotlib_pyplot",
       "_origin": "semantic",
@@ -4334,47 +4816,11 @@
       "type": "external"
     },
     {
-      "id": "numpy",
-      "label": "numpy",
-      "_origin": "semantic",
-      "community": 20,
-      "community_name": "forecast_baseline.py",
-      "external": true,
-      "file_type": "concept",
-      "norm_label": "numpy",
-      "source_file": "",
-      "type": "external"
-    },
-    {
-      "id": "pandas",
-      "label": "pandas",
-      "_origin": "semantic",
-      "community": 20,
-      "community_name": "forecast_baseline.py",
-      "external": true,
-      "file_type": "concept",
-      "norm_label": "pandas",
-      "source_file": "",
-      "type": "external"
-    },
-    {
-      "id": "duckdb",
-      "label": "duckdb",
-      "_origin": "semantic",
-      "community": 21,
-      "community_name": "duckdb",
-      "external": true,
-      "file_type": "concept",
-      "norm_label": "duckdb",
-      "source_file": "",
-      "type": "external"
-    },
-    {
       "id": "pytest",
       "label": "pytest",
       "_origin": "semantic",
-      "community": 21,
-      "community_name": "duckdb",
+      "community": 20,
+      "community_name": "forecast_baseline.py",
       "external": true,
       "file_type": "concept",
       "norm_label": "pytest",
@@ -4382,13 +4828,48 @@
       "type": "external"
     },
     {
+      "id": "numpy",
+      "label": "numpy",
+      "_origin": "semantic",
+      "community": 23,
+      "community_name": "recalibration.py",
+      "external": true,
+      "file_type": "concept",
+      "norm_label": "numpy",
+      "source_file": "",
+      "type": "external"
+    },
+    {
       "id": "drift_analysis",
       "label": "drift_analysis",
-      "community": 20,
-      "community_name": "forecast_baseline.py",
+      "_origin": "semantic",
+      "community": 24,
+      "community_name": "test_drift_helpers.py",
       "external": true,
       "file_type": "concept",
       "norm_label": "drift_analysis",
+      "source_file": "",
+      "type": "external"
+    },
+    {
+      "id": "scipy_optimize",
+      "label": "scipy_optimize",
+      "community": 23,
+      "community_name": "recalibration.py",
+      "external": true,
+      "file_type": "concept",
+      "norm_label": "scipy_optimize",
+      "source_file": "",
+      "type": "external"
+    },
+    {
+      "id": "sklearn_isotonic",
+      "label": "sklearn_isotonic",
+      "community": 23,
+      "community_name": "recalibration.py",
+      "external": true,
+      "file_type": "concept",
+      "norm_label": "sklearn_isotonic",
       "source_file": "",
       "type": "external"
     }
@@ -5031,6 +5512,342 @@
       "weight": 1.0
     },
     {
+      "source": "src_ml_recalibration_calibration_split",
+      "target": "pandas",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/ml/recalibration.py",
+      "source_location": "L54",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_recalibration_expected_calibration_error",
+      "target": "pandas",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/ml/recalibration.py",
+      "source_location": "L77",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_recalibration_experiment_recalibration",
+      "target": "src_ml_recalibration_fit_v1",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/ml/recalibration.py",
+      "source_location": "L112",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_recalibration_experiment_recalibration",
+      "target": "src_ml_recalibration_predict",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/ml/recalibration.py",
+      "source_location": "L114",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_recalibration_experiment_recalibration",
+      "target": "src_ml_recalibration_score",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/ml/recalibration.py",
+      "source_location": "L114",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_recalibration_experiment_recalibration",
+      "target": "src_ml_recalibration_calibration_split",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/ml/recalibration.py",
+      "source_location": "L116",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_recalibration_experiment_recalibration",
+      "target": "src_ml_recalibration_make_calibrator",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/ml/recalibration.py",
+      "source_location": "L123",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_recalibration_experiment_recalibration",
+      "target": "src_ml_recalibration_macro",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/ml/recalibration.py",
+      "source_location": "L127",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_recalibration_experiment_window",
+      "target": "src_ml_recalibration_fit_v1",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/ml/recalibration.py",
+      "source_location": "L139",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_recalibration_experiment_window",
+      "target": "src_ml_recalibration_predict",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/ml/recalibration.py",
+      "source_location": "L139",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_recalibration_experiment_window",
+      "target": "src_ml_recalibration_score",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/ml/recalibration.py",
+      "source_location": "L139",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_recalibration_experiment_window",
+      "target": "src_ml_recalibration_macro",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/ml/recalibration.py",
+      "source_location": "L142",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_recalibration_experiment_window",
+      "target": "numpy",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/ml/recalibration.py",
+      "source_location": "L147",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_recalibration_fit_v1",
+      "target": "src_ml_late_delivery_baseline_make_models",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/ml/recalibration.py",
+      "source_location": "L94",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_recalibration_logit",
+      "target": "numpy",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/ml/recalibration.py",
+      "source_location": "L43",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_recalibration_macro",
+      "target": "numpy",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/ml/recalibration.py",
+      "source_location": "L103",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_recalibration_main",
+      "target": "argparse",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/ml/recalibration.py",
+      "source_location": "L156",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_recalibration_main",
+      "target": "duckdb",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/ml/recalibration.py",
+      "source_location": "L161",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_recalibration_main",
+      "target": "src_ml_late_delivery_baseline_load",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/ml/recalibration.py",
+      "source_location": "L162",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_recalibration_main",
+      "target": "src_ml_recalibration_experiment_recalibration",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/ml/recalibration.py",
+      "source_location": "L167",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_recalibration_main",
+      "target": "pandas",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/ml/recalibration.py",
+      "source_location": "L168",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_recalibration_main",
+      "target": "src_ml_recalibration_experiment_window",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/ml/recalibration.py",
+      "source_location": "L174",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_recalibration_main",
+      "target": "json",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/ml/recalibration.py",
+      "source_location": "L181",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_recalibration_make_calibrator",
+      "target": "src_ml_recalibration_logit",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/ml/recalibration.py",
+      "source_location": "L64",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_recalibration_make_calibrator",
+      "target": "src_ml_recalibration_sigmoid",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/ml/recalibration.py",
+      "source_location": "L65",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_recalibration_score",
+      "target": "numpy",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/ml/recalibration.py",
+      "source_location": "L83",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_recalibration_score",
+      "target": "src_ml_recalibration_expected_calibration_error",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/ml/recalibration.py",
+      "source_location": "L89",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_recalibration_sigmoid",
+      "target": "numpy",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/ml/recalibration.py",
+      "source_location": "L48",
+      "weight": 1.0
+    },
+    {
       "source": "src_transformation_build_warehouse_main",
       "target": "argparse",
       "relation": "calls",
@@ -5607,6 +6424,282 @@
       "weight": 1.0
     },
     {
+      "source": "tests_test_recalibration_orders",
+      "target": "pandas",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_recalibration.py",
+      "source_location": "L13",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_recalibration_orders",
+      "target": "numpy",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_recalibration.py",
+      "source_location": "L17",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_recalibration_test_base_and_calibration_rows_do_not_overlap",
+      "target": "src_ml_recalibration",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_recalibration.py",
+      "source_location": "L35",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_recalibration_test_base_and_calibration_rows_do_not_overlap",
+      "target": "tests_test_recalibration_orders",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_recalibration.py",
+      "source_location": "L35",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_recalibration_test_base_model_outcomes_are_known_before_the_calibration_window_starts",
+      "target": "src_ml_recalibration",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_recalibration.py",
+      "source_location": "L30",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_recalibration_test_base_model_outcomes_are_known_before_the_calibration_window_starts",
+      "target": "tests_test_recalibration_orders",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_recalibration.py",
+      "source_location": "L30",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_recalibration_test_calibrators_return_probabilities",
+      "target": "src_ml_recalibration",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_recalibration.py",
+      "source_location": "L59",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_recalibration_test_ece_is_zero_for_a_perfectly_calibrated_split",
+      "target": "numpy",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_recalibration.py",
+      "source_location": "L79",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_recalibration_test_ece_is_zero_for_a_perfectly_calibrated_split",
+      "target": "pytest",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_recalibration.py",
+      "source_location": "L81",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_recalibration_test_ece_is_zero_for_a_perfectly_calibrated_split",
+      "target": "src_ml_recalibration",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_recalibration.py",
+      "source_location": "L81",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_recalibration_test_platt_reduces_overconfidence",
+      "target": "numpy",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_recalibration.py",
+      "source_location": "L67",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_recalibration_test_platt_reduces_overconfidence",
+      "target": "src_ml_recalibration",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_recalibration.py",
+      "source_location": "L68",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_recalibration_test_shift_calibrator_matches_the_observed_rate",
+      "target": "src_ml_recalibration",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_recalibration.py",
+      "source_location": "L49",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_recalibration_test_shift_calibrator_matches_the_observed_rate",
+      "target": "pytest",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_recalibration.py",
+      "source_location": "L50",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_recalibration_test_shift_calibrator_matches_the_observed_rate",
+      "target": "numpy",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_recalibration.py",
+      "source_location": "L51",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_recalibration_test_split_uses_only_outcomes_known_before_the_test_month",
+      "target": "src_ml_recalibration",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_recalibration.py",
+      "source_location": "L22",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_recalibration_test_split_uses_only_outcomes_known_before_the_test_month",
+      "target": "tests_test_recalibration_orders",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_recalibration.py",
+      "source_location": "L22",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_recalibration_test_split_uses_only_outcomes_known_before_the_test_month",
+      "target": "pandas",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_recalibration.py",
+      "source_location": "L25",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_recalibration_test_unknown_calibrator_is_rejected",
+      "target": "pytest",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_recalibration.py",
+      "source_location": "L74",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_recalibration_test_unknown_calibrator_is_rejected",
+      "target": "numpy",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_recalibration.py",
+      "source_location": "L75",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_recalibration_test_unknown_calibrator_is_rejected",
+      "target": "src_ml_recalibration",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_recalibration.py",
+      "source_location": "L75",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_recalibration_test_wider_window_gives_more_calibration_rows",
+      "target": "src_ml_recalibration",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_recalibration.py",
+      "source_location": "L40",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_recalibration_test_wider_window_gives_more_calibration_rows",
+      "target": "tests_test_recalibration_orders",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_recalibration.py",
+      "source_location": "L40",
+      "weight": 1.0
+    },
+    {
       "source": "tests_test_warehouse_test_seller_history_matches_a_direct_recount_on_real_data",
       "target": "pytest",
       "relation": "calls",
@@ -5680,7 +6773,7 @@
     },
     {
       "source": "tests_test_feature_leakage_test_label_is_passed_through_as_integer",
-      "target": "parametrize",
+      "target": "tests_test_feature_leakage_py_parametrize",
       "relation": "references",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -5700,6 +6793,18 @@
       "context": "decorator",
       "source_file": "tests/test_geolocation_conversion.py",
       "source_location": "L14",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_recalibration_test_calibrators_return_probabilities",
+      "target": "tests_test_recalibration_py_parametrize",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "decorator",
+      "source_file": "tests/test_recalibration.py",
+      "source_location": "L54",
       "weight": 1.0
     },
     {
@@ -6015,6 +7120,90 @@
       "weight": 1.0
     },
     {
+      "source": "src_ml_recalibration",
+      "target": "argparse",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/ml/recalibration.py",
+      "source_location": "L17",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_recalibration",
+      "target": "json",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/ml/recalibration.py",
+      "source_location": "L18",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_recalibration",
+      "target": "sys",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/ml/recalibration.py",
+      "source_location": "L19",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_recalibration",
+      "target": "duckdb",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/ml/recalibration.py",
+      "source_location": "L22",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_recalibration",
+      "target": "numpy",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/ml/recalibration.py",
+      "source_location": "L23",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_recalibration",
+      "target": "pandas",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/ml/recalibration.py",
+      "source_location": "L24",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_recalibration",
+      "target": "src_ml_late_delivery_baseline",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/ml/recalibration.py",
+      "source_location": "L30",
+      "weight": 1.0
+    },
+    {
       "source": "src_transformation_build_warehouse",
       "target": "sys",
       "relation": "imports",
@@ -6255,6 +7444,54 @@
       "weight": 1.0
     },
     {
+      "source": "tests_test_recalibration",
+      "target": "numpy",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "tests/test_recalibration.py",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_recalibration",
+      "target": "pandas",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "tests/test_recalibration.py",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_recalibration",
+      "target": "pytest",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "tests/test_recalibration.py",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_recalibration",
+      "target": "src_ml_recalibration",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "tests/test_recalibration.py",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
       "source": "tests_test_warehouse",
       "target": "pytest",
       "relation": "imports",
@@ -6420,6 +7657,66 @@
       "context": "import",
       "source_file": "src/ml/late_delivery_baseline.py",
       "source_location": "L24",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_recalibration",
+      "target": "pathlib",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/ml/recalibration.py",
+      "source_location": "L20",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_recalibration",
+      "target": "scipy_optimize",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/ml/recalibration.py",
+      "source_location": "L25",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_recalibration",
+      "target": "sklearn_isotonic",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/ml/recalibration.py",
+      "source_location": "L26",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_recalibration",
+      "target": "sklearn_linear_model",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/ml/recalibration.py",
+      "source_location": "L27",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_recalibration",
+      "target": "sklearn_metrics",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/ml/recalibration.py",
+      "source_location": "L28",
       "weight": 1.0
     },
     {
@@ -6699,6 +7996,114 @@
       "weight": 1.0
     },
     {
+      "source": "src_ml_recalibration_calibration_split",
+      "target": "period",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "parameter_type",
+      "source_file": "src/ml/recalibration.py",
+      "source_location": "L51",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_recalibration_calibration_split",
+      "target": "src_ml_recalibration_py_dataframe",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "parameter_type",
+      "source_file": "src/ml/recalibration.py",
+      "source_location": "L51",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_recalibration_expected_calibration_error",
+      "target": "src_ml_recalibration_py_ndarray",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "parameter_type",
+      "source_file": "src/ml/recalibration.py",
+      "source_location": "L76",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_recalibration_experiment_recalibration",
+      "target": "src_ml_recalibration_py_dataframe",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "parameter_type",
+      "source_file": "src/ml/recalibration.py",
+      "source_location": "L107",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_recalibration_experiment_window",
+      "target": "src_ml_recalibration_py_dataframe",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "parameter_type",
+      "source_file": "src/ml/recalibration.py",
+      "source_location": "L131",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_recalibration_fit_v1",
+      "target": "src_ml_recalibration_py_dataframe",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "parameter_type",
+      "source_file": "src/ml/recalibration.py",
+      "source_location": "L93",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_recalibration_make_calibrator",
+      "target": "src_ml_recalibration_py_ndarray",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "parameter_type",
+      "source_file": "src/ml/recalibration.py",
+      "source_location": "L61",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_recalibration_predict",
+      "target": "src_ml_recalibration_py_dataframe",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "parameter_type",
+      "source_file": "src/ml/recalibration.py",
+      "source_location": "L98",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_recalibration_score",
+      "target": "src_ml_recalibration_py_ndarray",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "parameter_type",
+      "source_file": "src/ml/recalibration.py",
+      "source_location": "L82",
+      "weight": 1.0
+    },
+    {
       "source": "src_transformation_build_warehouse_ensure_geolocation_parquet",
       "target": "src_transformation_build_warehouse_py_duckdbpyconnection",
       "relation": "references",
@@ -6864,6 +8269,42 @@
       "context": "return_type",
       "source_file": "src/ml/late_delivery_baseline.py",
       "source_location": "L50",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_recalibration_logit",
+      "target": "src_ml_recalibration_py_ndarray",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "return_type",
+      "source_file": "src/ml/recalibration.py",
+      "source_location": "L42",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_recalibration_predict",
+      "target": "src_ml_recalibration_py_ndarray",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "return_type",
+      "source_file": "src/ml/recalibration.py",
+      "source_location": "L98",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_recalibration_sigmoid",
+      "target": "src_ml_recalibration_py_ndarray",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "return_type",
+      "source_file": "src/ml/recalibration.py",
+      "source_location": "L47",
       "weight": 1.0
     },
     {
@@ -7051,7 +8492,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "DECISIONS.md",
-      "source_location": "L113",
+      "source_location": "L114",
       "weight": 1.0
     },
     {
@@ -7062,7 +8503,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "DECISIONS.md",
-      "source_location": "L30",
+      "source_location": "L31",
       "weight": 1.0
     },
     {
@@ -7073,7 +8514,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "DECISIONS.md",
-      "source_location": "L117",
+      "source_location": "L118",
       "weight": 1.0
     },
     {
@@ -7084,7 +8525,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "DECISIONS.md",
-      "source_location": "L125",
+      "source_location": "L126",
       "weight": 1.0
     },
     {
@@ -7095,7 +8536,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "DECISIONS.md",
-      "source_location": "L131",
+      "source_location": "L132",
       "weight": 1.0
     },
     {
@@ -7106,7 +8547,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "DECISIONS.md",
-      "source_location": "L137",
+      "source_location": "L138",
       "weight": 1.0
     },
     {
@@ -7117,7 +8558,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "DECISIONS.md",
-      "source_location": "L143",
+      "source_location": "L144",
       "weight": 1.0
     },
     {
@@ -7128,7 +8569,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "DECISIONS.md",
-      "source_location": "L149",
+      "source_location": "L150",
       "weight": 1.0
     },
     {
@@ -7139,7 +8580,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "DECISIONS.md",
-      "source_location": "L155",
+      "source_location": "L156",
       "weight": 1.0
     },
     {
@@ -7150,7 +8591,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "DECISIONS.md",
-      "source_location": "L161",
+      "source_location": "L162",
       "weight": 1.0
     },
     {
@@ -7161,7 +8602,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "DECISIONS.md",
-      "source_location": "L171",
+      "source_location": "L172",
       "weight": 1.0
     },
     {
@@ -7172,7 +8613,18 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "DECISIONS.md",
-      "source_location": "L179",
+      "source_location": "L180",
+      "weight": 1.0
+    },
+    {
+      "source": "decisions_design_decisions",
+      "target": "decisions_dd_11_no_recalibration_or_window_tuning_use_the_model_by_rank",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DECISIONS.md",
+      "source_location": "L188",
       "weight": 1.0
     },
     {
@@ -7183,7 +8635,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "DECISIONS.md",
-      "source_location": "L101",
+      "source_location": "L102",
       "weight": 1.0
     },
     {
@@ -7194,7 +8646,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "DECISIONS.md",
-      "source_location": "L32",
+      "source_location": "L33",
       "weight": 1.0
     },
     {
@@ -7205,7 +8657,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "DECISIONS.md",
-      "source_location": "L44",
+      "source_location": "L45",
       "weight": 1.0
     },
     {
@@ -7216,7 +8668,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "DECISIONS.md",
-      "source_location": "L55",
+      "source_location": "L56",
       "weight": 1.0
     },
     {
@@ -7227,7 +8679,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "DECISIONS.md",
-      "source_location": "L65",
+      "source_location": "L66",
       "weight": 1.0
     },
     {
@@ -7238,7 +8690,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "DECISIONS.md",
-      "source_location": "L75",
+      "source_location": "L76",
       "weight": 1.0
     },
     {
@@ -7249,7 +8701,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "DECISIONS.md",
-      "source_location": "L84",
+      "source_location": "L85",
       "weight": 1.0
     },
     {
@@ -7260,7 +8712,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "DECISIONS.md",
-      "source_location": "L91",
+      "source_location": "L92",
       "weight": 1.0
     },
     {
@@ -7869,6 +9321,61 @@
       "weight": 1.0
     },
     {
+      "source": "docs_ml_recalibration_and_window",
+      "target": "docs_ml_recalibration_and_window_recalibration_and_training_window_for_the_v1_late_delivery_model",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/ml/RECALIBRATION_AND_WINDOW.md",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_ml_recalibration_and_window_recalibration_and_training_window_for_the_v1_late_delivery_model",
+      "target": "docs_ml_recalibration_and_window_w_choosing_the_training_window",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/ml/RECALIBRATION_AND_WINDOW.md",
+      "source_location": "L41",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_ml_recalibration_and_window_recalibration_and_training_window_for_the_v1_late_delivery_model",
+      "target": "docs_ml_recalibration_and_window_r_recalibration_on_the_latest_resolved_period",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/ml/RECALIBRATION_AND_WINDOW.md",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_ml_recalibration_and_window_recalibration_and_training_window_for_the_v1_late_delivery_model",
+      "target": "docs_ml_recalibration_and_window_conclusions",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/ml/RECALIBRATION_AND_WINDOW.md",
+      "source_location": "L72",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_ml_recalibration_and_window_recalibration_and_training_window_for_the_v1_late_delivery_model",
+      "target": "docs_ml_recalibration_and_window_limits",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/ml/RECALIBRATION_AND_WINDOW.md",
+      "source_location": "L90",
+      "weight": 1.0
+    },
+    {
       "source": "docs_phase0_phase0_discovery",
       "target": "docs_phase0_phase0_discovery_phase_0_discovery_report",
       "relation": "contains",
@@ -8167,17 +9674,6 @@
     },
     {
       "source": "readme_retail_analytics_forecasting_customer_intelligence_local_duckdb_build",
-      "target": "readme_4_explore",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "README.md",
-      "source_location": "L69",
-      "weight": 1.0
-    },
-    {
-      "source": "readme_retail_analytics_forecasting_customer_intelligence_local_duckdb_build",
       "target": "readme_1_get_the_data",
       "relation": "contains",
       "_origin": "ast",
@@ -8189,13 +9685,24 @@
     },
     {
       "source": "readme_retail_analytics_forecasting_customer_intelligence_local_duckdb_build",
+      "target": "readme_4_explore",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": "L70",
+      "weight": 1.0
+    },
+    {
+      "source": "readme_retail_analytics_forecasting_customer_intelligence_local_duckdb_build",
       "target": "readme_attribution",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "README.md",
-      "source_location": "L80",
+      "source_location": "L81",
       "weight": 1.0
     },
     {
@@ -8493,6 +10000,138 @@
       "confidence_score": 1.0,
       "source_file": "src/ml/late_delivery_baseline.py",
       "source_location": "L89",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_recalibration",
+      "target": "src_ml_recalibration_macro",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/ml/recalibration.py",
+      "source_location": "L102",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_recalibration",
+      "target": "src_ml_recalibration_experiment_recalibration",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/ml/recalibration.py",
+      "source_location": "L107",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_recalibration",
+      "target": "src_ml_recalibration_experiment_window",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/ml/recalibration.py",
+      "source_location": "L131",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_recalibration",
+      "target": "src_ml_recalibration_main",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/ml/recalibration.py",
+      "source_location": "L155",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_recalibration",
+      "target": "src_ml_recalibration_logit",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/ml/recalibration.py",
+      "source_location": "L42",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_recalibration",
+      "target": "src_ml_recalibration_sigmoid",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/ml/recalibration.py",
+      "source_location": "L47",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_recalibration",
+      "target": "src_ml_recalibration_calibration_split",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/ml/recalibration.py",
+      "source_location": "L51",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_recalibration",
+      "target": "src_ml_recalibration_make_calibrator",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/ml/recalibration.py",
+      "source_location": "L61",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_recalibration",
+      "target": "src_ml_recalibration_expected_calibration_error",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/ml/recalibration.py",
+      "source_location": "L76",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_recalibration",
+      "target": "src_ml_recalibration_score",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/ml/recalibration.py",
+      "source_location": "L82",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_recalibration",
+      "target": "src_ml_recalibration_fit_v1",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/ml/recalibration.py",
+      "source_location": "L93",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_recalibration",
+      "target": "src_ml_recalibration_predict",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/ml/recalibration.py",
+      "source_location": "L98",
       "weight": 1.0
     },
     {
@@ -8881,6 +10520,116 @@
       "weight": 1.0
     },
     {
+      "source": "tests_test_recalibration",
+      "target": "tests_test_recalibration_orders",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/test_recalibration.py",
+      "source_location": "L11",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_recalibration",
+      "target": "tests_test_recalibration_test_split_uses_only_outcomes_known_before_the_test_month",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/test_recalibration.py",
+      "source_location": "L21",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_recalibration",
+      "target": "tests_test_recalibration_test_base_model_outcomes_are_known_before_the_calibration_window_starts",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/test_recalibration.py",
+      "source_location": "L29",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_recalibration",
+      "target": "tests_test_recalibration_test_base_and_calibration_rows_do_not_overlap",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/test_recalibration.py",
+      "source_location": "L34",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_recalibration",
+      "target": "tests_test_recalibration_test_wider_window_gives_more_calibration_rows",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/test_recalibration.py",
+      "source_location": "L39",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_recalibration",
+      "target": "tests_test_recalibration_test_shift_calibrator_matches_the_observed_rate",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/test_recalibration.py",
+      "source_location": "L45",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_recalibration",
+      "target": "tests_test_recalibration_test_calibrators_return_probabilities",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/test_recalibration.py",
+      "source_location": "L55",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_recalibration",
+      "target": "tests_test_recalibration_test_platt_reduces_overconfidence",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/test_recalibration.py",
+      "source_location": "L63",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_recalibration",
+      "target": "tests_test_recalibration_test_unknown_calibrator_is_rejected",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/test_recalibration.py",
+      "source_location": "L73",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_recalibration",
+      "target": "tests_test_recalibration_test_ece_is_zero_for_a_perfectly_calibrated_split",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/test_recalibration.py",
+      "source_location": "L78",
+      "weight": 1.0
+    },
+    {
       "source": "tests_test_warehouse",
       "target": "tests_test_warehouse_test_all_validation_checks_pass",
       "relation": "contains",
@@ -9123,6 +10872,39 @@
       "weight": 1.0
     },
     {
+      "source": "src_ml_recalibration_rationale_1",
+      "target": "src_ml_recalibration",
+      "relation": "rationale_for",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/ml/recalibration.py",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_recalibration_rationale_52",
+      "target": "src_ml_recalibration_calibration_split",
+      "relation": "rationale_for",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/ml/recalibration.py",
+      "source_location": "L52",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ml_recalibration_rationale_62",
+      "target": "src_ml_recalibration_make_calibrator",
+      "relation": "rationale_for",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/ml/recalibration.py",
+      "source_location": "L62",
+      "weight": 1.0
+    },
+    {
       "source": "src_transformation_build_warehouse_rationale_1",
       "target": "src_transformation_build_warehouse",
       "relation": "rationale_for",
@@ -9186,6 +10968,17 @@
       "confidence_score": 1.0,
       "source_file": "tests/test_forecast_baseline.py",
       "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_recalibration_rationale_12",
+      "target": "tests_test_recalibration_orders",
+      "relation": "rationale_for",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/test_recalibration.py",
+      "source_location": "L12",
       "weight": 1.0
     },
     {
@@ -9284,7 +11077,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "DECISIONS.md",
-      "source_location": "L115",
+      "source_location": "L116",
       "weight": 1.0
     },
     {
@@ -9295,7 +11088,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "DECISIONS.md",
-      "source_location": "L153",
+      "source_location": "L154",
       "weight": 1.0
     },
     {
@@ -9306,7 +11099,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "DECISIONS.md",
-      "source_location": "L181",
+      "source_location": "L182",
       "weight": 1.0
     },
     {
@@ -9317,7 +11110,18 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "DECISIONS.md",
-      "source_location": "L184",
+      "source_location": "L185",
+      "weight": 1.0
+    },
+    {
+      "source": "decisions",
+      "target": "docs_ml_recalibration_and_window",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DECISIONS.md",
+      "source_location": "L190",
       "weight": 1.0
     },
     {
@@ -9328,7 +11132,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "DECISIONS.md",
-      "source_location": "L60",
+      "source_location": "L61",
       "weight": 1.0
     },
     {
@@ -9339,7 +11143,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "DECISIONS.md",
-      "source_location": "L67",
+      "source_location": "L68",
       "weight": 1.0
     },
     {
@@ -9350,7 +11154,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "DECISIONS.md",
-      "source_location": "L95",
+      "source_location": "L96",
       "weight": 1.0
     },
     {
@@ -9417,6 +11221,28 @@
       "confidence_score": 1.0,
       "source_file": "docs/ml/LEAKAGE_ANALYSIS.md",
       "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_ml_phase2_baselines",
+      "target": "docs_ml_recalibration_and_window",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/ml/PHASE2_BASELINES.md",
+      "source_location": "L132",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_ml_recalibration_and_window",
+      "target": "docs_ml_drift_analysis",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/ml/RECALIBRATION_AND_WINDOW.md",
+      "source_location": "L3",
       "weight": 1.0
     },
     {
@@ -9511,7 +11337,19 @@
       "confidence_score": 0.95,
       "context": "ensure_geolocation_parquet",
       "source_file": "DECISIONS.md",
-      "source_location": "L152",
+      "source_location": "L153",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_phase0_phase0_discovery_3_data_quality_findings",
+      "target": "tests_test_recalibration_orders",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "context": "orders",
+      "source_file": "docs/phase0/PHASE0_DISCOVERY.md",
+      "source_location": "L63",
       "weight": 1.0
     },
     {
@@ -10477,5 +12315,5 @@
       "source_file": "GCP.md"
     }
   ],
-  "built_at_commit": "b4d4343b069956efcd38ee611d30c2e7c218a7ec"
+  "built_at_commit": "b9c128275110e1a802630d90c43b07102179f8ae"
 }

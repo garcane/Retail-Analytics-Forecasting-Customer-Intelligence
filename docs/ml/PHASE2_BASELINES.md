@@ -129,8 +129,7 @@ To check the tests themselves, I planted two leaks in the feature SQL. Loosening
 
 ## Suggested next steps
 
-1. Recalibrate the v1 model (for example isotonic regression or a level correction fitted on the most recent resolved month) and decide on an operating threshold for the "flag the riskiest 10%" use. The drift analysis says the level is the main thing that moves.
-2. Tune a short training window for v1: two months gave the best PR-AUC in the drift analysis (0.205 against 0.184), at the cost of a noisier model.
-3. Do not add more history features; see [DRIFT_ANALYSIS.md](DRIFT_ANALYSIS.md). The one untried idea from the first list is the promised window relative to the route's typical delivery time, but the promise relationship itself is unstable.
-4. For the forecast, try a damped-trend or exponential-smoothing model and a regression on calendar features, then compare against the 8-week average and the naive forecast with the same backtest.
-5. Decide whether the segmentation experiment (DD-07) is worth running; the 96.9% single-order customers make it unlikely.
+1. Done, with negative results: recalibration and a tuned training window did not beat v1 out-of-time ([RECALIBRATION_AND_WINDOW.md](RECALIBRATION_AND_WINDOW.md), DD-11). The model is to be used by rank, flagging a share of orders.
+2. Do not add more history features; see [DRIFT_ANALYSIS.md](DRIFT_ANALYSIS.md). The one untried idea from the first list is the promised window relative to the route's typical delivery time, but the promise relationship itself is unstable.
+3. For the forecast, try a damped-trend or exponential-smoothing model and a regression on calendar features, then compare against the 8-week average and the naive forecast with the same backtest.
+4. Decide whether the segmentation experiment (DD-07) is worth running; the 96.9% single-order customers make it unlikely.

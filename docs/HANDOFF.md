@@ -19,7 +19,7 @@ A **local implementation of what would have been built on BigQuery**. DuckDB rep
 | D-007 | ML target: late delivery (one order, predicted at purchase) plus a weekly order forecast. |
 | D-008 | `data/` untracked from Git (commit `d8f6954`); history not rewritten. |
 
-Full entries, with design decisions DD-01 to DD-10, are in `DECISIONS.md`. No decisions are open.
+Full entries, with design decisions DD-01 to DD-11, are in `DECISIONS.md`. No decisions are open.
 
 ## Current state
 
@@ -44,8 +44,8 @@ Full entries, with design decisions DD-01 to DD-10, are in `DECISIONS.md`. No de
 3. **ML target and `data/`: done** (D-007, D-008).
 4. **Phase 1 documents: done** (2026-10-11): `ARCHITECTURE.md`, `DECISIONS.md`, `docs/ml/LEAKAGE_ANALYSIS.md`.
 5. **Phase 2 baselines: done** (2026-10-11). `sql/ml/late_delivery_features.sql`, `src/ml/late_delivery_baseline.py`, `src/ml/forecast_baseline.py`, metrics in `reports/`, write-up in `docs/ml/PHASE2_BASELINES.md`. Logistic regression is the best late-delivery model so far (PR-AUC 0.184 against a base rate of 0.085); seller history adds almost nothing; naive and the 8-week average win the forecast at 1 and 4 weeks.
-6. **Tests: done.** `uv run pytest` runs 31 tests (leakage rules for the feature SQL on a mini warehouse, forecast no-lookahead, geolocation conversion, and recounts on the real warehouse).
-7. **Feature experiment: done.** Route, category and trailing-28-day history did not help (DD-10); v1 stays the reference. The drift explanation was then tested (`docs/ml/DRIFT_ANALYSIS.md`): partly right, partly wrong. Open next: recalibrate v1 by period, tune a short training window, better forecast models. Run `src/ml/drift_analysis.py` to reproduce.
+6. **Tests: done.** `uv run pytest` runs 42 tests (leakage rules for the feature SQL on a mini warehouse, forecast no-lookahead, geolocation conversion, and recounts on the real warehouse).
+7. **Feature experiment: done.** Route, category and trailing-28-day history did not help (DD-10); v1 stays the reference. The drift explanation was then tested (`docs/ml/DRIFT_ANALYSIS.md`): partly right, partly wrong. Recalibration and window tuning were then tested (`docs/ml/RECALIBRATION_AND_WINDOW.md`) and did not help (DD-11): use the late-delivery model by rank, not by probability. Open next: better forecast models (only baselines exist). Reproduce with `src/ml/drift_analysis.py` and `src/ml/recalibration.py`.
 8. **Unverified:** BigQuery, Dataflow and Vertex AI pricing; Apache Beam on Python 3.13 on Windows. Both only matter if the cloud returns.
 
 ## Environment notes
