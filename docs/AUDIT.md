@@ -106,6 +106,13 @@ The two machine-learning notebooks were added: [notebooks/02_late_delivery_model
 
 Later the same day, interactive marimo versions of both notebooks were added (`notebooks/marimo/`, DD-14). Each was checked with `marimo check` (now part of the test suite, which grew to 78 tests) and executed headlessly with no cell errors, and the new interactive charts were inspected by eye (two layout flaws, a legend over the data and a label crossing a reference line, were fixed).
 
+### Addendum: open items closed (2026-10-15)
+
+- **Dependency vulnerability scan:** the 83 locked packages (`uv export`) were checked against the OSV database: **0 advisories**. A control query for `requests==2.19.0` returned 10, so the check can find problems. `pip-audit` itself crashes on this machine (an OpenSSL error), which is why OSV was queried directly.
+- **Discovery notebook re-executed:** all 26 code cells ran without errors in 45 seconds on a copy. The printed outputs match the stored ones except a row index in one unordered sample table; the stored notebook was left as is.
+- **Clean clone of `main` from GitHub, with the raw data added:** warehouse 22/22, Power BI export, and **96 tests pass**.
+- **Raw data restored after the merge deleted it from disk** (it was still tracked on `main`): a warehouse rebuilt from the restored files has the same row counts in every table and identical content hashes on the facts, with 22/22 checks.
+
 ### Addendum: Power BI (DD-15)
 
 A Power BI dashboard was added: a DAX specification, an interactive HTML mock-up and a generated Power BI Project, all from one definition (`src/powerbi/model_spec.py`).
@@ -120,9 +127,8 @@ A Power BI dashboard was added: a DAX specification, an interactive HTML mock-up
 
 | Item | Why it is open |
 |---|---|
-| Dependency vulnerability scan | No scanner installed |
-| Re-execute the discovery notebook | No notebook runner installed |
-| Geolocation conversion on Kaggle's original CSV | Original file not available locally |
-| Open the Power BI project in Desktop and run the first-open checklist | Desktop is not available where it was built; the project is schema-checked only |
-| Knowledge graph does not include the newest documents | Needs `/graphify --update` (model-based extraction) |
+| Geolocation conversion on Kaggle's original CSV | Original file not available locally (needs a Kaggle download) |
+| Compare the Power BI dashboard's cards with the first-open checklist | Needs a person looking at the report in Desktop; the project loads (confirmed by the owner) |
+| Knowledge graph does not include the newest documents | Needs `/graphify --update` (model-based extraction); the code graph is current |
+| Raw data remains in early commits of a public repository | History was not rewritten (D-008); rewriting it is the owner's decision |
 | The original brief documents describe the cloud design | Left unchanged by decision |

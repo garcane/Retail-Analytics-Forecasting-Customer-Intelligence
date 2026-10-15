@@ -10,7 +10,7 @@ This is a local, single-user, batch analytics project. It has no server, no netw
 | Raw data, database files, credential-like files in Git (`data/`, `*.duckdb`, `.env*`, `*.pem`, `*.key`, service-account and credentials JSON) | None tracked; all covered by `.gitignore` |
 | Hard-coded absolute or user-specific paths in code | None; paths are built from the repository root |
 | Network calls from the project code | None. The only network use is installing dependencies with `uv` and, by the user, downloading the dataset from Kaggle |
-| Dependencies | Ten direct runtime dependencies plus `pytest`, `ipykernel`, `marimo`, `nbformat`, `nbclient`, `jsonschema` and `referencing` for development, all from PyPI and pinned by `uv.lock`. They have not been scanned for known vulnerabilities (no scanner is installed) |
+| Dependencies | Ten direct runtime dependencies plus `pytest`, `ipykernel`, `marimo`, `nbformat`, `nbclient`, `jsonschema` and `referencing` for development, all from PyPI and pinned by `uv.lock`. On 2026-10-15 the 83 locked packages were checked against the OSV vulnerability database and no advisories were found (re-run before relying on this later; advisories are published continuously) |
 
 ## Data and privacy
 
@@ -20,7 +20,7 @@ This is a local, single-user, batch analytics project. It has no server, no netw
 
 ## Licence
 
-The data is CC BY-NC-SA 4.0 (attribution, non-commercial, share-alike). Non-commercial use only; derived tables and artefacts must carry the same licence if shared. The raw files are not stored in Git (D-008). They remain in earlier commits, because history was not rewritten; this is permitted with attribution but anyone making the repository public should know it.
+The data is CC BY-NC-SA 4.0 (attribution, non-commercial, share-alike). Non-commercial use only; derived tables and artefacts must carry the same licence if shared. The raw files are not stored in Git (D-008). They remain in earlier commits, because history was not rewritten; this is permitted with attribution. **The GitHub repository (`garcane/GCP`) is public (checked 2026-10-15), so those nine files are downloadable from its early commits** (the first commits, before `d8f6954`). The data's licence allows sharing with attribution for non-commercial use; removing the files from history would need a history rewrite and a force-push, which has not been done and is the owner's decision.
 
 ## Practices to keep
 

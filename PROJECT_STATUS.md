@@ -44,9 +44,9 @@ D-001 to D-008 (user) and DD-01 to DD-15 (design) are in [DECISIONS.md](DECISION
 
 | Item | Why open |
 |---|---|
-| Dependency vulnerability scan | No scanner installed |
-| Re-execute the discovery notebook | No notebook runner installed (it was stored with a clean run at `d5e8d1e`) |
 | Geolocation CSV-to-Parquet on Kaggle's original file | Tested only on a CSV regenerated from the Parquet file |
+| Compare the Power BI cards with the first-open checklist | The project loads in Desktop; the numbers have not been compared |
+| Raw data in early commits of the public repository | History not rewritten (D-008); the owner decides whether to rewrite it |
 | Add the newest documents to the knowledge graph | Needs `/graphify --update`; `graphify update .` (code only) is current |
 
 ## Known limitations

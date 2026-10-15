@@ -31,7 +31,7 @@ All in-scope phases are complete; see `PROJECT_STATUS.md` for the phase table an
 - **Power BI:** `powerbi/RetailAnalytics.pbip` with `docs/powerbi/DAX_SPECIFICATION.html` and `DASHBOARD_MOCKUP.html`, all generated from `src/powerbi/model_spec.py` (drives the data export, the specification and the mock-up; the report and model are now edited in Desktop). Data export: `uv run python src/powerbi/export_data.py`. **It opens and loads in Desktop** (after two fixes), and the committed `.pbip` is now the version Desktop saved: edit the report and model in Desktop, not the generator (`build_pbip.py` refuses to overwrite it without `--force`). Keep the `DataFolder` placeholder out of your commits (see `powerbi/README.md`). Next step for whoever has Desktop: follow `powerbi/README.md`, set `DataFolder`, run the first-open checklist, and fix anything Desktop reports (then change the generator, not the output).
 - **Tests:** `uv run pytest`, 96 tests, about 45 seconds. The schema-validation test downloads Microsoft's JSON schemas on first run and is skipped when offline.
 - **Other documents:** `ARCHITECTURE.md`, `DECISIONS.md` (D-001 to D-008, DD-01 to DD-15), `SECURITY.md`, `COST.md`, `docs/LESSONS_LEARNED.md`.
-- **Knowledge graph:** graphify is installed for Claude and Codex (`.claude/`, `.codex/`, `CLAUDE.md`, `AGENTS.md`). The graph covers the code as of 2026-10-13; the newest documents are not in it until `/graphify --update` is run. The graph's cache and dated backups are git-ignored.
+- **Knowledge graph:** graphify is installed for Claude and Codex (`.claude/`, `.codex/`, `CLAUDE.md`, `AGENTS.md`). The code graph is current as of 2026-10-15; the newest documents are not in it until `/graphify --update` is run. The graph's cache and dated backups are git-ignored.
 - **Dataset download:** see `README.md`.
 
 ## Data findings (Phase 0 and EDA)
@@ -46,10 +46,10 @@ All in-scope phases are complete; see `PROJECT_STATUS.md` for the phase table an
 
 ## Open items
 
-1. Dependency vulnerability scan (no scanner installed).
-2. Re-execute the discovery notebook (no notebook runner installed).
-3. Test the geolocation conversion on Kaggle's original CSV.
-4. Run `/graphify --update` to add the newest documents to the graph.
+1. Test the geolocation conversion on Kaggle's original CSV.
+2. Run `/graphify --update` to add the newest documents to the graph.
+3. Compare the Power BI cards with the first-open checklist in `docs/powerbi/DAX_SPECIFICATION.html`.
+4. Decide whether to remove the raw data from the public repository's early commits (history rewrite; see `SECURITY.md`).
 5. **Unverified, only matters if the cloud returns:** BigQuery, Dataflow and Vertex AI pricing; Apache Beam on Python 3.13 on Windows.
 
 ## Environment notes
