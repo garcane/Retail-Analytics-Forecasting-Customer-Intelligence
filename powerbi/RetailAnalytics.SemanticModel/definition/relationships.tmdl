@@ -53,3 +53,29 @@ relationship a2e6ce4b-2824-5623-935e-dcbd0394cadb
 relationship 48bfedd4-d6c6-510e-b847-e26da40705b3
 	fromColumn: late_delivery_scores.purchase_date_key
 	toColumn: dim_date.date_key
+
+relationship 4ab208de-b20d-4572-8ca9-72ae5d50b469
+	joinOnDateBehavior: datePartOnly
+	fromColumn: fact_orders.purchase_ts
+	toColumn: LocalDateTable_8f54cf85-8e0c-4e4d-bd3b-0c06976dc205.Date
+
+relationship 192d0610-4a53-4b19-916a-eb985874cb88
+	joinOnDateBehavior: datePartOnly
+	fromColumn: fact_orders.estimated_delivery_ts
+	toColumn: LocalDateTable_0cf833dd-a03d-4386-a3f9-97f9bf9512cd.Date
+
+relationship 9d561fd5-779c-46c5-98df-14d25fde7d37
+	joinOnDateBehavior: datePartOnly
+	fromColumn: fact_reviews.review_creation_ts
+	toColumn: LocalDateTable_8ceb0bbc-3638-4651-abe2-5cf00cdee98c.Date
+
+relationship d4f21b12-f819-438a-a656-552cb4f0ccbf
+	joinOnDateBehavior: datePartOnly
+	fromColumn: fact_reviews.review_answer_ts
+	toColumn: LocalDateTable_00be7958-95d1-4389-8878-579e58951be8.Date
+
+relationship 17fdbd35-21bf-4d50-9b47-8773c39fcb5c
+	joinOnDateBehavior: datePartOnly
+	fromColumn: forecast_backtest.target_week
+	toColumn: LocalDateTable_8ac81597-2dc6-4422-b3c8-d39fddf1efd3.Date
+

@@ -11,9 +11,12 @@ table flag_share
 	partition flag_share = m
 		mode: import
 		source =
-			let
-				Source = Csv.Document(File.Contents(DataFolder & "\flag_share.csv"), [Delimiter=",", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
-				Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
-				Typed = Table.TransformColumnTypes(Promoted, {{"flag_pct", Int64.Type}}, "en-US")
-			in
-				Typed
+				let
+					Source = Csv.Document(File.Contents(DataFolder & "\flag_share.csv"), [Delimiter=",", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+					Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+					Typed = Table.TransformColumnTypes(Promoted, {{"flag_pct", Int64.Type}}, "en-US")
+				in
+					Typed
+
+	annotation PBI_ResultType = Table
+

@@ -68,8 +68,11 @@ table fact_payments
 	partition fact_payments = m
 		mode: import
 		source =
-			let
-				Source = Parquet.Document(File.Contents(DataFolder & "\fact_payments.parquet")),
-				Typed = Table.TransformColumnTypes(Source, {{"order_id", type text}, {"payment_sequential", Int64.Type}, {"customer_key", Int64.Type}, {"purchase_date_key", Int64.Type}, {"payment_type", type text}, {"payment_installments", Int64.Type}, {"payment_value", Currency.Type}})
-			in
-				Typed
+				let
+					Source = Parquet.Document(File.Contents(DataFolder & "\fact_payments.parquet")),
+					Typed = Table.TransformColumnTypes(Source, {{"order_id", type text}, {"payment_sequential", Int64.Type}, {"customer_key", Int64.Type}, {"purchase_date_key", Int64.Type}, {"payment_type", type text}, {"payment_installments", Int64.Type}, {"payment_value", Currency.Type}})
+				in
+					Typed
+
+	annotation PBI_ResultType = Exception
+

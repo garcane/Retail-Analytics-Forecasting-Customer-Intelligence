@@ -48,9 +48,12 @@ table dim_geography
 	partition dim_geography = m
 		mode: import
 		source =
-			let
-				Source = Csv.Document(File.Contents(DataFolder & "\dim_geography.csv"), [Delimiter=",", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
-				Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
-				Typed = Table.TransformColumnTypes(Promoted, {{"geography_key", Int64.Type}, {"zip_prefix", type text}, {"city", type text}, {"state", type text}, {"latitude", type number}, {"longitude", type number}, {"n_source_points", Int64.Type}}, "en-US")
-			in
-				Typed
+				let
+					Source = Csv.Document(File.Contents(DataFolder & "\dim_geography.csv"), [Delimiter=",", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+					Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+					Typed = Table.TransformColumnTypes(Promoted, {{"geography_key", Int64.Type}, {"zip_prefix", type text}, {"city", type text}, {"state", type text}, {"latitude", type number}, {"longitude", type number}, {"n_source_points", Int64.Type}}, "en-US")
+				in
+					Typed
+
+	annotation PBI_ResultType = Exception
+

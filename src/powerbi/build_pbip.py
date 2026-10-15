@@ -9,7 +9,7 @@ Files follow Microsoft's published formats (Power BI Desktop projects, TMDL, PBI
 the build environment, so the project has been validated against the published JSON schemas (tests/test_powerbi_project.py)
 and the first open in Desktop found one error (a measure sharing a name with a column ignoring case), now fixed and tested. Output is deterministic: identifiers are derived from names, so re-running changes nothing.
 
-    uv run python src/powerbi/build_pbip.py
+    uv run python src/powerbi/build_pbip.py [--force]   # --force overwrites an existing project, including edits made in Desktop
 """
 
 from __future__ import annotations
@@ -187,6 +187,10 @@ def files() -> dict[str, str]:
 
 
 def main() -> int:
+    if (OUT / f"{NAME}.pbip").exists() and "--force" not in sys.argv:
+        print(f"{OUT.relative_to(ms.ROOT)}/{NAME}.pbip already exists and has been saved by Power BI Desktop, which now owns the report and model. "
+              "Regenerating would overwrite every change made in Desktop. Re-run with --force only to start over from the specification.")
+        return 1
     generated = files()
     for sub in (f"{NAME}.SemanticModel", f"{NAME}.Report", "theme"):  # rebuild generated folders; keep README.md and data/
         shutil.rmtree(OUT / sub, ignore_errors=True)

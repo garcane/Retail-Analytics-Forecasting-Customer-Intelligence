@@ -165,8 +165,11 @@ table fact_order_items
 	partition fact_order_items = m
 		mode: import
 		source =
-			let
-				Source = Parquet.Document(File.Contents(DataFolder & "\fact_order_items.parquet")),
-				Typed = Table.TransformColumnTypes(Source, {{"order_id", type text}, {"order_item_id", Int64.Type}, {"order_status", type text}, {"customer_key", Int64.Type}, {"product_key", Int64.Type}, {"seller_key", Int64.Type}, {"customer_geography_key", Int64.Type}, {"seller_geography_key", Int64.Type}, {"purchase_date_key", Int64.Type}, {"shipping_limit_date_key", Int64.Type}, {"price", Currency.Type}, {"freight_value", Currency.Type}, {"item_total_value", Currency.Type}, {"is_net_order", type logical}})
-			in
-				Typed
+				let
+					Source = Parquet.Document(File.Contents(DataFolder & "\fact_order_items.parquet")),
+					Typed = Table.TransformColumnTypes(Source, {{"order_id", type text}, {"order_item_id", Int64.Type}, {"order_status", type text}, {"customer_key", Int64.Type}, {"product_key", Int64.Type}, {"seller_key", Int64.Type}, {"customer_geography_key", Int64.Type}, {"seller_geography_key", Int64.Type}, {"purchase_date_key", Int64.Type}, {"shipping_limit_date_key", Int64.Type}, {"price", Currency.Type}, {"freight_value", Currency.Type}, {"item_total_value", Currency.Type}, {"is_net_order", type logical}})
+				in
+					Typed
+
+	annotation PBI_ResultType = Exception
+

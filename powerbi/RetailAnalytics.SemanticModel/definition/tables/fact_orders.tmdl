@@ -99,29 +99,37 @@ table fact_orders
 		dataType: int64
 		isHidden
 		lineageTag: f78024e8-e35d-5e36-a8d5-ac7e6d8950c7
-		summarizeBy: none
+		summarizeBy: sum
 		sourceColumn: approved_date_key
+
+		annotation SummarizationSetBy = Automatic
 
 	column carrier_date_key
 		dataType: int64
 		isHidden
 		lineageTag: badbaeac-278a-5495-ae3b-c9de14cf92dd
-		summarizeBy: none
+		summarizeBy: sum
 		sourceColumn: carrier_date_key
+
+		annotation SummarizationSetBy = Automatic
 
 	column delivered_customer_date_key
 		dataType: int64
 		isHidden
 		lineageTag: 5a3ea191-e08e-5a8b-aa42-9095f852c2d7
-		summarizeBy: none
+		summarizeBy: sum
 		sourceColumn: delivered_customer_date_key
+
+		annotation SummarizationSetBy = Automatic
 
 	column estimated_delivery_date_key
 		dataType: int64
 		isHidden
 		lineageTag: 84951deb-9610-50b4-90d4-d95d1584f707
-		summarizeBy: none
+		summarizeBy: sum
 		sourceColumn: estimated_delivery_date_key
+
+		annotation SummarizationSetBy = Automatic
 
 	column purchase_ts
 		dataType: dateTime
@@ -129,58 +137,82 @@ table fact_orders
 		summarizeBy: none
 		sourceColumn: purchase_ts
 
+		variation Variation
+			isDefault
+			relationship: 4ab208de-b20d-4572-8ca9-72ae5d50b469
+			defaultHierarchy: LocalDateTable_8f54cf85-8e0c-4e4d-bd3b-0c06976dc205.'Date Hierarchy'
+
 	column estimated_delivery_ts
 		dataType: dateTime
 		lineageTag: 9275c86c-08ab-544a-9dd4-ba3a4ff49291
 		summarizeBy: none
 		sourceColumn: estimated_delivery_ts
 
+		variation Variation
+			isDefault
+			relationship: 192d0610-4a53-4b19-916a-eb985874cb88
+			defaultHierarchy: LocalDateTable_0cf833dd-a03d-4386-a3f9-97f9bf9512cd.'Date Hierarchy'
+
 	column item_count
 		dataType: int64
 		lineageTag: 3ad3d9e9-a546-561a-a0e4-497f17df3115
-		summarizeBy: none
+		summarizeBy: sum
 		sourceColumn: item_count
+
+		annotation SummarizationSetBy = Automatic
 
 	column items_price
 		dataType: decimal
 		formatString: #,0.00
 		lineageTag: 3f060bc4-20d9-5b50-8de8-3d8c03b028fd
-		summarizeBy: none
+		summarizeBy: sum
 		sourceColumn: items_price
+
+		annotation SummarizationSetBy = Automatic
 
 	column items_freight
 		dataType: decimal
 		formatString: #,0.00
 		lineageTag: 2461abff-53a3-5370-ab6e-bfe6c069fe09
-		summarizeBy: none
+		summarizeBy: sum
 		sourceColumn: items_freight
+
+		annotation SummarizationSetBy = Automatic
 
 	column payment_count
 		dataType: int64
 		lineageTag: 30a7b382-8111-5e39-a0ed-f77e407086ae
-		summarizeBy: none
+		summarizeBy: sum
 		sourceColumn: payment_count
+
+		annotation SummarizationSetBy = Automatic
 
 	column payment_total
 		dataType: decimal
 		formatString: #,0.00
 		lineageTag: 57472b7c-5840-5d96-9117-7ea8d633a1e5
-		summarizeBy: none
+		summarizeBy: sum
 		sourceColumn: payment_total
+
+		annotation SummarizationSetBy = Automatic
 
 	column delivery_days
 		dataType: double
 		formatString: 0.0
 		lineageTag: 05bafa50-bd7f-58d5-8f16-f11689a48abc
-		summarizeBy: none
+		summarizeBy: sum
 		sourceColumn: delivery_days
+
+		annotation SummarizationSetBy = Automatic
 
 	column delivery_delay_days
 		dataType: double
 		formatString: 0.0
 		lineageTag: 03609959-ce0d-54b0-8613-8920da8e17aa
-		summarizeBy: none
+		summarizeBy: sum
 		sourceColumn: delivery_delay_days
+
+		annotation SummarizationSetBy = Automatic
 
 	column is_late
 		dataType: boolean
@@ -198,8 +230,10 @@ table fact_orders
 		dataType: double
 		formatString: 0.0
 		lineageTag: fb0f9790-86ae-5701-84de-a596f98341e4
-		summarizeBy: none
+		summarizeBy: sum
 		sourceColumn: promised_days
+
+		annotation SummarizationSetBy = Automatic
 
 	column is_net_order
 		dataType: boolean
@@ -216,21 +250,26 @@ table fact_orders
 	column delay_bucket
 		dataType: string
 		lineageTag: af4c707b-5062-5aeb-9135-2ca5a6b5aeec
-		sortByColumn: delay_bucket_order
 		summarizeBy: none
 		sourceColumn: delay_bucket
+		sortByColumn: delay_bucket_order
 
 	column delay_bucket_order
 		dataType: int64
 		lineageTag: da76ed98-9558-592f-9edb-f49e7f409da4
-		summarizeBy: none
+		summarizeBy: sum
 		sourceColumn: delay_bucket_order
+
+		annotation SummarizationSetBy = Automatic
 
 	partition fact_orders = m
 		mode: import
 		source =
-			let
-				Source = Parquet.Document(File.Contents(DataFolder & "\fact_orders.parquet")),
-				Typed = Table.TransformColumnTypes(Source, {{"order_id", type text}, {"order_status", type text}, {"customer_key", Int64.Type}, {"customer_geography_key", Int64.Type}, {"purchase_date_key", Int64.Type}, {"approved_date_key", Int64.Type}, {"carrier_date_key", Int64.Type}, {"delivered_customer_date_key", Int64.Type}, {"estimated_delivery_date_key", Int64.Type}, {"purchase_ts", type datetime}, {"estimated_delivery_ts", type datetime}, {"item_count", Int64.Type}, {"items_price", Currency.Type}, {"items_freight", Currency.Type}, {"payment_count", Int64.Type}, {"payment_total", Currency.Type}, {"delivery_days", type number}, {"delivery_delay_days", type number}, {"is_late", type logical}, {"has_timestamp_anomaly", type logical}, {"promised_days", type number}, {"is_net_order", type logical}, {"is_labelled_delivery", type logical}, {"delay_bucket", type text}, {"delay_bucket_order", Int64.Type}})
-			in
-				Typed
+				let
+					Source = Parquet.Document(File.Contents(DataFolder & "\fact_orders.parquet")),
+					Typed = Table.TransformColumnTypes(Source, {{"order_id", type text}, {"order_status", type text}, {"customer_key", Int64.Type}, {"customer_geography_key", Int64.Type}, {"purchase_date_key", Int64.Type}, {"approved_date_key", Int64.Type}, {"carrier_date_key", Int64.Type}, {"delivered_customer_date_key", Int64.Type}, {"estimated_delivery_date_key", Int64.Type}, {"purchase_ts", type datetime}, {"estimated_delivery_ts", type datetime}, {"item_count", Int64.Type}, {"items_price", Currency.Type}, {"items_freight", Currency.Type}, {"payment_count", Int64.Type}, {"payment_total", Currency.Type}, {"delivery_days", type number}, {"delivery_delay_days", type number}, {"is_late", type logical}, {"has_timestamp_anomaly", type logical}, {"promised_days", type number}, {"is_net_order", type logical}, {"is_labelled_delivery", type logical}, {"delay_bucket", type text}, {"delay_bucket_order", Int64.Type}})
+				in
+					Typed
+
+	annotation PBI_ResultType = Exception
+

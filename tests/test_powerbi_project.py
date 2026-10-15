@@ -169,8 +169,16 @@ def test_generation_is_deterministic(generated):
     assert build_spec_html.render() == build_spec_html.render()
 
 
-def test_committed_project_matches_the_generator(generated):
-    for rel, text in generated.items():
-        path = ROOT / "powerbi" / rel
-        assert path.exists(), f"{rel} missing: run src/powerbi/build_pbip.py"
-        assert path.read_text(encoding="utf-8") == text, f"{rel} is stale: run src/powerbi/build_pbip.py"
+def test_committed_project_is_complete_and_holds_no_machine_path():
+    """Desktop owns the committed project now (it re-saves files in its own format), so it is no longer compared with the generator.
+    What must stay true: every model table is present, the project opens from the .pbip, and no local path is committed."""
+    sm = ROOT / "powerbi" / f"{pbip.NAME}.SemanticModel" / "definition"
+    assert (ROOT / "powerbi" / f"{pbip.NAME}.pbip").exists() and (sm / "model.tmdl").exists()
+    for t in ms.TABLES:
+        assert (sm / "tables" / f"{t.name}.tmdl").exists(), t.name
+    assert pbip.DATA_FOLDER_PLACEHOLDER in (sm / "expressions.tmdl").read_text(encoding="utf-8"), "commit the DataFolder placeholder, not a local path"
+
+
+def test_generator_refuses_to_overwrite_a_project_saved_by_desktop(monkeypatch, capsys):
+    monkeypatch.setattr("sys.argv", ["build_pbip.py"])
+    assert pbip.main() == 1 and "already exists" in capsys.readouterr().out

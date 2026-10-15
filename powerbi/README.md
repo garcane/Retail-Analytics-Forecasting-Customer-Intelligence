@@ -10,7 +10,7 @@ in [docs/powerbi/](../docs/powerbi/):
 | [DASHBOARD_MOCKUP.html](../docs/powerbi/DASHBOARD_MOCKUP.html) | An interactive picture of the finished dashboard with real numbers (open it in any browser; not Power BI) |
 | `RetailAnalytics.pbip` | The project: `RetailAnalytics.SemanticModel/` (tables, relationships, measures as TMDL) and `RetailAnalytics.Report/` (pages and visuals as PBIR) |
 
-**Status: first open in Desktop found one error, now fixed; the rest is unconfirmed.** The project was generated on a machine without Desktop. On the first open Desktop rejected it with "The 'Forecast' measure cannot be created because a column with the same name already exists" (Power BI compares names ignoring case, and the table had a column `forecast`). The measures `Forecast` and `Actual` are now `Forecast Value` and `Actual Value`, and a test checks names ignoring case. Desktop reports one model error at a time, so another may still appear; the report pages have not been confirmed to load either.
+**Status: opens and loads in Power BI Desktop.** Two first-open problems were found and fixed (see below), and the committed files are now the ones Desktop saved, so **Desktop owns the report and model from here**: edit them there.  The project was generated on a machine without Desktop. On the first open Desktop rejected it with "The 'Forecast' measure cannot be created because a column with the same name already exists" (Power BI compares names ignoring case, and the table had a column `forecast`). The measures `Forecast` and `Actual` are now `Forecast Value` and `Actual Value`, and a test checks names ignoring case. Desktop reports one model error at a time, so another may still appear; the report pages have not been confirmed to load either.
 What was checked instead: every JSON file validates against Microsoft's published schemas, every table, column and measure
 named anywhere exists, and the exported data reproduces the warehouse figures (`tests/test_powerbi_project.py`,
 `tests/test_powerbi_export.py`). That does not prove Desktop will accept every file. If it shows an error on first open,
@@ -39,7 +39,7 @@ send the exact message and the file it names.
 - Nothing in the project holds credentials. The only machine-specific setting is the `DataFolder` path, which Desktop keeps in
   the model and which is not committed (the committed value is a placeholder).
 
-## Regenerate
+## Regenerate (only to start over)
 
 The files under `RetailAnalytics.*` and `docs/powerbi/*.html` are generated; edit `src/powerbi/model_spec.py` and re-run, not the files.
 
@@ -49,9 +49,9 @@ uv run python src/powerbi/build_mockup_html.py
 uv run python src/powerbi/build_pbip.py
 ```
 
-Generation is deterministic (identifiers come from names), and a test fails if the committed project differs from the generator.
-Changes you make in Desktop and save will be overwritten by the next generation; if you want to keep editing in Desktop,
-stop regenerating.
+`build_pbip.py` now refuses to run while a project exists, because regenerating would overwrite every change made in Desktop; `--force` overrides that. The generator is a scaffold that produced the first version, and `model_spec.py` still drives the specification and mock-up, which will drift from the project as you change it in Desktop.
+
+**Do not commit your local data path.** Desktop writes the `DataFolder` you entered into `RetailAnalytics.SemanticModel/definition/expressions.tmdl`. The committed value is the placeholder; after you enter your path, run `git update-index --skip-worktree powerbi/RetailAnalytics.SemanticModel/definition/expressions.tmdl` so Git ignores your local change (undo with `--no-skip-worktree`).
 
 ## If the first refresh fails
 

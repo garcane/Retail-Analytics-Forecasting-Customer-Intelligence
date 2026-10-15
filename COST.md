@@ -21,7 +21,7 @@ Measured on the development laptop (2026-10-13):
 | Forecast backtests | 3 seconds (baselines), about 12 seconds (extra models) |
 | Analytics queries and charts | about 12 seconds |
 | Explainability (permutation importance) | about 43 seconds |
-| Full test suite (95 tests) | 30 to 60 seconds |
+| Full test suite (96 tests) | 30 to 60 seconds |
 | Export the Power BI data files (includes re-scoring the model) | under a minute |
 | Generate the specification, mock-up and Power BI project | a few seconds each |
 | Run the late-delivery notebook (all cells) | about 1 to 1.5 minutes |

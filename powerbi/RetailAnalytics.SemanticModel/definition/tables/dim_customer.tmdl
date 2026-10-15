@@ -36,9 +36,12 @@ table dim_customer
 	partition dim_customer = m
 		mode: import
 		source =
-			let
-				Source = Csv.Document(File.Contents(DataFolder & "\dim_customer.csv"), [Delimiter=",", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
-				Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
-				Typed = Table.TransformColumnTypes(Promoted, {{"customer_key", Int64.Type}, {"customer_unique_id", type text}, {"customer_zip_code_prefix", type text}, {"customer_city", type text}, {"customer_state", type text}}, "en-US")
-			in
-				Typed
+				let
+					Source = Csv.Document(File.Contents(DataFolder & "\dim_customer.csv"), [Delimiter=",", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+					Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+					Typed = Table.TransformColumnTypes(Promoted, {{"customer_key", Int64.Type}, {"customer_unique_id", type text}, {"customer_zip_code_prefix", type text}, {"customer_city", type text}, {"customer_state", type text}}, "en-US")
+				in
+					Typed
+
+	annotation PBI_ResultType = Table
+

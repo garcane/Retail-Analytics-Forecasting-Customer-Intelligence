@@ -3,6 +3,15 @@ model Model
 	defaultPowerBIDataSourceVersion: powerBI_V3
 	discourageImplicitMeasures
 	sourceQueryCulture: en-US
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation PBI_QueryOrder = ["dim_date","dim_customer","dim_product","dim_seller","dim_geography","fact_orders","fact_order_items","fact_payments","fact_reviews","late_delivery_scores","forecast_backtest","flag_share","DataFolder"]
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBI_ProTooling = ["DevMode"]
 
 ref table dim_date
 ref table dim_customer
@@ -16,3 +25,10 @@ ref table fact_reviews
 ref table late_delivery_scores
 ref table forecast_backtest
 ref table flag_share
+ref table DateTableTemplate_ee9b7428-e999-43df-87b8-fc90a6b113da
+ref table LocalDateTable_8f54cf85-8e0c-4e4d-bd3b-0c06976dc205
+ref table LocalDateTable_0cf833dd-a03d-4386-a3f9-97f9bf9512cd
+ref table LocalDateTable_8ceb0bbc-3638-4651-abe2-5cf00cdee98c
+ref table LocalDateTable_00be7958-95d1-4389-8878-579e58951be8
+ref table LocalDateTable_8ac81597-2dc6-4422-b3c8-d39fddf1efd3
+

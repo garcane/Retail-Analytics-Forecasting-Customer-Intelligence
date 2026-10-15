@@ -34,7 +34,7 @@ table late_delivery_scores
 
 	/// How many times better than chance the flagging is. Pooled over the selection, so it differs from the average of the monthly lifts (2.8x).
 	measure Lift = DIVIDE([Late Rate Among Flagged], [Late Rate (scored)])
-		formatString: "0.0""x"""
+		formatString: 0.0"x"
 		displayFolder: Risk
 		lineageTag: c8e78954-7622-5769-8ff1-ccb0ee281838
 
@@ -117,8 +117,11 @@ table late_delivery_scores
 	partition late_delivery_scores = m
 		mode: import
 		source =
-			let
-				Source = Parquet.Document(File.Contents(DataFolder & "\late_delivery_scores.parquet")),
-				Typed = Table.TransformColumnTypes(Source, {{"order_id", type text}, {"month", type text}, {"purchase_date_key", Int64.Type}, {"risk_score", type number}, {"risk_percentile", type number}, {"flagged_top10", type logical}, {"is_late", Int64.Type}, {"customer_state", type text}, {"seller_state", type text}, {"category", type text}, {"promised_days", type number}})
-			in
-				Typed
+				let
+					Source = Parquet.Document(File.Contents(DataFolder & "\late_delivery_scores.parquet")),
+					Typed = Table.TransformColumnTypes(Source, {{"order_id", type text}, {"month", type text}, {"purchase_date_key", Int64.Type}, {"risk_score", type number}, {"risk_percentile", type number}, {"flagged_top10", type logical}, {"is_late", Int64.Type}, {"customer_state", type text}, {"seller_state", type text}, {"category", type text}, {"promised_days", type number}})
+				in
+					Typed
+
+	annotation PBI_ResultType = Exception
+
