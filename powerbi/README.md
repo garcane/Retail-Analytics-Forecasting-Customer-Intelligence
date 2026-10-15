@@ -10,7 +10,7 @@ in [docs/powerbi/](../docs/powerbi/):
 | [DASHBOARD_MOCKUP.html](../docs/powerbi/DASHBOARD_MOCKUP.html) | An interactive picture of the finished dashboard with real numbers (open it in any browser; not Power BI) |
 | `RetailAnalytics.pbip` | The project: `RetailAnalytics.SemanticModel/` (tables, relationships, measures as TMDL) and `RetailAnalytics.Report/` (pages and visuals as PBIR) |
 
-**Status: never opened in Power BI Desktop.** The project could not be built or opened on the machine it was generated on.
+**Status: first open in Desktop found one error, now fixed; the rest is unconfirmed.** The project was generated on a machine without Desktop. On the first open Desktop rejected it with "The 'Forecast' measure cannot be created because a column with the same name already exists" (Power BI compares names ignoring case, and the table had a column `forecast`). The measures `Forecast` and `Actual` are now `Forecast Value` and `Actual Value`, and a test checks names ignoring case. Desktop reports one model error at a time, so another may still appear; the report pages have not been confirmed to load either.
 What was checked instead: every JSON file validates against Microsoft's published schemas, every table, column and measure
 named anywhere exists, and the exported data reproduces the warehouse figures (`tests/test_powerbi_project.py`,
 `tests/test_powerbi_export.py`). That does not prove Desktop will accept every file. If it shows an error on first open,

@@ -3,16 +3,16 @@ table forecast_backtest
 	lineageTag: eaf6c9d7-3a12-52b9-92fa-34dee8da18d1
 
 	/// Average forecast of the selected methods.
-	measure Forecast = AVERAGE(forecast_backtest[forecast])
+	measure 'Forecast Value' = AVERAGE(forecast_backtest[forecast])
 		formatString: #,0
 		displayFolder: Forecast
-		lineageTag: a5ff05ca-2f99-5d2a-bf87-77aaba567afe
+		lineageTag: 2663b7cd-1e04-533a-abc2-9cae2ea98c06
 
 	/// Actual value for the target week.
-	measure Actual = AVERAGE(forecast_backtest[actual])
+	measure 'Actual Value' = AVERAGE(forecast_backtest[actual])
 		formatString: #,0
 		displayFolder: Forecast
-		lineageTag: c55667ba-cc7a-5e15-8472-9e7504e206fa
+		lineageTag: 9293b344-5d24-5b62-9a75-35e7670ab5a4
 
 	/// Mean absolute error of the selected methods (the 'actual' line is excluded).
 	measure MAE = CALCULATE(AVERAGE(forecast_backtest[abs_error]), KEEPFILTERS(forecast_backtest[method] <> "actual"))

@@ -17,7 +17,7 @@ _Last updated: 2026-10-13_
 | 4 Data engineering | Done | `sql/`, `src/transformation/build_warehouse.py`, `docs/data/DATA_MODEL.md` (22 checks) |
 | 5 Analytics | Done | `sql/analytics/`, `src/analytics/`, `docs/analytics/BUSINESS_INSIGHTS.md` |
 | 6 Machine learning | Done | `notebooks/02_late_delivery_model.ipynb` and `03_weekly_forecast.ipynb` (with charts), interactive versions in `notebooks/marimo/`, `docs/ml/MODEL_CARD.md` and the experiment documents it links |
-| Dashboard (Power BI, added later) | Built, not opened in Desktop | `powerbi/README.md`, `docs/powerbi/DAX_SPECIFICATION.html`, `docs/powerbi/DASHBOARD_MOCKUP.html`, `powerbi/RetailAnalytics.pbip` (DD-15) |
+| Dashboard (Power BI, added later) | Built; opened once in Desktop (one name clash found and fixed), rest unconfirmed | `powerbi/README.md`, `docs/powerbi/DAX_SPECIFICATION.html`, `docs/powerbi/DASHBOARD_MOCKUP.html`, `powerbi/RetailAnalytics.pbip` (DD-15) |
 | 7 Deployment, 8 Monitoring | Out of scope (D-002, D-005) | |
 | 9 Documentation | Done | `README.md`, `SECURITY.md`, `COST.md`, `docs/LESSONS_LEARNED.md`, model card |
 | 10 Final audit | Done | `docs/AUDIT.md` |

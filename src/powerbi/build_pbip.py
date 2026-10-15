@@ -7,7 +7,7 @@
 
 Files follow Microsoft's published formats (Power BI Desktop projects, TMDL, PBIR). Power BI Desktop is not available in
 the build environment, so the project has been validated against the published JSON schemas (tests/test_powerbi_project.py)
-but never opened in Desktop. Output is deterministic: identifiers are derived from names, so re-running changes nothing.
+and the first open in Desktop found one error (a measure sharing a name with a column ignoring case), now fixed and tested. Output is deterministic: identifiers are derived from names, so re-running changes nothing.
 
     uv run python src/powerbi/build_pbip.py
 """

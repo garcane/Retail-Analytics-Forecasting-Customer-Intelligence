@@ -42,11 +42,11 @@
                       "Entity": "forecast_backtest"
                     }
                   },
-                  "Property": "Forecast"
+                  "Property": "Forecast Value"
                 }
               },
-              "queryRef": "forecast_backtest.Forecast",
-              "nativeQueryRef": "Forecast",
+              "queryRef": "forecast_backtest.Forecast Value",
+              "nativeQueryRef": "Forecast Value",
               "active": true
             }
           ]

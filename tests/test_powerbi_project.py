@@ -84,12 +84,16 @@ def _columns() -> dict[str, set[str]]:
 
 
 def test_names_are_unique_and_every_table_has_a_schema():
+    """Power BI compares names ignoring case: a measure called Forecast clashes with a column called forecast (found in Desktop)."""
     columns = _columns()
-    assert len({t.name for t in ms.TABLES}) == len(ms.TABLES)
+    assert len({t.name.lower() for t in ms.TABLES}) == len(ms.TABLES)
     assert set(columns) == {t.name for t in ms.TABLES}
-    assert len({m.name for m in ms.MEASURES}) == len(ms.MEASURES)
-    all_columns = {c for cols in columns.values() for c in cols}
-    assert not {m.name for m in ms.MEASURES} & all_columns, "a measure shares its name with a column"
+    assert len({m.name.lower() for m in ms.MEASURES}) == len(ms.MEASURES)
+    for t, cols in columns.items():
+        assert len({c.lower() for c in cols}) == len(cols), f"{t}: two columns differ only by case"
+        own = {m.name.lower() for m in ms.MEASURES if m.table == t}
+        assert not own & {c.lower() for c in cols}, f"{t}: measure shares a name with a column: {own & {c.lower() for c in cols}}"
+        assert not own & {n.lower() for n in columns}, f"{t}: measure shares a name with a table"
     ids = [v.id for p in ms.PAGES for v in p.visuals]
     assert len(ids) == len(set(ids)) and len({p.id for p in ms.PAGES}) == len(ms.PAGES)
 
