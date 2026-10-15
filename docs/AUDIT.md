@@ -12,7 +12,7 @@ Audit of the local DuckDB build against the review areas in the project brief, r
 | Reproducibility | **Good.** A clean clone plus the raw data rebuilt everything; outputs matched, with documented numeric noise in two ML files |
 | Security | **Good for the scope.** No secrets, no tracked data, no network surface; dependencies not scanned |
 | Cost | **$0**, measured run times recorded |
-| Architecture | **Sound and documented**, with decisions logged (DD-01 to DD-13) |
+| Architecture | **Sound and documented**, with decisions logged (DD-01 to DD-15) |
 | Testing | **61 tests pass**; leakage tests were shown to fail when leaks are planted |
 | Documentation | **Complete** for every in-scope phase; one known inconsistency (original cloud brief left unchanged by design) |
 | Evidence | **Saved** in `reports/` and the docs; figures and tables regenerate byte-for-byte |
@@ -67,7 +67,7 @@ See [ARCHITECTURE.md](../ARCHITECTURE.md) and [DECISIONS.md](../DECISIONS.md). A
 | Document | Purpose |
 |---|---|
 | [README.md](../README.md) | Overview, data download, build, run, repository map |
-| [ARCHITECTURE.md](../ARCHITECTURE.md), [DECISIONS.md](../DECISIONS.md) | Design and the decision log (D-001 to D-008, DD-01 to DD-13) |
+| [ARCHITECTURE.md](../ARCHITECTURE.md), [DECISIONS.md](../DECISIONS.md) | Design and the decision log (D-001 to D-008, DD-01 to DD-15) |
 | [docs/data/](data/) | Data model and discovery findings |
 | [docs/analytics/BUSINESS_INSIGHTS.md](analytics/BUSINESS_INSIGHTS.md) | Findings, with charts |
 | [docs/ml/](ml/) | Leakage analysis, baselines, drift, recalibration, **model card** |
@@ -106,6 +106,14 @@ The two machine-learning notebooks were added: [notebooks/02_late_delivery_model
 
 Later the same day, interactive marimo versions of both notebooks were added (`notebooks/marimo/`, DD-14). Each was checked with `marimo check` (now part of the test suite, which grew to 78 tests) and executed headlessly with no cell errors, and the new interactive charts were inspected by eye (two layout flaws, a legend over the data and a label crossing a reference line, were fixed).
 
+### Addendum: Power BI (DD-15)
+
+A Power BI dashboard was added: a DAX specification, an interactive HTML mock-up and a generated Power BI Project, all from one definition (`src/powerbi/model_spec.py`).
+
+- **Checked:** every generated JSON file validates against Microsoft's published schemas (a deliberately broken visual was rejected, so the check has teeth); every table, column and measure named by a relationship, DAX expression or visual exists; relationship columns have matching types and no fact key is missing from its dimension; the exported scores reproduce the stored PR-AUC within 0.002; the mock-up's data adds up to the specification's expected values (net revenue, orders, late rate, flagged orders); generation is deterministic and the committed project equals the generator output. The suite is now 95 tests.
+- **Not checked:** that Power BI Desktop opens the project without complaint (it was not available), that the TMDL text is accepted (no .NET tooling was available to parse it), and that any DAX measure returns the expected value. The specification's first-open checklist lists 13 numbers to compare. Expect that a first open may need small fixes.
+- **Privacy:** review comment text is not exported; the data folder is git-ignored; the committed project holds a placeholder `DataFolder` path and no credentials.
+
 ## Open items
 
 | Item | Why it is open |
@@ -113,5 +121,6 @@ Later the same day, interactive marimo versions of both notebooks were added (`n
 | Dependency vulnerability scan | No scanner installed |
 | Re-execute the discovery notebook | No notebook runner installed |
 | Geolocation conversion on Kaggle's original CSV | Original file not available locally |
+| Open the Power BI project in Desktop and run the first-open checklist | Desktop is not available where it was built; the project is schema-checked only |
 | Knowledge graph does not include the newest documents | Needs `/graphify --update` (model-based extraction) |
 | The original brief documents describe the cloud design | Left unchanged by decision |

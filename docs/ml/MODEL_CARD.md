@@ -99,3 +99,5 @@ uv run pytest
 ```
 
 Results can differ slightly between runs because of multithreaded numerical code: in a fresh-clone rerun the largest differences were about 0.001 in PR-AUC and 0.002 in ROC-AUC (the v1 logistic model came out identical), so compare to that tolerance. Metric files are in [reports/](../../reports/).
+
+The out-of-time scores are also exported per order (`src/ml/export_scores.py`) for the Power BI risk page; see [powerbi/README.md](../../powerbi/README.md).

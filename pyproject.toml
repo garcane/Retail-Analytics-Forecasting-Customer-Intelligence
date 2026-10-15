@@ -20,13 +20,15 @@ dependencies = [
 [dependency-groups]
 dev = [
     "ipykernel>=7.4.0",
+    "jsonschema>=4.26.0",
     "marimo>=0.25.1",
     "nbclient>=0.11.0",
     "nbformat>=5.11.1",
     "pytest>=9.1.1",
+    "referencing>=0.37.0",
 ]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-pythonpath = ["src/ml", "src/transformation", "tests"]
+pythonpath = ["src/ml", "src/transformation", "src/analytics", "src/powerbi", "tests"]
 markers = ["warehouse: needs the built warehouse.duckdb (skipped when it is missing)"]

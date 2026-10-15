@@ -17,6 +17,7 @@ _Last updated: 2026-10-13_
 | 4 Data engineering | Done | `sql/`, `src/transformation/build_warehouse.py`, `docs/data/DATA_MODEL.md` (22 checks) |
 | 5 Analytics | Done | `sql/analytics/`, `src/analytics/`, `docs/analytics/BUSINESS_INSIGHTS.md` |
 | 6 Machine learning | Done | `notebooks/02_late_delivery_model.ipynb` and `03_weekly_forecast.ipynb` (with charts), interactive versions in `notebooks/marimo/`, `docs/ml/MODEL_CARD.md` and the experiment documents it links |
+| Dashboard (Power BI, added later) | Built, not opened in Desktop | `powerbi/README.md`, `docs/powerbi/DAX_SPECIFICATION.html`, `docs/powerbi/DASHBOARD_MOCKUP.html`, `powerbi/RetailAnalytics.pbip` (DD-15) |
 | 7 Deployment, 8 Monitoring | Out of scope (D-002, D-005) | |
 | 9 Documentation | Done | `README.md`, `SECURITY.md`, `COST.md`, `docs/LESSONS_LEARNED.md`, model card |
 | 10 Final audit | Done | `docs/AUDIT.md` |
@@ -31,13 +32,13 @@ _Last updated: 2026-10-13_
 
 ## Quality evidence
 
-- `uv run pytest`: **78 tests pass** (about 30 seconds). Leakage tests were shown to fail when leaks were planted.
+- `uv run pytest`: **95 tests pass** (about 45 seconds). Leakage tests were shown to fail when leaks were planted.
 - A **clean clone** plus the raw data rebuilt the warehouse (22/22), passed all tests and regenerated the analytics tables and figures byte-for-byte. Late-delivery metrics reproduce to within about 0.001 to 0.002 (multithreaded numerics); v1 was identical.
 - Security scan: no secrets, no tracked data or credentials ([SECURITY.md](SECURITY.md)). Cost: $0 ([COST.md](COST.md)).
 
 ## Decisions
 
-D-001 to D-008 (user) and DD-01 to DD-14 (design) are in [DECISIONS.md](DECISIONS.md). **Open decisions:** none.
+D-001 to D-008 (user) and DD-01 to DD-15 (design) are in [DECISIONS.md](DECISIONS.md). **Open decisions:** none.
 
 ## Open items (from the audit)
 

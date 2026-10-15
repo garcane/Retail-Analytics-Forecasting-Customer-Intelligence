@@ -12,10 +12,10 @@
     "semantic_hash": "5ebef3dd159986e465ab65e4014107ec"
   },
   "pyproject.toml": {
-    "mtime": 1791919595.2752347,
-    "seen": 1791921003.0557954,
-    "ast_hash": "a5c699835d99c24d6496a326c0ccf697",
-    "semantic_hash": "a5c699835d99c24d6496a326c0ccf697"
+    "mtime": 1792069286.181131,
+    "seen": 1792069695.7967808,
+    "ast_hash": "17de64e11ca206d3fa319b8154dad542",
+    "semantic_hash": ""
   },
   "CLAUDE.md": {
     "mtime": 1791307623.0807996,
@@ -72,34 +72,34 @@
     "semantic_hash": "21ceb6533048be51308e69e7b74a35cf"
   },
   "ARCHITECTURE.md": {
-    "mtime": 1791919728.3438847,
-    "seen": 1791921003.0567954,
-    "ast_hash": "4a7f09f34b5121b5b4292315e6051ce7",
-    "semantic_hash": "4a7f09f34b5121b5b4292315e6051ce7"
+    "mtime": 1792069658.0149992,
+    "seen": 1792069695.811845,
+    "ast_hash": "211f3a675cf59c635787e78befcc441b",
+    "semantic_hash": ""
   },
   "DECISIONS.md": {
-    "mtime": 1791918672.096112,
-    "seen": 1791921003.0567954,
-    "ast_hash": "bbd76129621b0a4881cdf71d1e058dab",
-    "semantic_hash": "bbd76129621b0a4881cdf71d1e058dab"
+    "mtime": 1792069670.810303,
+    "seen": 1792069695.811845,
+    "ast_hash": "662db68e19b70fec8652b45ef14f70ac",
+    "semantic_hash": ""
   },
   "PROJECT_STATUS.md": {
-    "mtime": 1791919834.911443,
-    "seen": 1791921003.0567954,
-    "ast_hash": "3eb839d5fba1bf59d4d9a65909c2b6c9",
-    "semantic_hash": "3eb839d5fba1bf59d4d9a65909c2b6c9"
+    "mtime": 1792069670.805303,
+    "seen": 1792069695.811845,
+    "ast_hash": "0716ebde03988d39ad892dc024ebf17d",
+    "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1791919728.3438847,
-    "seen": 1791921003.0567954,
-    "ast_hash": "14af59d3e5bc13840be7cc80898f9d0d",
-    "semantic_hash": "14af59d3e5bc13840be7cc80898f9d0d"
+    "mtime": 1792069658.013958,
+    "seen": 1792069695.811845,
+    "ast_hash": "fb60d724e981496cbbd9438a7a4bb278",
+    "semantic_hash": ""
   },
   "docs/HANDOFF.md": {
-    "mtime": 1791919770.382312,
-    "seen": 1791921003.0567954,
-    "ast_hash": "4ff37ed974db05ab32b4d0ed57ea22dc",
-    "semantic_hash": "4ff37ed974db05ab32b4d0ed57ea22dc"
+    "mtime": 1792069681.8232887,
+    "seen": 1792069695.811845,
+    "ast_hash": "8bd8b6e9feee1844430a2e68ee81d94e",
+    "semantic_hash": ""
   },
   "docs/data/DATA_MODEL.md": {
     "mtime": 1791311008.9932482,
@@ -288,22 +288,22 @@
     "semantic_hash": "86cfaba3bf989edeb35f71365eb90bff"
   },
   "COST.md": {
-    "mtime": 1791919770.3666751,
-    "seen": 1791921003.0567954,
-    "ast_hash": "fb2c02838a9251718eb5f9f7707fc20c",
-    "semantic_hash": "fb2c02838a9251718eb5f9f7707fc20c"
+    "mtime": 1792069670.808301,
+    "seen": 1792069695.811845,
+    "ast_hash": "429ed956d3aa424fb1270cd42d6d6f5c",
+    "semantic_hash": ""
   },
   "SECURITY.md": {
-    "mtime": 1791919728.3438847,
-    "seen": 1791921003.0567954,
-    "ast_hash": "083293f2a2186180b3332bd3d88eb758",
-    "semantic_hash": "083293f2a2186180b3332bd3d88eb758"
+    "mtime": 1792069670.8073041,
+    "seen": 1792069695.811845,
+    "ast_hash": "3cd6fea17960f252eefc2e24aa266cf5",
+    "semantic_hash": ""
   },
   "docs/AUDIT.md": {
-    "mtime": 1791919728.328246,
-    "seen": 1791921003.0567954,
-    "ast_hash": "a059ac8927d6a73edd89c73095a784f1",
-    "semantic_hash": "a059ac8927d6a73edd89c73095a784f1"
+    "mtime": 1792069681.7833784,
+    "seen": 1792069695.811845,
+    "ast_hash": "27ffad7d9a87b6b41da0619934f6f1d4",
+    "semantic_hash": ""
   },
   "docs/LESSONS_LEARNED.md": {
     "mtime": 1791919328.3514664,
@@ -318,10 +318,10 @@
     "semantic_hash": "57f00118798684e39c1fcc27f0aa31fc"
   },
   "docs/ml/MODEL_CARD.md": {
-    "mtime": 1791919728.328246,
-    "seen": 1791921003.0568657,
-    "ast_hash": "c41b66a5c2974a0eb9df5eab8bd50d8d",
-    "semantic_hash": "c41b66a5c2974a0eb9df5eab8bd50d8d"
+    "mtime": 1792069670.809304,
+    "seen": 1792069695.8214898,
+    "ast_hash": "2b3accc2844eac14d68ea89f08954309",
+    "semantic_hash": ""
   },
   "docs/analytics/figures/categories.png": {
     "mtime": 1791919477.561452,
@@ -520,5 +520,401 @@
     "seen": 1791921003.0557954,
     "ast_hash": "a5f77401ee33e38ce4d5b6b4a9176d5f",
     "semantic_hash": "a5f77401ee33e38ce4d5b6b4a9176d5f"
+  },
+  "notebooks/marimo/02_late_delivery_model.py": {
+    "mtime": 1791929628.6178315,
+    "seen": 1792069695.7967808,
+    "ast_hash": "4aca9a27280f36d1f098c788ee2f6b43",
+    "semantic_hash": ""
+  },
+  "notebooks/marimo/03_weekly_forecast.py": {
+    "mtime": 1791929797.499954,
+    "seen": 1792069695.7967808,
+    "ast_hash": "f03b2325a51af66e96fb06dca8fb6984",
+    "semantic_hash": ""
+  },
+  "notebooks/marimo/__marimo__/session/03_weekly_forecast.py.json": {
+    "mtime": 1791929817.81221,
+    "seen": 1792069695.7967808,
+    "ast_hash": "7ebc3cc6f814b9bf7a634d62bf5fa820",
+    "semantic_hash": ""
+  },
+  "powerbi/RetailAnalytics.Report/definition/pages/delivery/page.json": {
+    "mtime": 1791930992.8143406,
+    "seen": 1792069695.7967808,
+    "ast_hash": "4247356ffba6c18b1cf3a00cbe92a726",
+    "semantic_hash": ""
+  },
+  "powerbi/RetailAnalytics.Report/definition/pages/delivery/visuals/d_c_late/visual.json": {
+    "mtime": 1791930992.8151777,
+    "seen": 1792069695.7967808,
+    "ast_hash": "4039f110e7829961f1ab2689fbbe6d72",
+    "semantic_hash": ""
+  },
+  "powerbi/RetailAnalytics.Report/definition/pages/delivery/visuals/d_c_med/visual.json": {
+    "mtime": 1791930992.8151777,
+    "seen": 1792069695.7967808,
+    "ast_hash": "a4c9a681044a9a389af1f4e098b18759",
+    "semantic_hash": ""
+  },
+  "powerbi/RetailAnalytics.Report/definition/pages/delivery/visuals/d_c_rev/visual.json": {
+    "mtime": 1791930992.8151777,
+    "seen": 1792069695.7967808,
+    "ast_hash": "bed60326a40f9797ebbc1e6d6c616b55",
+    "semantic_hash": ""
+  },
+  "powerbi/RetailAnalytics.Report/definition/pages/delivery/visuals/d_c_short/visual.json": {
+    "mtime": 1791930992.8151777,
+    "seen": 1792069695.7967808,
+    "ast_hash": "9fe8e6c54b8badbed1819ad5e4fb6c9c",
+    "semantic_hash": ""
+  },
+  "powerbi/RetailAnalytics.Report/definition/pages/delivery/visuals/d_late_month/visual.json": {
+    "mtime": 1791930992.8363228,
+    "seen": 1792069695.7967808,
+    "ast_hash": "db20f65661841ff4c49ed15c2679cf91",
+    "semantic_hash": ""
+  },
+  "powerbi/RetailAnalytics.Report/definition/pages/delivery/visuals/d_month/visual.json": {
+    "mtime": 1791930992.8151777,
+    "seen": 1792069695.7967808,
+    "ast_hash": "fed987abd6433ca11d17818edbe74434",
+    "semantic_hash": ""
+  },
+  "powerbi/RetailAnalytics.Report/definition/pages/delivery/visuals/d_review_bucket/visual.json": {
+    "mtime": 1791930992.8383207,
+    "seen": 1792069695.7967808,
+    "ast_hash": "b7ce863811a676be2f3beddf50926743",
+    "semantic_hash": ""
+  },
+  "powerbi/RetailAnalytics.Report/definition/pages/delivery/visuals/d_short_month/visual.json": {
+    "mtime": 1791930992.8373208,
+    "seen": 1792069695.7967808,
+    "ast_hash": "445adf7e4409a8728a0104c2f92f91db",
+    "semantic_hash": ""
+  },
+  "powerbi/RetailAnalytics.Report/definition/pages/delivery/visuals/d_state/visual.json": {
+    "mtime": 1791930992.8151777,
+    "seen": 1792069695.7967808,
+    "ast_hash": "8647b45f1feceff365f6fa53fee0cb41",
+    "semantic_hash": ""
+  },
+  "powerbi/RetailAnalytics.Report/definition/pages/delivery/visuals/d_state_table/visual.json": {
+    "mtime": 1791930992.839322,
+    "seen": 1792069695.7967808,
+    "ast_hash": "d5e0767c272270862d632932172cb692",
+    "semantic_hash": ""
+  },
+  "powerbi/RetailAnalytics.Report/definition/pages/forecast/page.json": {
+    "mtime": 1791930992.8542297,
+    "seen": 1792069695.7967808,
+    "ast_hash": "7008e45ef6cd6fc442fe1b20b52dd467",
+    "semantic_hash": ""
+  },
+  "powerbi/RetailAnalytics.Report/definition/pages/forecast/visuals/f_c_mae/visual.json": {
+    "mtime": 1791930992.85974,
+    "seen": 1792069695.7967808,
+    "ast_hash": "e0a401b04647afb38965edb0fda96c5a",
+    "semantic_hash": ""
+  },
+  "powerbi/RetailAnalytics.Report/definition/pages/forecast/visuals/f_c_rel/visual.json": {
+    "mtime": 1791930992.85974,
+    "seen": 1792069695.7967808,
+    "ast_hash": "9737d59c2c7c898cd568949e46400906",
+    "semantic_hash": ""
+  },
+  "powerbi/RetailAnalytics.Report/definition/pages/forecast/visuals/f_horizon/visual.json": {
+    "mtime": 1791930992.85974,
+    "seen": 1792069695.7967808,
+    "ast_hash": "6e635f100a91abac7ce9c6b58fda94d7",
+    "semantic_hash": ""
+  },
+  "powerbi/RetailAnalytics.Report/definition/pages/forecast/visuals/f_line/visual.json": {
+    "mtime": 1791930992.8653607,
+    "seen": 1792069695.7967808,
+    "ast_hash": "7d1097244c42df61a944777ca2436c15",
+    "semantic_hash": ""
+  },
+  "powerbi/RetailAnalytics.Report/definition/pages/forecast/visuals/f_mae_bar/visual.json": {
+    "mtime": 1791930992.867366,
+    "seen": 1792069695.7967808,
+    "ast_hash": "5e97d6d53d0cc9bdcf937648d9d598f3",
+    "semantic_hash": ""
+  },
+  "powerbi/RetailAnalytics.Report/definition/pages/forecast/visuals/f_method/visual.json": {
+    "mtime": 1791930992.85974,
+    "seen": 1792069695.7967808,
+    "ast_hash": "2310361204319e2883988a9be20c498d",
+    "semantic_hash": ""
+  },
+  "powerbi/RetailAnalytics.Report/definition/pages/forecast/visuals/f_table/visual.json": {
+    "mtime": 1791930992.8693702,
+    "seen": 1792069695.7967808,
+    "ast_hash": "2e5c94c4fe4bf5ba23e1720cceb8db9f",
+    "semantic_hash": ""
+  },
+  "powerbi/RetailAnalytics.Report/definition/pages/forecast/visuals/f_target/visual.json": {
+    "mtime": 1791930992.8542297,
+    "seen": 1792069695.7967808,
+    "ast_hash": "5b9eccab308c2e072502a547f6e2ffd4",
+    "semantic_hash": ""
+  },
+  "powerbi/RetailAnalytics.Report/definition/pages/pages.json": {
+    "mtime": 1791930992.741045,
+    "seen": 1792069695.7967808,
+    "ast_hash": "56436517a2c62dfde96077eef330d751",
+    "semantic_hash": ""
+  },
+  "powerbi/RetailAnalytics.Report/definition/pages/risk/page.json": {
+    "mtime": 1791930992.8413224,
+    "seen": 1792069695.7967808,
+    "ast_hash": "dd56157f793779d8f724b1eee618c2a8",
+    "semantic_hash": ""
+  },
+  "powerbi/RetailAnalytics.Report/definition/pages/risk/visuals/r_c_base/visual.json": {
+    "mtime": 1791930992.847826,
+    "seen": 1792069695.7967808,
+    "ast_hash": "548cb3b9297ba4fd3f27a8e0c17ae812",
+    "semantic_hash": ""
+  },
+  "powerbi/RetailAnalytics.Report/definition/pages/risk/visuals/r_c_flag/visual.json": {
+    "mtime": 1791930992.848701,
+    "seen": 1792069695.7967808,
+    "ast_hash": "096540aa834014944343c2b44ce5b967",
+    "semantic_hash": ""
+  },
+  "powerbi/RetailAnalytics.Report/definition/pages/risk/visuals/r_c_lift/visual.json": {
+    "mtime": 1791930992.850709,
+    "seen": 1792069695.7967808,
+    "ast_hash": "5a5656752af5a64c5031969a8b8c6dfc",
+    "semantic_hash": ""
+  },
+  "powerbi/RetailAnalytics.Report/definition/pages/risk/visuals/r_c_n/visual.json": {
+    "mtime": 1791930992.8463252,
+    "seen": 1792069695.7967808,
+    "ast_hash": "2a563271c274397c6267d5912f4a97fe",
+    "semantic_hash": ""
+  },
+  "powerbi/RetailAnalytics.Report/definition/pages/risk/visuals/r_c_rec/visual.json": {
+    "mtime": 1791930992.8517056,
+    "seen": 1792069695.7967808,
+    "ast_hash": "387d683e68ad5b126ec8e1792f418976",
+    "semantic_hash": ""
+  },
+  "powerbi/RetailAnalytics.Report/definition/pages/risk/visuals/r_flag/visual.json": {
+    "mtime": 1791930992.8443294,
+    "seen": 1792069695.7967808,
+    "ast_hash": "fbf84c749c0f25ca9e507159c4cc719e",
+    "semantic_hash": ""
+  },
+  "powerbi/RetailAnalytics.Report/definition/pages/risk/visuals/r_lift_month/visual.json": {
+    "mtime": 1791930992.8527045,
+    "seen": 1792069695.7967808,
+    "ast_hash": "6a08d17fefa8fc6f54d84b8e556d592d",
+    "semantic_hash": ""
+  },
+  "powerbi/RetailAnalytics.Report/definition/pages/risk/visuals/r_month/visual.json": {
+    "mtime": 1791930992.8433292,
+    "seen": 1792069695.7967808,
+    "ast_hash": "e9ddcd72aedbe56b6091173094e25945",
+    "semantic_hash": ""
+  },
+  "powerbi/RetailAnalytics.Report/definition/pages/risk/visuals/r_state/visual.json": {
+    "mtime": 1791930992.8453243,
+    "seen": 1792069695.7967808,
+    "ast_hash": "c216b35131d972b59529bb4f9f60f1de",
+    "semantic_hash": ""
+  },
+  "powerbi/RetailAnalytics.Report/definition/pages/risk/visuals/r_state_bar/visual.json": {
+    "mtime": 1791930992.8542297,
+    "seen": 1792069695.7967808,
+    "ast_hash": "08ab4d5f6b0bea44673155c4752edc81",
+    "semantic_hash": ""
+  },
+  "powerbi/RetailAnalytics.Report/definition/pages/risk/visuals/r_table/visual.json": {
+    "mtime": 1791930992.8542297,
+    "seen": 1792069695.7967808,
+    "ast_hash": "d116d133f0b74d230e252616f5759f01",
+    "semantic_hash": ""
+  },
+  "powerbi/RetailAnalytics.Report/definition/pages/sales/page.json": {
+    "mtime": 1791930992.8003473,
+    "seen": 1792069695.7967808,
+    "ast_hash": "0a1be2f8eb6d507431b6293898634471",
+    "semantic_hash": ""
+  },
+  "powerbi/RetailAnalytics.Report/definition/pages/sales/visuals/c_aov/visual.json": {
+    "mtime": 1791930992.806341,
+    "seen": 1792069695.7967808,
+    "ast_hash": "528ee2dfaa91b6ed2648fdae278b541a",
+    "semantic_hash": ""
+  },
+  "powerbi/RetailAnalytics.Report/definition/pages/sales/visuals/c_cus/visual.json": {
+    "mtime": 1791930992.8093402,
+    "seen": 1792069695.7967808,
+    "ast_hash": "11019a371bbfb6d00c723837c9d41a96",
+    "semantic_hash": ""
+  },
+  "powerbi/RetailAnalytics.Report/definition/pages/sales/visuals/c_frt/visual.json": {
+    "mtime": 1791930992.80734,
+    "seen": 1792069695.7967808,
+    "ast_hash": "02163add171da23e2b1579ef327ba284",
+    "semantic_hash": ""
+  },
+  "powerbi/RetailAnalytics.Report/definition/pages/sales/visuals/c_ord/visual.json": {
+    "mtime": 1791930992.805341,
+    "seen": 1792069695.7967808,
+    "ast_hash": "a555b615f6b1b7b4c89acd6bb9326e8c",
+    "semantic_hash": ""
+  },
+  "powerbi/RetailAnalytics.Report/definition/pages/sales/visuals/c_rev/visual.json": {
+    "mtime": 1791930992.805341,
+    "seen": 1792069695.7967808,
+    "ast_hash": "b1d3640afdd06cc0a3eb8570692842fa",
+    "semantic_hash": ""
+  },
+  "powerbi/RetailAnalytics.Report/definition/pages/sales/visuals/s_cat/visual.json": {
+    "mtime": 1791930992.8033404,
+    "seen": 1792069695.7967808,
+    "ast_hash": "62ecec29b37f82ffffea7e06269b1b97",
+    "semantic_hash": ""
+  },
+  "powerbi/RetailAnalytics.Report/definition/pages/sales/visuals/s_month/visual.json": {
+    "mtime": 1791930992.802343,
+    "seen": 1792069695.7967808,
+    "ast_hash": "c8e59d8fe19059db83bdbbde94d6e20f",
+    "semantic_hash": ""
+  },
+  "powerbi/RetailAnalytics.Report/definition/pages/sales/visuals/s_state/visual.json": {
+    "mtime": 1791930992.8043413,
+    "seen": 1792069695.7967808,
+    "ast_hash": "c8dc307897fe41ffc81bf99710bdf7f7",
+    "semantic_hash": ""
+  },
+  "powerbi/RetailAnalytics.Report/definition/pages/sales/visuals/v_aov_month/visual.json": {
+    "mtime": 1791930992.8113406,
+    "seen": 1792069695.7967808,
+    "ast_hash": "58909c058876728c00650c93d2c17307",
+    "semantic_hash": ""
+  },
+  "powerbi/RetailAnalytics.Report/definition/pages/sales/visuals/v_rev_cat/visual.json": {
+    "mtime": 1791930992.8123412,
+    "seen": 1792069695.7967808,
+    "ast_hash": "51480b04f38bf6f02e653fa26db579fd",
+    "semantic_hash": ""
+  },
+  "powerbi/RetailAnalytics.Report/definition/pages/sales/visuals/v_rev_month/visual.json": {
+    "mtime": 1791930992.8103397,
+    "seen": 1792069695.7967808,
+    "ast_hash": "e0cff5c08c5a613a078bd9218f4d97c1",
+    "semantic_hash": ""
+  },
+  "powerbi/RetailAnalytics.Report/definition/pages/sales/visuals/v_rev_state/visual.json": {
+    "mtime": 1791930992.813341,
+    "seen": 1792069695.7967808,
+    "ast_hash": "9b57d19776077f1875b62e486b8c37ee",
+    "semantic_hash": ""
+  },
+  "powerbi/RetailAnalytics.Report/definition/report.json": {
+    "mtime": 1791930992.740045,
+    "seen": 1792069695.7967808,
+    "ast_hash": "c374db989db74789192f96d454efde7e",
+    "semantic_hash": ""
+  },
+  "powerbi/RetailAnalytics.Report/definition/version.json": {
+    "mtime": 1791930992.7390454,
+    "seen": 1792069695.7967808,
+    "ast_hash": "d30a487241cffef99d5843548dc0f584",
+    "semantic_hash": ""
+  },
+  "powerbi/theme/RetailAnalytics.theme.json": {
+    "mtime": 1791930992.7420452,
+    "seen": 1792069695.7967808,
+    "ast_hash": "a91f48ceb82d45a97ed2ca32f92be81e",
+    "semantic_hash": ""
+  },
+  "src/ml/export_scores.py": {
+    "mtime": 1791929994.1796422,
+    "seen": 1792069695.8087797,
+    "ast_hash": "55d75b7df45cf59a34fe36660a04bcbc",
+    "semantic_hash": ""
+  },
+  "src/powerbi/build_mockup_html.py": {
+    "mtime": 1791930880.6475012,
+    "seen": 1792069695.80978,
+    "ast_hash": "0fc3d3b42a729763a48e27dd55d03ca5",
+    "semantic_hash": ""
+  },
+  "src/powerbi/build_pbip.py": {
+    "mtime": 1791930979.2407682,
+    "seen": 1792069695.80978,
+    "ast_hash": "da71ecbcc4a2227f2dfa1d4904f40702",
+    "semantic_hash": ""
+  },
+  "src/powerbi/build_spec_html.py": {
+    "mtime": 1791930445.377941,
+    "seen": 1792069695.80978,
+    "ast_hash": "d8cdcd21e73d29894978af1c50fd5f46",
+    "semantic_hash": ""
+  },
+  "src/powerbi/export_data.py": {
+    "mtime": 1791930199.3572211,
+    "seen": 1792069695.80978,
+    "ast_hash": "38b15615b93bbd8f8d187fd9fde6b347",
+    "semantic_hash": ""
+  },
+  "src/powerbi/mockup_data.py": {
+    "mtime": 1791930766.9861615,
+    "seen": 1792069695.80978,
+    "ast_hash": "6abe4e9ab264f0352322944929448d05",
+    "semantic_hash": ""
+  },
+  "src/powerbi/model_spec.py": {
+    "mtime": 1791930982.8500025,
+    "seen": 1792069695.80978,
+    "ast_hash": "bf8d2f2845142e000f98234d6dc1349d",
+    "semantic_hash": ""
+  },
+  "tests/test_marimo.py": {
+    "mtime": 1791929831.954985,
+    "seen": 1792069695.811845,
+    "ast_hash": "eb76a127892b86c5d051158f612524c5",
+    "semantic_hash": ""
+  },
+  "tests/test_notebooks.py": {
+    "mtime": 1791922808.4671543,
+    "seen": 1792069695.811845,
+    "ast_hash": "3fd8b64ea6be74dd8d56e0ba47a82008",
+    "semantic_hash": ""
+  },
+  "tests/test_powerbi_export.py": {
+    "mtime": 1792069494.8902414,
+    "seen": 1792069695.811845,
+    "ast_hash": "b3ec5b805503f2a69ef8ec38544bc035",
+    "semantic_hash": ""
+  },
+  "tests/test_powerbi_project.py": {
+    "mtime": 1792069381.613894,
+    "seen": 1792069695.811845,
+    "ast_hash": "eefe48bf9d68652c95dad677f58822cc",
+    "semantic_hash": ""
+  },
+  "docs/powerbi/DASHBOARD_MOCKUP.html": {
+    "mtime": 1791930883.633135,
+    "seen": 1792069695.8225844,
+    "ast_hash": "1fe80e03f872e9d01e5e628753f7cad3",
+    "semantic_hash": ""
+  },
+  "docs/powerbi/DAX_SPECIFICATION.html": {
+    "mtime": 1791930453.2440953,
+    "seen": 1792069695.8225844,
+    "ast_hash": "c67d883ece682b8db04fc88eb8eea755",
+    "semantic_hash": ""
+  },
+  "powerbi/README.md": {
+    "mtime": 1792069599.9132898,
+    "seen": 1792069695.8225844,
+    "ast_hash": "0d6f8e485edbeef3eb5384dd1a24a3f3",
+    "semantic_hash": ""
   }
 }

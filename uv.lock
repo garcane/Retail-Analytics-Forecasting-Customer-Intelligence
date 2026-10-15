@@ -376,10 +376,12 @@ dependencies = [
 [package.dev-dependencies]
 dev = [
     { name = "ipykernel" },
+    { name = "jsonschema" },
     { name = "marimo" },
     { name = "nbclient" },
     { name = "nbformat" },
     { name = "pytest" },
+    { name = "referencing" },
 ]
 
 [package.metadata]
@@ -399,10 +401,12 @@ requires-dist = [
 [package.metadata.requires-dev]
 dev = [
     { name = "ipykernel", specifier = ">=7.4.0" },
+    { name = "jsonschema", specifier = ">=4.26.0" },
     { name = "marimo", specifier = ">=0.25.1" },
     { name = "nbclient", specifier = ">=0.11.0" },
     { name = "nbformat", specifier = ">=5.11.1" },
     { name = "pytest", specifier = ">=9.1.1" },
+    { name = "referencing", specifier = ">=0.37.0" },
 ]
 
 [[package]]

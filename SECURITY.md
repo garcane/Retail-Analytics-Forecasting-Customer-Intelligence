@@ -10,7 +10,7 @@ This is a local, single-user, batch analytics project. It has no server, no netw
 | Raw data, database files, credential-like files in Git (`data/`, `*.duckdb`, `.env*`, `*.pem`, `*.key`, service-account and credentials JSON) | None tracked; all covered by `.gitignore` |
 | Hard-coded absolute or user-specific paths in code | None; paths are built from the repository root |
 | Network calls from the project code | None. The only network use is installing dependencies with `uv` and, by the user, downloading the dataset from Kaggle |
-| Dependencies | Ten direct runtime dependencies plus `pytest`, `ipykernel`, `nbformat` and `nbclient` for development, all from PyPI and pinned by `uv.lock`. They have not been scanned for known vulnerabilities (no scanner is installed) |
+| Dependencies | Ten direct runtime dependencies plus `pytest`, `ipykernel`, `marimo`, `nbformat`, `nbclient`, `jsonschema` and `referencing` for development, all from PyPI and pinned by `uv.lock`. They have not been scanned for known vulnerabilities (no scanner is installed) |
 
 ## Data and privacy
 
@@ -27,6 +27,7 @@ The data is CC BY-NC-SA 4.0 (attribution, non-commercial, share-alike). Non-comm
 - Never commit a Kaggle API token (`kaggle.json`); the README tells users to keep it out of Git, and `.gitignore` blocks common credential file names.
 - SQL files use no string-built user input. The only substitution is the `${DATA_DIR}` token, which comes from a command-line argument chosen by the person running the build.
 - The warehouse is opened read-only by every analysis and ML script.
+- Power BI: the project contains no credentials or connection strings, only a `DataFolder` parameter (the committed value is a placeholder path) that points at local files. The exported data (`powerbi/data/`) is git-ignored because it derives from the CC BY-NC-SA dataset, and it leaves out review comment text. The schema test downloads JSON schemas from `raw.githubusercontent.com` (Microsoft's public repository) and nothing else.
 
 ## Not applicable by design
 
