@@ -1,0 +1,101 @@
+/// Rolling-origin weekly forecasts: one row per target (orders or revenue), horizon (1 or 4 weeks), method and target week. The method 'actual' repeats the actual value so it can be drawn as a line.
+table forecast_backtest
+	lineageTag: eaf6c9d7-3a12-52b9-92fa-34dee8da18d1
+
+	/// Average forecast of the selected methods.
+	measure 'Forecast Value' = AVERAGE(forecast_backtest[forecast])
+		formatString: #,0
+		displayFolder: Forecast
+		lineageTag: 2663b7cd-1e04-533a-abc2-9cae2ea98c06
+
+	/// Actual value for the target week.
+	measure 'Actual Value' = AVERAGE(forecast_backtest[actual])
+		formatString: #,0
+		displayFolder: Forecast
+		lineageTag: 9293b344-5d24-5b62-9a75-35e7670ab5a4
+
+	/// Mean absolute error of the selected methods (the 'actual' line is excluded).
+	measure MAE = CALCULATE(AVERAGE(forecast_backtest[abs_error]), KEEPFILTERS(forecast_backtest[method] <> "actual"))
+		formatString: #,0
+		displayFolder: Forecast
+		lineageTag: 17722c11-a77c-51e7-9816-a874e6b212cb
+
+	/// Error relative to repeating last week; below 1 beats naive.
+	measure 'MAE vs Naive' = DIVIDE([MAE], CALCULATE([MAE], forecast_backtest[method] = "naive_last_week"))
+		formatString: 0.00"x"
+		displayFolder: Forecast
+		lineageTag: 8f54d294-a824-570b-aeeb-1586a36082a0
+
+	column target
+		dataType: string
+		lineageTag: 2743c64c-732e-5dc0-a8ff-84dd4c99563f
+		summarizeBy: none
+		sourceColumn: target
+
+	column horizon
+		dataType: int64
+		lineageTag: fc61ead5-a03a-558b-aa8c-370262508752
+		summarizeBy: sum
+		sourceColumn: horizon
+
+		annotation SummarizationSetBy = Automatic
+
+	column method
+		dataType: string
+		lineageTag: a1602162-b030-58d5-b953-684833228b99
+		summarizeBy: none
+		sourceColumn: method
+
+	column target_week
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 57162047-d923-586f-a58c-407da785f1e5
+		summarizeBy: none
+		sourceColumn: target_week
+
+		variation Variation
+			isDefault
+			relationship: 17fdbd35-21bf-4d50-9b47-8773c39fcb5c
+			defaultHierarchy: LocalDateTable_8ac81597-2dc6-4422-b3c8-d39fddf1efd3.'Date Hierarchy'
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column forecast
+		dataType: double
+		formatString: #,0
+		lineageTag: 7fb552c5-df57-5c83-99f7-f47e0c177fd3
+		summarizeBy: sum
+		sourceColumn: forecast
+
+		annotation SummarizationSetBy = Automatic
+
+	column actual
+		dataType: double
+		formatString: #,0
+		lineageTag: 3d701fa1-ee0f-5029-a981-bbcf5e833cf7
+		summarizeBy: sum
+		sourceColumn: actual
+
+		annotation SummarizationSetBy = Automatic
+
+	column abs_error
+		dataType: double
+		formatString: #,0
+		lineageTag: 0484f430-55f6-5af0-a258-f91a46399921
+		summarizeBy: sum
+		sourceColumn: abs_error
+
+		annotation SummarizationSetBy = Automatic
+
+	partition forecast_backtest = m
+		mode: import
+		source =
+				let
+					Source = Csv.Document(File.Contents(DataFolder & "\forecast_backtest.csv"), [Delimiter=",", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+					Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+					Typed = Table.TransformColumnTypes(Promoted, {{"target", type text}, {"horizon", Int64.Type}, {"method", type text}, {"target_week", type date}, {"forecast", type number}, {"actual", type number}, {"abs_error", type number}}, "en-US")
+				in
+					Typed
+
+	annotation PBI_ResultType = Exception
+

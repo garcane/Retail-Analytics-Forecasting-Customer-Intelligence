@@ -1,0 +1,175 @@
+/// One row per order item. The core sales fact; flag is_net_order marks items of orders that were not canceled or unavailable.
+table fact_order_items
+	lineageTag: 42745754-0990-5db9-b336-a3d0cebcb254
+
+	/// Item price of orders that were not canceled or unavailable. Freight is separate.
+	measure 'Net Revenue' = CALCULATE(SUM(fact_order_items[price]), fact_order_items[is_net_order] = TRUE())
+		formatString: #,0.00
+		displayFolder: Sales
+		lineageTag: a4fc83af-ea18-5043-81f7-3bd77772a797
+
+	/// Distinct orders that have net items.
+	measure 'Net Orders' = CALCULATE(DISTINCTCOUNT(fact_order_items[order_id]), fact_order_items[is_net_order] = TRUE())
+		formatString: #,0
+		displayFolder: Sales
+		lineageTag: 83ed41ea-bd63-5b2f-ac51-8bd2c1040728
+
+	/// Net revenue per net order.
+	measure 'Average Order Value' = DIVIDE([Net Revenue], [Net Orders])
+		formatString: #,0.00
+		displayFolder: Sales
+		lineageTag: 541cce31-c7b2-5d74-939a-c6ec03ca4e0e
+
+	/// Freight charged on net items.
+	measure 'Net Freight' = CALCULATE(SUM(fact_order_items[freight_value]), fact_order_items[is_net_order] = TRUE())
+		formatString: #,0.00
+		displayFolder: Sales
+		lineageTag: 98d4e25e-dcd1-5acc-8932-d6df47b2b739
+
+	/// Freight as a share of net item revenue.
+	measure 'Freight % of Revenue' = DIVIDE([Net Freight], [Net Revenue])
+		formatString: 0.0%
+		displayFolder: Sales
+		lineageTag: 346c3bf8-47f5-5f0f-aea2-d5dd4f85fbd4
+
+	/// Number of net items.
+	measure 'Items Sold' = CALCULATE(COUNTROWS(fact_order_items), fact_order_items[is_net_order] = TRUE())
+		formatString: #,0
+		displayFolder: Sales
+		lineageTag: 58f7520b-44f0-584f-b05a-4fa340dade19
+
+	/// Distinct customers with a net item.
+	measure 'Buying Customers' = CALCULATE(DISTINCTCOUNT(fact_order_items[customer_key]), fact_order_items[is_net_order] = TRUE())
+		formatString: #,0
+		displayFolder: Sales
+		lineageTag: ed6ae514-2601-53ca-9f46-b7f7301fa1a6
+
+	/// Net revenue one month earlier (needs the gap-free date table).
+	measure 'Net Revenue Prior Month' = CALCULATE([Net Revenue], DATEADD(dim_date[full_date], -1, MONTH))
+		formatString: #,0.00
+		displayFolder: Sales
+		lineageTag: 89fcd675-b60b-5dbe-9d9d-94fa0d7aa599
+
+	/// Month-over-month growth. Meaningful only between months with real volume (2017-01 to 2018-08).
+	measure 'Revenue MoM %' = DIVIDE([Net Revenue] - [Net Revenue Prior Month], [Net Revenue Prior Month])
+		formatString: 0.0%
+		displayFolder: Sales
+		lineageTag: a0a590de-d74b-5d3a-85b3-0cd8556fac7c
+
+	/// Item-weighted late rate: each item carries its order's lateness (used for categories).
+	measure 'Late Items %' = VAR _late = CALCULATE(COUNTROWS(fact_order_items), fact_order_items[is_net_order] = TRUE(), fact_orders[is_late] = TRUE()) VAR _known = CALCULATE(COUNTROWS(fact_order_items), fact_order_items[is_net_order] = TRUE(), fact_orders[is_late] IN {TRUE(), FALSE()}) RETURN DIVIDE(_late, _known)
+		formatString: 0.0%
+		displayFolder: Sales
+		lineageTag: 70440ac2-17ce-55e2-8a06-416d62ea80f3
+
+	/// Share of net revenue earned by the ten largest sellers in the current selection.
+	measure 'Top 10 Sellers Revenue Share' = DIVIDE(SUMX(TOPN(10, ALLSELECTED(dim_seller[seller_key]), [Net Revenue]), [Net Revenue]), CALCULATE([Net Revenue], ALLSELECTED(dim_seller)))
+		formatString: 0.0%
+		displayFolder: Sales
+		lineageTag: 2243e5c4-a431-5d93-8609-aa288517fb54
+
+	column order_id
+		dataType: string
+		lineageTag: bad77ef8-8a49-5ead-9d87-d66bf9b2c657
+		summarizeBy: none
+		sourceColumn: order_id
+
+	column order_item_id
+		dataType: int64
+		lineageTag: 703dae02-2459-5df4-9823-e6003dcdd1ab
+		summarizeBy: none
+		sourceColumn: order_item_id
+
+	column order_status
+		dataType: string
+		lineageTag: 7cdac3cb-ff2d-5e57-b87b-ee83754d8e3c
+		summarizeBy: none
+		sourceColumn: order_status
+
+	column customer_key
+		dataType: int64
+		isHidden
+		lineageTag: cffeef11-6967-52ff-97d8-5f942ad32d51
+		summarizeBy: none
+		sourceColumn: customer_key
+
+	column product_key
+		dataType: int64
+		isHidden
+		lineageTag: 40092e32-eddf-5afe-91a5-87fc08fed734
+		summarizeBy: none
+		sourceColumn: product_key
+
+	column seller_key
+		dataType: int64
+		isHidden
+		lineageTag: d37b057a-5c1c-55b1-8e89-95baa9130fd7
+		summarizeBy: none
+		sourceColumn: seller_key
+
+	column customer_geography_key
+		dataType: int64
+		isHidden
+		lineageTag: 256c1575-d778-58fe-b269-223b23bc4f1e
+		summarizeBy: none
+		sourceColumn: customer_geography_key
+
+	column seller_geography_key
+		dataType: int64
+		isHidden
+		lineageTag: 4054da61-5b35-57af-85b3-0eeb6ac7e9d8
+		summarizeBy: none
+		sourceColumn: seller_geography_key
+
+	column purchase_date_key
+		dataType: int64
+		isHidden
+		lineageTag: f783a103-c2f2-5156-b431-081048beb1be
+		summarizeBy: none
+		sourceColumn: purchase_date_key
+
+	column shipping_limit_date_key
+		dataType: int64
+		isHidden
+		lineageTag: 24ced2b8-84c0-5cdb-bd31-c17c4f10c321
+		summarizeBy: none
+		sourceColumn: shipping_limit_date_key
+
+	column price
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: f9c0f326-21c8-509f-bbb7-111769776f55
+		summarizeBy: none
+		sourceColumn: price
+
+	column freight_value
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: ac1ff54b-789b-538e-9031-93fe34bc7145
+		summarizeBy: none
+		sourceColumn: freight_value
+
+	column item_total_value
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: 48bbc7e8-4256-506e-a002-a5f2d038dcfb
+		summarizeBy: none
+		sourceColumn: item_total_value
+
+	column is_net_order
+		dataType: boolean
+		lineageTag: 2a1c46db-d838-5eb7-bb4b-2ae65899cabc
+		summarizeBy: none
+		sourceColumn: is_net_order
+
+	partition fact_order_items = m
+		mode: import
+		source =
+				let
+					Source = Parquet.Document(File.Contents(DataFolder & "\fact_order_items.parquet")),
+					Typed = Table.TransformColumnTypes(Source, {{"order_id", type text}, {"order_item_id", Int64.Type}, {"order_status", type text}, {"customer_key", Int64.Type}, {"product_key", Int64.Type}, {"seller_key", Int64.Type}, {"customer_geography_key", Int64.Type}, {"seller_geography_key", Int64.Type}, {"purchase_date_key", Int64.Type}, {"shipping_limit_date_key", Int64.Type}, {"price", Currency.Type}, {"freight_value", Currency.Type}, {"item_total_value", Currency.Type}, {"is_net_order", type logical}})
+				in
+					Typed
+
+	annotation PBI_ResultType = Exception
+

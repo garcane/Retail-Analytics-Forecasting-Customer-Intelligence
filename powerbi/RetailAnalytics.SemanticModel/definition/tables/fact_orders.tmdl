@@ -1,0 +1,275 @@
+/// One row per order, including orders with no items. Items and payments are pre-aggregated to this grain. Derived flags: is_net_order, is_labelled_delivery; derived columns: promised_days, delay_bucket.
+table fact_orders
+	lineageTag: 604da6ba-e892-5f3b-bd02-e0358f7ad615
+
+	/// Delivered orders with a late/on-time label and no timestamp anomaly (the population used for the model).
+	measure 'Delivered Orders' = CALCULATE(COUNTROWS(fact_orders), fact_orders[is_labelled_delivery] = TRUE())
+		formatString: #,0
+		displayFolder: Delivery
+		lineageTag: 4f5d40c0-97f3-547c-bc2b-92fa4bca8426
+
+	/// Delivered after the estimated date.
+	measure 'Late Orders' = CALCULATE(COUNTROWS(fact_orders), fact_orders[is_labelled_delivery] = TRUE(), fact_orders[is_late] = TRUE())
+		formatString: #,0
+		displayFolder: Delivery
+		lineageTag: 0497405d-5478-5893-8070-91daf660e0fb
+
+	/// Share of delivered orders that arrived late.
+	measure 'Late Rate %' = DIVIDE([Late Orders], [Delivered Orders])
+		formatString: 0.0%
+		displayFolder: Delivery
+		lineageTag: 08c4f895-775e-57e6-9076-7b70e28bc1d6
+
+	/// Median days from purchase to delivery.
+	measure 'Median Delivery Days' = CALCULATE(MEDIAN(fact_orders[delivery_days]), fact_orders[is_labelled_delivery] = TRUE())
+		formatString: 0.0
+		displayFolder: Delivery
+		lineageTag: 8d64d1e2-b4fa-5f90-9244-39290fe3ffe0
+
+	/// Average delivery window promised at checkout.
+	measure 'Average Promised Days' = CALCULATE(AVERAGE(fact_orders[promised_days]), fact_orders[is_labelled_delivery] = TRUE())
+		formatString: 0.0
+		displayFolder: Delivery
+		lineageTag: 40332975-b850-532d-8595-722f1f52d047
+
+	/// Share of delivered orders promised in under 20 days (it jumped in 2018).
+	measure 'Share Promised Under 20 Days' = DIVIDE(CALCULATE(COUNTROWS(fact_orders), fact_orders[is_labelled_delivery] = TRUE(), fact_orders[promised_days] < 20), [Delivered Orders])
+		formatString: 0.0%
+		displayFolder: Delivery
+		lineageTag: 3f58c440-7f38-5033-bd10-59405cd6e80c
+
+	/// Example of the inactive relationship: orders counted by the day they were delivered, not purchased.
+	measure 'Orders by Delivery Date' = CALCULATE(COUNTROWS(fact_orders), USERELATIONSHIP(fact_orders[delivered_customer_date_key], dim_date[date_key]))
+		formatString: #,0
+		displayFolder: Delivery
+		lineageTag: da86907e-103c-5d67-8187-07c2e2223f3c
+
+	/// Net orders counted on the order grain (used for repeat-customer measures).
+	measure 'Net Orders (orders table)' = CALCULATE(COUNTROWS(fact_orders), fact_orders[is_net_order] = TRUE())
+		formatString: #,0
+		displayFolder: Customers
+		lineageTag: 793ac53c-bc7d-5b75-9d76-80039ba1eba6
+
+	/// Real customers with at least one net order.
+	measure 'Customers Ordering' = COUNTROWS(FILTER(VALUES(dim_customer[customer_key]), [Net Orders (orders table)] >= 1))
+		formatString: #,0
+		displayFolder: Customers
+		lineageTag: 3c9e5ce5-75fd-5f02-98bc-d10c07eef022
+
+	/// Share of customers who ordered exactly once (about 97%).
+	measure 'One-Time Customer Share' = DIVIDE(COUNTROWS(FILTER(VALUES(dim_customer[customer_key]), [Net Orders (orders table)] = 1)), [Customers Ordering])
+		formatString: 0.0%
+		displayFolder: Customers
+		lineageTag: 9f454586-f4ce-5aec-b0e3-8774804bd267
+
+	column order_id
+		dataType: string
+		lineageTag: 4d36c30d-14b0-5d09-a86e-2f7046e5f264
+		summarizeBy: none
+		sourceColumn: order_id
+
+	column order_status
+		dataType: string
+		lineageTag: 2e28e724-a346-51e8-a9a5-f0f32cd6eb06
+		summarizeBy: none
+		sourceColumn: order_status
+
+	column customer_key
+		dataType: int64
+		isHidden
+		lineageTag: 67e8bff7-4d72-5a3e-ad86-34430dd0bc8a
+		summarizeBy: none
+		sourceColumn: customer_key
+
+	column customer_geography_key
+		dataType: int64
+		isHidden
+		lineageTag: e497e182-e20a-5548-a7dc-43752d0deed8
+		summarizeBy: none
+		sourceColumn: customer_geography_key
+
+	column purchase_date_key
+		dataType: int64
+		isHidden
+		lineageTag: 06282a97-69ce-5d46-b5b2-b0bb2139bbe2
+		summarizeBy: none
+		sourceColumn: purchase_date_key
+
+	column approved_date_key
+		dataType: int64
+		isHidden
+		lineageTag: f78024e8-e35d-5e36-a8d5-ac7e6d8950c7
+		summarizeBy: sum
+		sourceColumn: approved_date_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column carrier_date_key
+		dataType: int64
+		isHidden
+		lineageTag: badbaeac-278a-5495-ae3b-c9de14cf92dd
+		summarizeBy: sum
+		sourceColumn: carrier_date_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column delivered_customer_date_key
+		dataType: int64
+		isHidden
+		lineageTag: 5a3ea191-e08e-5a8b-aa42-9095f852c2d7
+		summarizeBy: sum
+		sourceColumn: delivered_customer_date_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column estimated_delivery_date_key
+		dataType: int64
+		isHidden
+		lineageTag: 84951deb-9610-50b4-90d4-d95d1584f707
+		summarizeBy: sum
+		sourceColumn: estimated_delivery_date_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column purchase_ts
+		dataType: dateTime
+		lineageTag: f5433cf8-fb19-5924-b63d-ebf175bed07c
+		summarizeBy: none
+		sourceColumn: purchase_ts
+
+		variation Variation
+			isDefault
+			relationship: 4ab208de-b20d-4572-8ca9-72ae5d50b469
+			defaultHierarchy: LocalDateTable_8f54cf85-8e0c-4e4d-bd3b-0c06976dc205.'Date Hierarchy'
+
+	column estimated_delivery_ts
+		dataType: dateTime
+		lineageTag: 9275c86c-08ab-544a-9dd4-ba3a4ff49291
+		summarizeBy: none
+		sourceColumn: estimated_delivery_ts
+
+		variation Variation
+			isDefault
+			relationship: 192d0610-4a53-4b19-916a-eb985874cb88
+			defaultHierarchy: LocalDateTable_0cf833dd-a03d-4386-a3f9-97f9bf9512cd.'Date Hierarchy'
+
+	column item_count
+		dataType: int64
+		lineageTag: 3ad3d9e9-a546-561a-a0e4-497f17df3115
+		summarizeBy: sum
+		sourceColumn: item_count
+
+		annotation SummarizationSetBy = Automatic
+
+	column items_price
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: 3f060bc4-20d9-5b50-8de8-3d8c03b028fd
+		summarizeBy: sum
+		sourceColumn: items_price
+
+		annotation SummarizationSetBy = Automatic
+
+	column items_freight
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: 2461abff-53a3-5370-ab6e-bfe6c069fe09
+		summarizeBy: sum
+		sourceColumn: items_freight
+
+		annotation SummarizationSetBy = Automatic
+
+	column payment_count
+		dataType: int64
+		lineageTag: 30a7b382-8111-5e39-a0ed-f77e407086ae
+		summarizeBy: sum
+		sourceColumn: payment_count
+
+		annotation SummarizationSetBy = Automatic
+
+	column payment_total
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: 57472b7c-5840-5d96-9117-7ea8d633a1e5
+		summarizeBy: sum
+		sourceColumn: payment_total
+
+		annotation SummarizationSetBy = Automatic
+
+	column delivery_days
+		dataType: double
+		formatString: 0.0
+		lineageTag: 05bafa50-bd7f-58d5-8f16-f11689a48abc
+		summarizeBy: sum
+		sourceColumn: delivery_days
+
+		annotation SummarizationSetBy = Automatic
+
+	column delivery_delay_days
+		dataType: double
+		formatString: 0.0
+		lineageTag: 03609959-ce0d-54b0-8613-8920da8e17aa
+		summarizeBy: sum
+		sourceColumn: delivery_delay_days
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_late
+		dataType: boolean
+		lineageTag: e46f8352-8895-53cf-a3a6-7f85e281dc7d
+		summarizeBy: none
+		sourceColumn: is_late
+
+	column has_timestamp_anomaly
+		dataType: boolean
+		lineageTag: bcd0a071-a0c5-5e6d-b233-bc1c98795d8e
+		summarizeBy: none
+		sourceColumn: has_timestamp_anomaly
+
+	column promised_days
+		dataType: double
+		formatString: 0.0
+		lineageTag: fb0f9790-86ae-5701-84de-a596f98341e4
+		summarizeBy: sum
+		sourceColumn: promised_days
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_net_order
+		dataType: boolean
+		lineageTag: 6712c475-c04c-5f62-862d-07a196366e1e
+		summarizeBy: none
+		sourceColumn: is_net_order
+
+	column is_labelled_delivery
+		dataType: boolean
+		lineageTag: 9fd72e12-93da-563b-a610-9c2f621c571f
+		summarizeBy: none
+		sourceColumn: is_labelled_delivery
+
+	column delay_bucket
+		dataType: string
+		lineageTag: af4c707b-5062-5aeb-9135-2ca5a6b5aeec
+		summarizeBy: none
+		sourceColumn: delay_bucket
+		sortByColumn: delay_bucket_order
+
+	column delay_bucket_order
+		dataType: int64
+		lineageTag: da76ed98-9558-592f-9edb-f49e7f409da4
+		summarizeBy: sum
+		sourceColumn: delay_bucket_order
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fact_orders = m
+		mode: import
+		source =
+				let
+					Source = Parquet.Document(File.Contents(DataFolder & "\fact_orders.parquet")),
+					Typed = Table.TransformColumnTypes(Source, {{"order_id", type text}, {"order_status", type text}, {"customer_key", Int64.Type}, {"customer_geography_key", Int64.Type}, {"purchase_date_key", Int64.Type}, {"approved_date_key", Int64.Type}, {"carrier_date_key", Int64.Type}, {"delivered_customer_date_key", Int64.Type}, {"estimated_delivery_date_key", Int64.Type}, {"purchase_ts", type datetime}, {"estimated_delivery_ts", type datetime}, {"item_count", Int64.Type}, {"items_price", Currency.Type}, {"items_freight", Currency.Type}, {"payment_count", Int64.Type}, {"payment_total", Currency.Type}, {"delivery_days", type number}, {"delivery_delay_days", type number}, {"is_late", type logical}, {"has_timestamp_anomaly", type logical}, {"promised_days", type number}, {"is_net_order", type logical}, {"is_labelled_delivery", type logical}, {"delay_bucket", type text}, {"delay_bucket_order", Int64.Type}})
+				in
+					Typed
+
+	annotation PBI_ResultType = Exception
+

@@ -1,0 +1,95 @@
+/// One row per calendar day, 2016 to 2020 (gap-free), plus a -1 'not applicable' member. Marked as the date table.
+table dim_date
+	lineageTag: 6d8042c5-cec7-590e-9076-c3da973b5176
+	dataCategory: Time
+
+	column date_key
+		dataType: int64
+		lineageTag: 8b76bd33-35c5-5a2c-a598-a02f21dbaacf
+		summarizeBy: none
+		sourceColumn: date_key
+
+	column full_date
+		dataType: dateTime
+		isKey
+		formatString: dd mmm yyyy
+		lineageTag: be9544e0-4db0-5490-99ab-fe0597027b4f
+		summarizeBy: none
+		sourceColumn: full_date
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column year
+		dataType: int64
+		lineageTag: 0f075e15-1166-5c7e-b9a7-7a2be1cc42cf
+		summarizeBy: none
+		sourceColumn: year
+
+	column quarter
+		dataType: int64
+		lineageTag: 3f563cce-7ccf-5b54-9be3-411913eea2cc
+		summarizeBy: none
+		sourceColumn: quarter
+
+	column month
+		dataType: int64
+		lineageTag: 660fe000-9ca1-5fbb-a85c-2b79935c16c1
+		summarizeBy: none
+		sourceColumn: month
+
+	column month_name
+		dataType: string
+		lineageTag: 1faea657-62c9-5277-9bd1-862a4b91f040
+		summarizeBy: none
+		sourceColumn: month_name
+		sortByColumn: month
+
+	column year_month
+		dataType: string
+		lineageTag: 00555ce9-3565-5fc9-be79-0c15e0be72b8
+		summarizeBy: none
+		sourceColumn: year_month
+
+	column day_of_month
+		dataType: int64
+		lineageTag: 3a0e1a98-dac6-56a3-81d1-ddb41ee7332e
+		summarizeBy: none
+		sourceColumn: day_of_month
+
+	column iso_week
+		dataType: int64
+		lineageTag: 64398251-e6fd-55dd-b064-4b39467e73fc
+		summarizeBy: none
+		sourceColumn: iso_week
+
+	column day_of_week
+		dataType: int64
+		lineageTag: 24ad9766-90ca-5385-81dc-c6ed6d78c9b8
+		summarizeBy: none
+		sourceColumn: day_of_week
+
+	column day_name
+		dataType: string
+		lineageTag: eac7fb9d-8bd7-5493-bdb3-b7bbceb1e636
+		summarizeBy: none
+		sourceColumn: day_name
+		sortByColumn: day_of_week
+
+	column is_weekend
+		dataType: boolean
+		lineageTag: ff46c87c-0082-504a-8e0c-d5ca55895d3e
+		summarizeBy: none
+		sourceColumn: is_weekend
+
+	partition dim_date = m
+		mode: import
+		source =
+				let
+					Source = Csv.Document(File.Contents(DataFolder & "\dim_date.csv"), [Delimiter=",", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+					Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+					Typed = Table.TransformColumnTypes(Promoted, {{"date_key", Int64.Type}, {"full_date", type date}, {"year", Int64.Type}, {"quarter", Int64.Type}, {"month", Int64.Type}, {"month_name", type text}, {"year_month", type text}, {"day_of_month", Int64.Type}, {"iso_week", Int64.Type}, {"day_of_week", Int64.Type}, {"day_name", type text}, {"is_weekend", type logical}}, "en-US")
+				in
+					Typed
+
+	annotation PBI_ResultType = Table
+

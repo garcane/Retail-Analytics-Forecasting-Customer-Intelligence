@@ -1,0 +1,127 @@
+/// Out-of-time risk score for every order in the six test months (2018-03 to 2018-08), from the v1 logistic regression trained only on orders resolved before each month. risk_percentile is within the month: 1.0 is the riskiest order of that month.
+table late_delivery_scores
+	lineageTag: 9a068af1-df71-5286-9736-295324ee14ea
+
+	/// The 'flag the riskiest X%' control (default 10%).
+	measure 'Flag Share' = SELECTEDVALUE(flag_share[flag_pct], 10) / 100
+		formatString: 0%
+		displayFolder: Risk
+		lineageTag: a4ef4119-64f8-5450-9758-e3781403525c
+
+	/// Orders scored out of time (the six test months).
+	measure 'Scored Orders' = COUNTROWS(late_delivery_scores)
+		formatString: #,0
+		displayFolder: Risk
+		lineageTag: 5afeca5f-39e0-5b75-8fb0-33466dc72f6d
+
+	/// Actual late rate of the scored orders (the chance level).
+	measure 'Late Rate (scored)' = AVERAGE(late_delivery_scores[is_late])
+		formatString: 0.0%
+		displayFolder: Risk
+		lineageTag: 5dbe2a15-1a15-5e6f-9956-f8e4c06bf213
+
+	/// Orders in the riskiest X% of their month.
+	measure 'Flagged Orders' = VAR _cut = 1 - [Flag Share] RETURN CALCULATE(COUNTROWS(late_delivery_scores), late_delivery_scores[risk_percentile] > _cut)
+		formatString: #,0
+		displayFolder: Risk
+		lineageTag: 6a49fbd6-a4a5-5023-b853-9229116aa00c
+
+	/// Actual late rate among the flagged orders.
+	measure 'Late Rate Among Flagged' = VAR _cut = 1 - [Flag Share] RETURN CALCULATE(AVERAGE(late_delivery_scores[is_late]), late_delivery_scores[risk_percentile] > _cut)
+		formatString: 0.0%
+		displayFolder: Risk
+		lineageTag: 9ec451f3-db67-54f7-b567-f5450e1550d2
+
+	/// How many times better than chance the flagging is. Pooled over the selection, so it differs from the average of the monthly lifts (2.8x).
+	measure Lift = DIVIDE([Late Rate Among Flagged], [Late Rate (scored)])
+		formatString: 0.0"x"
+		displayFolder: Risk
+		lineageTag: c8e78954-7622-5769-8ff1-ccb0ee281838
+
+	/// Share of all late orders that the flagged orders catch.
+	measure Recall = VAR _cut = 1 - [Flag Share] RETURN DIVIDE(CALCULATE(SUM(late_delivery_scores[is_late]), late_delivery_scores[risk_percentile] > _cut), SUM(late_delivery_scores[is_late]))
+		formatString: 0.0%
+		displayFolder: Risk
+		lineageTag: eff56b48-f080-55df-b42e-74df36317912
+
+	column order_id
+		dataType: string
+		lineageTag: a5d6e6ca-bfce-5244-9759-a540d997d6f0
+		summarizeBy: none
+		sourceColumn: order_id
+
+	column month
+		dataType: string
+		lineageTag: 551cc830-1d41-5ecf-85bf-6743fd6b3c76
+		summarizeBy: none
+		sourceColumn: month
+
+	column purchase_date_key
+		dataType: int64
+		isHidden
+		lineageTag: 8d09f0eb-e4e9-5446-b777-23910f937278
+		summarizeBy: none
+		sourceColumn: purchase_date_key
+
+	column risk_score
+		dataType: double
+		formatString: 0.000
+		lineageTag: d27ef6e0-253a-55ea-9637-25ec2186ae91
+		summarizeBy: none
+		sourceColumn: risk_score
+
+	column risk_percentile
+		dataType: double
+		formatString: 0.000
+		lineageTag: b48264f7-062c-5dd1-8df8-f36257b51042
+		summarizeBy: none
+		sourceColumn: risk_percentile
+
+	column flagged_top10
+		dataType: boolean
+		lineageTag: dcee126f-ca87-5ebc-a8dd-18f43d264c93
+		summarizeBy: none
+		sourceColumn: flagged_top10
+
+	column is_late
+		dataType: int64
+		lineageTag: 36a61838-289c-5045-aa76-bc0abc9be80f
+		summarizeBy: none
+		sourceColumn: is_late
+
+	column customer_state
+		dataType: string
+		lineageTag: 0c316f5e-3f5b-56b5-b14e-bedfc16718ff
+		summarizeBy: none
+		sourceColumn: customer_state
+
+	column seller_state
+		dataType: string
+		lineageTag: 403e67a8-493b-58b8-b0f5-09b1311c8c1d
+		summarizeBy: none
+		sourceColumn: seller_state
+
+	column category
+		dataType: string
+		lineageTag: 84cf9e81-de0f-5694-833b-6b1311b6cc71
+		summarizeBy: none
+		sourceColumn: category
+
+	column promised_days
+		dataType: double
+		formatString: 0.0
+		lineageTag: 2a91aa1d-3009-5584-84c5-9e2652298435
+		summarizeBy: none
+		sourceColumn: promised_days
+
+	partition late_delivery_scores = m
+		mode: import
+		source =
+				let
+					Source = Parquet.Document(File.Contents(DataFolder & "\late_delivery_scores.parquet")),
+					Typed = Table.TransformColumnTypes(Source, {{"order_id", type text}, {"month", type text}, {"purchase_date_key", Int64.Type}, {"risk_score", type number}, {"risk_percentile", type number}, {"flagged_top10", type logical}, {"is_late", Int64.Type}, {"customer_state", type text}, {"seller_state", type text}, {"category", type text}, {"promised_days", type number}})
+				in
+					Typed
+
+	annotation PBI_ResultType = Exception
+

@@ -1,0 +1,99 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
+  "name": "f_line",
+  "position": {
+    "x": 20,
+    "y": 172,
+    "z": 6000,
+    "height": 300,
+    "width": 1240,
+    "tabOrder": 6000
+  },
+  "visual": {
+    "visualType": "lineChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "forecast_backtest"
+                    }
+                  },
+                  "Property": "target_week"
+                }
+              },
+              "queryRef": "forecast_backtest.target_week",
+              "nativeQueryRef": "target_week",
+              "active": true
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "forecast_backtest"
+                    }
+                  },
+                  "Property": "Forecast Value"
+                }
+              },
+              "queryRef": "forecast_backtest.Forecast Value",
+              "nativeQueryRef": "Forecast Value",
+              "active": true
+            }
+          ]
+        },
+        "Series": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "forecast_backtest"
+                    }
+                  },
+                  "Property": "method"
+                }
+              },
+              "queryRef": "forecast_backtest.method",
+              "nativeQueryRef": "method",
+              "active": true
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true,
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Forecast against actual'"
+                }
+              }
+            },
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}
