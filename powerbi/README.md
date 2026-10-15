@@ -53,6 +53,10 @@ Generation is deterministic (identifiers come from names), and a test fails if t
 Changes you make in Desktop and save will be overwritten by the next generation; if you want to keep editing in Desktop,
 stop regenerating.
 
+## If the first refresh fails
+
+Power BI reports the first failing table and marks the rest "Load was cancelled by an error in loading a previous table" (and some as an OLE DB error 0x80040E4E), so fix the first message only. Known case: `dim_date` contained a "Not applicable" row with an empty date, which cannot be in a date table's key; the export now leaves it out, so re-run `export_data.py` and use *Home > Refresh*. Facts that have no date (for example the delivery date of an order that was never delivered) show as (Blank) in date slicers, which is intended.
+
 ## Known limits
 
 - Row-level **review comments are not exported**; only the score and whether a comment exists.

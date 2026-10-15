@@ -30,8 +30,10 @@ def test_every_table_in_the_model_has_an_exported_file(manifest):
 
 
 def test_row_counts_equal_the_warehouse(manifest, warehouse):
-    for name in ("fact_orders", "fact_order_items", "fact_payments", "fact_reviews", "dim_date", "dim_customer", "dim_product", "dim_seller", "dim_geography"):
+    for name in ("fact_orders", "fact_order_items", "fact_payments", "fact_reviews", "dim_customer", "dim_product", "dim_seller", "dim_geography"):
         assert manifest[name]["rows"] == warehouse.execute(f"select count(*) from {name}").fetchone()[0], name
+    # dim_date leaves out its "Not applicable" row (empty date), which Power BI would reject as a key
+    assert manifest["dim_date"]["rows"] == warehouse.execute("select count(*) from dim_date where full_date is not null").fetchone()[0]
 
 
 def test_manifest_row_counts_equal_the_files(manifest):
@@ -48,10 +50,12 @@ def test_no_fact_key_is_missing_from_its_dimension(manifest):
     for r in ms.RELATIONSHIPS:
         many = p(r.many_table) if ms.TABLE_BY_NAME[r.many_table].fmt == "parquet" else c(r.many_table)
         one = p(r.one_table) if ms.TABLE_BY_NAME[r.one_table].fmt == "parquet" else c(r.one_table)
-        orphans = con.execute(f"select count(*) from {many} m where m.{r.many_col} is not null and m.{r.many_col} not in (select {r.one_col} from {one})").fetchone()[0]
+        # -1 is the warehouse's "not applicable" key (no such date, no such seller...); Power BI shows it as (Blank), which is intended
+        sentinel = f"m.{r.many_col} <> -1 and " if r.many_col.endswith("_key") else ""  # order_id is text
+        orphans = con.execute(f"select count(*) from {many} m where m.{r.many_col} is not null and {sentinel}m.{r.many_col} not in (select {r.one_col} from {one})").fetchone()[0]
         assert orphans == 0, f"{r.many_table}.{r.many_col} has {orphans} values missing from {r.one_table}"
-        if r.one_table != "dim_date":  # the one side of a relationship must be unique
-            assert con.execute(f"select count({r.one_col}) = count(distinct {r.one_col}) from {one}").fetchone()[0], f"{r.one_table}.{r.one_col} not unique"
+        # the one side of a relationship must be unique and have no blanks (Power BI refuses to load otherwise)
+        assert con.execute(f"select count(*) = count({r.one_col}) and count({r.one_col}) = count(distinct {r.one_col}) from {one}").fetchone()[0], f"{r.one_table}.{r.one_col} has blanks or duplicates"
 
 
 def test_review_comment_text_is_not_exported(manifest):

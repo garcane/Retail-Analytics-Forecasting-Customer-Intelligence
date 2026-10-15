@@ -93,8 +93,11 @@ def export(db: Path, out: Path) -> dict:
 
     for name in DIMENSIONS:
         path = out / f"{name}.csv"
-        con.execute(f"copy (select * from {name} order by 1) to '{path.as_posix()}' (format csv, header true)")
-        manifest[name] = {"file": path.name, "format": "csv", "rows": con.execute(f"select count(*) from {name}").fetchone()[0]}
+        # The date table's key must have no blanks in Power BI, so the "Not applicable" row (date_key -1, empty date) is left out;
+        # facts that point at -1 then fall into Power BI's own (Blank) date member.
+        where = " where full_date is not null" if name == "dim_date" else ""
+        con.execute(f"copy (select * from {name}{where} order by 1) to '{path.as_posix()}' (format csv, header true)")
+        manifest[name] = {"file": path.name, "format": "csv", "rows": con.execute(f"select count(*) from {name}{where}").fetchone()[0]}
 
     scores = export_scores.build(db)
     scores_path = out / "late_delivery_scores.parquet"
