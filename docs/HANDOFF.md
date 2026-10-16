@@ -19,7 +19,7 @@ A **local implementation of what would have been built on BigQuery**. DuckDB rep
 | D-007 | ML target: late delivery (one order, predicted at purchase) plus a weekly order forecast. |
 | D-008 | `data/` untracked from Git (commit `d8f6954`); history not rewritten. |
 
-Full entries, with design decisions DD-01 to DD-16, are in `DECISIONS.md`. No decisions are open.
+Full entries, with design decisions DD-01 to DD-17, are in `DECISIONS.md`. No decisions are open.
 
 ## Current state (2026-10-13)
 
@@ -29,8 +29,9 @@ All in-scope phases are complete; see `PROJECT_STATUS.md` for the phase table an
 - **Analytics:** `sql/analytics/` (8 queries), `src/analytics/run_analytics.py` (tables to `reports/analytics/`, charts to `docs/analytics/figures/`), findings in `docs/analytics/BUSINESS_INSIGHTS.md`.
 - **ML:** late-delivery ranking model and weekly forecast. **The notebooks `notebooks/02_late_delivery_model.ipynb` and `03_weekly_forecast.ipynb` present the work with charts** (stored with outputs; they call the tested code in `src/ml/`). Interactive marimo versions are in `notebooks/marimo/` (run with `uv run marimo edit <file>`). Written summary: `docs/ml/MODEL_CARD.md`; experiment write-ups are `PHASE2_BASELINES.md`, `DRIFT_ANALYSIS.md` and `RECALIBRATION_AND_WINDOW.md` in the same folder. Code is in `src/ml/` and `sql/ml/`, saved metrics in `reports/`.
 - **Power BI:** `powerbi/RetailAnalytics.pbip` with `docs/powerbi/DAX_SPECIFICATION.html` and `DASHBOARD_MOCKUP.html`, all generated from `src/powerbi/model_spec.py` (drives the data export, the specification and the mock-up; the report and model are now edited in Desktop). Data export: `uv run python src/powerbi/export_data.py`. **It opens and loads in Desktop** (after two fixes), and the committed `.pbip` is now the version Desktop saved: edit the report and model in Desktop, not the generator (`build_pbip.py` refuses to overwrite it without `--force`). Keep the `DataFolder` placeholder out of your commits (see `powerbi/README.md`). Next step for whoever has Desktop: follow `powerbi/README.md`, set `DataFolder`, run the first-open checklist, and fix anything Desktop reports (then change the generator, not the output).
+- **Cloud:** nothing is built on Google Cloud (D-002). `README.md#data-architecture` maps each local layer to its cloud counterpart and `docs/MIGRATING_TO_CLOUD.md` is the migration plan (DD-17); it has never been run, and BigQuery has no `ASOF JOIN`, so `sql/ml/late_delivery_features.sql` needs a rewrite there.
 - **Tests:** `uv run pytest`, 96 tests, about 45 seconds. The schema-validation test downloads Microsoft's JSON schemas on first run and is skipped when offline.
-- **Other documents:** `ARCHITECTURE.md`, `DECISIONS.md` (D-001 to D-008, DD-01 to DD-16), `SECURITY.md`, `COST.md`, `docs/LESSONS_LEARNED.md`.
+- **Other documents:** `ARCHITECTURE.md`, `DECISIONS.md` (D-001 to D-008, DD-01 to DD-17), `SECURITY.md`, `COST.md`, `docs/LESSONS_LEARNED.md`.
 - **Knowledge graph:** graphify is installed for Claude and Codex (`.claude/`, `.codex/`, `CLAUDE.md`, `AGENTS.md`). The graph (code and documents) is current as of 2026-10-16; `.graphifyignore` excludes generated Power BI files. The graph's cache and dated backups are git-ignored.
 - **Dataset download:** see `README.md`.
 

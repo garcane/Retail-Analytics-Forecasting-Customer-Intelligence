@@ -154,7 +154,7 @@ Row counts include the unknown member (the 1,828 dates are 1,827 days plus the -
 
 ## Moving to BigQuery
 
-The DDL uses types that map directly, but the SQL needs dialect translation rather than copy-paste. This is not applied yet.
+The DDL uses types that map directly, but the SQL needs dialect translation rather than copy-paste. This is not applied yet. The full plan, with the constructs counted per file, the `ASOF JOIN` problem and the numbers to reproduce, is in [docs/MIGRATING_TO_CLOUD.md](../MIGRATING_TO_CLOUD.md).
 
 | DuckDB | BigQuery |
 |---|---|

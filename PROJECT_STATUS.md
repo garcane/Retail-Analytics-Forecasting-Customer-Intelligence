@@ -38,7 +38,7 @@ _Last updated: 2026-10-13_
 
 ## Decisions
 
-D-001 to D-008 (user) and DD-01 to DD-16 (design) are in [DECISIONS.md](DECISIONS.md). **Open decisions:** none.
+D-001 to D-008 (user) and DD-01 to DD-17 (design) are in [DECISIONS.md](DECISIONS.md). **Open decisions:** none.
 
 ## Open items (from the audit)
 

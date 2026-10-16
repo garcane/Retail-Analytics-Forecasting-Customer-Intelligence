@@ -30,9 +30,49 @@ The least glamorous result is also the most useful one: **several well-motivated
 5. **Power BI.** A four-page dashboard (sales, delivery and reviews, late-delivery risk, weekly forecast) with 38 measures. It was specified first in HTML ([docs/powerbi/DAX_SPECIFICATION.html](docs/powerbi/DAX_SPECIFICATION.html)), pictured in an interactive mock-up ([docs/powerbi/DASHBOARD_MOCKUP.html](docs/powerbi/DASHBOARD_MOCKUP.html)), then delivered as a Power BI Project. See [powerbi/README.md](powerbi/README.md) for how to open it.
 6. **Quality.** 96 automated tests, including tests for the leakage rules (which were shown to fail when leaks were planted deliberately), a clean-clone reproduction of the whole pipeline, and a written audit ([docs/AUDIT.md](docs/AUDIT.md)).
 
+## Data architecture
+
+The build is organised in the same layers as the original cloud design (RAW, STAGING, CURATED, ANALYTICAL, FEATURES, PREDICTIONS, then BI), so the local version is a working twin of the cloud one. Each box below shows what runs **today on this laptop** and what its **cloud counterpart** would be. The local half is built and tested; the cloud half is a documented design, not something that has been run.
+
+```mermaid
+flowchart TB
+    K(["Kaggle download<br/>Olist CSVs"]) --> RAW
+
+    RAW["<b>1 RAW</b><br/>Local: data/ (nine CSVs, untouched)<br/>Cloud: Cloud Storage, raw/ prefix"]
+    STG["<b>2 STAGING</b><br/>Local: sql/staging (typed views)<br/>Cloud: BigQuery dataset staging"]
+    CUR["<b>3 CURATED</b> (star schema)<br/>Local: sql/dimensions + sql/facts<br/>in warehouse.duckdb<br/>Cloud: BigQuery dataset curated"]
+    CHK{{"<b>4 VALIDATE</b><br/>Local: sql/validation, 22 checks<br/>Cloud: the same checks as BigQuery queries"}}
+    ANA["<b>5 ANALYTICAL</b><br/>Local: sql/analytics, 8 queries<br/>Cloud: BigQuery dataset analytics"]
+    FEA["<b>6 FEATURES</b><br/>Local: sql/ml/late_delivery_features.sql<br/>Cloud: BigQuery dataset features"]
+    MOD["<b>7 MODEL</b><br/>Local: scikit-learn scripts, src/ml<br/>Cloud: Vertex AI training + Model Registry"]
+    PRE["<b>8 PREDICTIONS</b><br/>Local: scores file + reports/*.json<br/>Cloud: BigQuery table from batch prediction"]
+    BI["<b>9 BI</b><br/>Local: Power BI Desktop on exported files<br/>Cloud: Power BI on BigQuery"]
+
+    RAW --> STG --> CUR --> CHK
+    CHK -- "all pass" --> ANA
+    CHK -- "all pass" --> FEA
+    FEA --> MOD --> PRE
+    CUR --> BI
+    ANA --> BI
+    PRE --> BI
+
+    classDef built fill:#e8f1fc,stroke:#2a78d6,color:#0b0b0b
+    class RAW,STG,CUR,CHK,ANA,FEA,MOD,PRE,BI built
+```
+
+**How the two line up**
+
+- **Same shape.** Same layers in the same order, one SQL file per table, the same grain rules and keys (a `-1` unknown member in every dimension; facts never join to facts), and the same 22 validation checks. Those carry over to the cloud unchanged in meaning.
+- **What changes** is the engine and the location: DuckDB SQL becomes GoogleSQL, a local folder becomes a Cloud Storage bucket, and a Python runner becomes a scheduled workflow with service accounts.
+- **Deliberately not mirrored** (decisions D-002, D-004, D-005): Dataflow and Apache Beam (plain SQL is enough for 100,000 orders), MLflow, an online prediction endpoint (the model is used by rank, in batch), Cloud Monitoring, IAM and Secret Manager (nothing is deployed).
+- **One real incompatibility was found while mapping it:** BigQuery has no `ASOF JOIN`, which the late-delivery features use to stay free of leakage, so that file needs a rewrite rather than a translation.
+
+The step-by-step plan, with the SQL constructs to change, the BigQuery and Vertex AI setup, and the numbers the cloud build must reproduce, is in [docs/MIGRATING_TO_CLOUD.md](docs/MIGRATING_TO_CLOUD.md). It has not been run on Google Cloud, and it does not quote prices, which were never verified.
+
 ## Where it is honestly unfinished
 
 - **The Power BI project was generated, then opened in Power BI Desktop, where it needed two fixes** (a measure that shared a name with a column, ignoring case, and an empty key row in the date table). It now loads. The dashboard's headline numbers have not yet been compared with the expected values listed in the specification's first-open checklist, and the report layouts are being refined by hand in Desktop.
+- **The cloud implementation is a plan, not a build.** The layers, the mapping and the migration steps are documented, but nothing has been run on Google Cloud, so the SQL translations and costs are untested.
 - **The model is modest by design of the data.** A better late-delivery model would need information this dataset does not contain, such as carrier or warehouse data.
 - **Everything is a snapshot.** The data ends in 2018, and the forecast and model results describe that period only.
 
@@ -47,7 +87,7 @@ The least glamorous result is also the most useful one: **several well-motivated
 | `powerbi/`, `docs/powerbi/` | The Power BI project, the specification and the mock-up |
 | `tests/` | The pytest suite |
 | `reports/` | Saved metrics (JSON) and analytics tables (CSV) |
-| `docs/` | Data model, insights, ML documents, audit, lessons learned |
+| `docs/` | Data model, insights, ML documents, audit, lessons learned, and the [migration guide to Google Cloud](docs/MIGRATING_TO_CLOUD.md) |
 | `ARCHITECTURE.md`, `DECISIONS.md`, `SECURITY.md`, `COST.md` | Design, decision log, security and cost (the cost is $0) |
 | `PROJECT_STATUS.md`, `docs/HANDOFF.md` | Where the project stands, for a new reader |
 

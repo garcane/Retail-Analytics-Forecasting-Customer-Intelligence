@@ -21,6 +21,8 @@ This is a local implementation of what would have been built on BigQuery. It is 
 
 ## Data flow
 
+The layered view, with the cloud counterpart of each layer, is in the [README](README.md#data-architecture); the migration plan is in [docs/MIGRATING_TO_CLOUD.md](docs/MIGRATING_TO_CLOUD.md). This diagram shows what the build script and the downstream code actually do.
+
 ```mermaid
 flowchart LR
     K[Kaggle download] --> D[data/<br/>nine CSV files]
@@ -30,9 +32,11 @@ flowchart LR
     F --> V[sql/validation/checks.sql]
     V -- any check fails --> X[exit 1]
     V -- all pass --> W[(warehouse.duckdb)]
-    W --> N[notebooks: EDA and baselines]
-    W --> M[src/ml: features, models<br/>planned]
-    M --> A[local artefacts and metrics<br/>planned]
+    W --> N[notebooks: EDA and ML walk-throughs]
+    W --> M[src/ml: features, models]
+    M --> A[metrics in reports/<br/>and the scores file]
+    W --> PB[src/powerbi: export for Power BI]
+    A --> PB
     W --> P[scripts/visualize_schema.py]
 ```
 
@@ -49,7 +53,7 @@ flowchart LR
 
 ## Processing
 
-- Everything is SQL executed by DuckDB, except the geolocation conversion and the ML code, which use Python with pandas and scikit-learn.
+- Everything is SQL executed by DuckDB, except the ML code, the Power BI export and the charts, which use Python with pandas and scikit-learn.
 - The full build takes about 25 seconds on this laptop (measured 2026-10-11). There is no incremental processing, because the dataset does not change.
 
 ## ML (baselines built, D-007)
@@ -76,10 +80,9 @@ Feature and leakage rules are in [docs/ml/LEAKAGE_ANALYSIS.md](docs/ml/LEAKAGE_A
 
 | Failure | Effect | Guard |
 |---|---|---|
-| A raw file is missing or renamed | Staging fails with a DuckDB error | README lists the nine expected files; the geolocation step raises a clear `FileNotFoundError` |
+| A raw file is missing or renamed | The build stops before running any SQL | `check_raw_files` names the missing files; the README lists the nine expected files |
 | Kaggle changes the file schema | Explicit column lists in staging fail, or counts change | Typed `read_csv(... columns=...)` in the nine CSV staging files; row-count and money checks |
 | Logic error in a transform | Silent revenue or row drift | 22 reconciliation checks; primary-key and foreign-key constraints; the build exits 1 |
-| Geolocation conversion from the original Kaggle CSV | Untested path (only tested on a regenerated CSV) | Documented in README; check this step first if the build fails there |
 | Notebook started in `notebooks/` uses a relative `data/` path | File not found | Build paths from the repo root |
 | `uv` behind a TLS-intercepting network | `uv sync` fails or hangs | Use `uv --native-tls` |
 | Leakage in ML features | Overstated model performance | Rules and audit in LEAKAGE_ANALYSIS; time-ordered splits |
@@ -87,7 +90,7 @@ Feature and leakage rules are in [docs/ml/LEAKAGE_ANALYSIS.md](docs/ml/LEAKAGE_A
 ## Scalability
 
 - The dataset is about 100k orders and 80 MB on disk. A single DuckDB process handles it with plenty of room, and should cope with one to two orders of magnitude more data on the same laptop.
-- Beyond that, the move is to a cloud warehouse. The type mapping, the DuckDB-specific constructs to translate and the likely partition and cluster keys are listed in [docs/data/DATA_MODEL.md](docs/data/DATA_MODEL.md#moving-to-bigquery). That move is out of scope by decision (D-002).
+- Beyond that, the move is to a cloud warehouse. The type mapping, the DuckDB-specific constructs to translate and the likely partition and cluster keys are listed in [docs/data/DATA_MODEL.md](docs/data/DATA_MODEL.md#moving-to-bigquery). That move is out of scope by decision (D-002), but the plan for it is written down in [docs/MIGRATING_TO_CLOUD.md](docs/MIGRATING_TO_CLOUD.md) (DD-17).
 
 ## Cost
 
@@ -97,6 +100,7 @@ $0. Everything runs locally on open-source tools; there is no cloud spend and no
 
 - [DECISIONS.md](DECISIONS.md): every decision referenced above.
 - [docs/data/DATA_MODEL.md](docs/data/DATA_MODEL.md): grains, keys, columns and design rules.
+- [docs/MIGRATING_TO_CLOUD.md](docs/MIGRATING_TO_CLOUD.md): how the local build maps to the cloud design and how to move it.
 - [docs/data/EDA_FINDINGS.md](docs/data/EDA_FINDINGS.md): the data-quality evidence.
 - [docs/ml/LEAKAGE_ANALYSIS.md](docs/ml/LEAKAGE_ANALYSIS.md): ML targets and leakage rules.
 - [docs/phase0/PHASE0_DISCOVERY.md](docs/phase0/PHASE0_DISCOVERY.md): Phase 0 discovery report.

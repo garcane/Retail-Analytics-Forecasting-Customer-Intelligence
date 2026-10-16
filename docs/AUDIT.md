@@ -12,7 +12,7 @@ Audit of the local DuckDB build against the review areas in the project brief, r
 | Reproducibility | **Good.** A clean clone plus the raw data rebuilt everything; outputs matched, with documented numeric noise in two ML files |
 | Security | **Good for the scope.** No secrets, no tracked data, no network surface; dependencies not scanned |
 | Cost | **$0**, measured run times recorded |
-| Architecture | **Sound and documented**, with decisions logged (DD-01 to DD-16) |
+| Architecture | **Sound and documented**, with decisions logged (DD-01 to DD-17) |
 | Testing | **61 tests pass**; leakage tests were shown to fail when leaks are planted |
 | Documentation | **Complete** for every in-scope phase; one known inconsistency (original cloud brief left unchanged by design) |
 | Evidence | **Saved** in `reports/` and the docs; figures and tables regenerate byte-for-byte |

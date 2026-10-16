@@ -72,39 +72,39 @@
     "semantic_hash": "21ceb6533048be51308e69e7b74a35cf"
   },
   "ARCHITECTURE.md": {
-    "mtime": 1792167111.992725,
-    "seen": 1792167176.4771502,
-    "ast_hash": "f1eae4d7ef1ced83dea8f2f59f083e32",
+    "mtime": 1792167946.0447123,
+    "seen": 1792168020.0892117,
+    "ast_hash": "3b28447077ade5624e83e14bf2f29503",
     "semantic_hash": ""
   },
   "DECISIONS.md": {
-    "mtime": 1792167119.8514445,
-    "seen": 1792167176.4771502,
-    "ast_hash": "1318cc901de37f3e08d4406e6539b3d1",
+    "mtime": 1792167946.0487118,
+    "seen": 1792168020.0892117,
+    "ast_hash": "5f325642ea8b2ccd378956b09d16c3c6",
     "semantic_hash": ""
   },
   "PROJECT_STATUS.md": {
-    "mtime": 1792167111.992725,
-    "seen": 1792167176.4771502,
-    "ast_hash": "42fe9973971ef2a8ad3f195f794c93dc",
+    "mtime": 1792167946.0524325,
+    "seen": 1792168020.0892117,
+    "ast_hash": "4b447aec4f1ff81fdcfbbea295e31dda",
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1792167112.0110562,
-    "seen": 1792167176.4771502,
-    "ast_hash": "8ca27d2f5d459b25f817a499ef105286",
+    "mtime": 1792167922.1743462,
+    "seen": 1792168020.0892117,
+    "ast_hash": "60f2ccf4950d7218cbf939b7783fdb85",
     "semantic_hash": ""
   },
   "docs/HANDOFF.md": {
-    "mtime": 1792167112.0110562,
-    "seen": 1792167176.4771502,
-    "ast_hash": "61b5d0180a57999ded0d8cc300724ff4",
+    "mtime": 1792167946.050715,
+    "seen": 1792168020.0892117,
+    "ast_hash": "430267fb793e68bf7b37b585d99dd930",
     "semantic_hash": ""
   },
   "docs/data/DATA_MODEL.md": {
-    "mtime": 1792167112.0110562,
-    "seen": 1792167176.4771502,
-    "ast_hash": "6bc15fc0054980e073e029ae9c038469",
+    "mtime": 1792167946.046713,
+    "seen": 1792168020.0892117,
+    "ast_hash": "6f96beb6c14328cc0cc00e22430c9c21",
     "semantic_hash": ""
   },
   "docs/data/EDA_FINDINGS.md": {
@@ -294,9 +294,9 @@
     "semantic_hash": "5c298c1653edc9ef94caa05d17551522"
   },
   "docs/AUDIT.md": {
-    "mtime": 1792167112.0083637,
-    "seen": 1792167176.4771502,
-    "ast_hash": "d3ac29aa4b64831a834852b5d3663c75",
+    "mtime": 1792167946.0544348,
+    "seen": 1792168020.0892117,
+    "ast_hash": "664e9b13c2cc7a10c7bde8cd7a803c77",
     "semantic_hash": ""
   },
   "docs/LESSONS_LEARNED.md": {
@@ -609,6 +609,12 @@
     "mtime": 1792166441.4315102,
     "seen": 1792167176.4771502,
     "ast_hash": "a15faa5e4cd9eb4f68a9618282552036",
+    "semantic_hash": ""
+  },
+  "docs/MIGRATING_TO_CLOUD.md": {
+    "mtime": 1792167904.6692092,
+    "seen": 1792168020.0892117,
+    "ast_hash": "0b1c241bc66933f5c70c3cff1015197f",
     "semantic_hash": ""
   }
 }

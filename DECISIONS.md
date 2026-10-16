@@ -30,6 +30,7 @@ Later decisions can supersede earlier ones; when that happens the entry says so.
 | DD-14 | 2026-10-13 | Add interactive marimo versions of the ML notebooks, keeping the Jupyter ones | Active |
 | DD-15 | 2026-10-15 | Deliver Power BI specification-first from one definition | Active |
 | DD-16 | 2026-10-16 | Read the geolocation CSV directly; no Parquet conversion | Active |
+| DD-17 | 2026-10-16 | Document the local build as a twin of the cloud design, with a migration guide (nothing built in the cloud) | Active |
 
 ---
 
@@ -252,3 +253,14 @@ Evidence for these entries is in [docs/data/EDA_FINDINGS.md](docs/data/EDA_FINDI
 - **Trade-offs:** The build parses the CSV each time (a second or so) instead of reading a typed Parquet file. In pandas, `engine='pyarrow'` loses leading zeros in the zip column, so the notebook uses the default engine with `dtype=str`.
 - **Cost / Security:** None. The Power BI export still writes Parquet for its own large fact tables; that is unrelated and unchanged.
 - **Rejected:** Keeping both paths (more code for no benefit).
+
+### DD-17: The local build is documented as a twin of the cloud design, with a migration guide
+
+- **Context:** D-002 made the project local-only, and D-003 dropped the requirement that the SQL stay BigQuery-portable. The project owner then asked for the data architecture diagram in the README to show the local implementation mirroring the cloud one, and for a guide to migrate from local to cloud.
+- **Options:** Leave the cloud design only in the original brief; document the mapping and a migration plan; also build the cloud implementation.
+- **Chosen:** Document, do not build. The README has a layered diagram with the local implementation and its cloud counterpart for each layer, and `docs/MIGRATING_TO_CLOUD.md` gives the step-by-step plan (Cloud Storage, BigQuery datasets, SQL translation, the `ASOF JOIN` rewrite, Vertex AI training, registry and batch prediction, Power BI on BigQuery, parity targets, teardown). D-002 and D-003 stay in force: no cloud resources are created and no BigQuery SQL is written.
+- **Reason:** The layers were already the same as the brief's, so the mapping is cheap and shows how the work would transfer. Building it would cost money that has never been priced and could not be tested here.
+- **Verified:** Against the official GoogleSQL reference, BigQuery's joins are `INNER`, `LEFT`, `RIGHT`, `FULL` and `CROSS`, with no `ASOF JOIN` (checked 2026-10-16), so the ML features need a rewrite. The other function equivalents and the command flags are from general knowledge and marked "verify" in the guide.
+- **Trade-offs:** The guide can drift from the code and from Google's products; it is a plan, not a record, and says so. No prices are quoted.
+- **Cost / Security:** None now. The guide starts with a budget alert and ends with teardown, and keeps credentials out of the repository.
+- **Rejected:** Building a BigQuery version now (untestable here, unpriced); keeping the mapping only in `GCP.md`, whose local column lists tools (Beam, MLflow, FastAPI, Prometheus) that the project decided not to use.
