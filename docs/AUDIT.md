@@ -79,7 +79,7 @@ Known inconsistency: the original brief documents (`Cloud Portfolio — Master A
 
 ## 8. Evidence
 
-Raw outputs are committed in `reports/` (ML metrics as JSON, analytics tables as CSV) and `docs/analytics/figures/` (PNG). Every number quoted in the documents comes from those files or from a query shown next to it. The graphify knowledge graph (`graphify-out/`) covers the code; the newest documents are not in it until `/graphify --update` is run.
+Raw outputs are committed in `reports/` (ML metrics as JSON, analytics tables as CSV) and `docs/analytics/figures/` (PNG). Every number quoted in the documents comes from those files or from a query shown next to it. The graphify knowledge graph (`graphify-out/`) covers the code and the documents (see the 2026-10-16 addendum).
 
 **Repository hygiene (fixed in this audit):** graphify's cache and dated backup folders had been committed on every refresh; they are now git-ignored and untracked (the graph and report stay tracked).
 
@@ -113,6 +113,8 @@ Later the same day, interactive marimo versions of both notebooks were added (`n
 - **Clean clone of `main` from GitHub, with the raw data added:** warehouse 22/22, Power BI export, and **96 tests pass**.
 - **Raw data restored after the merge deleted it from disk** (it was still tracked on `main`): a warehouse rebuilt from the restored files has the same row counts in every table and identical content hashes on the facts, with 22/22 checks.
 
+- **Knowledge graph:** updated with the code and the 12 changed documents (890 nodes, 1,680 edges, 70 communities, 40 labelled). `.graphifyignore` keeps Power BI report JSON, marimo caches and the generated mock-up out of it, which removed about 800 noise nodes. The marimo session caches (1.9 MB of stored outputs) had been committed by mistake and are now untracked and git-ignored.
+
 ### Addendum: Power BI (DD-15)
 
 A Power BI dashboard was added: a DAX specification, an interactive HTML mock-up and a generated Power BI Project, all from one definition (`src/powerbi/model_spec.py`).
@@ -129,6 +131,5 @@ A Power BI dashboard was added: a DAX specification, an interactive HTML mock-up
 |---|---|
 | Geolocation conversion on Kaggle's original CSV | Original file not available locally (needs a Kaggle download) |
 | Compare the Power BI dashboard's cards with the first-open checklist | Needs a person looking at the report in Desktop; the project loads (confirmed by the owner) |
-| Knowledge graph does not include the newest documents | Needs `/graphify --update` (model-based extraction); the code graph is current |
 | Raw data remains in early commits of a public repository | History was not rewritten (D-008); rewriting it is the owner's decision |
 | The original brief documents describe the cloud design | Left unchanged by decision |

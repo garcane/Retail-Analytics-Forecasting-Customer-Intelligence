@@ -1,0 +1,8 @@
+# Generated or tool-owned files that would only add noise to the knowledge graph
+powerbi/RetailAnalytics.Report/
+powerbi/RetailAnalytics.SemanticModel/definition/tables/LocalDateTable_*
+powerbi/RetailAnalytics.SemanticModel/definition/tables/DateTableTemplate_*
+powerbi/RetailAnalytics.SemanticModel/diagramLayout.json
+powerbi/theme/
+notebooks/marimo/__marimo__/
+docs/powerbi/DASHBOARD_MOCKUP.html

@@ -23,3 +23,6 @@ graphify-out/20*/
 # Power BI: exported data is regenerable (src/powerbi/export_data.py); local Power BI state is per-user
 powerbi/data/
 **/.pbi/
+
+# marimo session caches (cell outputs, regenerated on every run)
+__marimo__/
