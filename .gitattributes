@@ -1,0 +1,11 @@
+*.sql linguist-detectable=true
+*.sql linguist-language=sql
+# Treat .sql files as text (for proper diffs and line ending conversion)
+*.sql text
+
+# Force LF line endings (recommended for cross‑platform consistency)
+*.sql text eol=lf
+
+# (Optional) Mark backup files (like .dump) as binary – avoid corrupting them
+*.dump binary
+*.backup binary
