@@ -38,13 +38,12 @@ _Last updated: 2026-10-13_
 
 ## Decisions
 
-D-001 to D-008 (user) and DD-01 to DD-15 (design) are in [DECISIONS.md](DECISIONS.md). **Open decisions:** none.
+D-001 to D-008 (user) and DD-01 to DD-16 (design) are in [DECISIONS.md](DECISIONS.md). **Open decisions:** none.
 
 ## Open items (from the audit)
 
 | Item | Why open |
 |---|---|
-| Geolocation CSV-to-Parquet on Kaggle's original file | Tested only on a CSV regenerated from the Parquet file |
 | Compare the Power BI cards with the first-open checklist | The project loads in Desktop; the numbers have not been compared |
 | Raw data in early commits of the public repository | History not rewritten (D-008); the owner decides whether to rewrite it |
 

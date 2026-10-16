@@ -12,7 +12,7 @@ Audit of the local DuckDB build against the review areas in the project brief, r
 | Reproducibility | **Good.** A clean clone plus the raw data rebuilt everything; outputs matched, with documented numeric noise in two ML files |
 | Security | **Good for the scope.** No secrets, no tracked data, no network surface; dependencies not scanned |
 | Cost | **$0**, measured run times recorded |
-| Architecture | **Sound and documented**, with decisions logged (DD-01 to DD-15) |
+| Architecture | **Sound and documented**, with decisions logged (DD-01 to DD-16) |
 | Testing | **61 tests pass**; leakage tests were shown to fail when leaks are planted |
 | Documentation | **Complete** for every in-scope phase; one known inconsistency (original cloud brief left unchanged by design) |
 | Evidence | **Saved** in `reports/` and the docs; figures and tables regenerate byte-for-byte |
@@ -44,7 +44,7 @@ Method: `git clone` into an empty folder, copy only the raw `data/` files in, th
 
 **Environment.** Python 3.13, `uv` with `uv.lock`. Dependencies were tidied in this audit: two unused packages (`fastparquet`, `jinja2`) removed, `scipy` declared (it was imported directly but installed only as a dependency of scikit-learn), and `ipykernel` declared as a dev dependency. *One mistake to record:* removing the unused packages made `uv` prune `ipykernel`, which had been installed by hand and never declared, so the notebook kernel briefly disappeared. It was restored immediately and is now declared so a re-sync cannot remove it again.
 
-**Not reproduced:** the discovery notebook (`notebooks/01_dataset_discovery.ipynb`) was stored with a clean run at commit `d5e8d1e` but was not re-executed in this audit (no notebook runner is installed). The geolocation CSV-to-Parquet step was tested on a CSV regenerated from the Parquet file, not on Kaggle's original download.
+**Not reproduced:** the discovery notebook (`notebooks/01_dataset_discovery.ipynb`) was stored with a clean run at commit `d5e8d1e` but was not re-executed in this audit (no notebook runner is installed). (Since superseded: the Parquet conversion was removed and the warehouse is built from the CSV; see the 2026-10-16 addendum.)
 
 ## 3. Security
 
@@ -114,6 +114,10 @@ Later the same day, interactive marimo versions of both notebooks were added (`n
 - **Raw data restored after the merge deleted it from disk** (it was still tracked on `main`): a warehouse rebuilt from the restored files has the same row counts in every table and identical content hashes on the facts, with 22/22 checks.
 
 - **Knowledge graph:** updated with the code and the 12 changed documents (890 nodes, 1,680 edges, 70 communities, 40 labelled). `.graphifyignore` keeps Power BI report JSON, marimo caches and the generated mock-up out of it, which removed about 800 noise nodes. The marimo session caches (1.9 MB of stored outputs) had been committed by mistake and are now untracked and git-ignored.
+
+### Addendum: geolocation read from CSV (DD-16)
+
+The CSV-to-Parquet conversion was removed (DD-16, which replaced DD-06): staging reads `olist_geolocation_dataset.csv` directly, with the zip prefix as text. A warehouse built from the CSV that the project owner placed in `data/` (1,000,163 rows, 19,015 zip prefixes, 245,733 starting with 0) has the same row count in every table and identical content in the four facts and `dim_geography` as the one built from the Parquet, and passes 22/22 checks. This also closes the open item about testing on Kaggle's original download, to the extent the file the owner supplied is that download.
 
 ### Addendum: Power BI (DD-15)
 

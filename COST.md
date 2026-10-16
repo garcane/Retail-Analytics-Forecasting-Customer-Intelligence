@@ -28,7 +28,7 @@ Measured on the development laptop (2026-10-13):
 | Run the forecast notebook (all cells) | about 15 seconds |
 | Drift analysis and recalibration | a few minutes each |
 
-Disk: about 79 MB of raw data (Kaggle CSVs, one Parquet), a 112 MB warehouse file and about 40 MB of Power BI data files, all git-ignored. Power BI Desktop is free; no Power BI service, gateway or licence is used, so the cost stays $0.
+Disk: about 79 MB of raw data (the nine Kaggle CSV files), a 112 MB warehouse file and about 40 MB of Power BI data files, all git-ignored. Power BI Desktop is free; no Power BI service, gateway or licence is used, so the cost stays $0.
 
 ## If the project moved to the cloud
 

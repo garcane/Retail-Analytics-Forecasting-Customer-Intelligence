@@ -18,6 +18,17 @@ SQL_DIR = ROOT / "sql"
 # Dimensions before facts (facts reference them); order within each layer is explicit on purpose.
 DIMENSIONS = ["dim_date", "dim_geography", "dim_customer", "dim_product", "dim_seller"]
 FACTS = ["fact_orders", "fact_order_items", "fact_payments", "fact_reviews"]
+RAW_FILES = [
+    "olist_customers_dataset.csv",
+    "olist_geolocation_dataset.csv",
+    "olist_order_items_dataset.csv",
+    "olist_order_payments_dataset.csv",
+    "olist_order_reviews_dataset.csv",
+    "olist_orders_dataset.csv",
+    "olist_products_dataset.csv",
+    "olist_sellers_dataset.csv",
+    "product_category_name_translation.csv",
+]
 
 
 def run_sql_file(con: duckdb.DuckDBPyConnection, path: Path, data_dir: Path) -> None:
@@ -25,24 +36,11 @@ def run_sql_file(con: duckdb.DuckDBPyConnection, path: Path, data_dir: Path) -> 
     con.execute(sql)
 
 
-def ensure_geolocation_parquet(con: duckdb.DuckDBPyConnection, data_dir: Path) -> None:
-    """Kaggle ships geolocation as CSV; staging reads Parquet. Convert once if only the CSV is present.
-
-    The zip prefix is forced to VARCHAR so leading zeros (e.g. '01046') survive.
-    """
-    parquet = data_dir / "olist_geolocation_dataset.parquet"
-    csv = data_dir / "olist_geolocation_dataset.csv"
-    if parquet.exists():
-        return
-    if not csv.exists():
-        raise FileNotFoundError(f"Neither {parquet.name} nor {csv.name} found in {data_dir}. See README.md section 1.")
-    con.execute(
-        f"""copy (
-                select * from read_csv('{csv.as_posix()}', header=true, quote='"',
-                                       types={{'geolocation_zip_code_prefix': 'VARCHAR'}})
-            ) to '{parquet.as_posix()}' (format parquet)"""
-    )
-    print(f"converted {csv.name} -> {parquet.name}")
+def check_raw_files(data_dir: Path) -> None:
+    """Fail early, with a pointer to the README, if any of the nine Kaggle files is missing."""
+    missing = [name for name in RAW_FILES if not (data_dir / name).exists()]
+    if missing:
+        raise FileNotFoundError(f"Missing in {data_dir}: {', '.join(missing)}. See README.md section 1.")
 
 
 def main() -> int:
@@ -53,7 +51,7 @@ def main() -> int:
 
     args.db.unlink(missing_ok=True)
     con = duckdb.connect(str(args.db))
-    ensure_geolocation_parquet(con, args.data_dir)
+    check_raw_files(args.data_dir)
 
     layers = [
         ("staging", sorted((SQL_DIR / "staging").glob("*.sql"))),

@@ -167,5 +167,5 @@ The DDL uses types that map directly, but the SQL needs dialect translation rath
 | `TIMESTAMP` (no time zone) | `DATETIME` |
 
 - Primary and foreign keys are informational in BigQuery (`NOT ENFORCED`); the validation queries become the real guard there.
-- DuckDB-specific constructs to translate: `read_csv(... columns = {...})` and `read_parquet` (replaced by an external or loaded table), the `${DATA_DIR}` token, `median`, `generate_series`, `strftime`, `date_diff`, `isodow`, `weekofyear`, `monthname`, and inline `REFERENCES`.
+- DuckDB-specific constructs to translate: `read_csv(... columns = {...})` (replaced by an external or loaded table), the `${DATA_DIR}` token, `median`, `generate_series`, `strftime`, `date_diff`, `isodow`, `weekofyear`, `monthname`, and inline `REFERENCES`.
 - Likely partition and cluster choices, to be confirmed against real query patterns: partition `fact_orders` by purchase date and `fact_order_items` by `purchase_date_key`; cluster on the most-filtered keys (`customer_key`, `seller_key`, `product_key`).

@@ -19,7 +19,7 @@ Later decisions can supersede earlier ones; when that happens the entry says so.
 | DD-03 | 2026-10-10 | Reviews keyed on (`review_id`, `order_id`) with a latest-review flag | Active |
 | DD-04 | 2026-10-10 | Revenue is measured from order items only | Active |
 | DD-05 | 2026-10-10 | Surrogate keys with an unknown member (-1) | Active |
-| DD-06 | 2026-10-10 | Convert geolocation CSV to Parquet in the build | Active |
+| DD-06 | 2026-10-10 | Convert geolocation CSV to Parquet in the build | Superseded by DD-16 |
 | DD-07 | 2026-10-11 | Customer segmentation is optional and may be dropped | Active |
 | DD-08 | 2026-10-11 | Add scikit-learn for the ML baselines | Active |
 | DD-09 | 2026-10-11 | Report backtest metrics as a per-month macro-average | Active |
@@ -28,6 +28,8 @@ Later decisions can supersede earlier ones; when that happens the entry says so.
 | DD-12 | 2026-10-13 | Close the late-delivery feature search; v1 is final. Forecast: recommend the simple averages | Active |
 | DD-13 | 2026-10-13 | Present the ML in Jupyter notebooks that call the tested `src/ml` code | Active |
 | DD-14 | 2026-10-13 | Add interactive marimo versions of the ML notebooks, keeping the Jupyter ones | Active |
+| DD-15 | 2026-10-15 | Deliver Power BI specification-first from one definition | Active |
+| DD-16 | 2026-10-16 | Read the geolocation CSV directly; no Parquet conversion | Active |
 
 ---
 
@@ -152,6 +154,8 @@ Evidence for these entries is in [docs/data/EDA_FINDINGS.md](docs/data/EDA_FINDI
 
 ### DD-06: Convert geolocation CSV to Parquet in the build
 
+**Superseded by DD-16 (2026-10-16).** Kept as history; the conversion no longer exists.
+
 - **Context:** Kaggle ships geolocation as a CSV (about 1M rows), but staging reads Parquet.
 - **Chosen:** `ensure_geolocation_parquet` in `build_warehouse.py` converts the CSV once if the Parquet file is missing. It keeps zip prefixes as text so leading zeros survive.
 - **Trade-offs:** Not yet tested against Kaggle's original download (see [README.md](README.md)).
@@ -238,3 +242,13 @@ Evidence for these entries is in [docs/data/EDA_FINDINGS.md](docs/data/EDA_FINDI
 - **Outcome (2026-10-15):** Desktop opened the generated project after two fixes (a measure sharing a name with a column ignoring case, and an empty key row in `dim_date`). The project owner then took over the layouts in Desktop, so the committed `.pbip` is the version Desktop saved (it adds `.platform` files, auto date tables and its own formatting) and is no longer compared with the generator. `build_pbip.py` refuses to overwrite an existing project without `--force`. `model_spec.py` still drives the data export, the specification and the mock-up, which will drift from the report as it is edited. The committed `DataFolder` is a placeholder.
 - **Cost / Security:** None; Desktop is free and the project holds no credentials. Review comment text is not exported.
 - **Rejected:** Hand-written project files (drift between the three); a `.pbix` (binary, cannot be generated or reviewed as text); custom visuals (extra dependencies, no benefit).
+
+### DD-16: Read the geolocation CSV directly; no Parquet conversion
+
+- **Context:** DD-06 converted the geolocation CSV to Parquet in the build because the file is large (about a million rows). In practice the CSV reads in about a second, the conversion added a code path, a test file and a README section, and the Parquet copy was an extra file that could go stale. The project owner removed the Parquet file and ran the discovery notebook on the CSV without problems.
+- **Options:** Keep the conversion; read the CSV directly.
+- **Chosen:** `sql/staging/stg_geolocation.sql` reads `olist_geolocation_dataset.csv` with a typed `read_csv(... columns = {...})`, like the other eight staging files, with the zip prefix as text so leading zeros survive. `ensure_geolocation_parquet` and its tests were removed; `build_warehouse.py` now only checks that the nine raw files exist (`check_raw_files`), and `tests/test_geolocation_staging.py` covers the staging SQL on a small CSV.
+- **Verification:** A warehouse built from the CSV has the same row count in every table and identical content in the four facts and `dim_geography` as the one built from the Parquet, and passes 22/22 checks. The discovery notebook ran end to end on the CSV.
+- **Trade-offs:** The build parses the CSV each time (a second or so) instead of reading a typed Parquet file. In pandas, `engine='pyarrow'` loses leading zeros in the zip column, so the notebook uses the default engine with `dtype=str`.
+- **Cost / Security:** None. The Power BI export still writes Parquet for its own large fact tables; that is unrelated and unchanged.
+- **Rejected:** Keeping both paths (more code for no benefit).

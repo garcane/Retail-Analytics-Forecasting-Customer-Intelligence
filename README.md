@@ -33,7 +33,6 @@ The least glamorous result is also the most useful one: **several well-motivated
 ## Where it is honestly unfinished
 
 - **The Power BI project was generated, then opened in Power BI Desktop, where it needed two fixes** (a measure that shared a name with a column, ignoring case, and an empty key row in the date table). It now loads. The dashboard's headline numbers have not yet been compared with the expected values listed in the specification's first-open checklist, and the report layouts are being refined by hand in Desktop.
-- **The geolocation conversion** (CSV to Parquet, done by the build) was tested on a CSV regenerated from the existing Parquet file, not on Kaggle's original download.
 - **The model is modest by design of the data.** A better late-delivery model would need information this dataset does not contain, such as carrier or warehouse data.
 - **Everything is a snapshot.** The data ends in 2018, and the forecast and model results describe that period only.
 
@@ -84,13 +83,9 @@ olist_sellers_dataset.csv
 product_category_name_translation.csv
 ```
 
-**Geolocation: download the CSV, the build converts it for you.** Kaggle ships geolocation as a CSV with about a million rows, by far the largest file in the dataset. The project stores it as Parquet (16.6 MB here, compressed and typed), and the staging SQL reads `data/olist_geolocation_dataset.parquet`. You do not convert it yourself:
+**Nothing needs converting.** All nine files, including the large geolocation file (about a million rows), are read directly as CSV; the staging SQL keeps zip prefixes as text so leading zeros such as `01046` survive. If a file is missing, the build stops with an error that names it and points back to this section.
 
-1. Put the original `olist_geolocation_dataset.csv` in `data/` with the other files.
-2. Run the build (step 2). On the first run it prints `converted olist_geolocation_dataset.csv -> olist_geolocation_dataset.parquet`, keeping zip prefixes as text so leading zeros such as `01046` survive.
-3. Later runs find the Parquet file and skip the step. You can delete the CSV afterwards if you want the space back.
-
-If neither file is present, the build stops with an error that points back to this section. See "Where it is honestly unfinished" above for how far this step has been tested.
+If you read the geolocation CSV in pandas yourself, pass `dtype={'geolocation_zip_code_prefix': 'str'}` and use the default engine: with `engine='pyarrow'` pandas parses the column as numbers first and the leading zeros are already lost.
 
 ### 2. Set up and build the warehouse
 

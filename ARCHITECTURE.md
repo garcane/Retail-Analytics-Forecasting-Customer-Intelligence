@@ -11,7 +11,7 @@ This is a local implementation of what would have been built on BigQuery. It is 
 | Dimension SQL | `sql/dimensions/` | `dim_date`, `dim_geography`, `dim_customer`, `dim_product`, `dim_seller`, each with surrogate keys and an unknown member (DD-05). | Built |
 | Fact SQL | `sql/facts/` | `fact_orders`, `fact_order_items`, `fact_payments`, `fact_reviews`, each with one stated grain (DD-01). | Built |
 | Validation SQL | `sql/validation/checks.sql` | 22 reconciliation checks against the raw data: row counts, money totals, fan-out and known EDA findings. | Built |
-| Build script | `src/transformation/build_warehouse.py` | Deletes and recreates `warehouse.duckdb`. `ensure_geolocation_parquet` converts geolocation CSV to Parquet if needed. `run_sql_file` substitutes `${DATA_DIR}` and runs each file. `main` runs the layers in a fixed order, prints row counts, runs the checks and exits 1 if any fail. | Built |
+| Build script | `src/transformation/build_warehouse.py` | Deletes and recreates `warehouse.duckdb`. `check_raw_files` stops early, pointing at the README, if any of the nine Kaggle files is missing. `run_sql_file` substitutes `${DATA_DIR}` and runs each file. `main` runs the layers in a fixed order, prints row counts, runs the checks and exits 1 if any fail. | Built |
 | Warehouse | `warehouse.duckdb` | The single local database file. Git-ignored and fully reproducible from `data/` and `sql/`. | Built |
 | Schema diagram | `scripts/visualize_schema.py` | Draws `docs/data/star_schema.png` from the foreign keys in the database catalogue, so the diagram cannot drift from the DDL. | Built |
 | Notebooks | `notebooks/` | `01_dataset_discovery.ipynb` holds the EDA evidence. `02_late_delivery_model.ipynb` and `03_weekly_forecast.ipynb` present the ML work with stored charts; `notebooks/marimo/` holds interactive marimo versions of the same two. All import the tested modules in `src/ml/`. Written for the project's `.venv` (`ipykernel` and `marimo` are declared dev dependencies). | Built |
@@ -23,11 +23,8 @@ This is a local implementation of what would have been built on BigQuery. It is 
 
 ```mermaid
 flowchart LR
-    K[Kaggle download] --> D[data/<br/>CSV + Parquet]
-    D --> G{geolocation<br/>Parquet exists?}
-    G -- no --> C[convert CSV to Parquet]
-    G -- yes --> S
-    C --> S[sql/staging]
+    K[Kaggle download] --> D[data/<br/>nine CSV files]
+    D --> S[sql/staging]
     S --> DIM[sql/dimensions]
     DIM --> F[sql/facts]
     F --> V[sql/validation/checks.sql]
@@ -47,7 +44,7 @@ flowchart LR
 ## Storage
 
 - One DuckDB file, rebuilt from scratch on every run, so there is no migration logic and no state to drift.
-- Raw files stay in their Kaggle format, except geolocation, which is converted to Parquet once (DD-06).
+- Raw files stay in their Kaggle format (CSV); nothing is converted. Geolocation, the largest at about a million rows, is read directly (DD-16, which replaced DD-06).
 - Metrics are written as small JSON files in `reports/`, which are committed so results stay visible. No model artefacts are saved yet; when they are, they go in a git-ignored folder.
 
 ## Processing
@@ -80,7 +77,7 @@ Feature and leakage rules are in [docs/ml/LEAKAGE_ANALYSIS.md](docs/ml/LEAKAGE_A
 | Failure | Effect | Guard |
 |---|---|---|
 | A raw file is missing or renamed | Staging fails with a DuckDB error | README lists the nine expected files; the geolocation step raises a clear `FileNotFoundError` |
-| Kaggle changes the file schema | Explicit column lists in staging fail, or counts change | Typed `read_csv(... columns=...)` in the eight CSV staging files (geolocation reads Parquet); row-count and money checks |
+| Kaggle changes the file schema | Explicit column lists in staging fail, or counts change | Typed `read_csv(... columns=...)` in the nine CSV staging files; row-count and money checks |
 | Logic error in a transform | Silent revenue or row drift | 22 reconciliation checks; primary-key and foreign-key constraints; the build exits 1 |
 | Geolocation conversion from the original Kaggle CSV | Untested path (only tested on a regenerated CSV) | Documented in README; check this step first if the build fails there |
 | Notebook started in `notebooks/` uses a relative `data/` path | File not found | Build paths from the repo root |

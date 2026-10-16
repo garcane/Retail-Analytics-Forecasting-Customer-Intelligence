@@ -43,7 +43,7 @@ Not verified from a primary source: whether the Kaggle licence text has any extr
 
 Relationships: `orders → customers` (1:1 on `customer_id`), `orders → items / payments / reviews` (1:N on `order_id`), `items → products`, `items → sellers`, `products → translation`. `customers`/`sellers` link to `geolocation` only through zip-code prefix (many-to-many in raw form).
 
-**Size:** ~80 MB on disk (CSV + one Parquet). This is the single most important fact for architecture: the whole dataset fits in laptop memory and far inside every GCP free-tier limit.
+**Size:** ~80 MB on disk (nine CSV files). This is the single most important fact for architecture: the whole dataset fits in laptop memory and far inside every GCP free-tier limit.
 
 **Types:** all timestamps parse as `TIMESTAMP`; zip prefixes must be read as `VARCHAR` (leading zeros). Two column names are misspelled in the source (`product_name_lenght`, `product_description_lenght`) — normalise in staging, do not edit raw.
 
