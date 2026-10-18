@@ -600,10 +600,10 @@
     "semantic_hash": "a1a323b1310cf41ead38a03c4c70a1b0"
   },
   "powerbi/README.md": {
-    "mtime": 1792073901.4940126,
-    "seen": 1792163279.4701645,
-    "ast_hash": "18c4a6a6e362fb97895e7735f8209b66",
-    "semantic_hash": "18c4a6a6e362fb97895e7735f8209b66"
+    "mtime": 1792341132.543527,
+    "seen": 1792341166.3340302,
+    "ast_hash": "e7a658c3df37cfd87cd8c172c9095389",
+    "semantic_hash": ""
   },
   "tests/test_geolocation_staging.py": {
     "mtime": 1792166441.4315102,
@@ -615,6 +615,30 @@
     "mtime": 1792167904.6692092,
     "seen": 1792168020.0892117,
     "ast_hash": "0b1c241bc66933f5c70c3cff1015197f",
+    "semantic_hash": ""
+  },
+  "powerbi/images/delivery.png": {
+    "mtime": 1792340566.0,
+    "seen": 1792341166.3340302,
+    "ast_hash": "5bc07d2ee54043019137f8804b19cb54",
+    "semantic_hash": ""
+  },
+  "powerbi/images/forecast.png": {
+    "mtime": 1792340568.0,
+    "seen": 1792341166.3340302,
+    "ast_hash": "c58517530a0a6595ea0aef044a7323f7",
+    "semantic_hash": ""
+  },
+  "powerbi/images/risk.png": {
+    "mtime": 1792340566.0,
+    "seen": 1792341166.3340302,
+    "ast_hash": "f580e445055d54c18a692d2f6a3f669c",
+    "semantic_hash": ""
+  },
+  "powerbi/images/sales.png": {
+    "mtime": 1792340566.0,
+    "seen": 1792341166.3340302,
+    "ast_hash": "608da4bbbbef8503251390360e43fb8a",
     "semantic_hash": ""
   }
 }

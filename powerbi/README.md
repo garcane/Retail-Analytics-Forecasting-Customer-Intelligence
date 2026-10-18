@@ -10,6 +10,26 @@ in [docs/powerbi/](../docs/powerbi/):
 | [DASHBOARD_MOCKUP.html](../docs/powerbi/DASHBOARD_MOCKUP.html) | An interactive picture of the finished dashboard with real numbers (open it in any browser; not Power BI) |
 | `RetailAnalytics.pbip` | The project: `RetailAnalytics.SemanticModel/` (tables, relationships, measures as TMDL) and `RetailAnalytics.Report/` (pages and visuals as PBIR) |
 
+## Screenshots
+
+The four pages, rendered from the mock-up with the same numbers as the dashboard:
+
+![Sales overview](images/sales.png)
+
+*Sales overview — net revenue, net orders, average order value, freight % of revenue and buying customers, with revenue by month, category and customer state.*
+
+![Delivery and reviews](images/delivery.png)
+
+*Delivery and reviews — late rate, median delivery days, average review score, share promised under 20 days, review score by delay bucket and delivery by customer state.*
+
+![Late-delivery risk](images/risk.png)
+
+*Late-delivery risk — lift and recall when flagging the riskiest X% of orders, lift by month, the riskiest orders and late rate by state.*
+
+![Weekly forecast](images/forecast.png)
+
+*Weekly forecast — forecast against actual by method, mean absolute error by method and the method comparison.*
+
 **Status: opens and loads in Power BI Desktop.** Two first-open problems were found and fixed (see below), and the committed files are now the ones Desktop saved, so **Desktop owns the report and model from here**: edit them there.  The project was generated on a machine without Desktop. On the first open Desktop rejected it with "The 'Forecast' measure cannot be created because a column with the same name already exists" (Power BI compares names ignoring case, and the table had a column `forecast`). The measures `Forecast` and `Actual` are now `Forecast Value` and `Actual Value`, and a test checks names ignoring case. Desktop reports one model error at a time, so another may still appear; the report pages have not been confirmed to load either.
 What was checked instead: every JSON file validates against Microsoft's published schemas, every table, column and measure
 named anywhere exists, and the exported data reproduces the warehouse figures (`tests/test_powerbi_project.py`,
