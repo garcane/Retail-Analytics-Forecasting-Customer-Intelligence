@@ -2,7 +2,7 @@
 
 The decision log for the local DuckDB build. Each entry follows the template in the project brief. **User decisions** (D-001 to D-008) were made by the project owner. **Design decisions** (DD-01 onwards) were made while building the warehouse, and each one names the evidence behind it.
 
-Later decisions can supersede earlier ones; when that happens the entry says so. The original cloud brief (`Cloud Portfolio — Master Agent Prompt.md`, `GCP.md`, the Retail Analytics project document) is kept unchanged on purpose, so where a decision below contradicts it, the decision wins.
+Later decisions can supersede earlier ones; when that happens the entry says so. The original cloud brief (`Cloud Portfolio — Master Agent Prompt.md`, `GCP Retail Project Local vs Cloud Architecture.md`, the Retail Analytics project document) is kept unchanged on purpose, so where a decision below contradicts it, the decision wins.
 
 | ID | Date | Decision | Status |
 |---|---|---|---|
@@ -263,7 +263,7 @@ Evidence for these entries is in [docs/data/EDA_FINDINGS.md](docs/data/EDA_FINDI
 - **Verified:** Against the official GoogleSQL reference, BigQuery's joins are `INNER`, `LEFT`, `RIGHT`, `FULL` and `CROSS`, with no `ASOF JOIN` (checked 2026-10-16), so the ML features need a rewrite. The other function equivalents and the command flags are from general knowledge and marked "verify" in the guide.
 - **Trade-offs:** The guide can drift from the code and from Google's products; it is a plan, not a record, and says so. No prices are quoted.
 - **Cost / Security:** None now. The guide starts with a budget alert and ends with teardown, and keeps credentials out of the repository.
-- **Rejected:** Building a BigQuery version now (untestable here, unpriced); keeping the mapping only in `GCP.md`, whose local column lists tools (Beam, MLflow, FastAPI, Prometheus) that the project decided not to use.
+- **Rejected:** Building a BigQuery version now (untestable here, unpriced); keeping the mapping only in `GCP Retail Project Local vs Cloud Architecture.md`, whose local column lists tools (Beam, MLflow, FastAPI, Prometheus) that the project decided not to use.
 
 ### DD-18: The staging layer is translated to BigQuery SQL in sql/bigquery/
 

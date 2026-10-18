@@ -75,7 +75,7 @@ See [ARCHITECTURE.md](../ARCHITECTURE.md) and [DECISIONS.md](../DECISIONS.md). A
 | [docs/LESSONS_LEARNED.md](LESSONS_LEARNED.md) | What the project taught |
 | [PROJECT_STATUS.md](../PROJECT_STATUS.md), [docs/HANDOFF.md](HANDOFF.md) | Current state for a new reader |
 
-Known inconsistency: the original brief documents (`Cloud Portfolio — Master Agent Prompt.md`, `GCP.md`, the Retail Analytics document) still describe BigQuery, Dataflow and Vertex AI. They were kept unchanged on purpose.
+Known inconsistency: the original brief documents (`Cloud Portfolio — Master Agent Prompt.md`, `GCP Retail Project Local vs Cloud Architecture.md`, the Retail Analytics document) still describe BigQuery, Dataflow and Vertex AI. They were kept unchanged on purpose.
 
 ## 8. Evidence
 
