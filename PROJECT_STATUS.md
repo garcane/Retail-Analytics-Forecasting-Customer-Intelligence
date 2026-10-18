@@ -51,5 +51,5 @@ D-001 to D-008 (user) and DD-01 to DD-17 (design) are in [DECISIONS.md](DECISION
 
 - The ML result is modest and documented as such; a better model would need information the dataset lacks (see the model card).
 - Six test months and 85 forecast weeks are small samples.
-- The original brief documents (`Cloud Portfolio — Master Agent Prompt.md`, `GCP.md`, the Retail Analytics document) still describe BigQuery, Dataflow, Vertex AI and monitoring services. They are kept unchanged by design.
+- The original brief documents (`Cloud Portfolio — Master Agent Prompt.md`, `GCP Retail Project Local vs Cloud Architecture.md`, the Retail Analytics document) still describe BigQuery, Dataflow, Vertex AI and monitoring services. They are kept unchanged by design.
 - The raw data remains in earlier commits (history not rewritten, D-008).

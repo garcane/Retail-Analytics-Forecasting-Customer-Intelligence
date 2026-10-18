@@ -4,7 +4,7 @@ _Written 2026-10-10 to consolidate several separate Claude chats into one; updat
 
 ## What this project is now
 
-A **local implementation of what would have been built on BigQuery**. DuckDB replaces Google Cloud and BigQuery. The original cloud brief (Master Agent Prompt, `GCP.md`, the Retail Analytics project document) is deliberately left unchanged, because parts of it may come back later.
+A **local implementation of what would have been built on BigQuery**. DuckDB replaces Google Cloud and BigQuery. The original cloud brief (Master Agent Prompt, `GCP Retail Project Local vs Cloud Architecture.md`, the Retail Analytics project document) is deliberately left unchanged, because parts of it may come back later.
 
 ## Decisions (made by the user)
 

@@ -141,7 +141,7 @@ Recommendation: **A (or B) as the supervised problem, plus the weekly forecast; 
 5. **`pyproject.toml`** has duckdb/pandas/polars/pyarrow/matplotlib/seaborn only. Missing for later phases: scikit-learn, xgboost, mlflow, pytest, google-cloud-* libraries, apache-beam (if used), a SQL/dbt tool. `uv.lock` and `pyproject.toml` already have uncommitted modifications; I changed nothing.
 6. **`gcloud` / `bq` / `gsutil` are not installed.** No evidence yet of a GCP project, billing account, or credentials.
 7. **Python 3.13** is pinned. **UNVERIFIED:** whether the current Apache Beam release and Dataflow worker images support Python 3.13, and Beam on native Windows has historically been awkward. Check before committing to Dataflow (fallbacks: WSL, Docker, Cloud Shell, or a lower Python for the pipeline package only).
-8. **`GCP.md` local-equivalent stack is heavier than the brief needs.** Prometheus + Grafana + FastAPI locally conflicts with Master Prompt §31 ("do not overengineer") given that batch inference is the preferred path. Suggest MLflow only for local tracking; skip Prometheus/Grafana.
+8. **`GCP Retail Project Local vs Cloud Architecture.md` local-equivalent stack is heavier than the brief needs.** Prometheus + Grafana + FastAPI locally conflicts with Master Prompt §31 ("do not overengineer") given that batch inference is the preferred path. Suggest MLflow only for local tracking; skip Prometheus/Grafana.
 
 ## 9. Architecture assessment
 
@@ -166,7 +166,7 @@ Cloud Monitoring (job health, logs-based metrics, budget alerts); drift demo lab
 ```
 
 ### Dataflow: honest assessment
-For ~80 MB, **BigQuery load jobs + SQL (or even local DuckDB) do everything Dataflow would, faster and cheaper.** Dataflow is justifiable only as a bounded, deliberate demonstration (e.g. one Beam batch job: validate and normalise raw files → typed Parquet in `staging/`, with a documented three-way comparison: local vs BigQuery SQL vs Dataflow). GCP.md's Direct-Runner-to-Dataflow-Runner portability is a real talking point. Cost is small (cents to low dollars) but complexity and the Python 3.13 / Windows issue above are real. This is an **approval gate** (child prompt §36: "introducing unnecessary services").
+For ~80 MB, **BigQuery load jobs + SQL (or even local DuckDB) do everything Dataflow would, faster and cheaper.** Dataflow is justifiable only as a bounded, deliberate demonstration (e.g. one Beam batch job: validate and normalise raw files → typed Parquet in `staging/`, with a documented three-way comparison: local vs BigQuery SQL vs Dataflow). The Direct-Runner-to-Dataflow-Runner portability argued for in `GCP Retail Project Local vs Cloud Architecture.md` is a real talking point. Cost is small (cents to low dollars) but complexity and the Python 3.13 / Windows issue above are real. This is an **approval gate** (child prompt §36: "introducing unnecessary services").
 
 ### Options table
 
