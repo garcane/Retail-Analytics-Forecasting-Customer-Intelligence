@@ -1,12 +1,12 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
   "name": "r_lift_month",
   "position": {
-    "x": 20,
-    "y": 172,
+    "x": 16,
+    "y": 288,
     "z": 9000,
-    "height": 250,
-    "width": 620,
+    "height": 160,
+    "width": 624,
     "tabOrder": 9000
   },
   "visual": {
@@ -53,7 +53,6 @@
         }
       }
     },
-    "drillFilterOtherVisuals": true,
     "visualContainerObjects": {
       "title": [
         {
@@ -74,7 +73,53 @@
             }
           }
         }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
       ]
-    }
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "e5c8cdb2d47ab205dfe8",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "dim_date"
+              }
+            },
+            "Property": "year_month"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "fdf9101190549bfee7c7",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "late_delivery_scores"
+              }
+            },
+            "Property": "Lift"
+          }
+        },
+        "type": "Advanced"
+      }
+    ]
   }
 }

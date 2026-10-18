@@ -1,12 +1,12 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
   "name": "d_state_table",
   "position": {
-    "x": 650,
+    "x": 656,
     "y": 432,
     "z": 10000,
-    "height": 280,
-    "width": 610,
+    "height": 272,
+    "width": 608,
     "tabOrder": 10000
   },
   "visual": {
@@ -119,5 +119,65 @@
       ]
     },
     "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "6ba9b5fa5f50abf4b7b4",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "dim_geography"
+              }
+            },
+            "Property": "state"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "0985b85c7f23a1c332c5",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "fact_orders"
+              }
+            },
+            "Property": "Delivered Orders"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "f0d2233d5b33b3e932f4",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "fact_orders"
+              }
+            },
+            "Property": "Late Rate %"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "150682a9f38ec0b7c44e",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "fact_orders"
+              }
+            },
+            "Property": "Median Delivery Days"
+          }
+        },
+        "type": "Advanced"
+      }
+    ]
   }
 }

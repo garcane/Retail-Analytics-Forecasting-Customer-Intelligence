@@ -1,12 +1,12 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
   "name": "r_state_bar",
   "position": {
-    "x": 650,
-    "y": 172,
+    "x": 656,
+    "y": 288,
     "z": 10000,
-    "height": 250,
-    "width": 610,
+    "height": 416,
+    "width": 608,
     "tabOrder": 10000
   },
   "visual": {
@@ -105,8 +105,67 @@
             }
           }
         }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
       ]
     },
     "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "e722d4b088d94891a646",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "late_delivery_scores"
+              }
+            },
+            "Property": "customer_state"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "f5116b179c4d3f4bd549",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "late_delivery_scores"
+              }
+            },
+            "Property": "Late Rate Among Flagged"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "057a0085a470f62be906",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "late_delivery_scores"
+              }
+            },
+            "Property": "Late Rate (scored)"
+          }
+        },
+        "type": "Advanced"
+      }
+    ]
   }
 }

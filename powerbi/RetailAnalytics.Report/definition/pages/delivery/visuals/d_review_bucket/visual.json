@@ -1,12 +1,12 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
   "name": "d_review_bucket",
   "position": {
-    "x": 20,
+    "x": 16,
     "y": 432,
     "z": 9000,
-    "height": 280,
-    "width": 620,
+    "height": 272,
+    "width": 624,
     "tabOrder": 9000
   },
   "visual": {
@@ -93,5 +93,37 @@
       ]
     },
     "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "cdd06350096ba4769b10",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "fact_orders"
+              }
+            },
+            "Property": "delay_bucket"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "482b8005d06f50fb6056",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "fact_reviews"
+              }
+            },
+            "Property": "Average Review Score"
+          }
+        },
+        "type": "Advanced"
+      }
+    ]
   }
 }

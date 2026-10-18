@@ -1,12 +1,12 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
   "name": "r_table",
   "position": {
-    "x": 20,
-    "y": 432,
+    "x": 16,
+    "y": 464,
     "z": 11000,
-    "height": 280,
-    "width": 1240,
+    "height": 240,
+    "width": 624,
     "tabOrder": 11000
   },
   "visual": {
@@ -126,6 +126,57 @@
         ]
       }
     },
+    "objects": {
+      "columnWidth": [
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "77.8D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "late_delivery_scores.is_late"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "110.2D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "late_delivery_scores.category"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "131.2D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "late_delivery_scores.order_id"
+          }
+        }
+      ],
+      "columnHeaders": [
+        {
+          "properties": {}
+        }
+      ]
+    },
     "visualContainerObjects": {
       "title": [
         {
@@ -149,5 +200,93 @@
       ]
     },
     "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "07a74c6a47bccccb532c",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "late_delivery_scores"
+              }
+            },
+            "Property": "order_id"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "2f51561949eaa10dd745",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "late_delivery_scores"
+              }
+            },
+            "Property": "month"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "e611f02f6a6e597ebd04",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "late_delivery_scores"
+              }
+            },
+            "Property": "risk_score"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "c3dc5dd699e71a42dfa0",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "late_delivery_scores"
+              }
+            },
+            "Property": "customer_state"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "6bf75aebbf5af4138569",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "late_delivery_scores"
+              }
+            },
+            "Property": "category"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "c6c7493c59fdc6716e34",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "late_delivery_scores"
+              }
+            },
+            "Property": "is_late"
+          }
+        },
+        "type": "Advanced"
+      }
+    ]
   }
 }

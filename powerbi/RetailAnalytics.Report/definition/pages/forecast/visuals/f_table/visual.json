@@ -1,12 +1,12 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
   "name": "f_table",
   "position": {
-    "x": 650,
-    "y": 482,
+    "x": 656,
+    "y": 496,
     "z": 8000,
-    "height": 230,
-    "width": 610,
+    "height": 208,
+    "width": 608,
     "tabOrder": 8000
   },
   "visual": {
@@ -104,5 +104,51 @@
       ]
     },
     "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "e44173ce89ac21bf85c1",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "forecast_backtest"
+              }
+            },
+            "Property": "method"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "98b2ebffeaddfbaefe56",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "forecast_backtest"
+              }
+            },
+            "Property": "MAE"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "b08de77dce5800fe9ad0",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "forecast_backtest"
+              }
+            },
+            "Property": "MAE vs Naive"
+          }
+        },
+        "type": "Advanced"
+      }
+    ]
   }
 }
