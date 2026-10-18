@@ -101,6 +101,8 @@ bq load --source_format=CSV --skip_leading_rows=1 --allow_quoted_newlines \
 - The zip-code prefix columns must be `STRING`, so that values like `01046` keep their zero (the local staging does the same).
 - Geolocation is the largest file (about 1,000,163 rows). It loads the same way.
 
+**Translated alternative (DD-18):** `sql/bigquery/raw/` plus `sql/bigquery/staging/` express this step as SQL instead — one CSV external table per file with the same column lists (all `STRING`), and the nine `stg_*` views with the casts. Same object names and schema as the `bq load` route; pick one, not both. Like everything in `sql/bigquery/`, it has never been run.
+
 ### Step 5. Curated layer: translate the SQL
 
 Create a parallel folder, `sql/bigquery/`, with the **same file names** as `sql/`, so each translated file can be compared with its DuckDB original. Keep the layer order: dimensions before facts, because facts reference them.
@@ -110,7 +112,7 @@ The constructs that need changing, with how many files use them (counted in `sql
 | DuckDB (this repo) | Where | GoogleSQL starting point (verify) |
 |---|---|---|
 | `x::TYPE` casts | 14 files | `CAST(x AS TYPE)` (`SAFE_CAST` where a bad value should become null). Types per the table in [DATA_MODEL.md](data/DATA_MODEL.md#moving-to-bigquery): `VARCHAR` to `STRING`, `DECIMAL(12,2)` to `NUMERIC`, `DOUBLE` to `FLOAT64`, `BOOLEAN` to `BOOL`, `TIMESTAMP` to `DATETIME` |
-| `read_csv(... columns = {...})` | 9 staging files | Replaced by the `bq load` in step 4; staging becomes tables |
+| `read_csv(... columns = {...})` | 9 staging files | Replaced by the `bq load` in step 4; staging becomes tables. Translated as SQL too (DD-18): the column lists live in `sql/bigquery/raw/`, the casts in `sql/bigquery/staging/` |
 | `strftime(ts, '%Y%m%d')` | 6 files, 13 uses | `FORMAT_DATE('%Y%m%d', DATE(ts))` or `FORMAT_DATETIME(...)`; the date key is an integer, so wrap in `CAST(... AS INT64)` |
 | `date_diff('second', start, end)` | 3 files, 6 uses | `DATETIME_DIFF(end, start, SECOND)`. **The argument order flips**: end first. A swap here silently negates every delivery duration |
 | `median(x)` | 4 files | Exact: `PERCENTILE_CONT(x, 0.5) OVER (...)` (an analytic function, so grouped medians need a rewrite). Approximate: `APPROX_QUANTILES(x, 2)[OFFSET(1)]`. Expect small differences if you choose approximate |
@@ -120,7 +122,7 @@ The constructs that need changing, with how many files use them (counted in `sql
 | `monthname(d)`, `weekofyear(d)` | `dim_date.sql` | `FORMAT_DATE('%B', d)`, `EXTRACT(ISOWEEK FROM d)` |
 | `isodow(d)` | 2 files | `EXTRACT(DAYOFWEEK FROM d)` counts Sunday as 1, so ISO weekday is `MOD(EXTRACT(DAYOFWEEK FROM d) + 5, 7) + 1` |
 | `PRIMARY KEY`, inline `REFERENCES` | dimension and fact DDL | `PRIMARY KEY (...) NOT ENFORCED`, `FOREIGN KEY (...) REFERENCES ... NOT ENFORCED`. BigQuery does not enforce them, so the validation checks become the real guard |
-| `${DATA_DIR}` token | the 9 staging files | Disappears with `read_csv` (step 4). Other layers refer to tables by name; add a `${PROJECT}.${DATASET}` token substituted the same way if you want one SQL set for several projects |
+| `${DATA_DIR}` token | the 9 staging files | Disappears with `read_csv` (step 4). Other layers refer to tables by name; `sql/bigquery/` substitutes `${PROJECT}` for table names and `${BUCKET}` for the raw URIs, the same way `build_warehouse.py` substitutes `${DATA_DIR}` (DD-18) |
 | `asof left join` | `sql/ml/late_delivery_features.sql`, 4 joins | **No equivalent. See step 6** |
 
 ### Step 6. Features: rewrite the `ASOF` joins
@@ -176,7 +178,7 @@ From [DATA_MODEL.md](data/DATA_MODEL.md#moving-to-bigquery): partition `fact_ord
 
 ## 6. A suggested layout for the cloud twin
 
-Nothing below exists yet; it keeps the two builds easy to compare.
+The staging layer exists already (`sql/bigquery/raw/`, `sql/bigquery/staging/`, DD-18); the rest is not translated yet. The layout below keeps the two builds easy to compare.
 
 ```
 sql/                      local DuckDB SQL (unchanged)
