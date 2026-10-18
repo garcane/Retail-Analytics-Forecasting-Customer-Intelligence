@@ -78,9 +78,9 @@
     "semantic_hash": ""
   },
   "DECISIONS.md": {
-    "mtime": 1792167946.0487118,
-    "seen": 1792168020.0892117,
-    "ast_hash": "5f325642ea8b2ccd378956b09d16c3c6",
+    "mtime": 1792342760.2461865,
+    "seen": 1792342932.6067107,
+    "ast_hash": "3446e74a5b9e1d5545c6cebecec9bef8",
     "semantic_hash": ""
   },
   "PROJECT_STATUS.md": {
@@ -612,9 +612,9 @@
     "semantic_hash": ""
   },
   "docs/MIGRATING_TO_CLOUD.md": {
-    "mtime": 1792167904.6692092,
-    "seen": 1792168020.0892117,
-    "ast_hash": "0b1c241bc66933f5c70c3cff1015197f",
+    "mtime": 1792342775.4214904,
+    "seen": 1792342932.6067107,
+    "ast_hash": "404ce2a40926f493b83e997b362cb1ee",
     "semantic_hash": ""
   },
   "powerbi/images/delivery.png": {
@@ -639,6 +639,126 @@
     "mtime": 1792340566.0,
     "seen": 1792341166.3340302,
     "ast_hash": "608da4bbbbef8503251390360e43fb8a",
+    "semantic_hash": ""
+  },
+  "sql/bigquery/raw/olist_customers_dataset.sql": {
+    "mtime": 1792342571.1057036,
+    "seen": 1792342932.6057096,
+    "ast_hash": "09678c00ce88575d2bfc707dc243eaea",
+    "semantic_hash": ""
+  },
+  "sql/bigquery/raw/olist_geolocation_dataset.sql": {
+    "mtime": 1792342574.6322734,
+    "seen": 1792342932.6057096,
+    "ast_hash": "16f2610e745b352a9b28d75710534b93",
+    "semantic_hash": ""
+  },
+  "sql/bigquery/raw/olist_order_items_dataset.sql": {
+    "mtime": 1792342577.691637,
+    "seen": 1792342932.6057096,
+    "ast_hash": "b95af79f66602e6da75318a833cc07c6",
+    "semantic_hash": ""
+  },
+  "sql/bigquery/raw/olist_order_payments_dataset.sql": {
+    "mtime": 1792342581.617887,
+    "seen": 1792342932.6057096,
+    "ast_hash": "9c5c70bc8e4a72db5407439edfd9c20e",
+    "semantic_hash": ""
+  },
+  "sql/bigquery/raw/olist_order_reviews_dataset.sql": {
+    "mtime": 1792342584.8402784,
+    "seen": 1792342932.6057096,
+    "ast_hash": "0a039b16f79fd8064f1ab1bfb85b5e7b",
+    "semantic_hash": ""
+  },
+  "sql/bigquery/raw/olist_orders_dataset.sql": {
+    "mtime": 1792342616.6182404,
+    "seen": 1792342932.6057096,
+    "ast_hash": "cd2cd5df1b302eb4f6d590f60603ac5a",
+    "semantic_hash": ""
+  },
+  "sql/bigquery/raw/olist_products_dataset.sql": {
+    "mtime": 1792342619.9849505,
+    "seen": 1792342932.6057096,
+    "ast_hash": "40931a18cc4493e1c4827389d71bc737",
+    "semantic_hash": ""
+  },
+  "sql/bigquery/raw/olist_sellers_dataset.sql": {
+    "mtime": 1792342623.0696912,
+    "seen": 1792342932.6057096,
+    "ast_hash": "98722a2e02571ec761b9533bf9c82dde",
+    "semantic_hash": ""
+  },
+  "sql/bigquery/raw/product_category_name_translation.sql": {
+    "mtime": 1792342625.8193278,
+    "seen": 1792342932.6057096,
+    "ast_hash": "b504f9203e114c422a4820eb7b6683ce",
+    "semantic_hash": ""
+  },
+  "sql/bigquery/staging/stg_category_translation.sql": {
+    "mtime": 1792342691.538932,
+    "seen": 1792342932.6057096,
+    "ast_hash": "9b3f14a8c26dcb1861b5d1f058dba77d",
+    "semantic_hash": ""
+  },
+  "sql/bigquery/staging/stg_customers.sql": {
+    "mtime": 1792342647.5262897,
+    "seen": 1792342932.6057096,
+    "ast_hash": "3c62cc8b6d721f536e2020de11863d00",
+    "semantic_hash": ""
+  },
+  "sql/bigquery/staging/stg_geolocation.sql": {
+    "mtime": 1792342650.7485487,
+    "seen": 1792342932.6057096,
+    "ast_hash": "59d094394d5da1b84a42dfcfaf760865",
+    "semantic_hash": ""
+  },
+  "sql/bigquery/staging/stg_order_items.sql": {
+    "mtime": 1792342653.7382402,
+    "seen": 1792342932.6057096,
+    "ast_hash": "99ebab46572cf161b7a6b9e4084928b5",
+    "semantic_hash": ""
+  },
+  "sql/bigquery/staging/stg_order_payments.sql": {
+    "mtime": 1792342656.534038,
+    "seen": 1792342932.6057096,
+    "ast_hash": "a585ec33ecbaf703b98026664dabb7bf",
+    "semantic_hash": ""
+  },
+  "sql/bigquery/staging/stg_order_reviews.sql": {
+    "mtime": 1792342683.2203305,
+    "seen": 1792342932.6057096,
+    "ast_hash": "e080bc1154e56043399a961deece56eb",
+    "semantic_hash": ""
+  },
+  "sql/bigquery/staging/stg_orders.sql": {
+    "mtime": 1792342644.627719,
+    "seen": 1792342932.6057096,
+    "ast_hash": "98bcd979d99db8830730507295c81033",
+    "semantic_hash": ""
+  },
+  "sql/bigquery/staging/stg_products.sql": {
+    "mtime": 1792342686.1323483,
+    "seen": 1792342932.6057096,
+    "ast_hash": "ce5e980bfdfc81e2246721b5ec44b77b",
+    "semantic_hash": ""
+  },
+  "sql/bigquery/staging/stg_sellers.sql": {
+    "mtime": 1792342688.9382539,
+    "seen": 1792342932.6057096,
+    "ast_hash": "05b8146836276a2deb98c5e611d35821",
+    "semantic_hash": ""
+  },
+  "tests/test_bigquery_staging.py": {
+    "mtime": 1792342796.7227297,
+    "seen": 1792342932.6057096,
+    "ast_hash": "9b23c6693c04b44622fea2c93990f50d",
+    "semantic_hash": ""
+  },
+  "sql/bigquery/README.md": {
+    "mtime": 1792342628.8732684,
+    "seen": 1792342932.6067107,
+    "ast_hash": "814c8db4ae27e41089c7cb799e36ffca",
     "semantic_hash": ""
   }
 }
