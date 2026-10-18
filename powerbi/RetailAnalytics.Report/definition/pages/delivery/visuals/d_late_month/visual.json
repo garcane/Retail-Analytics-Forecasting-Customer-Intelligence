@@ -1,12 +1,12 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
   "name": "d_late_month",
   "position": {
-    "x": 20,
-    "y": 172,
+    "x": 16,
+    "y": 112,
     "z": 7000,
-    "height": 250,
-    "width": 620,
+    "height": 304,
+    "width": 624,
     "tabOrder": 7000
   },
   "visual": {
@@ -53,7 +53,6 @@
         }
       }
     },
-    "drillFilterOtherVisuals": true,
     "visualContainerObjects": {
       "title": [
         {
@@ -75,6 +74,7 @@
           }
         }
       ]
-    }
+    },
+    "drillFilterOtherVisuals": true
   }
 }

@@ -1,12 +1,12 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
   "name": "f_line",
   "position": {
-    "x": 20,
-    "y": 172,
+    "x": 16,
+    "y": 160,
     "z": 6000,
-    "height": 300,
-    "width": 1240,
+    "height": 320,
+    "width": 1248,
     "tabOrder": 6000
   },
   "visual": {
@@ -32,25 +32,6 @@
             }
           ]
         },
-        "Y": {
-          "projections": [
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "forecast_backtest"
-                    }
-                  },
-                  "Property": "Forecast Value"
-                }
-              },
-              "queryRef": "forecast_backtest.Forecast Value",
-              "nativeQueryRef": "Forecast Value",
-              "active": true
-            }
-          ]
-        },
         "Series": {
           "projections": [
             {
@@ -69,10 +50,28 @@
               "active": true
             }
           ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "forecast_backtest"
+                    }
+                  },
+                  "Property": "Forecast Value"
+                }
+              },
+              "queryRef": "forecast_backtest.Forecast Value",
+              "nativeQueryRef": "Forecast Value",
+              "active": true
+            }
+          ]
         }
       }
     },
-    "drillFilterOtherVisuals": true,
     "visualContainerObjects": {
       "title": [
         {
@@ -94,6 +93,53 @@
           }
         }
       ]
-    }
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "327d95080bc680c3be16",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "forecast_backtest"
+              }
+            },
+            "Property": "target_week"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "3302099789d33b3ddecf",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "forecast_backtest"
+              }
+            },
+            "Property": "Forecast Value"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "063b0b5250399817a95c",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "forecast_backtest"
+              }
+            },
+            "Property": "method"
+          }
+        },
+        "type": "Categorical"
+      }
+    ]
   }
 }

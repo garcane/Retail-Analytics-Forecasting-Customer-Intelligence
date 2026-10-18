@@ -1,19 +1,19 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
   "name": "c_ord",
   "position": {
-    "x": 270,
-    "y": 72,
-    "z": 5000,
-    "height": 90,
-    "width": 240,
-    "tabOrder": 5000
+    "x": 272,
+    "y": 0,
+    "z": 4000,
+    "height": 112,
+    "width": 224,
+    "tabOrder": 4000
   },
   "visual": {
-    "visualType": "card",
+    "visualType": "cardVisual",
     "query": {
       "queryState": {
-        "Values": {
+        "Data": {
           "projections": [
             {
               "field": {
@@ -27,14 +27,30 @@
                 }
               },
               "queryRef": "fact_order_items.Net Orders",
-              "nativeQueryRef": "Net Orders",
-              "active": true
+              "nativeQueryRef": "Net Orders"
             }
           ]
         }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Measure": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "fact_order_items"
+                  }
+                },
+                "Property": "Net Orders"
+              }
+            },
+            "direction": "Descending"
+          }
+        ],
+        "isDefaultSort": true
       }
     },
-    "drillFilterOtherVisuals": true,
     "visualContainerObjects": {
       "title": [
         {
@@ -49,13 +65,14 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
+                  "Value": "false"
                 }
               }
             }
           }
         }
       ]
-    }
+    },
+    "drillFilterOtherVisuals": true
   }
 }

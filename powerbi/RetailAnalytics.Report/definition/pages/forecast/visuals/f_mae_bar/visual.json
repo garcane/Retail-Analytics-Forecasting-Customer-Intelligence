@@ -1,12 +1,12 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
   "name": "f_mae_bar",
   "position": {
-    "x": 20,
-    "y": 482,
+    "x": 16,
+    "y": 496,
     "z": 7000,
-    "height": 230,
-    "width": 620,
+    "height": 208,
+    "width": 624,
     "tabOrder": 7000
   },
   "visual": {
@@ -93,5 +93,37 @@
       ]
     },
     "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "b7e5c87bbbc5380f5a43",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "forecast_backtest"
+              }
+            },
+            "Property": "method"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "8b15bfbdd69ad812016f",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "forecast_backtest"
+              }
+            },
+            "Property": "MAE"
+          }
+        },
+        "type": "Advanced"
+      }
+    ]
   }
 }

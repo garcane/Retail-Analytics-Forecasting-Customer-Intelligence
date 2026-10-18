@@ -1,19 +1,19 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
   "name": "c_cus",
   "position": {
-    "x": 1020,
-    "y": 72,
-    "z": 8000,
-    "height": 90,
+    "x": 1024,
+    "y": 0,
+    "z": 7000,
+    "height": 112,
     "width": 240,
-    "tabOrder": 8000
+    "tabOrder": 7000
   },
   "visual": {
-    "visualType": "card",
+    "visualType": "cardVisual",
     "query": {
       "queryState": {
-        "Values": {
+        "Data": {
           "projections": [
             {
               "field": {
@@ -27,14 +27,30 @@
                 }
               },
               "queryRef": "fact_order_items.Buying Customers",
-              "nativeQueryRef": "Buying Customers",
-              "active": true
+              "nativeQueryRef": "Buying Customers"
             }
           ]
         }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Measure": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "fact_order_items"
+                  }
+                },
+                "Property": "Buying Customers"
+              }
+            },
+            "direction": "Descending"
+          }
+        ],
+        "isDefaultSort": true
       }
     },
-    "drillFilterOtherVisuals": true,
     "visualContainerObjects": {
       "title": [
         {
@@ -49,6 +65,19 @@
             "show": {
               "expr": {
                 "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "visualHeader": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
                   "Value": "true"
                 }
               }
@@ -56,6 +85,7 @@
           }
         }
       ]
-    }
+    },
+    "drillFilterOtherVisuals": true
   }
 }
