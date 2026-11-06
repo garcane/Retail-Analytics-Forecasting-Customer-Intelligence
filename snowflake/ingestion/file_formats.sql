@@ -5,7 +5,11 @@
 -- Why each option (all nine Olist CSVs are UTF-8, comma-separated, CRLF line endings, header row):
 --   FIELD_OPTIONALLY_ENCLOSED_BY = '"'   fields may be quoted; a doubled quote ("") inside a quoted
 --                                        field is read as one literal quote.
---   (embedded newlines)                  order_reviews review_comment_message has line breaks INSIDE
+--   RECORD_DELIMITER (left at default)   all nine files use CRLF line endings. Snowflake documents the
+--                                        default newline delimiter as logical, i.e. it should also accept
+--                                        \r\n without leaving a trailing CR on the last field. UNVERIFIED:
+--                                        the runbook has a live check for a trailing CR (CHR(13)).
+--   (embedded newlines)                order_reviews review_comment_message has line breaks INSIDE
 --                                        quoted fields: 99,224 records but ~104.7k physical lines.
 --                                        Quoted newlines stay inside the field (default behaviour).
 --   SKIP_HEADER = 1                      drop the header row.
@@ -35,7 +39,6 @@ CREATE FILE FORMAT IF NOT EXISTS RAW.OLIST_CSV
 
 ALTER FILE FORMAT RAW.OLIST_CSV SET
     FIELD_DELIMITER = ','
-    RECORD_DELIMITER = '\n'
     FIELD_OPTIONALLY_ENCLOSED_BY = '"'
     SKIP_HEADER = 1
     ENCODING = 'UTF8'

@@ -1,0 +1,149 @@
+version: 2
+
+models:
+  - name: mart_late_delivery_features
+    description: >
+      Feature table for the late-delivery model (D-007). One row per delivered, labelled, non-anomalous order that has
+      items. Prediction point = purchase_ts; every column is allowed or point-in-time per docs/ml/LEAKAGE_ANALYSIS.md.
+      Output columns, order and logical types match sql/ml/late_delivery_features.sql (DuckDB). Row order is not
+      guaranteed by a Snowflake table: readers must ORDER BY purchase_ts, order_id.
+      Intentional differences vs DuckDB: arg_max ties on category / payment type resolve alphabetically (affects only
+      category_prior_n / category_prior_late); the history uses Snowflake ASOF JOIN (NEEDS LIVE VERIFICATION).
+    columns:
+      - name: order_id
+        description: "Order identifier (one row per order)."
+        data_tests:
+          - unique
+          - not_null
+      - name: purchase_ts
+        description: "Purchase timestamp; the prediction point."
+        data_tests:
+          - not_null
+      - name: delivered_customer_ts
+        description: "Actual delivery timestamp. Returned only so training code can drop rows whose outcome was unknown at the start of a test period; never a feature."
+        data_tests:
+          - not_null
+      - name: is_late
+        description: "Label: 1 if delivered after the estimate, else 0."
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: [0, 1]
+                quote: false
+      - name: purchase_dow
+        description: "ISO day of week of purchase, 1 = Monday .. 7 = Sunday."
+        data_tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 1
+                max_value: 7
+      - name: purchase_hour
+        description: "Hour of purchase, 0-23."
+        data_tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+                max_value: 23
+      - name: purchase_month
+        description: "Month of purchase, 1-12."
+        data_tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 1
+                max_value: 12
+      - name: promised_days
+        description: "Days between purchase and the estimated delivery date (the promise shown to the customer)."
+      - name: item_count
+        description: "Number of items in the order."
+      - name: items_price
+        description: "Sum of item prices (BRL)."
+      - name: items_freight
+        description: "Sum of item freight (BRL)."
+      - name: freight_ratio
+        description: "items_freight / items_price; NULL when items_price is 0."
+      - name: n_sellers
+        description: "Distinct sellers in the order."
+      - name: total_weight_g
+        description: "Total product weight in grams (missing counts as 0)."
+      - name: max_volume_cm3
+        description: "Largest product volume (cm3)."
+      - name: max_item_freight
+        description: "Largest item freight (BRL)."
+      - name: distance_km
+        description: "Maximum seller-to-customer haversine distance (km); NULL when a zip prefix is unknown."
+      - name: customer_state
+        description: "Customer state, 'unknown' when missing."
+      - name: seller_state
+        description: "Seller state (alphabetically first when several), 'unknown' when missing."
+      - name: same_state
+        description: "1 if customer and seller state are equal, else 0."
+      - name: max_installments
+        description: "Highest instalment count among the order payments."
+      - name: main_payment_type
+        description: "Payment type of the largest payment (ties alphabetically), 'unknown' when missing."
+      - name: seller_prior_n
+        description: "Resolved prior orders of the least experienced seller in the order (point-in-time)."
+        data_tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+      - name: seller_prior_late_rate
+        description: "Mean prior late rate of sellers with at least 5 resolved orders; NULL otherwise (training code falls back to the global rate)."
+      - name: route_prior_n
+        description: "Resolved orders on the same seller-state > customer-state route before this purchase."
+        data_tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+      - name: route_prior_late
+        description: "Late orders among route_prior_n."
+        data_tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+      - name: category_prior_n
+        description: "Resolved orders in the same category before this purchase."
+        data_tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+      - name: category_prior_late
+        description: "Late orders among category_prior_n."
+        data_tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+      - name: recent_n_28d
+        description: "System-wide orders resolved in the 28 days before purchase."
+        data_tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+      - name: recent_late_28d
+        description: "Late orders among recent_n_28d."
+        data_tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+      - name: route_prior_days
+        description: "Total purchase-to-delivery days over the route resolved orders."
+        data_tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+      - name: recent_days_28d
+        description: "Total purchase-to-delivery days over the last-28-day resolved orders."
+        data_tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0

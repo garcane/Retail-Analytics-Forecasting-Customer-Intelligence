@@ -1,0 +1,10 @@
+expression SnowflakeServer = "<account>.snowflakecomputing.com" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
+	lineageTag: 5b0e3f0e-6a53-5c1e-9f5a-1d2f0a6c7b11
+
+	annotation PBI_ResultType = Text
+
+expression SnowflakeWarehouse = "RETAIL_WH" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
+	lineageTag: a7c1d9b2-3e84-5f0a-8b6d-4c9e2f1a0d37
+
+	annotation PBI_ResultType = Text
+
