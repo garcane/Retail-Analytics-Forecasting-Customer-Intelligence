@@ -4278,3 +4278,41 @@ There are 1 unused configuration paths:
 [0m15:37:12.981294 [debug] [MainThread]: Wrote artifact RunExecutionResult to .\target\run_results.json
 [0m15:37:12.984788 [debug] [MainThread]: Command `dbt compile` succeeded at 15:37:12.984454 after 19.24 seconds
 [0m15:37:12.985824 [debug] [MainThread]: Flushing usage events
+
+
+============================== 15:40:13.517448 | 42a23897-dda8-4271-9924-53ccce293fe3 ==============================
+[0m15:40:13.517448 [info ] [MainThread]: Running with dbt=1.11.17
+[0m15:40:13.533891 [debug] [MainThread]: running dbt with arguments {'version_check': 'True', 'no_print': 'None', 'static_parser': 'True', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'target_path': 'target_prod', 'printer_width': '80', 'write_json': 'True', 'empty': 'None', 'log_cache_events': 'False', 'introspect': 'True', 'cache_selected_only': 'False', 'fail_fast': 'False', 'debug': 'False', 'log_format': 'default', 'partial_parse': 'True', 'send_anonymous_usage_stats': 'False', 'quiet': 'False', 'warn_error': 'None', 'profiles_dir': '.', 'invocation_command': 'dbt parse --profiles-dir . --project-dir . --target prod --target-path target_prod', 'indirect_selection': 'eager', 'use_colors': 'True', 'use_experimental_parser': 'False', 'log_path': 'logs'}
+[0m15:40:17.054854 [debug] [MainThread]: Snowflake adapter: Setting snowflake.connector to ERROR (file logging only)
+[0m15:40:17.056287 [debug] [MainThread]: Snowflake adapter: Setting botocore to ERROR (file logging only)
+[0m15:40:17.057441 [debug] [MainThread]: Snowflake adapter: Setting boto3 to ERROR (file logging only)
+[0m15:40:18.061885 [info ] [MainThread]: Registered adapter: snowflake=1.11.6
+[0m15:40:19.206527 [debug] [MainThread]: checksum: 82cc6e463e43f03319886b74fd4018b031a4daa1a81b2ca3fe474e22169dbd55, vars: {}, profile: , target: prod, version: 1.11.17
+[0m15:40:19.209976 [info ] [MainThread]: Unable to do partial parsing because saved manifest not found. Starting full parse.
+[0m15:40:26.752231 [warn ] [MainThread]: [[33mWARNING[0m]: Configuration paths exist in your dbt_project.yml file which do not apply to any resources.
+There are 1 unused configuration paths:
+- models.retail_olist.pbi
+[0m15:40:27.089760 [info ] [MainThread]: Performance info: .\target_prod\perf_info.json
+[0m15:40:27.645829 [debug] [MainThread]: Wrote artifact WritableManifest to .\target_prod\manifest.json
+[0m15:40:27.674661 [debug] [MainThread]: Wrote artifact SemanticManifest to .\target_prod\semantic_manifest.json
+[0m15:40:27.677373 [debug] [MainThread]: Command `dbt parse` succeeded at 15:40:27.677037 after 15.59 seconds
+[0m15:40:27.678548 [debug] [MainThread]: Flushing usage events
+
+
+============================== 15:40:48.400110 | 5fc0da69-d198-4821-9552-0eb8ef6bd383 ==============================
+[0m15:40:48.400110 [info ] [MainThread]: Running with dbt=1.11.17
+[0m15:40:48.410615 [debug] [MainThread]: running dbt with arguments {'static_parser': 'True', 'no_print': 'None', 'version_check': 'True', 'target_path': 'target_dev', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'printer_width': '80', 'write_json': 'True', 'empty': 'None', 'log_cache_events': 'False', 'introspect': 'True', 'cache_selected_only': 'False', 'fail_fast': 'False', 'debug': 'False', 'log_format': 'default', 'partial_parse': 'True', 'send_anonymous_usage_stats': 'False', 'quiet': 'False', 'warn_error': 'None', 'profiles_dir': '.', 'invocation_command': 'dbt parse --profiles-dir . --project-dir . --target dev --target-path target_dev', 'indirect_selection': 'eager', 'use_colors': 'True', 'use_experimental_parser': 'False', 'log_path': 'logs'}
+[0m15:40:51.074997 [debug] [MainThread]: Snowflake adapter: Setting snowflake.connector to ERROR (file logging only)
+[0m15:40:51.075987 [debug] [MainThread]: Snowflake adapter: Setting botocore to ERROR (file logging only)
+[0m15:40:51.076829 [debug] [MainThread]: Snowflake adapter: Setting boto3 to ERROR (file logging only)
+[0m15:40:52.779851 [info ] [MainThread]: Registered adapter: snowflake=1.11.6
+[0m15:40:54.548846 [debug] [MainThread]: checksum: 9810bc25319567265dce807ef8e8c7c415e79f6ebfcf318a0708056aba7933d5, vars: {}, profile: , target: dev, version: 1.11.17
+[0m15:40:54.553009 [info ] [MainThread]: Unable to do partial parsing because saved manifest not found. Starting full parse.
+[0m15:41:09.064078 [warn ] [MainThread]: [[33mWARNING[0m]: Configuration paths exist in your dbt_project.yml file which do not apply to any resources.
+There are 1 unused configuration paths:
+- models.retail_olist.pbi
+[0m15:41:09.503183 [info ] [MainThread]: Performance info: .\target_dev\perf_info.json
+[0m15:41:10.961953 [debug] [MainThread]: Wrote artifact WritableManifest to .\target_dev\manifest.json
+[0m15:41:10.994132 [debug] [MainThread]: Wrote artifact SemanticManifest to .\target_dev\semantic_manifest.json
+[0m15:41:10.997740 [debug] [MainThread]: Command `dbt parse` succeeded at 15:41:10.997405 after 25.16 seconds
+[0m15:41:10.998754 [debug] [MainThread]: Flushing usage events
