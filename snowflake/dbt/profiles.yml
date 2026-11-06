@@ -1,0 +1,36 @@
+# Committed profile. Contains NO secrets: every value comes from env_var(), key-pair auth only.
+#
+#   dev  : developer sandbox; schemas are prefixed with DBT_DEV_SUFFIX (see macros/generate_schema_name.sql)
+#   prod : plain upper-case schemas RAW/STAGING/INTERMEDIATE/MARTS/PBI
+#   ci   : dummy defaults so `dbt parse --target ci` works with no environment set. It never connects.
+#
+# Usage:  dbt <cmd> --profiles-dir snowflake/dbt --project-dir snowflake/dbt --target dev
+retail_olist:
+  target: dev
+  outputs:
+    dev: &live
+      type: snowflake
+      account: "{{ env_var('SNOWFLAKE_ACCOUNT') }}"
+      user: "{{ env_var('SNOWFLAKE_USER') }}"
+      private_key_path: "{{ env_var('SNOWFLAKE_PRIVATE_KEY_PATH') }}"
+      private_key_passphrase: "{{ env_var('SNOWFLAKE_PRIVATE_KEY_PASSPHRASE', '') }}"
+      role: "{{ env_var('RETAIL_SF_ROLE', 'RETAIL_TRANSFORMER') }}"
+      warehouse: "{{ env_var('RETAIL_SF_WAREHOUSE', 'RETAIL_WH') }}"
+      database: "{{ env_var('RETAIL_SF_DATABASE', 'RETAIL_OLIST') }}"
+      schema: "{{ env_var('DBT_DEV_SUFFIX', 'DBT_DEV') }}"
+      threads: 4
+      client_session_keep_alive: false
+    prod:
+      <<: *live
+      schema: MARTS   # fallback only; every model sets a custom schema, resolved by generate_schema_name
+    ci:
+      type: snowflake
+      account: "{{ env_var('SNOWFLAKE_ACCOUNT', 'dummy_account') }}"
+      user: "{{ env_var('SNOWFLAKE_USER', 'dummy_user') }}"
+      private_key_path: "{{ env_var('SNOWFLAKE_PRIVATE_KEY_PATH', 'dummy_key.p8') }}"
+      private_key_passphrase: "{{ env_var('SNOWFLAKE_PRIVATE_KEY_PASSPHRASE', '') }}"
+      role: "{{ env_var('RETAIL_SF_ROLE', 'RETAIL_TRANSFORMER') }}"
+      warehouse: "{{ env_var('RETAIL_SF_WAREHOUSE', 'RETAIL_WH') }}"
+      database: "{{ env_var('RETAIL_SF_DATABASE', 'RETAIL_OLIST') }}"
+      schema: "{{ env_var('DBT_DEV_SUFFIX', 'DBT_CI') }}"
+      threads: 4
