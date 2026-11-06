@@ -30,8 +30,8 @@ with item_rows as (
 )
 select category, orders, items,
        round(revenue, 2)                                                                                                              as net_revenue,
-       round(100 * revenue::float / sum(revenue::float) over (), 2)                                                                   as revenue_share_pct,
-       round(100 * sum(revenue::float) over (order by revenue desc nulls last, category nulls last) / sum(revenue::float) over (), 2) as cumulative_share_pct,
+       round(100 * revenue::float / (sum(revenue) over ())::float, 2)                                                                   as revenue_share_pct,
+       round(100 * (sum(revenue) over (order by revenue desc nulls last, category nulls last))::float / (sum(revenue) over ())::float, 2) as cumulative_share_pct,
        round(avg_item_price, 2)                                                                                                       as avg_item_price,
        round(100 * freight_to_price, 1)                                                                                               as freight_pct_of_price,
        round(100 * late_rate, 1)                                                                                                      as late_pct,

@@ -7,7 +7,7 @@
 select g.state                                                                                  as customer_state,
        count(*)                                                                                 as orders,
        round(sum(o.items_price), 2)                                                             as net_revenue,
-       round(100 * sum(o.items_price)::float / sum(sum(o.items_price)::float) over (), 2)       as revenue_share_pct,
+       round(100 * sum(o.items_price)::float / (sum(sum(o.items_price)) over ())::float, 2)       as revenue_share_pct,
        round(sum(o.items_price)::float / count(*), 2)                                           as avg_order_value,
        round(100 * sum(o.items_freight)::float / nullif(sum(o.items_price)::float, 0), 1)       as freight_pct_of_price,
        count(o.is_late)                                                                         as delivered_orders,
