@@ -1,0 +1,29 @@
+version: 2
+
+sources:
+  - name: olist_raw
+    description: >
+      Landing tables loaded from the nine Olist CSV files by snowflake/ingestion/load_raw.py. Every data
+      column is VARCHAR (names are the CSV header names, source typos such as product_name_lenght kept);
+      typing happens in the staging models. Each table also carries the load metadata columns
+      _loaded_at, _source_file, _source_row_number and _batch_id.
+    schema: RAW
+    tables:
+      - name: customers
+        description: "Raw olist_customers_dataset.csv. One row per customer_id (which is per ORDER)."
+      - name: geolocation
+        description: "Raw olist_geolocation_dataset.csv. About 1M points for ~19k zip prefixes; not unique."
+      - name: order_items
+        description: "Raw olist_order_items_dataset.csv. One row per (order_id, order_item_id)."
+      - name: order_payments
+        description: "Raw olist_order_payments_dataset.csv. One row per (order_id, payment_sequential)."
+      - name: order_reviews
+        description: "Raw olist_order_reviews_dataset.csv. One row per (review_id, order_id)."
+      - name: orders
+        description: "Raw olist_orders_dataset.csv. One row per order_id."
+      - name: products
+        description: "Raw olist_products_dataset.csv. One row per product_id; keeps the 'lenght' misspelling."
+      - name: sellers
+        description: "Raw olist_sellers_dataset.csv. One row per seller_id."
+      - name: product_category_translation
+        description: "Raw product_category_name_translation.csv (Portuguese -> English category names)."

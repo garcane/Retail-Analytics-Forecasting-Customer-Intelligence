@@ -129,7 +129,7 @@ If you read the geolocation CSV in pandas yourself, pass `dtype={'geolocation_zi
 
 ### 2. Set up and build the warehouse
 
-Requires Python 3.13 and [uv](https://docs.astral.sh/uv/).
+Requires Python 3.13 or newer and [uv](https://docs.astral.sh/uv/). The project defaults to Python 3.14; Python 3.13 remains the minimum.
 
 ```
 uv sync

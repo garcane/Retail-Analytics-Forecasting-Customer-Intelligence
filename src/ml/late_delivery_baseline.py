@@ -51,8 +51,18 @@ HISTORY_COUNTS = ("_prior_n", "_prior_late", "_28d", "_prior_days")
 # purchase_month is deliberately not a feature: with under two years of history it only memorises calendar months.
 
 
+def _is_data_access(con) -> bool:
+    return getattr(con, "backend", None) is not None and callable(getattr(con, "read_sql", None))
+
+
 def load(con: duckdb.DuckDBPyConnection) -> pd.DataFrame:
-    df = con.execute(FEATURES_SQL.read_text(encoding="utf-8")).df()
+    """Accepts a raw DuckDB connection (as always) or a data_access wrapper (DuckDB or Snowflake)."""
+    if _is_data_access(con):
+        from data_access import datasets  # imported here so the plain DuckDB path needs no extra sys.path entry
+
+        df = datasets.late_delivery_features(con)
+    else:
+        df = con.execute(FEATURES_SQL.read_text(encoding="utf-8")).df()
     df["month"] = df["purchase_ts"].dt.to_period("M")
     counts = [c for c in df.columns if c.endswith(HISTORY_COUNTS)]
     to_float = list(dict.fromkeys(NUMERIC_V1 + counts))
@@ -87,6 +97,10 @@ def add_smoothed_rates(df: pd.DataFrame, prior: float, prior_days: float | None 
 
 def unlabelled_share(con: duckdb.DuckDBPyConnection) -> dict[str, float]:
     """Share of each month's orders with no usable label (not delivered, anomalous, or no delivery date)."""
+    if _is_data_access(con):
+        from data_access import datasets
+
+        return datasets.unlabelled_share(con)
     rows = con.execute(
         """select strftime(o.purchase_ts, '%Y-%m') ym, count(*) n,
                   count(*) filter (where o.order_status = 'delivered' and o.is_late is not null

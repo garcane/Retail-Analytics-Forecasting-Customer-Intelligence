@@ -1,0 +1,87 @@
+version: 2
+
+# Intermediate layer (views). Files under models/intermediate/late_delivery/ are owned by another
+# workstream and documented in their own schema file.
+
+models:
+  - name: int_customers_latest
+    description: >
+      One row per real customer (customer_unique_id) with location taken from the customer's most recent
+      order. Tie-break: latest purchase timestamp (NULLs last), then customer_id ascending.
+    columns:
+      - name: customer_unique_id
+        description: "Identifier of the real customer."
+        data_tests:
+          - unique
+          - not_null
+      - name: customer_zip_code_prefix
+        description: "Zip prefix from the customer's latest order."
+      - name: customer_city
+        description: "City from the customer's latest order."
+      - name: customer_state
+        description: "State from the customer's latest order."
+
+  - name: int_geography_points
+    description: >
+      Geolocation points inside a Brazil bounding box (latitude -34..6, longitude -74..-28). Grain: one row
+      per source point (not unique).
+    columns:
+      - name: zip_prefix
+        description: "Zip-code prefix of the point."
+      - name: lat
+        description: "Latitude (decimal degrees)."
+      - name: lng
+        description: "Longitude (decimal degrees)."
+      - name: city
+        description: "City attached to the point."
+      - name: state
+        description: "State attached to the point."
+
+  - name: int_geography_rollup
+    description: >
+      One row per zip-code prefix: median latitude/longitude and the most frequent city and state
+      (ties broken alphabetically).
+    columns:
+      - name: zip_prefix
+        description: "Zip-code prefix."
+        data_tests:
+          - unique
+          - not_null
+      - name: city
+        description: "Most frequent city among the prefix's points."
+      - name: state
+        description: "Most frequent state among the prefix's points."
+      - name: latitude
+        description: "Median latitude of the prefix's points."
+      - name: longitude
+        description: "Median longitude of the prefix's points."
+      - name: n_points
+        description: "Number of in-bounds source points collapsed into the prefix."
+
+  - name: int_order_items_agg
+    description: "Order items pre-aggregated to the order grain (prevents fan-out when joined to payments)."
+    columns:
+      - name: order_id
+        description: "Order identifier (only orders that have items)."
+        data_tests:
+          - unique
+          - not_null
+      - name: item_count
+        description: "Number of item rows in the order."
+      - name: items_price
+        description: "Sum of item prices in BRL, NUMBER(12,2)."
+      - name: items_freight
+        description: "Sum of item freight in BRL, NUMBER(12,2)."
+
+  - name: int_order_payments_agg
+    description: "Order payments pre-aggregated to the order grain (prevents fan-out when joined to items)."
+    columns:
+      - name: order_id
+        description: "Order identifier (only orders that have payments)."
+        data_tests:
+          - unique
+          - not_null
+      - name: payment_count
+        description: "Number of payment records for the order."
+      - name: payment_total
+        description: "Sum of payment values in BRL, NUMBER(12,2)."

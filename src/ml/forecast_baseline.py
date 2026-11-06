@@ -32,6 +32,11 @@ HORIZONS = (1, 4)
 
 
 def weekly_series(con: duckdb.DuckDBPyConnection) -> pd.DataFrame:
+    """Accepts a raw DuckDB connection (as always) or a data_access wrapper (DuckDB or Snowflake)."""
+    if getattr(con, "backend", None) is not None and callable(getattr(con, "read_sql", None)):
+        from data_access import datasets  # imported here so the plain DuckDB path needs no extra sys.path entry
+
+        return datasets.weekly_series(con).assign(week=lambda d: pd.to_datetime(d["week"])).set_index("week")
     return con.execute(
         """
         with orders as (

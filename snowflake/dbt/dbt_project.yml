@@ -1,0 +1,38 @@
+name: retail_olist
+version: "1.0.0"
+config-version: 2
+profile: retail_olist
+
+model-paths: ["models"]
+macro-paths: ["macros"]
+test-paths: ["tests"]
+analysis-paths: ["analyses"]
+clean-targets: ["target", "dbt_packages"]
+
+flags:
+  send_anonymous_usage_stats: false
+
+# Layer -> schema. The generate_schema_name macro turns these custom schemas into
+# STAGING / INTERMEDIATE / MARTS / PBI in prod and <DBT_DEV_SUFFIX>_<SCHEMA> in dev/ci.
+#
+# Folder convention (so the models added by the other workstreams inherit the right config):
+#   models/staging/                -> view,  STAGING
+#   models/intermediate/**         -> view,  INTERMEDIATE   (incl. intermediate/late_delivery)
+#   models/marts/core/             -> table, MARTS          (dim_*, fact_*)
+#   models/marts/analytics/        -> table, MARTS          (mart_* for sql/analytics 01-08)
+#   models/marts/ml/               -> table, MARTS          (mart_late_delivery_features, mart_weekly_orders_revenue)
+#   models/pbi/                    -> view,  PBI            (Power BI-facing views)
+models:
+  retail_olist:
+    staging:
+      +materialized: view
+      +schema: staging
+    intermediate:
+      +materialized: view
+      +schema: intermediate
+    marts:
+      +materialized: table
+      +schema: marts
+    pbi:
+      +materialized: view
+      +schema: pbi
