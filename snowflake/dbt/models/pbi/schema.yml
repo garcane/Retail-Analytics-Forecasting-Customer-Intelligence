@@ -1,0 +1,287 @@
+version: 2
+
+# Power BI-facing views (schema PBI). One view per Power BI import table, object name = UPPER(table name).
+# The model names carry a pbi_ prefix because dbt model names are global and dim_date etc. already exist in
+# MARTS; each model sets alias = the Power BI table name, so the objects are PBI.DIM_DATE, PBI.FACT_ORDERS, ...
+# Column names, order and types are identical to what src/powerbi/export_data.py writes today, so the patched
+# Power BI model only changes its data source. Lower-casing of column names is done in the Power BI M step.
+# Not exposed on purpose: review_comment_title / review_comment_message (customer free text), customer_id and the
+# non-exported *_ts columns on fact_orders, and the dim_date -1 "Not applicable" row (a blank key in Power BI).
+# The three Python-fed tables (late_delivery_scores, forecast_backtest, flag_share) are in schema ML, not here.
+# No relationship tests to pbi_dim_date: facts with date key -1 intentionally have no match there.
+
+models:
+  - name: pbi_dim_date
+    description: "PBI.DIM_DATE: dim_date without the -1 'Not applicable' row (1,827 calendar days)."
+    columns:
+      - name: date_key
+        description: "Smart key yyyymmdd (integer)."
+        data_tests: [unique, not_null]
+      - name: full_date
+        description: "Calendar date; never NULL in this view."
+        data_tests: [not_null]
+      - name: year
+        description: "Calendar year."
+      - name: quarter
+        description: "Calendar quarter, 1 to 4."
+      - name: month
+        description: "Month number, 1 to 12."
+      - name: month_name
+        description: "Full English month name."
+      - name: year_month
+        description: "Year and month as text, YYYY-MM."
+      - name: day_of_month
+        description: "Day of the month."
+      - name: iso_week
+        description: "ISO-8601 week number."
+      - name: day_of_week
+        description: "ISO day of week, 1 = Monday."
+      - name: day_name
+        description: "Full English day name."
+      - name: is_weekend
+        description: "True for Saturday and Sunday."
+
+  - name: pbi_dim_customer
+    description: "PBI.DIM_CUSTOMER: dim_customer including the -1 unknown member."
+    columns:
+      - name: customer_key
+        description: "Surrogate key; -1 = unknown."
+        data_tests: [unique, not_null]
+      - name: customer_unique_id
+        description: "Natural key of the real customer."
+      - name: customer_zip_code_prefix
+        description: "Zip-code prefix of the latest order (text)."
+      - name: customer_city
+        description: "City of the latest order."
+      - name: customer_state
+        description: "State of the latest order."
+
+  - name: pbi_dim_product
+    description: "PBI.DIM_PRODUCT: dim_product including the -1 unknown member."
+    columns:
+      - name: product_key
+        description: "Surrogate key; -1 = unknown."
+        data_tests: [unique, not_null]
+      - name: product_id
+        description: "Natural key."
+      - name: product_category_name
+        description: "Portuguese category name."
+      - name: product_category_name_english
+        description: "English category name."
+      - name: product_name_length
+        description: "Characters in the product name."
+      - name: product_description_length
+        description: "Characters in the product description."
+      - name: product_photos_qty
+        description: "Number of photos."
+      - name: product_weight_g
+        description: "Weight in grams."
+      - name: product_length_cm
+        description: "Length in cm."
+      - name: product_height_cm
+        description: "Height in cm."
+      - name: product_width_cm
+        description: "Width in cm."
+      - name: product_volume_cm3
+        description: "length x height x width in cm3."
+
+  - name: pbi_dim_seller
+    description: "PBI.DIM_SELLER: dim_seller including the -1 unknown member."
+    columns:
+      - name: seller_key
+        description: "Surrogate key; -1 = unknown."
+        data_tests: [unique, not_null]
+      - name: seller_id
+        description: "Natural key."
+      - name: seller_zip_code_prefix
+        description: "Zip-code prefix (text)."
+      - name: seller_city
+        description: "Seller city."
+      - name: seller_state
+        description: "Seller state."
+
+  - name: pbi_dim_geography
+    description: "PBI.DIM_GEOGRAPHY: dim_geography including the -1 unknown member."
+    columns:
+      - name: geography_key
+        description: "Surrogate key; -1 = unknown."
+        data_tests: [unique, not_null]
+      - name: zip_prefix
+        description: "Zip-code prefix (text)."
+      - name: city
+        description: "Most frequent city."
+      - name: state
+        description: "Most frequent state."
+      - name: latitude
+        description: "Median latitude."
+      - name: longitude
+        description: "Median longitude."
+      - name: n_source_points
+        description: "Source points collapsed into the row."
+
+  - name: pbi_fact_orders
+    description: >
+      PBI.FACT_ORDERS: one row per order (25 columns, the export_data.py FACT_SQL list). Adds the derived columns
+      promised_days, is_net_order, is_labelled_delivery, delay_bucket and delay_bucket_order so the DAX stays short.
+    columns:
+      - name: order_id
+        description: "Primary key."
+        data_tests: [unique, not_null]
+      - name: order_status
+        description: "Order lifecycle status."
+        data_tests: [not_null]
+      - name: customer_key
+        description: "FK to dim_customer; -1 if unmatched."
+      - name: customer_geography_key
+        description: "FK to dim_geography; -1 if unmatched."
+      - name: purchase_date_key
+        description: "FK to dim_date (role: purchase); -1 = not applicable."
+      - name: approved_date_key
+        description: "FK to dim_date (role: approved); -1 = not applicable."
+      - name: carrier_date_key
+        description: "FK to dim_date (role: carrier); -1 = not applicable."
+      - name: delivered_customer_date_key
+        description: "FK to dim_date (role: delivered); -1 = not applicable."
+      - name: estimated_delivery_date_key
+        description: "FK to dim_date (role: estimated); -1 = not applicable."
+      - name: purchase_ts
+        description: "Purchase timestamp."
+      - name: estimated_delivery_ts
+        description: "Estimated delivery timestamp."
+      - name: item_count
+        description: "Items in the order; 0 for orders without items."
+      - name: items_price
+        description: "Sum of item price (R$)."
+      - name: items_freight
+        description: "Sum of freight (R$)."
+      - name: payment_count
+        description: "Payment records."
+      - name: payment_total
+        description: "Sum of payment value (R$)."
+      - name: delivery_days
+        description: "Purchase to customer delivery, fractional days."
+      - name: delivery_delay_days
+        description: "Delivered minus estimated, fractional days; positive = late."
+      - name: is_late
+        description: "Delivered after the estimate; NULL if not delivered."
+      - name: has_timestamp_anomaly
+        description: "Carrier before purchase, or customer delivery before carrier."
+      - name: promised_days
+        description: "Days between purchase and the estimated delivery date (the promise shown at checkout)."
+      - name: is_net_order
+        description: "Not canceled/unavailable and has items (population of sql/analytics/01, 03, 07)."
+        data_tests: [not_null]
+      - name: is_labelled_delivery
+        description: "Delivered, has a late/on-time label, no timestamp anomaly (ML-feature population)."
+        data_tests: [not_null]
+      - name: delay_bucket
+        description: "Delivered orders only: on time or early / 1-3 / 4-7 / 8-14 days late / more than 14 days late."
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [on time or early, 1-3 days late, 4-7 days late, 8-14 days late, more than 14 days late]
+      - name: delay_bucket_order
+        description: "Sort key of delay_bucket, 1 to 5 (integer)."
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [1, 2, 3, 4, 5]
+                quote: false
+
+  - name: pbi_fact_order_items
+    description: "PBI.FACT_ORDER_ITEMS: fact_order_items (13 columns) plus is_net_order (not canceled/unavailable)."
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: [order_id, order_item_id]
+    columns:
+      - name: order_id
+        description: "Order identifier."
+        data_tests: [not_null]
+      - name: order_item_id
+        description: "Item sequence within the order."
+        data_tests: [not_null]
+      - name: order_status
+        description: "Copied from the order."
+      - name: customer_key
+        description: "FK to dim_customer."
+      - name: product_key
+        description: "FK to dim_product."
+      - name: seller_key
+        description: "FK to dim_seller."
+      - name: customer_geography_key
+        description: "FK to dim_geography (customer)."
+      - name: seller_geography_key
+        description: "FK to dim_geography (seller)."
+      - name: purchase_date_key
+        description: "FK to dim_date (purchase)."
+      - name: shipping_limit_date_key
+        description: "FK to dim_date (shipping limit)."
+      - name: price
+        description: "Item price (R$)."
+      - name: freight_value
+        description: "Freight (R$)."
+      - name: item_total_value
+        description: "price + freight_value."
+      - name: is_net_order
+        description: "Not canceled or unavailable."
+        data_tests: [not_null]
+
+  - name: pbi_fact_payments
+    description: "PBI.FACT_PAYMENTS: fact_payments, all columns."
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: [order_id, payment_sequential]
+    columns:
+      - name: order_id
+        description: "Order identifier."
+        data_tests: [not_null]
+      - name: payment_sequential
+        description: "Payment sequence within the order."
+        data_tests: [not_null]
+      - name: customer_key
+        description: "FK to dim_customer."
+      - name: purchase_date_key
+        description: "FK to dim_date (purchase)."
+      - name: payment_type
+        description: "Payment method."
+      - name: payment_installments
+        description: "Number of installments."
+      - name: payment_value
+        description: "Payment value (R$)."
+
+  - name: pbi_fact_reviews
+    description: "PBI.FACT_REVIEWS: fact_reviews without the comment title and message (customer free text)."
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: [review_id, order_id]
+    columns:
+      - name: review_id
+        description: "Review identifier."
+        data_tests: [not_null]
+      - name: order_id
+        description: "Order identifier."
+        data_tests: [not_null]
+      - name: customer_key
+        description: "FK to dim_customer."
+      - name: review_creation_date_key
+        description: "FK to dim_date (review created)."
+      - name: review_answer_date_key
+        description: "FK to dim_date (review answered)."
+      - name: review_creation_ts
+        description: "Review creation timestamp."
+      - name: review_answer_ts
+        description: "Review answer timestamp."
+      - name: review_score
+        description: "Score 1 to 5."
+        data_tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 1
+                max_value: 5
+      - name: has_comment
+        description: "True when the review has a comment (the text itself is not exposed)."
+      - name: is_latest_review_for_order
+        description: "True for the latest review of its order."

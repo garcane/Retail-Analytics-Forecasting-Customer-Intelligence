@@ -1,0 +1,31 @@
+version: 2
+
+models:
+  - name: mart_weekly_orders_revenue
+    description: >
+      Orders and item revenue per ISO week (Monday start) by purchase date; port of the weekly_series() SQL in
+      src/ml/forecast_baseline.py and the input of the weekly forecast baselines. One row per week that has at
+      least one order, every order status included for `orders` (fact_orders), item price for `revenue`
+      (fact_order_items, DD-04). The week is computed with the iso_week_start macro, not the WEEK_START session
+      parameter. Consumers must ORDER BY week; src/data_access does. The first (2016-09) and last (2018-08/09)
+      weeks are partial extraction tails; the forecast code selects its window itself.
+    columns:
+      - name: week
+        description: "Monday of the ISO week of purchase_ts (DATE). Grain."
+        data_tests:
+          - unique
+          - not_null
+      - name: orders
+        description: "Orders purchased in the week (integer), all statuses."
+        data_tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 1
+      - name: revenue
+        description: "Sum of item price in the week (R$, FLOAT, excludes freight); 0 for a week with orders but no items."
+        data_tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0

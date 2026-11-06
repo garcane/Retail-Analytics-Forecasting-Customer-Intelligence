@@ -1,0 +1,184 @@
+version: 2
+
+# Late-delivery feature pipeline (intermediate layer, views in INTERMEDIATE). Port of sql/ml/late_delivery_features.sql.
+# Point-in-time rules: docs/ml/LEAKAGE_ANALYSIS.md. History models read the totals AS OF each purchase with a STRICT
+# comparison (purchase_ts > delivered_customer_ts).
+
+models:
+  - name: int_late_delivery_population
+    description: >
+      The scored population: delivered orders with a label (is_late not null) and no timestamp anomaly.
+      Prediction point is purchase_ts. order_status and has_timestamp_anomaly are row filters only and are not carried.
+    columns:
+      - name: order_id
+        description: "Order identifier."
+        data_tests:
+          - unique
+          - not_null
+      - name: customer_key
+        description: "Surrogate key of the customer (fact_orders.customer_key)."
+      - name: customer_geography_key
+        description: "Surrogate key of the customer zip-prefix geography."
+      - name: purchase_ts
+        description: "Purchase timestamp; the prediction point."
+        data_tests:
+          - not_null
+      - name: estimated_delivery_ts
+        description: "Delivery date promised to the customer at purchase."
+      - name: delivered_customer_ts
+        description: "Actual delivery timestamp. The outcome; used to order history, never a feature."
+        data_tests:
+          - not_null
+      - name: is_late
+        description: "Label: delivered after the estimate (boolean)."
+        data_tests:
+          - not_null
+      - name: item_count
+        description: "Number of item rows in the order."
+        data_tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+      - name: items_price
+        description: "Sum of item prices in BRL."
+      - name: items_freight
+        description: "Sum of item freight in BRL."
+      - name: payment_count
+        description: "Number of payment records."
+
+  - name: int_late_delivery_item_agg
+    description: >
+      Order-level basket and route features aggregated from the order items. One row per population order that has at
+      least one item. category uses a deterministic tie-break (alphabetically first category among the highest-priced
+      items) where DuckDB arg_max is arbitrary; this is an intentional, documented difference.
+    columns:
+      - name: order_id
+        description: "Order identifier."
+        data_tests:
+          - unique
+          - not_null
+      - name: n_sellers
+        description: "Distinct sellers in the order."
+        data_tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 1
+      - name: total_weight_g
+        description: "Sum of item product weights in grams (missing weight counts as 0)."
+        data_tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+      - name: max_volume_cm3
+        description: "Largest product volume in the order (cm3)."
+      - name: max_item_freight
+        description: "Largest item freight in the order (BRL)."
+      - name: seller_state
+        description: "Alphabetically first seller state in the order (deterministic when several sellers)."
+      - name: customer_state
+        description: "Customer state; 'Unknown' for the -1 geography member."
+      - name: category
+        description: "English category of the most expensive item; ties resolved alphabetically."
+      - name: distance_km
+        description: "Maximum seller-to-customer great-circle (haversine) distance in km; NULL when a zip prefix is the unknown member."
+        data_tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+                max_value: 20040
+
+  - name: int_late_delivery_seller_history
+    description: >
+      Point-in-time seller track record per order: only seller orders already delivered (delivered_customer_ts strictly
+      before this order purchase_ts, excluding the order itself) are counted. The seller history includes
+      timestamp-anomaly orders, as in the DuckDB query.
+    columns:
+      - name: order_id
+        description: "Order identifier."
+        data_tests:
+          - unique
+          - not_null
+      - name: seller_prior_n
+        description: "Minimum, across the order sellers, of the number of resolved prior orders."
+        data_tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+      - name: seller_prior_late_rate
+        description: "Mean prior late rate over the order sellers with at least 5 resolved prior orders; NULL if none qualify."
+        data_tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+                max_value: 1
+
+  - name: int_late_delivery_history
+    description: >
+      Route (seller state > customer state), category and system-wide running totals of resolved orders, read AS OF each
+      order purchase (strict comparison) with Snowflake ASOF JOIN, or the range-join fallback when
+      var late_delivery_history_method = range_join. System-wide 28-day figures are totals now minus totals 28 days ago.
+      One row per order; the ASOF join must keep orders that have no earlier history (live-verification item).
+    columns:
+      - name: order_id
+        description: "Order identifier."
+        data_tests:
+          - unique
+          - not_null
+      - name: route_prior_n
+        description: "Resolved orders on the same route delivered before this purchase."
+        data_tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+      - name: route_prior_late
+        description: "Of those, how many were late."
+        data_tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+      - name: route_prior_days
+        description: "Total purchase-to-delivery days over the route resolved orders."
+        data_tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+      - name: category_prior_n
+        description: "Resolved orders in the same category delivered before this purchase."
+        data_tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+      - name: category_prior_late
+        description: "Of those, how many were late."
+        data_tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+      - name: recent_n_28d
+        description: "System-wide orders resolved in the 28 days before this purchase."
+        data_tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+      - name: recent_late_28d
+        description: "Of those, how many were late."
+        data_tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+      - name: recent_days_28d
+        description: "Total purchase-to-delivery days over those orders."
+        data_tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
