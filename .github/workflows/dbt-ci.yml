@@ -1,0 +1,54 @@
+# dbt CI: offline checks only. `dbt parse --target ci` is the required gate; it opens no Snowflake connection
+# (the `ci` target in snowflake/dbt/profiles.yml carries dummy defaults). No secrets are used or needed.
+name: dbt-ci
+
+on:
+  push:
+    paths:
+      - "snowflake/dbt/**"
+      - ".github/workflows/dbt-ci.yml"
+  pull_request:
+    paths:
+      - "snowflake/dbt/**"
+      - ".github/workflows/dbt-ci.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: dbt-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  DBT_SEND_ANONYMOUS_USAGE_STATS: "false"
+  DBT_PROFILES_DIR: "."   # steps run in snowflake/dbt (defaults.run.working-directory), where profiles.yml lives
+  # Deliberately NO SNOWFLAKE_* / RETAIL_SF_* variables: the ci target falls back to dummy values.
+
+jobs:
+  dbt-parse:
+    name: dbt deps + parse (ci target)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: snowflake/dbt
+    steps:
+      - uses: actions/checkout@v7
+      # dbt is isolated from the root project (it needs Python <3.14); versions come from snowflake/dbt/uv.lock.
+      - uses: astral-sh/setup-uv@v7
+        with:
+          python-version: "3.13"
+          enable-cache: true
+          cache-dependency-glob: snowflake/dbt/uv.lock
+      - name: Install dbt (locked)
+        run: uv sync --locked
+      - name: dbt deps
+        run: uv run --no-sync dbt deps
+      - name: dbt parse --target ci (required gate)
+        run: uv run --no-sync dbt parse --target ci
+
+      # Informational only: compile without populating the relation cache, so it should not need a connection.
+      # If it ever does, it fails here without failing the job. Read the step log; it is not a gate.
+      - name: dbt compile --no-populate-cache --target ci (informational)
+        continue-on-error: true
+        run: uv run --no-sync dbt compile --no-populate-cache --target ci
