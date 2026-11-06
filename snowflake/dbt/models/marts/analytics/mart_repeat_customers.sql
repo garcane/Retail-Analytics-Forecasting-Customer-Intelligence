@@ -14,7 +14,7 @@ select case when n_orders >= 4 then '4+' else n_orders::varchar end             
        count(*)                                                                 as customers,
        round(100.0 * count(*)::float / sum(count(*)) over (), 2)                as customer_share_pct,
        round(sum(revenue), 2)                                                   as net_revenue,
-       round(100 * sum(revenue)::float / sum(sum(revenue)::float) over (), 2)   as revenue_share_pct
+       round(100 * sum(revenue)::float / (sum(sum(revenue)) over ())::float, 2)   as revenue_share_pct
 from per_customer
 group by 1
 order by 1

@@ -5,7 +5,7 @@
 select payment_type,
        count(*)                                                                           as payments,
        round(sum(payment_value), 2)                                                       as payment_value,
-       round(100 * sum(payment_value)::float / sum(sum(payment_value)::float) over (), 1) as value_share_pct,
+       round(100 * sum(payment_value)::float / (sum(sum(payment_value)) over ())::float, 1) as value_share_pct,
        round(sum(payment_value)::float / count(payment_value), 2)                       as avg_payment,
        round(avg(payment_installments::float), 2)                                         as avg_installments
 from {{ ref('fact_payments') }}

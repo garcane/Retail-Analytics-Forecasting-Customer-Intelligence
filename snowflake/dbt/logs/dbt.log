@@ -11780,3 +11780,39 @@ join h on h.order_id = pop.order_id
 order by pop.purchase_ts, pop.order_id
 [0m16:11:18.517189 [debug] [MainThread]: Command `dbt compile` succeeded at 16:11:18.517006 after 10.62 seconds
 [0m16:11:18.517690 [debug] [MainThread]: Flushing usage events
+
+
+============================== 16:12:46.907629 | f9294e16-a79a-4fe8-b05b-a537bd95ecb6 ==============================
+[0m16:12:46.907629 [info ] [MainThread]: Running with dbt=1.11.17
+[0m16:12:46.919259 [debug] [MainThread]: running dbt with arguments {'static_parser': 'True', 'no_print': 'None', 'version_check': 'True', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'target_path': 'target_a3c', 'printer_width': '80', 'write_json': 'True', 'introspect': 'True', 'log_cache_events': 'False', 'empty': 'None', 'cache_selected_only': 'False', 'log_format': 'default', 'debug': 'False', 'fail_fast': 'False', 'partial_parse': 'True', 'send_anonymous_usage_stats': 'False', 'quiet': 'False', 'warn_error': 'None', 'profiles_dir': '.', 'invocation_command': 'dbt parse --target ci --profiles-dir . --project-dir . --target-path target_a3c', 'indirect_selection': 'eager', 'use_colors': 'True', 'use_experimental_parser': 'False', 'log_path': 'logs'}
+[0m16:12:48.721144 [debug] [MainThread]: Snowflake adapter: Setting snowflake.connector to ERROR (file logging only)
+[0m16:12:48.722402 [debug] [MainThread]: Snowflake adapter: Setting botocore to ERROR (file logging only)
+[0m16:12:48.727353 [debug] [MainThread]: Snowflake adapter: Setting boto3 to ERROR (file logging only)
+[0m16:12:48.961508 [debug] [MainThread]: Snowflake adapter: Replaced underscores (_) with hyphens (-) in Snowflake account name to form a valid account URL.
+[0m16:12:49.768401 [info ] [MainThread]: Registered adapter: snowflake=1.11.6
+[0m16:12:50.982117 [debug] [MainThread]: checksum: 36c6bbbace61ae21e7e56ac1da16aa19b8a27516f91b7a870dfbdc6cfa42e038, vars: {}, profile: , target: ci, version: 1.11.17
+[0m16:12:51.839149 [debug] [MainThread]: Partial parsing enabled: 0 files deleted, 0 files added, 0 files changed.
+[0m16:12:51.841400 [debug] [MainThread]: Nothing changed, skipping partial parsing.
+[0m16:12:51.842646 [debug] [MainThread]: Partial parsing enabled, no changes found, skipping parsing
+[0m16:12:52.116175 [info ] [MainThread]: Performance info: .\target_a3c\perf_info.json
+[0m16:12:53.023009 [debug] [MainThread]: Wrote artifact WritableManifest to .\target_a3c\manifest.json
+[0m16:12:53.031465 [debug] [MainThread]: Wrote artifact SemanticManifest to .\target_a3c\semantic_manifest.json
+[0m16:12:53.034408 [debug] [MainThread]: Command `dbt parse` succeeded at 16:12:53.034098 after 6.77 seconds
+[0m16:12:53.035666 [debug] [MainThread]: Flushing usage events
+
+
+============================== 16:13:07.426723 | 9ac5fe11-81cc-4c43-ae12-c38136b756fe ==============================
+[0m16:13:07.426723 [info ] [MainThread]: Running with dbt=1.11.17
+[0m16:13:07.436163 [debug] [MainThread]: running dbt with arguments {'static_parser': 'True', 'no_print': 'None', 'version_check': 'True', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'target_path': 'target_a3c_final', 'printer_width': '80', 'write_json': 'True', 'empty': 'None', 'log_cache_events': 'False', 'introspect': 'True', 'cache_selected_only': 'False', 'fail_fast': 'False', 'debug': 'False', 'log_format': 'default', 'profiles_dir': '.', 'send_anonymous_usage_stats': 'False', 'quiet': 'False', 'warn_error': 'None', 'partial_parse': 'True', 'invocation_command': 'dbt parse --target ci --profiles-dir . --project-dir . --target-path target_a3c_final', 'use_colors': 'True', 'indirect_selection': 'eager', 'use_experimental_parser': 'False', 'log_path': 'logs'}
+[0m16:13:08.322207 [debug] [MainThread]: Snowflake adapter: Setting snowflake.connector to ERROR (file logging only)
+[0m16:13:08.323380 [debug] [MainThread]: Snowflake adapter: Setting botocore to ERROR (file logging only)
+[0m16:13:08.324387 [debug] [MainThread]: Snowflake adapter: Setting boto3 to ERROR (file logging only)
+[0m16:13:08.483347 [debug] [MainThread]: Snowflake adapter: Replaced underscores (_) with hyphens (-) in Snowflake account name to form a valid account URL.
+[0m16:13:08.912975 [info ] [MainThread]: Registered adapter: snowflake=1.11.6
+[0m16:13:09.648792 [debug] [MainThread]: checksum: 36c6bbbace61ae21e7e56ac1da16aa19b8a27516f91b7a870dfbdc6cfa42e038, vars: {}, profile: , target: ci, version: 1.11.17
+[0m16:13:09.652041 [info ] [MainThread]: Unable to do partial parsing because saved manifest not found. Starting full parse.
+[0m16:13:15.974295 [info ] [MainThread]: Performance info: .\target_a3c_final\perf_info.json
+[0m16:13:16.375273 [debug] [MainThread]: Wrote artifact WritableManifest to .\target_a3c_final\manifest.json
+[0m16:13:16.382348 [debug] [MainThread]: Wrote artifact SemanticManifest to .\target_a3c_final\semantic_manifest.json
+[0m16:13:16.385269 [debug] [MainThread]: Command `dbt parse` succeeded at 16:13:16.384960 after 9.22 seconds
+[0m16:13:16.386245 [debug] [MainThread]: Flushing usage events
