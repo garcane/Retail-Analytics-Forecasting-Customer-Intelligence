@@ -182,7 +182,5 @@ This writes a copy of the project to `powerbi_snowflake/` and rewrites only `exp
 
 ## Known issues to be aware of
 
-- `.gitignore` matches `.env.*`, which also matches `.env.example`; the template is created but may need `!.env.example` in `.gitignore` to be committed.
-- Generated dbt output under `snowflake/dbt/target`, `snowflake/dbt/dbt_packages` and `snowflake/dbt/logs` was committed by mistake and should be untracked (`git rm -r --cached`).
 - The DuckDB reference's late-delivery features were reported to vary between runs on `arg_max` ties; the accounts of the workstreams that saw it disagree about the effect of `threads = 1`. Unresolved.
 - CI workflow files under `.github/workflows/` come from another workstream and are not covered here.

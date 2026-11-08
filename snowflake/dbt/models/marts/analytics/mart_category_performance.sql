@@ -5,9 +5,12 @@
 --
 -- Snowflake notes
 --   * boolean averages: case when ... then 1 when not ... then 0 end keeps NULL (IFF would turn NULL into 0)
---   * every averaged/divided operand is cast ::float; avg of a money column is sum(x)::float / count(x) (one division of
---     the exact decimal sum, as DuckDB does) rather than avg(x::float), which accumulates float error and flipped
---     one .xx5 boundary (security_and_services avg_item_price 141.645) in the offline simulation
+--   * every averaged/divided operand is cast ::float, EXCEPT avg_item_price: it is exact NUMBER arithmetic,
+--     sum(price) / count(price) (Snowflake keeps >= 6 fractional digits), then round(..., 2) rounds half away from zero.
+--     Two categories sit exactly on a .xx5 boundary in the DuckDB reference: security_and_services (141.645 -> 141.65)
+--     and la_cuisine (146.785 -> 146.79, whose double is 146.78499999999999659 and would round DOWN under float
+--     arithmetic). Exact division keeps both on the reference value. The offline simulation (sqlglot -> DuckDB) cannot
+--     prove Snowflake's NUMBER rounding: UNVERIFIED, listed in README_LIVE_CHECKS.md.
 --   * NULLS LAST on every ORDER BY (Snowflake sorts NULLs first under DESC, DuckDB last)
 with item_rows as (
     select p.product_category_name_english as category,
@@ -22,7 +25,7 @@ with item_rows as (
            count(distinct order_id)                       as orders,
            count(*)                                       as items,
            sum(price)                                     as revenue,
-           sum(price)::float / count(price)                    as avg_item_price,
+           sum(price) / count(price)                      as avg_item_price,
            sum(freight_value)::float / sum(price)::float  as freight_to_price,
            avg((case when is_late then 1 when not is_late then 0 end)::float) as late_rate,
            avg(review_score::float)                       as avg_review_score

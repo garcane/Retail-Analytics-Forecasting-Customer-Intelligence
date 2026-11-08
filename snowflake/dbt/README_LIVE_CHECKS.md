@@ -78,3 +78,8 @@ Needs live verification (Snowflake itself)
 25. `haversine` (`asin`, `power`, `radians`) on FLOAT agrees with DuckDB `distance_km` at the plan's 1e-6 km tolerance.
 26. Singular test cost: `assert_late_delivery_history_is_point_in_time` cross-joins about 400 sampled orders with the 96k population (a few tens of millions of row pairs); `assert_late_delivery_seller_history_excludes_self` re-runs the seller range join. Both are cheap in DuckDB (1-6 s); confirm on XSMALL.
 27. Row order: the mart keeps `order by purchase_ts, order_id` but Snowflake does not guarantee read order; readers (`src/data_access`) must `ORDER BY purchase_ts, order_id` themselves.
+
+## Rounding boundary checks (analytics marts)
+
+- [ ] `mart_category_performance.avg_item_price` uses exact NUMBER division (`sum(price) / count(price)`). After the first live build confirm the two categories that sit exactly on a .xx5 boundary in the DuckDB reference: `security_and_services` = 141.65 and `la_cuisine` = 146.79 (`reports/analytics/02_category_performance.csv`). If Snowflake returns 146.78, switch the division to an explicit `round(..., 2)` on a `NUMBER(38,6)` cast.
+- [ ] `mart_seller_concentration` has no ordering column; its six metric rows are in UNION ALL order. Consumers must look rows up by `metric` name, never by position.

@@ -6,7 +6,7 @@ How to point the dashboard at the Snowflake implementation (`RETAIL_OLIST`) inst
 
 | Claim | Status |
 |---|---|
-| `apply_snowflake_source.py` writes a patched copy and changes only `expressions.tmdl` plus each table's partition source; everything else is byte-identical; the original project is untouched | VERIFIED offline by `tests/test_powerbi_snowflake.py` (run on the repo venv, see the run log in the hand-over report) |
+| `apply_snowflake_source.py` writes a patched copy and changes only `expressions.tmdl` plus each table's partition source; everything else is byte-identical; the original project is untouched | VERIFIED offline by `tests/test_powerbi_snowflake.py` (68 passed, 2026-11-08, run with pytest from a Python 3.13 venv; the repo `.venv` does not include the dev group) |
 | Every template keeps the table's existing `Table.TransformColumnTypes` step and types exactly the columns the model reads | VERIFIED offline by the same tests |
 | The patched copy has **not been opened** in Power BI Desktop, and no refresh has been run | UNVERIFIED. The M navigation (`Snowflake.Databases` > database > schema > view) is the standard shape but has not been executed |
 | The `PBI` views and `ML` tables exist in Snowflake and return the expected columns and types | UNVERIFIED. Snowflake setup, ingestion and `dbt build` have not been run (see `snowflake/README.md`) |
@@ -32,7 +32,7 @@ Report pages and visuals, relationships, measures, column definitions, formattin
 
    `--ml-on-files` is the right choice until the Python write-back to `ML` has run: it patches the nine `PBI` tables and leaves `late_delivery_scores`, `forecast_backtest` and `flag_share` on their Parquet/CSV sources (the `DataFolder` parameter is kept for them). Once the `ML` tables exist, run it again **without** that flag and `--force` to switch all 12 tables.
    The script refuses to write into a non-empty target without `--force`, and `--force` replaces only the three project items by name.
-3. **Make sure `powerbi_snowflake/` is git-ignored** (check with `git check-ignore powerbi_snowflake`; at the time of writing the repo `.gitignore` did not list it yet, so add `powerbi_snowflake/` if that command prints nothing). The patched copy will contain your account name once you enter it, so it must never be committed.
+3. **Check that `powerbi_snowflake/` is git-ignored** (`git check-ignore powerbi_snowflake` should print the path; the repo `.gitignore` lists it). The patched copy will contain your account name once you enter it, so it must never be committed.
 4. **Open** `powerbi_snowflake\RetailAnalytics.pbip` in Power BI Desktop (same preview-feature requirements as `powerbi/README.md`). It has **not been opened in Desktop by anyone yet**; if Desktop reports an error, note the exact message and the file it names.
 5. **Set the parameters:** *Home > Transform data > Manage parameters*.
    - `SnowflakeServer`: your Snowflake account host, `<account>.snowflakecomputing.com` (the account identifier from Snowflake; do not commit it).
@@ -92,7 +92,7 @@ Other points the views must reproduce from the export:
 - `dim_date` excludes the "Not applicable" row (`date_key` -1, null `full_date`): a date table's key cannot contain blanks. Facts pointing at -1 fall into Power BI's own (Blank) member.
 - `fact_reviews` exposes only `review_id, order_id, customer_key, review_creation_date_key, review_answer_date_key, review_creation_ts, review_answer_ts, review_score, has_comment, is_latest_review_for_order`. Review comment text is deliberately not exposed.
 - `fact_order_items` is `fact_order_items` plus `is_net_order`; `fact_payments` and the other dimensions are the mart columns as they are.
-- `late_delivery_scores`, `forecast_backtest` and `flag_share` have the same columns as `late_delivery_scores.parquet`, `forecast_backtest.csv` and `flag_share.csv`.
+- `late_delivery_scores`, `forecast_backtest` and `flag_share` have the same columns as `late_delivery_scores.parquet`, `forecast_backtest.csv` and `flag_share.csv`, plus a leading `run_id` column added by the write-back. Write-back appends one block of rows per run and never deletes other runs, so the three ML templates keep only the latest `run_id` (text maximum; `run_id` is a UTC timestamp plus uuid) and drop the column before typing. This filter is UNVERIFIED against a live Snowflake table.
 
 ## The three tables that depend on Python write-back
 
