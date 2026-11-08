@@ -96,6 +96,10 @@ Feature and leakage rules are in [docs/ml/LEAKAGE_ANALYSIS.md](docs/ml/LEAKAGE_A
 
 $0. Everything runs locally on open-source tools; there is no cloud spend and no paid service. Cloud pricing in Phase 0 was never fully verified and only matters if the cloud phase returns.
 
+## Snowflake + dbt implementation (DD-19, DD-20)
+
+A second implementation of the same pipeline runs on Snowflake with dbt: `data/*.csv` -> Snowflake `RAW` (stage + `COPY INTO`, all text plus load metadata) -> dbt `STAGING` (typed views) -> `INTERMEDIATE` -> `MARTS` (the same `dim_*` / `fact_*` names as DuckDB, plus `mart_*` for the eight analytics queries, the late-delivery features and the weekly series) -> `PBI` views and `ML` write-back tables for Power BI -> Python forecasting through `src/data_access`. The DuckDB build above is unchanged and remains the reference. Diagrams, lineage and the object list are in [docs/architecture/SNOWFLAKE_ARCHITECTURE.md](docs/architecture/SNOWFLAKE_ARCHITECTURE.md); the SQL migration inventory is in [docs/migration/SNOWFLAKE_MIGRATION.md](docs/migration/SNOWFLAKE_MIGRATION.md). Status: built and checked offline only; not yet run on Snowflake.
+
 ## Related documents
 
 - [DECISIONS.md](DECISIONS.md): every decision referenced above.

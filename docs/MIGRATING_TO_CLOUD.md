@@ -2,6 +2,8 @@
 
 This guide explains how to move the local DuckDB implementation onto the cloud design in the original brief (Cloud Storage, BigQuery, Vertex AI, Power BI on BigQuery). The local build was organised in the same layers as that design, so the move is mostly a change of **engine and location**, not of structure.
 
+> **Snowflake:** a second cloud twin, on Snowflake with dbt instead of Google Cloud, has since been written alongside the DuckDB build (DD-19). It is a different target from this guide: see [migration/SNOWFLAKE_MIGRATION.md](migration/SNOWFLAKE_MIGRATION.md) for the SQL translation inventory and [snowflake/README.md](../snowflake/README.md) for how to run it. It has been checked offline only.
+
 ## Read this first: what is and is not verified
 
 - **Nothing here has been run on Google Cloud.** The project is local by decision (D-002). The steps are a plan, not a record. Commands are illustrative: check them against the current Google Cloud documentation before running them.

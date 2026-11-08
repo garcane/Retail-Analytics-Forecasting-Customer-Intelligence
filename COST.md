@@ -30,6 +30,17 @@ Measured on the development laptop (2026-10-13):
 
 Disk: about 79 MB of raw data (the nine Kaggle CSV files), a 112 MB warehouse file and about 40 MB of Power BI data files, all git-ignored. Power BI Desktop is free; no Power BI service, gateway or licence is used, so the cost stays $0.
 
+## Snowflake implementation (branch feature/snowflake-dbt-migration)
+
+**Nothing has been run on Snowflake, so there is no measured cost.** Every figure below is a design intent or an estimate, not a result.
+
+- Compute: one warehouse, `RETAIL_WH`, size XSMALL, `AUTO_SUSPEND = 60`, `AUTO_RESUME = TRUE`, created suspended. An XSMALL warehouse consumes 1 credit per hour of running time (Snowflake's published rate; the price of a credit depends on edition, region and contract and has not been checked here).
+- Storage: the nine CSVs are about 124 MB; RAW, STAGING, INTERMEDIATE and MARTS together are a small multiple of that. Not measured.
+- Heaviest expected steps: loading `GEOLOCATION` (1,000,163 rows), building `int_geography_rollup`, and the late-delivery history models (the `ASOF JOIN`, or the range-join fallback that is roughly 96k x 48k candidate rows for the system-wide lookups). Runtime on XSMALL is unknown.
+- Estimate: a full load plus `dbt build` is expected to take minutes on XSMALL, that is a fraction of a credit. **Replace this with the measured figure** (from `SNOWFLAKE.ACCOUNT_USAGE.WAREHOUSE_METERING_HISTORY` or the Snowflake UI) after the first live run.
+- Not created: a resource monitor (it needs ACCOUNTADMIN). Recommended before the first live run: a small monthly quota with notify and suspend.
+- The DuckDB implementation still costs $0.
+
 ## If the project moved to the cloud
 
 Pricing for BigQuery, Dataflow and Vertex AI was **never verified** (Phase 0 §10) and is not estimated here. At this data size (about 100,000 orders, 80 MB) the cost would be expected to be very small, within free tiers, but that is an expectation and not a checked figure. See the "Moving to BigQuery" section of [docs/data/DATA_MODEL.md](docs/data/DATA_MODEL.md) for the technical work involved.
