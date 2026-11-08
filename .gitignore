@@ -26,3 +26,7 @@ powerbi/data/
 
 # marimo session caches (cell outputs, regenerated on every run)
 __marimo__/
+
+# Snowflake/dbt implementation: patched Power BI copy (apply_snowflake_source.py) and local tool caches
+powerbi_snowflake/
+.ruff_cache/
