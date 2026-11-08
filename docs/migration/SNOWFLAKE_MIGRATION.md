@@ -21,17 +21,16 @@ Result of reading the 28 DuckDB SQL files: **no file is class 1.** Every file ei
 
 ## 2. Reconciling `git ls-files "*.sql"`
 
-Command run on 2026-11-06 from the repository root: `git ls-files "*.sql" | wc -l` printed **443**.
+Command run on 2026-11-08 from the repository root, after the generated dbt output was untracked: `git ls-files "*.sql" | wc -l` printed **139**. (On 2026-11-06, before the cleanup, it printed 443 because 304 generated files were tracked by mistake.)
 
 | Group | Files | Where it is accounted for |
 |---|---|---|
 | Original DuckDB pipeline, `sql/staging`, `sql/dimensions`, `sql/facts`, `sql/analytics`, `sql/ml`, `sql/validation` | 28 | [Section 4](#4-inventory-a-the-28-duckdb-sql-files), one row each, classified |
 | Original GoogleSQL translation, `sql/bigquery/raw` (9) and `sql/bigquery/staging` (9) | 18 | [Section 5](#5-inventory-b-sqlbigquery-reference-only-18-files), one row each, reference only, not classified |
 | New Snowflake-side SQL written for this migration (macros, models, singular tests, setup, ingestion) | 93 | [Section 10](#10-inventory-d-sql-added-for-snowflake-93-files), counted per folder |
-| Generated or vendored files that are tracked by accident: `snowflake/dbt/dbt_packages/dbt_utils` (112) and `snowflake/dbt/target/compiled` (192) | 304 | Not source. They were committed by mistake and must be untracked (`git rm -r --cached`); they are excluded from the inventory |
-| **Total** | **28 + 18 + 93 + 304 = 443** | |
+| **Total** | **28 + 18 + 93 = 139** | |
 
-The 46 original files (28 + 18) are the "46 `.sql` files" counted in the migration plan. Once the 304 generated files are untracked the command prints 139 (46 + 93). Other work was still being committed while this page was written, so re-run `git ls-files "*.sql" | wc -l` and compare against the table before relying on the arithmetic.
+The 46 original files (28 + 18) are the "46 `.sql` files" counted in the migration plan. The 304 generated files (`snowflake/dbt/dbt_packages/dbt_utils` 112, `snowflake/dbt/target/compiled` 192) were untracked with `git rm -r --cached` and are ignored by `snowflake/dbt/.gitignore`. Re-run `git ls-files "*.sql" | wc -l` and compare against the table before relying on the arithmetic.
 
 ## 3. Summary counts
 
@@ -288,4 +287,4 @@ Listed from `git ls-files "*.sql"` on 2026-11-06, every file by name. These are 
 | `ingestion/` | 2 | `ddl_raw.sql`, `file_formats.sql` |
 | **Total** | **93** | |
 
-How to reproduce the counts: `git ls-files "*.sql" | wc -l` (443), `git ls-files "sql/*" | grep -c "\.sql$"` (46), and `git ls-files "*.sql" | grep -c -E "^snowflake/dbt/(dbt_packages|target)/"` (304).
+How to reproduce the counts: `git ls-files "*.sql" | wc -l` (139), `git ls-files "sql/*" | grep -c "\.sql$"` (46), and `git ls-files "snowflake/*" | grep -c "\.sql$"` (93).
