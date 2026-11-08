@@ -11,6 +11,11 @@ data/
 !.env.example
 *.pem
 *.key
+# Snowflake key-pair authentication: PKCS#8 private keys are normally .p8 files
+*.p8
+*.p12
+*.pfx
+rsa_key*
 *service-account*.json
 *credentials*.json
 

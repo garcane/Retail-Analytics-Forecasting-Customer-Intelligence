@@ -565,3 +565,9 @@ def test_cascade_classifier_bound():
     assert f(("o4",), 10, 11) is None               # category untouched by any tie
     assert f(("o9",), 10, 11) is None               # unknown order
     assert "eligible" in info.note
+
+def test_empty_comparison_never_passes():
+    """Two empty frames (or no matched row) prove nothing: a comparison must not pass vacuously."""
+    assert not K.compare_frames(frame(["id", "x"], []), frame(["id", "x"], []), ["id"]).passed
+    assert not K.compare_frames(frame(["id", "x"], [[1, 1]]), frame(["id", "x"], []), ["id"]).passed
+    assert K.compare_frames(frame(["id", "x"], [[1, 1]]), frame(["id", "x"], [[1, 1]]), ["id"]).passed

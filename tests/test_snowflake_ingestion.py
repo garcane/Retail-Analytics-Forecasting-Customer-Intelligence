@@ -566,3 +566,17 @@ def test_generated_sql_uses_only_expected_statement_types(data_dir):
         assert "'batch-1'" in copy
         assert "FORCE" not in copy and "FORCE = TRUE" in load_raw.sql_copy(info.spec, "b", force=True)
         assert "DROP" not in load_raw.sql_truncate(info.spec).upper()
+
+@pytest.mark.parametrize("name", ["rsa_key.p8", "snowflake_key.p8", "key.p12", "key.pfx", "id.pem", "id.key", ".env", ".env.local"])
+def test_private_key_and_env_files_are_git_ignored(name):
+    """Key-pair auth means a stray private key is the biggest leak risk: every usual key/env file name must be ignored."""
+    import subprocess
+    repo = Path(__file__).resolve().parents[1]
+    result = subprocess.run(["git", "check-ignore", "-q", "--no-index", name], cwd=repo)
+    assert result.returncode == 0, f"{name} is not covered by .gitignore"
+
+
+def test_env_example_is_not_ignored():
+    import subprocess
+    repo = Path(__file__).resolve().parents[1]
+    assert subprocess.run(["git", "check-ignore", "-q", "--no-index", ".env.example"], cwd=repo).returncode == 1
