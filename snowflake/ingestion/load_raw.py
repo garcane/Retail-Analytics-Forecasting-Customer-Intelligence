@@ -344,8 +344,8 @@ def load_table(ex: Executor, info: FileInfo, batch_id: str, reload: bool) -> str
     except Exception as exc:  # noqa: BLE001 - log the failure then re-raise as IngestError
         _log_best_effort(ex, info, batch_id, loaded, "FAILED")
         raise IngestError(f"{spec.table}: load failed ({type(exc).__name__}: {exc}). "
-                          f"The load is a single COPY with ON_ERROR=ABORT_STATEMENT, so nothing from it was "
-                          f"committed; fix the cause and re-run (use --reload {spec.key} if the table is not empty)."
+                          f"The load is a single COPY with ON_ERROR=ABORT_STATEMENT, so the failed COPY loaded no rows; "
+                          f"with --reload the table was already truncated and is now empty. Fix the cause and re-run (use --reload {spec.key} if the table is not empty)."
                           ) from exc
     if loaded != info.records:
         _log_best_effort(ex, info, batch_id, loaded, "FAILED")

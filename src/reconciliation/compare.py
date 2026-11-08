@@ -92,6 +92,9 @@ class Comparison:
 
     @property
     def passed(self) -> bool:
+        # A comparison of two empty frames (or with no matched row) proves nothing, so it never passes.
+        if self.left_rows == 0 or self.right_rows == 0 or self.matched_rows == 0:
+            return False
         return not (self.missing_in_right or self.extra_in_right or self.duplicate_keys_left
                     or self.duplicate_keys_right or self.columns_only_left or self.columns_only_right
                     or self.n_unexplained)

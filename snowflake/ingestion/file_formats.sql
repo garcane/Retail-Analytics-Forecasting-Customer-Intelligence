@@ -2,10 +2,10 @@
 -- Idempotent: CREATE ... IF NOT EXISTS, then ALTER FILE FORMAT ... SET so the format always matches
 -- this file (IF NOT EXISTS alone never updates an existing format).
 --
--- Why each option (all nine Olist CSVs are UTF-8, comma-separated, CRLF line endings, header row):
+-- Why each option (all nine Olist CSVs are UTF-8, comma-separated, with a header row; line endings are CRLF in seven files, LF-only in olist_geolocation_dataset.csv, and the category translation file has a BOM and no trailing newline):
 --   FIELD_OPTIONALLY_ENCLOSED_BY = '"'   fields may be quoted; a doubled quote ("") inside a quoted
 --                                        field is read as one literal quote.
---   RECORD_DELIMITER (left at default)   all nine files use CRLF line endings. Snowflake documents the
+--   RECORD_DELIMITER (left at default)   seven files use CRLF line endings (geolocation is LF-only). Snowflake documents the
 --                                        default newline delimiter as logical, i.e. it should also accept
 --                                        \r\n without leaving a trailing CR on the last field. UNVERIFIED:
 --                                        the runbook has a live check for a trailing CR (CHR(13)).
