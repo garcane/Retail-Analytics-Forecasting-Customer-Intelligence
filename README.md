@@ -69,10 +69,26 @@ flowchart TB
 
 The step-by-step plan, with the SQL constructs to change, the BigQuery and Vertex AI setup, and the numbers the cloud build must reproduce, is in [docs/MIGRATING_TO_CLOUD.md](docs/MIGRATING_TO_CLOUD.md). It has not been run on Google Cloud, and it does not quote prices, which were never verified.
 
+## Two implementations: DuckDB (local) and Snowflake + dbt (cloud)
+
+The same analytical workload exists twice. **DuckDB** is the complete, tested, reference implementation described above. **Snowflake + dbt** (branch `feature/snowflake-dbt-migration`, decisions DD-19 and DD-20) ports it to a cloud warehouse: `RAW` (stage + `COPY INTO`) -> dbt `STAGING` -> `INTERMEDIATE` -> `MARTS`, with Python and Power BI reading the marts. DuckDB stays where it is (`sql/`, `src/`, `tests/`) rather than moving under an `implementations/` folder, because moving it would break the test paths, notebooks and documents; the Snowflake code is in [snowflake/](snowflake/README.md).
+
+| Capability | State | How it was checked |
+|---|---|---|
+| DuckDB build, 22 checks, analytics, ML, forecast, Power BI project | Working | Existing test suite and documents above |
+| Snowflake setup SQL, RAW ingestion (`snowflake/ingestion/load_raw.py`) | Written, **not run on Snowflake** | Offline tests with a fake connector |
+| dbt project: staging, intermediate, dimensions, facts, 8 analytics marts, late-delivery features, weekly series, `PBI` views, dbt tests | Written, **not run on Snowflake** | `dbt parse` and `dbt compile` offline; compiled SQL run on DuckDB over the real CSVs matches the DuckDB reference tables |
+| `DATA_BACKEND=duckdb` or `snowflake` switch for Python (`src/data_access`) | Written; DuckDB path verified identical to the original code, Snowflake path **not run** | Offline tests; real warehouse (read-only) |
+| DuckDB-vs-Snowflake reconciliation (`src/reconciliation`) | Framework written; **no reconciliation has been run** ([report](docs/validation/RECONCILIATION_REPORT.md) is a NOT RUN stub) | Offline self-comparison and perturbation tests |
+| Power BI on Snowflake | Patched-copy script and templates; **never opened in Desktop** | 68 offline tests that the report, measures and relationships stay byte-identical ([guide](docs/migration/POWERBI_SWITCH_GUIDE.md)) |
+| CI (`.github/workflows`) | Written; **has not run on GitHub**; `python-ci` is red on the 10 known `test_powerbi_project.py` failures | `actionlint` and the same commands locally |
+
+Where to read more: the [SQL migration inventory](docs/migration/SNOWFLAKE_MIGRATION.md), the [Snowflake architecture and lineage](docs/architecture/SNOWFLAKE_ARCHITECTURE.md), the [data dictionary](docs/data_dictionary/DATA_DICTIONARY.md), the [ingestion runbook](docs/migration/INGESTION_RUNBOOK.md) and [CI setup](docs/migration/CI_SETUP.md). To run the Snowflake side you need your own Snowflake account, key-pair credentials and the approval steps in [snowflake/README.md](snowflake/README.md); copy `.env.example` to a git-ignored `.env`. The DuckDB path needs none of that (`DATA_BACKEND` defaults to `duckdb`).
+
 ## Where it is honestly unfinished
 
 - **The Power BI project was generated, then opened in Power BI Desktop, where it needed two fixes** (a measure that shared a name with a column, ignoring case, and an empty key row in the date table). It now loads. The dashboard's headline numbers have not yet been compared with the expected values listed in the specification's first-open checklist, and the report layouts are being refined by hand in Desktop.
-- **The cloud implementation is a plan, not a build.** The layers, the mapping and the migration steps are documented, but nothing has been run on Google Cloud, so the SQL translations and costs are untested.
+- **The Google Cloud implementation is a plan, not a build.** The layers, the mapping and the migration steps are documented, but nothing has been run on Google Cloud, so the SQL translations and costs are untested. The Snowflake implementation is written and checked offline but has not yet been run on a Snowflake account (see the table above).
 - **The model is modest by design of the data.** A better late-delivery model would need information this dataset does not contain, such as carrier or warehouse data.
 - **Everything is a snapshot.** The data ends in 2018, and the forecast and model results describe that period only.
 
@@ -89,6 +105,10 @@ The step-by-step plan, with the SQL constructs to change, the BigQuery and Verte
 | `reports/` | Saved metrics (JSON) and analytics tables (CSV) |
 | `docs/` | Data model, insights, ML documents, audit, lessons learned, and the [migration guide to Google Cloud](docs/MIGRATING_TO_CLOUD.md) |
 | `ARCHITECTURE.md`, `DECISIONS.md`, `SECURITY.md`, `COST.md` | Design, decision log, security and cost (the cost is $0) |
+| `snowflake/` | The Snowflake + dbt implementation: `setup/` (idempotent SQL), `ingestion/` (RAW loader), `dbt/` (models, tests, macros; its own Python environment) |
+| `src/data_access/`, `src/reconciliation/` | Backend switch for Python (DuckDB or Snowflake) and the DuckDB-vs-Snowflake comparison tool |
+| `powerbi/snowflake/` | M templates and the script that writes a Snowflake-sourced copy of the Power BI project |
+| `.github/workflows/` | Offline `dbt parse` CI, Python tests and a manual-only live dbt build |
 | `PROJECT_STATUS.md`, `docs/HANDOFF.md` | Where the project stands, for a new reader |
 
 ## Run it yourself
