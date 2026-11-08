@@ -605,3 +605,55 @@ def test_real_warehouse_wrapped_equals_raw_and_validates(warehouse):
     from conftest import WAREHOUSE
 
     check_wrapped_equals_raw(WAREHOUSE)
+
+# ------------------------------------------------------------------------------------ entry points: --backend / --yes
+
+
+@pytest.mark.parametrize("module_name", ["forecast_baseline", "late_delivery_baseline"])
+def test_entry_points_reject_unknown_backend_from_env(module_name, monkeypatch):
+    import importlib
+    mod = importlib.import_module(module_name)
+    monkeypatch.setenv("DATA_BACKEND", "oracle")
+    monkeypatch.setattr("sys.argv", [module_name])
+    with pytest.raises(SystemExit) as exc:
+        mod.main()
+    assert exc.value.code == 2
+
+
+@pytest.mark.parametrize("module_name", ["forecast_baseline", "late_delivery_baseline"])
+def test_entry_points_snowflake_backend_needs_config_and_confirmation(module_name, monkeypatch, tmp_path):
+    """--backend snowflake must stop before any connection: no env -> MissingConfigError, env but no --yes -> ConfirmationRequired."""
+    import importlib
+    from data_access import backend as be
+    mod = importlib.import_module(module_name)
+    for name in ("SNOWFLAKE_ACCOUNT", "SNOWFLAKE_USER", "SNOWFLAKE_PRIVATE_KEY_PATH", "RETAIL_SF_CONFIRM"):
+        monkeypatch.delenv(name, raising=False)
+    monkeypatch.setattr(be, "_load_snowflake_connector",
+                        lambda: pytest.fail("the Snowflake connector must not be imported without confirmation"))
+    argv = [module_name, "--backend", "snowflake", "--out", str(tmp_path / "out.json")]
+    monkeypatch.setattr("sys.argv", argv)
+    with pytest.raises(be.MissingConfigError):
+        mod.main()
+    monkeypatch.setenv("SNOWFLAKE_ACCOUNT", "acct-placeholder")
+    monkeypatch.setenv("SNOWFLAKE_USER", "user-placeholder")
+    monkeypatch.setenv("SNOWFLAKE_PRIVATE_KEY_PATH", str(tmp_path / "no_such_key.p8"))
+    with pytest.raises(be.ConfirmationRequired):
+        mod.main()
+    assert not (tmp_path / "out.json").exists()
+
+
+def test_yes_flag_is_passed_to_connect_as_confirmation(monkeypatch):
+    """--backend snowflake --yes reaches data_access.connect as confirm=True (and nothing else connects first)."""
+    import forecast_baseline as fb
+    seen = {}
+
+    def fake_connect(backend, confirm=False):
+        seen["backend"], seen["confirm"] = backend, confirm
+        raise RuntimeError("stop after connect")
+
+    import data_access
+    monkeypatch.setattr(data_access, "connect", fake_connect)
+    monkeypatch.setattr("sys.argv", ["forecast_baseline", "--backend", "snowflake", "--yes"])
+    with pytest.raises(RuntimeError, match="stop after connect"):
+        fb.main()
+    assert seen == {"backend": "snowflake", "confirm": True}

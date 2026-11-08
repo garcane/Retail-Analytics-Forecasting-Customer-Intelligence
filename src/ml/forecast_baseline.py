@@ -14,6 +14,7 @@ beyond that, so no information flows from later weeks.
 
 import argparse
 import json
+import os
 import sys
 from pathlib import Path
 
@@ -112,10 +113,26 @@ def score(bt: pd.DataFrame) -> dict[str, dict[str, float]]:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--db", type=Path, default=ROOT / "warehouse.duckdb")
-    parser.add_argument("--out", type=Path, default=ROOT / "reports" / "forecast_metrics.json")
+    parser.add_argument("--out", type=Path, default=None,
+                        help="default: reports/forecast_metrics.json (DuckDB) or reports/snowflake/forecast_metrics.json")
+    parser.add_argument("--backend", choices=("duckdb", "snowflake"),
+                        default=os.environ.get("DATA_BACKEND", "duckdb").strip().lower() or "duckdb",
+                        help="data source; defaults to $DATA_BACKEND, then duckdb")
+    parser.add_argument("--yes", action="store_true",
+                        help="confirm the Snowflake target printed by data_access (required for --backend snowflake)")
     args = parser.parse_args()
+    if args.backend not in ("duckdb", "snowflake"):
+        parser.error(f"DATA_BACKEND must be 'duckdb' or 'snowflake', got {args.backend!r}")
+    if args.out is None:  # a Snowflake run must never overwrite the tracked DuckDB reference metrics
+        args.out = ROOT / "reports" / ("snowflake" if args.backend == "snowflake" else "") / "forecast_metrics.json"
 
-    con = duckdb.connect(str(args.db), read_only=True)
+    if args.backend == "snowflake":
+        sys.path.insert(0, str(ROOT / "src"))
+        from data_access import connect  # imported here: the DuckDB path needs no extra sys.path entry
+
+        con = connect("snowflake", confirm=args.yes)
+    else:
+        con = duckdb.connect(str(args.db), read_only=True)
     full = weekly_series(con)
     con.close()
 
