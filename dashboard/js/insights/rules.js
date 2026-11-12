@@ -3,7 +3,7 @@
 
 import { registerInsight } from "../core/registry.js";
 import * as f from "../core/format.js";
-import { modelLabel } from "../core/labels.js";
+import { modelLabel, methodLabel } from "../core/labels.js";
 
 registerInsight({
   id: "one-time-customers", kind: "Customers", needs: ["analytics"], page: "sales",
@@ -116,11 +116,13 @@ registerInsight({
   compute({ forecast }) {
     const key = Object.keys(forecast.metrics.models).find((k) => k.startsWith("orders | main (") && k.endsWith("h=4"));
     if (!key) return null;
-    const methods = Object.entries(forecast.metrics.models[key]).filter(([k, v]) => !k.startsWith("_") && Number.isFinite(v.mae));
+    const block = forecast.metrics.models[key];
+    const methods = Object.entries(block).filter(([k, v]) => !k.startsWith("_") && Number.isFinite(v.mae));
     const [bestKey, best] = methods.sort((a, b) => a[1].mae - b[1].mae)[0];
+    const n = block._n_forecasts?.n;
     return {
       figure: f.num(best.mae_vs_naive, 2),
-      text: `MAE relative to the naive forecast for the best 4-week-ahead method (${bestKey.replace(/_/g, " ")}). Simple averages match or beat the trend and autoregressive models on this 85-week series.`,
+      text: `MAE relative to the naive forecast for the most accurate 4-week-ahead method, ${methodLabel(bestKey)}${n ? `, over ${f.int(n)} weekly forecasts` : ""}. ${/moving_average|naive|combo/.test(bestKey) ? "A simple method beats the trend, smoothing and autoregressive models." : "A model-based method wins at this horizon."}`,
       source: "reports/forecast_models_metrics.json",
     };
   },

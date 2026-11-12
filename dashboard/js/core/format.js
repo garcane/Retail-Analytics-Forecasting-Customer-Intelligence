@@ -15,7 +15,9 @@ export function int(v) {
 }
 
 export function num(v, digits = 2) {
-  return isNum(v) ? nf({ minimumFractionDigits: digits, maximumFractionDigits: digits }).format(v) : DASH;
+  if (!isNum(v)) return DASH;
+  if (Math.abs(v) < 0.5 * 10 ** -digits) v = 0; // no "-0.000"
+  return nf({ minimumFractionDigits: digits, maximumFractionDigits: digits }).format(v);
 }
 
 /** Compact: 1,284 / 12.9K / 4.2M. Values under 10,000 stay in full. */
