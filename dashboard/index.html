@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Retail Analytics Dashboard</title>
+  <meta name="description" content="Olist e-commerce analytics, late-delivery model and weekly forecasts, with DuckDB and Snowflake lineage.">
+
+  <!-- Styles: tokens first, then base, layout, and one file per component. No inline styles in this document. -->
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components/card.css">
+  <link rel="stylesheet" href="css/components/kpi.css">
+  <link rel="stylesheet" href="css/components/chart.css">
+  <link rel="stylesheet" href="css/components/tooltip.css">
+  <link rel="stylesheet" href="css/components/table.css">
+  <link rel="stylesheet" href="css/components/controls.css">
+  <link rel="stylesheet" href="css/components/insight.css">
+
+  <!-- Classic script: explains how to serve the dashboard if it was opened from the file system. -->
+  <script src="js/boot-check.js" defer></script>
+  <!-- Application: ES modules. Pages register themselves in js/pages/; see js/core/registry.js. -->
+  <script type="module" src="js/main.js"></script>
+</head>
+<body>
+  <a class="visually-hidden" href="#main">Skip to content</a>
+  <header class="app-header">
+    <div class="brand">
+      <h1>Retail Analytics</h1>
+      <small>Olist e-commerce, 2016-2018</small>
+    </div>
+    <nav class="nav" id="nav" aria-label="Dashboard pages"></nav>
+    <span class="spacer"></span>
+    <button type="button" class="icon-button" id="theme-toggle">Theme: system</button>
+  </header>
+
+  <main class="page" id="main" tabindex="-1">
+    <p class="muted" id="loading">Loading…</p>
+  </main>
+
+  <footer class="app-footer" id="footer"></footer>
+</body>
+</html>

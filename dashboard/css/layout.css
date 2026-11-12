@@ -52,3 +52,5 @@
 }
 .boot-error h1 { margin-bottom: 8px; }
 .boot-error p + p { margin-top: 8px; }
+
+.section-title { margin: 28px 0 12px; font-size: 16px; }
