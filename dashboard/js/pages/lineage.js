@@ -21,6 +21,7 @@ const FLOW = [
 
 registerPage({
   id: "lineage",
+  eyebrow: "Data platform",
   title: "Data & lineage",
   order: 90,
   description: "Where the numbers come from, and the evidence that the DuckDB and Snowflake implementations agree.",

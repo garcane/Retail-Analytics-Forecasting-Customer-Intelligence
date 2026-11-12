@@ -30,6 +30,7 @@ const STATE_METRICS = {
 
 registerPage({
   id: "sales",
+  eyebrow: "Business analytics",
   title: "Sales & customers",
   order: 20,
   description: "Where the revenue comes from. Revenue is item price of net orders (not canceled or unavailable); freight is reported separately.",

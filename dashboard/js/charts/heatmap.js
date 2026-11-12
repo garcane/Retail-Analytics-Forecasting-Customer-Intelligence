@@ -31,13 +31,13 @@ export function heatmap(host, options) {
 
   function draw(width) {
     for (const child of [...frame.childNodes]) if (child.tagName !== "DIV") child.remove();
+    frame.querySelector(".chart-empty")?.remove();
     const { rows, cols } = opts;
     const vals = rows.flatMap((r) => cols.map((c) => opts.value(r.key, c.key))).filter(Number.isFinite);
     if (!vals.length) {
       frame.prepend(el("div", { class: "chart-empty", text: "No data for this selection" }));
       return;
     }
-    frame.querySelector(".chart-empty")?.remove();
     const [lo, hi] = opts.domain || [Math.min(...vals), Math.max(...vals)];
     const colors = STEPS.map((s) => cssVar(s) || "#888888");
     const labelW = Math.min(width * 0.4, Math.max(...rows.map((r) => r.label.length)) * TEXT_W + 12);
@@ -45,7 +45,7 @@ export function heatmap(host, options) {
     const cw = (width - m.left - m.right) / cols.length;
     const ch = opts.cellHeight;
     const height = m.top + m.bottom + ch * rows.length;
-    const root = svg("svg", { viewBox: `0 0 ${width} ${height}`, width, height, role: "img", "aria-label": opts.ariaLabel || "Heatmap" });
+    const root = svg("svg", { viewBox: `0 0 ${width} ${height}`, width, height, role: "group", "aria-label": opts.ariaLabel || "Heatmap" });
 
     cols.forEach((c, j) => {
       const label = c.label.length * TEXT_W > cw ? c.label.slice(0, Math.max(1, Math.floor(cw / TEXT_W) - 1)) + "…" : c.label;
@@ -65,13 +65,14 @@ export function heatmap(host, options) {
         if (!opts.higherIsBetter) t = 1 - t;
         const step = Math.max(0, Math.min(STEPS.length - 1, Math.round(t * (STEPS.length - 1))));
         const fill = colors[step];
-        const rect = svg("rect", { class: "heat-cell", x: x0, y: y0, width: cw, height: ch, rx: 3, style: `fill:${fill}`, tabindex: 0,
+        const rect = svg("rect", { class: "heat-cell", x: x0, y: y0, width: cw, height: ch, rx: 3, style: `fill:${fill}`, tabindex: 0, role: "img",
           "aria-label": `${r.label}, ${c.label}: ${opts.format(v)}` });
         root.append(rect);
         const text = opts.format(v);
         if (text.length * TEXT_W + 6 < cw) {
-          root.append(svg("text", { class: "heat-label", x: x0 + cw / 2, y: y0 + ch / 2 + 4, "text-anchor": "middle",
-            style: `fill:${luminance(fill) > 0.35 ? "#0b0b0b" : "#ffffff"}`, text }));
+          // ink chosen by the cell's luminance; the colours themselves are tokens (chart.css)
+          root.append(svg("text", { class: `heat-label ${luminance(fill) > 0.35 ? "on-light" : "on-dark"}`,
+            x: x0 + cw / 2, y: y0 + ch / 2 + 4, "text-anchor": "middle", text }));
         }
         const show = (pos) => {
           rect.classList.add("is-hover");
@@ -90,12 +91,12 @@ export function heatmap(host, options) {
     frame.prepend(root);
   }
 
-  const stop = onResize(frame, draw);
+  const resize = onResize(frame, draw);
   return {
     update(next) {
       opts = { ...opts, ...next };
-      draw(Math.floor(frame.clientWidth));
+      resize.redraw();
     },
-    destroy: stop,
+    destroy: resize.stop,
   };
 }

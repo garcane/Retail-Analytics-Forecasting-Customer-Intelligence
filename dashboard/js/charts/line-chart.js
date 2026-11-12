@@ -26,13 +26,13 @@ export function lineChart(host, options) {
 
   function draw(width) {
     for (const child of [...frame.childNodes]) if (child.tagName !== "DIV") child.remove();
+    frame.querySelector(".chart-empty")?.remove();
     const series = opts.series.filter((s) => s.points && s.points.length);
     const height = opts.height || 260;
     if (!series.length) {
       frame.prepend(el("div", { class: "chart-empty", text: "No data for this selection" }));
       return;
     }
-    frame.querySelector(".chart-empty")?.remove();
 
     const xs = series.flatMap((s) => s.points.map((p) => p.x));
     const ys = series.flatMap((s) => s.points.map((p) => p.y)).concat((opts.refLines || []).flatMap((r) => [r.y1, r.y2]));
@@ -50,7 +50,7 @@ export function lineChart(host, options) {
     const x = linear(xDomain, [m.left, m.left + iw]);
     const y = linear(yNice.domain, [m.top + ih, m.top]);
 
-    const root = svg("svg", { viewBox: `0 0 ${width} ${height}`, width, height, role: "img", "aria-label": opts.ariaLabel || "Line chart" });
+    const root = svg("svg", { viewBox: `0 0 ${width} ${height}`, width, height, role: "group", "aria-label": opts.ariaLabel || "Line chart" });
 
     // shaded spans
     for (const s of opts.spans || []) {
@@ -121,7 +121,7 @@ export function lineChart(host, options) {
     const lookup = series.map((s) => new Map(s.points.map((p) => [p.x, p.y])));
     const cross = svg("line", { class: "crosshair", y1: m.top, y2: m.top + ih, visibility: "hidden" });
     const dots = series.map((s) => svg("circle", { class: "marker", r: 4, style: `fill:${s.color}`, visibility: "hidden" }));
-    const overlay = svg("rect", { class: "hit", x: m.left, y: m.top, width: iw, height: ih, tabindex: 0,
+    const overlay = svg("rect", { class: "hit", x: m.left, y: m.top, width: iw, height: ih, tabindex: 0, role: "application",
       "aria-label": `${opts.ariaLabel || "Chart"}. Use left and right arrow keys to read values.` });
     root.append(cross, ...dots, overlay);
 
@@ -178,13 +178,13 @@ export function lineChart(host, options) {
     frame.prepend(root);
   }
 
-  const stop = onResize(frame, draw);
+  const resize = onResize(frame, draw);
   return {
     update(next) {
       opts = { ...opts, ...next };
-      draw(Math.floor(frame.clientWidth));
+      resize.redraw();
     },
-    destroy: stop,
+    destroy: resize.stop,
   };
 }
 

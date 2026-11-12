@@ -38,7 +38,22 @@ export function clear(node) {
   return node;
 }
 
-/** Re-run `draw(width)` whenever the host's width changes (and on theme change). Returns a disconnect function. */
+// Every live chart registers its teardown here; the shell disposes them all before rendering the next page, so
+// observers and theme listeners never outlive their (detached) DOM.
+const live = new Set();
+
+/** Tear down every chart created since the last call (called by main.js on navigation). */
+export function disposeCharts() {
+  for (const stop of [...live]) stop();
+  live.clear();
+}
+
+/**
+ * Re-run `draw(width)` whenever the host's width changes, and on theme change.
+ * Returns {redraw, stop}. redraw() forces a draw now, or, if the host is hidden (width 0, e.g. a card showing its
+ * table), as soon as it becomes visible again: the remembered width is reset either way, so a chart updated while
+ * hidden is never left blank.
+ */
 export function onResize(host, draw) {
   let last = -1;
   const run = () => {
@@ -53,7 +68,9 @@ export function onResize(host, draw) {
   const redraw = () => { last = -1; run(); };
   window.addEventListener("themechange", redraw);
   requestAnimationFrame(run);
-  return () => { ro.disconnect(); window.removeEventListener("themechange", redraw); };
+  const stop = () => { ro.disconnect(); window.removeEventListener("themechange", redraw); live.delete(stop); };
+  live.add(stop);
+  return { redraw, stop };
 }
 
 /** Resolved value of a CSS custom property, e.g. cssVar("--seq-400"). */

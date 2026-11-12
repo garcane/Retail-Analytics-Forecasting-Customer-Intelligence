@@ -16,6 +16,7 @@ const nice = (s) => String(s).replace(/_/g, " ");
 
 registerPage({
   id: "risk",
+  eyebrow: "Machine learning",
   title: "Risk scores",
   order: 50,
   description: "The v1 logistic regression used as intended: rank each month's orders by risk and flag the top share. Every order is scored by a model trained only on deliveries known before its month.",

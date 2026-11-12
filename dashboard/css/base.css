@@ -1,25 +1,57 @@
-/* Reset and typography. No component styling here. */
+/* Reset and typography. One family; contrast comes from size, weight (450 body / 500 display / 700 eyebrow) and
+   tracking (-2% on display sizes, +4% only on the uppercase eyebrow). No component styling here. */
 *, *::before, *::after { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; }
 body {
   margin: 0;
   background: var(--page);
   color: var(--text-primary);
-  font: 14px/1.5 var(--font);
+  font-family: var(--font);
+  font-size: 16px;
+  font-weight: var(--weight-body);
+  line-height: 1.4;
 }
-h1, h2, h3 { margin: 0; line-height: 1.25; font-weight: 600; }
-h1 { font-size: 18px; }
-h2 { font-size: 22px; }
-h3 { font-size: 15px; }
+h1, h2, h3 { margin: 0; font-weight: var(--weight-strong); letter-spacing: var(--tracking-display); }
+h1 { font-size: 20px; line-height: 1.2; }
+h2 { font-size: 48px; line-height: 1; }
+h3 { font-size: 22px; line-height: 1.2; }
 p { margin: 0; }
-a { color: var(--accent); }
+strong, b { font-weight: 700; }
+a { color: var(--link); text-underline-offset: 3px; }
 button, select, input { font: inherit; color: inherit; }
-:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
+
+/* Eyebrow: the section-category signal. 14px / 700 / +4% / uppercase, with a signal-orange dot. */
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+.eyebrow::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--signal);
+  flex-shrink: 0;
+}
+
 .visually-hidden {
   position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px;
   overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
 }
+.skip-link:focus {
+  position: fixed !important; width: auto; height: auto; clip: auto; margin: 0; z-index: 100;
+  top: 12px; left: 12px; padding: 10px 20px; border-radius: var(--radius-pill);
+  background: var(--surface-ink); color: var(--on-ink); text-decoration: none;
+}
 .muted { color: var(--text-muted); }
 .secondary { color: var(--text-secondary); }
 .num { font-variant-numeric: tabular-nums; }
-code { font-size: 12.5px; background: var(--surface-2); padding: 1px 5px; border-radius: 4px; }
+code { font-size: 13px; background: var(--surface-2); padding: 2px 8px; border-radius: var(--radius-xs); }

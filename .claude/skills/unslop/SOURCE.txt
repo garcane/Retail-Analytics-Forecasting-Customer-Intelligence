@@ -1,0 +1,2 @@
+Source: https://github.com/heydamir/unslop @ 97daa3eb365670ea3f87ed85356cbfcee18105a5 (2026-11-09)
+Author: Damir Sokolovsky, CC BY 4.0. Installed 2026-11-12 by copying skills/unslop unchanged.

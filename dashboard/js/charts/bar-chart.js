@@ -68,7 +68,7 @@ export function barChart(host, options) {
       const x = linear(nice.domain, [m.left, m.left + iw]);
       const yb = band(data.map((d) => d.key), [m.top, m.top + rowH * data.length], { paddingInner: 0.25, paddingOuter: 0.1 });
       const thick = Math.min(MAX_THICK, yb.bandwidth);
-      root = svg("svg", { viewBox: `0 0 ${width} ${height}`, width, height, role: "img", "aria-label": opts.ariaLabel || "Bar chart" });
+      root = svg("svg", { viewBox: `0 0 ${width} ${height}`, width, height, role: "group", "aria-label": opts.ariaLabel || "Bar chart" });
       for (const t of nice.ticks) {
         const px = Math.round(x(t)) + 0.5;
         root.append(svg("line", { class: t === 0 ? "baseline" : "gridline", x1: px, x2: px, y1: m.top, y2: height - m.bottom }));
@@ -90,7 +90,7 @@ export function barChart(host, options) {
           const vx = x(d.value);
           g.append(svg("text", { class: "value-label", x: d.value >= 0 ? vx + 6 : vx - 6, y: c0 + thick / 2 + 4, "text-anchor": d.value >= 0 ? "start" : "end", text: opts.format(d.value) }));
         }
-        const hit = svg("rect", { class: "hit", x: 0, y: yb(d.key) - (yb.step - yb.bandwidth) / 2, width, height: yb.step, tabindex: 0,
+        const hit = svg("rect", { class: "hit", x: 0, y: yb(d.key) - (yb.step - yb.bandwidth) / 2, width, height: yb.step, tabindex: 0, role: "img",
           "aria-label": `${d.label}: ${opts.format(d.value)}${d.note ? `, ${d.note}` : ""}` });
         g.append(hit);
         wire(hit, bar, d, () => ({ x: x(d.value), y: c0 }));
@@ -115,7 +115,7 @@ export function barChart(host, options) {
       const y = linear(nice.domain, [m.top + ih, m.top]);
       const xb = band(data.map((d) => d.key), [m.left, m.left + iw], { paddingInner: 0.3 });
       const thick = Math.min(MAX_THICK, xb.bandwidth);
-      root = svg("svg", { viewBox: `0 0 ${width} ${height}`, width, height, role: "img", "aria-label": opts.ariaLabel || "Column chart" });
+      root = svg("svg", { viewBox: `0 0 ${width} ${height}`, width, height, role: "group", "aria-label": opts.ariaLabel || "Column chart" });
       for (const t of nice.ticks) {
         const py = Math.round(y(t)) + 0.5;
         root.append(svg("line", { class: t === 0 ? "baseline" : "gridline", x1: m.left, x2: m.left + iw, y1: py, y2: py }));
@@ -135,7 +135,7 @@ export function barChart(host, options) {
         if (opts.valueLabels) g.append(svg("text", { class: "value-label", x: c0 + thick / 2, y: y(d.value) - 5, "text-anchor": "middle", text: opts.format(d.value) }));
         const stagger = xLabelRows > 1 && i % 2 === 1 ? 12 : 0;
         g.append(svg("text", { class: "tick-label", x: c0 + thick / 2, y: m.top + ih + 14 + stagger, "text-anchor": "middle", text: d.label }));
-        const hit = svg("rect", { class: "hit", x: xb(d.key) - (xb.step - xb.bandwidth) / 2, y: m.top, width: xb.step, height: ih, tabindex: 0,
+        const hit = svg("rect", { class: "hit", x: xb(d.key) - (xb.step - xb.bandwidth) / 2, y: m.top, width: xb.step, height: ih, tabindex: 0, role: "img",
           "aria-label": `${d.label}: ${opts.format(d.value)}${d.note ? `, ${d.note}` : ""}` });
         g.append(hit);
         wire(hit, bar, d, () => ({ x: c0 + thick / 2, y: y(d.value) }));
@@ -164,12 +164,12 @@ export function barChart(host, options) {
     frame.prepend(root);
   }
 
-  const stop = onResize(frame, draw);
+  const resize = onResize(frame, draw);
   return {
     update(next) {
       opts = { ...opts, ...next };
-      draw(Math.floor(frame.clientWidth));
+      resize.redraw();
     },
-    destroy: stop,
+    destroy: resize.stop,
   };
 }
