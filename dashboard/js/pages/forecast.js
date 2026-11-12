@@ -13,6 +13,7 @@ import { legend } from "../charts/legend.js";
 
 registerPage({
   id: "forecast",
+  eyebrow: "Forecasting",
   title: "Weekly forecast",
   order: 60,
   description: "Weekly orders and revenue, forecast one and four weeks ahead. Every forecast uses only the weeks before it (rolling origin), 2017-01 to 2018-08.",

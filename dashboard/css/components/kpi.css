@@ -1,21 +1,30 @@
 /* Stat tiles and the single hero figure per view. Proportional figures for big standalone numbers. */
 .kpi-row {
   display: grid;
-  gap: var(--gap);
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
   margin-bottom: var(--gap);
 }
 .kpi {
   background: var(--surface-1);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 14px 16px;
+  border-radius: var(--radius-tile);
+  padding: 20px 24px;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 4px;
   min-width: 0;
 }
-.kpi-label { color: var(--text-secondary); font-size: 13px; }
-.kpi-value { font-size: 26px; font-weight: 600; letter-spacing: -0.01em; }
-.kpi.hero .kpi-value { font-size: 48px; line-height: 1.05; }
-.kpi-note { color: var(--text-muted); font-size: 12px; }
+.kpi-label { color: var(--text-muted); font-size: 14px; }
+.kpi-value { white-space: nowrap; font-size: clamp(24px, 2.3vw, 32px); font-weight: var(--weight-strong); letter-spacing: var(--tracking-display); line-height: 1.1; }
+.kpi-note { color: var(--text-muted); font-size: 13px; }
+
+/* The hero tile is ink, not cream: the one high-contrast moment of the page. */
+.kpi.hero { background: var(--surface-ink); color: var(--on-ink); }
+.kpi.hero .kpi-label, .kpi.hero .kpi-note { color: var(--on-ink-muted); }
+.kpi.hero .kpi-value { font-size: 56px; line-height: 1; letter-spacing: -0.03em; }
+@media (min-width: 900px) { .kpi-row > .kpi.hero { grid-column: span 2; } }
+
+/* Tiles nested inside a card sit on the canvas tone so they read as a step down. */
+.card .kpi-row { grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); margin-bottom: 16px; }
+.card .kpi { background: var(--page); padding: 16px 20px; border-radius: var(--radius-control); }
+.card .kpi-value { font-size: 24px; }

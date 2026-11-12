@@ -38,7 +38,7 @@ def test_index_html_has_no_inline_style_or_script():
 
 def test_every_stylesheet_is_linked_and_exists():
     html = (DASH / "index.html").read_text(encoding="utf-8")
-    linked = set(re.findall(r'<link rel="stylesheet" href="([^"]+)"', html))
+    linked = {h for h in re.findall(r'<link rel="stylesheet" href="([^"]+)"', html) if not h.startswith("http")}
     on_disk = {p.relative_to(DASH).as_posix() for p in (DASH / "css").rglob("*.css")}
     assert linked == on_disk
 

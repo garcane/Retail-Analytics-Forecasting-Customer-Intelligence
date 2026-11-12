@@ -6,6 +6,7 @@
 //     title: "Late-delivery model",
 //     order: 40,                 // navigation order
 //     description: "...",        // one line under the page title
+//     eyebrow: "Machine learning", // optional section category shown above the title (uppercase, accent dot)
 //     needs: ["models"],         // datasets that must load (dashboard/data/<name>.json via manifest.json)
 //     optional: ["risk"],        // datasets passed as null when absent
 //     render(root, data, ctx),   // build the page into `root`; ctx.navigate(id) switches pages

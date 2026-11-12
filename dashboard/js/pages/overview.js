@@ -12,6 +12,7 @@ import { lineChart } from "../charts/line-chart.js";
 
 registerPage({
   id: "overview",
+  eyebrow: "Retail analytics",
   title: "Overview",
   order: 10,
   description: "Olist marketplace orders from September 2016 to October 2018: what was sold, how it was delivered, and what the models learned.",

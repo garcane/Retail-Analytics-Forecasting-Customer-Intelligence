@@ -19,6 +19,7 @@ const fmt3 = (v) => f.num(v, 3);
 
 registerPage({
   id: "models",
+  eyebrow: "Machine learning",
   title: "Late-delivery model",
   order: 40,
   description: "Which orders will arrive late? Each model is trained only on orders delivered before the test month starts, then scored on that month (2018-03 to 2018-08). Metrics are means of the six months.",

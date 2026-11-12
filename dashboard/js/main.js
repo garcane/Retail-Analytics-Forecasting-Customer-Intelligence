@@ -40,7 +40,10 @@ async function route() {
     const data = await load(page.needs, page.optional);
     if (token !== renderToken) return; // a newer navigation won
     clear(main);
-    main.append(el("div", { class: "page-head" }, el("h2", { text: page.title }), page.description ? el("p", { text: page.description }) : null));
+    main.append(el("div", { class: "page-head", "data-ghost": page.title },
+      page.eyebrow ? el("span", { class: "eyebrow", text: page.eyebrow }) : null,
+      el("h2", { text: page.title }),
+      page.description ? el("p", { text: page.description }) : null));
     page.render(main, data, { navigate });
     main.focus({ preventScroll: true });
     window.scrollTo(0, 0);
@@ -61,11 +64,16 @@ async function renderFooter() {
   try {
     const m = await manifest();
     const when = m.generated_at ? m.generated_at.replace("T", " ").replace("+00:00", " UTC") : "unknown";
-    footer.replaceChildren(
-      `Data built ${when} from the ${m.backend === "snowflake" ? "Snowflake" : "DuckDB"} warehouse`,
-      m.git_sha ? ` at commit ${m.git_sha}` : "",
-      ". Olist dataset (Kaggle), CC BY-NC-SA 4.0. Only aggregates are shown; no order-level or review text.",
-    );
+    const source = m.backend === "snowflake" ? "Snowflake (RETAIL_OLIST marts, built by dbt)" : "DuckDB (the local reference warehouse)";
+    const col = (title, text) => el("div", {}, el("h4", { text: title }), el("p", { text }));
+    footer.replaceChildren(el("div", { class: "footer-inner" },
+      el("p", { class: "footer-headline", text: "Every figure here traces back to one dataset, two warehouses that agree." }),
+      el("div", { class: "footer-cols" },
+        col("Data source", source),
+        col("Built", `${when}${m.git_sha ? ` · commit ${m.git_sha}` : ""}`),
+        col("Dataset", "Olist Brazilian e-commerce, Kaggle. CC BY-NC-SA 4.0."),
+        col("Privacy", "Aggregates only: no order-level rows, no review text.")),
+      el("p", { class: "footer-small", text: "Retail Analytics, Forecasting & Customer Intelligence · DuckDB and Snowflake + dbt implementations · Power BI remains available for conventional reporting." })));
   } catch {
     footer.textContent = "";
   }

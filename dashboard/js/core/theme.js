@@ -4,6 +4,7 @@
 const KEY = "retail-dashboard-theme";
 const ORDER = ["auto", "light", "dark"];
 const LABEL = { auto: "Theme: system", light: "Theme: light", dark: "Theme: dark" };
+const SHORT = { auto: "Auto", light: "Light", dark: "Dark" };
 
 function stored() {
   try {
@@ -29,7 +30,7 @@ export function initTheme(button) {
   let mode = ORDER.includes(stored()) ? stored() : "auto";
   apply(mode);
   const sync = () => {
-    button.textContent = LABEL[mode];
+    button.textContent = SHORT[mode];
     button.setAttribute("aria-label", `${LABEL[mode]}. Activate to change.`);
   };
   sync();

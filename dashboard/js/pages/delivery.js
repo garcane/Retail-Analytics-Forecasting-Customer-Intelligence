@@ -14,6 +14,7 @@ const pctFmt = (v) => f.pct(v, 1, { fraction: false });
 
 registerPage({
   id: "delivery",
+  eyebrow: "Operations",
   title: "Delivery",
   order: 30,
   description: "Delivered orders with a late/on-time label and no timestamp anomaly, by purchase month. Late = delivered after the date promised at checkout.",
