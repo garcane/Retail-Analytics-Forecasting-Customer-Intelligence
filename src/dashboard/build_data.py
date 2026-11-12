@@ -64,7 +64,7 @@ def clean(value):
         except (ValueError, AttributeError):
             pass
     if isinstance(value, float):
-        return None if math.isnan(value) or math.isinf(value) else round(value, 10)
+        return None if math.isnan(value) or math.isinf(value) else round(value, 6)
     if isinstance(value, (pd.Timestamp, dt.datetime, dt.date)):
         return value.isoformat()[:10] if isinstance(value, dt.date) and not isinstance(value, dt.datetime) else value.isoformat()
     return value
@@ -120,6 +120,30 @@ def model_outputs() -> dict:
 def forecast_metrics() -> dict:
     return {"baselines": read_json("forecast_metrics.json"), "models": read_json("forecast_models_metrics.json"),
             "source": "reports/forecast_metrics.json, reports/forecast_models_metrics.json"}
+
+
+def lineage() -> dict:
+    """Implementation status for the Data & lineage page, from the committed reconciliation report (a live run)."""
+    path = ROOT / "docs" / "validation" / "RECONCILIATION_REPORT.md"
+    text = path.read_text(encoding="utf-8") if path.exists() else ""
+    run, checks, section = {}, [], None
+    for line in text.splitlines():
+        if line.startswith("## "):
+            section = line[3:].strip().lower()
+            continue
+        if not line.startswith("|") or set(line.replace("|", "").strip()) <= set("-: "):
+            continue
+        cells = [c.strip() for c in line.strip().strip("|").split("|")]
+        if section == "run" and len(cells) == 2 and cells[0] != "item":
+            run[cells[0]] = cells[1]
+        elif section == "summary" and len(cells) >= 7 and cells[0] != "check":
+            checks.append({"check": cells[0], "group": cells[1], "status": cells[2], "left_rows": cells[3],
+                           "right_rows": cells[4], "missing_extra": cells[5], "unexplained": cells[6]})
+    keep = ("generated", "git SHA", "mode", "database / role / warehouse", "tool: duckdb",
+            "tool: snowflake-connector-python")
+    return {"source": "docs/validation/RECONCILIATION_REPORT.md (src/reconciliation, live run)",
+            "not_run": "NOT RUN" in text or not checks,
+            "run": {k: v for k, v in run.items() if k in keep}, "checks": checks}
 
 
 # -------------------------------------------------------------------------------------------- warehouse queries
@@ -208,7 +232,7 @@ def risk_rollups(db: Path) -> dict:
 # -------------------------------------------------------------------------------------------------------- main
 def write(out: Path, name: str, payload: dict, manifest: dict, title: str, source: str, rows: int | None = None) -> None:
     path = out / f"{name}.json"
-    path.write_text(json.dumps(clean(payload), indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
+    path.write_text(json.dumps(clean(payload), separators=(",", ":"), ensure_ascii=False) + "\n", encoding="utf-8")
     manifest["datasets"][name] = {"file": path.name, "title": title, "source": source, "rows": rows,
                                   "bytes": path.stat().st_size}
 
@@ -252,6 +276,8 @@ def main() -> int:
           "reports/analytics/*.csv (sql/analytics)", rows=sum(len(t["rows"]) for t in tables.values()))
     write(args.out, "models", model_outputs(), manifest, "Late-delivery model results",
           "reports/late_delivery_metrics.json, explainability, recalibration, drift")
+    lin = lineage()
+    write(args.out, "lineage", lin, manifest, "DuckDB vs Snowflake reconciliation", lin["source"], rows=len(lin["checks"]))
 
     if args.backend == "duckdb" and not args.skip_scores:
         risk = risk_rollups(db)
