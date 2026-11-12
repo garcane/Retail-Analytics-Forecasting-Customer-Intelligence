@@ -1,0 +1,43 @@
+/* Standard form controls styled to the chart chrome: segmented buttons, selects, small toggles. */
+.control { display: flex; flex-direction: column; gap: 4px; }
+.control-label { font-size: 12px; color: var(--text-muted); }
+.segmented {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  padding: 2px;
+  background: var(--surface-2);
+  border-radius: 8px;
+}
+.segmented button {
+  border: 0;
+  background: none;
+  padding: 4px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  color: var(--text-secondary);
+}
+.segmented button:hover { color: var(--text-primary); }
+.segmented button[aria-pressed="true"] {
+  background: var(--surface-1);
+  color: var(--text-primary);
+  box-shadow: var(--shadow);
+  font-weight: 500;
+}
+select.select {
+  padding: 5px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--surface-1);
+}
+.icon-button {
+  border: 1px solid var(--border);
+  background: var(--surface-1);
+  border-radius: 8px;
+  padding: 4px 10px;
+  cursor: pointer;
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+.icon-button:hover { color: var(--text-primary); background: var(--surface-2); }
+.icon-button[aria-pressed="true"] { background: var(--accent-wash); color: var(--text-primary); }

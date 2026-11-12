@@ -1,0 +1,22 @@
+/* One tooltip per chart. Values lead (strong), series names follow (secondary); line keys, not boxes. */
+.tooltip {
+  position: absolute;
+  z-index: 5;
+  pointer-events: none;
+  min-width: 140px;
+  max-width: 300px;
+  padding: 8px 10px;
+  border-radius: var(--radius-sm);
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  font-size: 12px;
+  opacity: 0;
+  transition: opacity 80ms;
+}
+.tooltip.is-visible { opacity: 1; }
+.tooltip-title { color: var(--text-muted); margin-bottom: 4px; }
+.tooltip-row { display: flex; align-items: center; gap: 8px; }
+.tooltip-row strong { font-variant-numeric: tabular-nums; min-width: 56px; }
+.tooltip-row span { color: var(--text-secondary); }
+.tooltip-key { width: 12px; height: 2px; border-radius: 1px; flex-shrink: 0; }

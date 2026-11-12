@@ -16,12 +16,10 @@
 --   * Row order: the DuckDB query ends with `order by purchase_ts, order_id`. It is kept, but a Snowflake table does not
 --     guarantee row order on read; consumers (src/data_access, training code) must ORDER BY purchase_ts, order_id themselves.
 --
--- INTENTIONAL DIFFERENCES vs the DuckDB query (documented, expected):
---   * arg_max ties. `arg_max(category, price)` (in int_late_delivery_item_agg) and `arg_max(payment_type, payment_value)`
---     (here) are arbitrary on ties in DuckDB. Here ties resolve to the alphabetically first category / payment_type.
---     In warehouse.duckdb 57 of the 96,282 orders have a price tie across different categories and none has a payment
---     tie across different types, so only category_prior_n / category_prior_late can differ, and only for orders whose
---     category differs between the two picks (and the orders that read those categories' running totals).
+-- Differences in mechanism vs the DuckDB query (results are identical; live reconciliation 2026-11-12: 0 diffs):
+--   * Ties on price (category, in int_late_delivery_item_agg) and on payment_value (payment_type, here) resolve to the
+--     alphabetically first value, the same rule as sql/ml/late_delivery_features.sql. DuckDB's arg_max used to pick
+--     arbitrarily (57 category ties), which made its category_prior_* irreproducible; both engines now agree.
 --   * The "as of" history read uses Snowflake's ASOF JOIN (or the documented range-join fallback), not DuckDB's ASOF JOIN.
 with pop as (
     select * from {{ ref('int_late_delivery_population') }}
