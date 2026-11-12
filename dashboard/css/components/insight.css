@@ -1,0 +1,33 @@
+/* Insight cards: a finding in words, the evidence figure, and where it comes from. Plus small status/fact helpers. */
+.insights { display: grid; gap: var(--gap); grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+.insight {
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.insight-kind { font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-muted); }
+.insight-figure { font-size: 22px; font-weight: 600; }
+.insight-text { color: var(--text-secondary); }
+.insight-link { font-size: 12px; margin-top: auto; }
+
+.status { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-secondary); }
+.status::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--status-color, var(--text-muted));
+}
+.status.good { --status-color: var(--good); }
+.status.warning { --status-color: var(--warning); }
+.status.critical { --status-color: var(--critical); }
+
+.pill-list { display: flex; flex-wrap: wrap; gap: 6px; }
+.pill { background: var(--surface-2); border-radius: 999px; padding: 2px 10px; font-size: 12px; color: var(--text-secondary); }
+dl.facts { display: grid; grid-template-columns: max-content 1fr; gap: 4px 16px; margin: 0; font-size: 13px; }
+dl.facts dt { color: var(--text-muted); }
+dl.facts dd { margin: 0; }

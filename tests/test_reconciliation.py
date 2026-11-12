@@ -433,10 +433,19 @@ def test_snowflake_metadata_requires_settings():
     assert meta.account_locator == "n/a" and len(meta.git_sha) >= 7 and "python" in meta.tool_versions
 
 
-def test_shipped_report_is_a_not_run_stub_without_numbers():
+def test_shipped_report_is_a_stub_or_a_real_live_run():
+    """The shipped report is either the figure-free NOT RUN stub, or one written by the tool from a live Snowflake run
+    (never a hand-edited or self-test report), and it never carries an unredacted account identifier."""
     text = STUB.read_text(encoding="utf-8")
-    assert "NOT RUN" in text
-    assert not re.search(r"\d", text), "the stub must not contain any figure"
+    if "NOT RUN" in text:
+        assert not re.search(r"\d", text), "the stub must not contain any figure"
+        return
+    assert text.startswith("# Reconciliation report: DuckDB vs Snowflake")
+    assert "| mode | snowflake |" in text, "only a live run may replace the stub"
+    assert re.search(r"\| git SHA \| [0-9a-f]{7,40}", text)
+    assert re.search(r"PASS: \d+ \(of \d+ checks\)|FAIL", text)
+    accounts = re.findall(r"snowflake account (\S+)", text) + re.findall(r"account locator \(redacted\) \| (\S+)", text)
+    assert accounts and all("***" in a for a in accounts), "the account must be redacted"
 
 
 # ----------------------------------------------------------------------------- CLI guards and an end-to-end offline run

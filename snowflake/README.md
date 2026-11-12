@@ -182,5 +182,5 @@ This writes a copy of the project to `powerbi_snowflake/` and rewrites only `exp
 
 ## Known issues to be aware of
 
-- The DuckDB reference's late-delivery features were reported to vary between runs on `arg_max` ties; the accounts of the workstreams that saw it disagree about the effect of `threads = 1`. Unresolved.
+- The DuckDB reference's late-delivery features used to vary between multi-threaded runs (`arg_max` ties). Fixed on 2026-11-12 (DD-21): both engines use the same alphabetical tie-break, and the live reconciliation shows 0 differences.
 - CI workflow files under `.github/workflows/` come from another workstream and are not covered here.

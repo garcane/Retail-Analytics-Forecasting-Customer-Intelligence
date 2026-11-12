@@ -3,19 +3,17 @@
 -- Grain: one row per order_id of the population that has at least one item.
 --
 -- Snowflake translation notes
---   * arg_max(category, price) -> deterministic pick, see the INTENTIONAL DIFFERENCE below.
+--   * arg_max(category, price) -> deterministic pick, see TIE-BREAK below.
 --   * haversine is computed on FLOAT columns (dim_geography.latitude/longitude are float), so Snowflake's NUMBER
 --     scale rules never enter the arithmetic. pow() -> power().
 --   * sum(coalesce(product_weight_g, 0)) is widened to NUMBER(38,0) by Snowflake; cast to bigint for a stable type.
 --
--- INTENTIONAL DIFFERENCE vs the DuckDB query (documented, expected, not a bug)
---   DuckDB's `arg_max(category, price)` picks an arbitrary row when several items share the highest price
---   (57 of the 96,282 labelled orders have a price tie across DIFFERENT categories in warehouse.duckdb). That pick
---   is not reproducible, even in DuckDB. Here ties are broken deterministically by taking the alphabetically first
---   category among the items at the maximum price. Orders without a price tie get exactly the DuckDB category.
---   `category` is not an output column of the feature table, but it keys category_prior_n / category_prior_late, so
---   a different pick in a tied order changes those history counts for that order and for orders that share the
---   affected categories. Expect small diffs in category_prior_* only; reconciliation reports them as diff counts.
+-- TIE-BREAK (same rule as the DuckDB query since 2026-11-12)
+--   57 of the 96,282 labelled orders have their most expensive items tied on price across DIFFERENT categories.
+--   The original DuckDB `arg_max(category, price)` picked an arbitrary tied row, and the pick changed with thread
+--   scheduling, so category_prior_n / category_prior_late were not reproducible. Both engines now take the
+--   alphabetically first category among the items at the maximum price (DuckDB: first(category order by price desc,
+--   category)). The live reconciliation on 2026-11-12 found 0 differences in the feature table.
 with items as (
     select
         oi.order_id,

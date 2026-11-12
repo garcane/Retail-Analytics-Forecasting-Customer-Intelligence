@@ -1,0 +1,19 @@
+/* Card: the container every panel renders into (title, subtitle, actions, body, footnote). */
+.card {
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+.card-head { display: flex; align-items: flex-start; gap: 12px; }
+.card-head .titles { flex: 1; min-width: 0; }
+.card-head .subtitle { color: var(--text-secondary); font-size: 13px; margin-top: 2px; }
+.card-actions { display: flex; gap: 6px; flex-shrink: 0; }
+.card-body { min-width: 0; }
+.card-foot { color: var(--text-muted); font-size: 12px; }
+.card.is-loading .card-body { opacity: 0.5; }

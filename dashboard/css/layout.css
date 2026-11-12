@@ -1,0 +1,54 @@
+/* App shell: header, page navigation, page grid. */
+.app-header {
+  position: sticky; top: 0; z-index: 10;
+  display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+  padding: 12px 24px;
+  background: var(--surface-1);
+  border-bottom: 1px solid var(--border);
+}
+.app-header .brand { display: flex; flex-direction: column; min-width: 0; }
+.app-header .brand small { color: var(--text-muted); font-size: 12px; }
+.app-header .spacer { flex: 1; }
+
+.nav { display: flex; gap: 4px; flex-wrap: wrap; }
+.nav a {
+  padding: 6px 12px; border-radius: 999px; text-decoration: none;
+  color: var(--text-secondary); font-weight: 500;
+}
+.nav a:hover { background: var(--surface-2); }
+.nav a[aria-current="page"] { background: var(--accent-wash); color: var(--text-primary); }
+
+.page { max-width: 1280px; margin: 0 auto; padding: 24px; }
+.page-head { display: flex; flex-direction: column; gap: 4px; margin-bottom: 16px; }
+.page-head p { color: var(--text-secondary); max-width: 80ch; }
+
+.controls-row {                                  /* filters: one row, above everything they scope */
+  display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: end;
+  margin: 0 0 var(--gap);
+}
+
+.grid { display: grid; gap: var(--gap); grid-template-columns: repeat(12, minmax(0, 1fr)); }
+.span-12 { grid-column: span 12; }
+.span-8 { grid-column: span 8; }
+.span-7 { grid-column: span 7; }
+.span-6 { grid-column: span 6; }
+.span-5 { grid-column: span 5; }
+.span-4 { grid-column: span 4; }
+.span-3 { grid-column: span 3; }
+@media (max-width: 1000px) {
+  .span-8, .span-7, .span-6, .span-5, .span-4 { grid-column: span 12; }
+  .span-3 { grid-column: span 6; }
+}
+@media (max-width: 600px) {
+  .page { padding: 16px; }
+  .app-header { padding: 10px 16px; }
+  .span-3 { grid-column: span 12; }
+}
+
+.app-footer { max-width: 1280px; margin: 0 auto; padding: 8px 24px 32px; color: var(--text-muted); font-size: 12px; }
+.boot-error {
+  max-width: 720px; margin: 64px auto; padding: 24px;
+  background: var(--surface-1); border: 1px solid var(--border); border-radius: var(--radius);
+}
+.boot-error h1 { margin-bottom: 8px; }
+.boot-error p + p { margin-top: 8px; }
