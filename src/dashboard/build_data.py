@@ -285,6 +285,12 @@ def main() -> int:
     else:
         manifest["notes"].append("risk.json not rebuilt: the score roll-ups need the DuckDB warehouse "
                                  "(export_scores is DuckDB-only) or were skipped with --skip-scores.")
+        previous = args.out / "risk.json"
+        if previous.exists():  # keep serving the last DuckDB build of the roll-ups, and say so
+            risk = json.loads(previous.read_text(encoding="utf-8"))
+            manifest["datasets"]["risk"] = {"file": previous.name, "title": "Risk-score roll-ups (previous build)",
+                                            "source": risk.get("source", ""), "rows": risk.get("n_scored"),
+                                            "bytes": previous.stat().st_size}
 
     (args.out / "manifest.json").write_text(json.dumps(manifest, indent=1) + "\n", encoding="utf-8")
     for name, meta in manifest["datasets"].items():
