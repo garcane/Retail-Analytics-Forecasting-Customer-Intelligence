@@ -1,0 +1,50 @@
+{
+ "generated_at": "2026-11-12T17:55:51+00:00",
+ "git_sha": "94d069e",
+ "backend": "snowflake",
+ "datasets": {
+  "kpis": {
+   "file": "kpis.json",
+   "title": "Headline KPIs",
+   "source": "Snowflake RETAIL_OLIST.MARTS: fact_order_items, fact_orders, fact_reviews; reports/analytics/07",
+   "rows": null,
+   "bytes": 298
+  },
+  "forecast": {
+   "file": "forecast.json",
+   "title": "Weekly forecasts",
+   "source": "Snowflake RETAIL_OLIST.MARTS: fb.weekly_series + export_data.forecast_backtest (rolling origin, horizons 1 and 4 weeks); reports/forecast_metrics.json, reports/forecast_models_metrics.json",
+   "rows": 1610,
+   "bytes": 256292
+  },
+  "analytics": {
+   "file": "analytics.json",
+   "title": "Business analytics (8 queries)",
+   "source": "Snowflake RETAIL_OLIST.MARTS: mart_* (dbt)",
+   "rows": 169,
+   "bytes": 34287
+  },
+  "models": {
+   "file": "models.json",
+   "title": "Late-delivery model results",
+   "source": "reports/late_delivery_metrics.json, explainability, recalibration, drift",
+   "rows": null,
+   "bytes": 32422
+  },
+  "lineage": {
+   "file": "lineage.json",
+   "title": "DuckDB vs Snowflake reconciliation",
+   "source": "docs/validation/RECONCILIATION_REPORT.md (src/reconciliation, live run)",
+   "rows": 22,
+   "bytes": 3494
+  },
+  "risk": {
+   "file": "risk.json",
+   "title": "Risk-score roll-ups",
+   "source": "Snowflake RETAIL_OLIST.MARTS: src/ml/export_scores.py (v1 logistic regression, trained only on orders delivered before each test month)",
+   "rows": 38988,
+   "bytes": 16323
+  }
+ },
+ "notes": []
+}
