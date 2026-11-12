@@ -61,7 +61,8 @@ export function barChart(host, options) {
     if (horizontal) {
       const rowH = opts.rowHeight || 30;
       const labelW = Math.min(Math.max(width * 0.42, 80), Math.max(...data.map((d) => d.label.length)) * TEXT_W + 12);
-      const m = { top: 4, right: valueLabelW, bottom: 22, left: labelW };
+      // A reference label gets its own strip above the plot, so it never sits on a bar or a value label.
+      const m = { top: opts.refValue?.label ? 20 : 4, right: valueLabelW, bottom: 22, left: labelW };
       height = m.top + m.bottom + rowH * data.length;
       const iw = Math.max(40, width - m.left - m.right);
       const x = linear(nice.domain, [m.left, m.left + iw]);
@@ -96,13 +97,19 @@ export function barChart(host, options) {
         root.append(g);
       }
       if (opts.refValue?.label) {
-        root.append(svg("text", { class: "tick-label", x: x(opts.refValue.value) + 4, y: m.top + 10, text: opts.refValue.label }));
+        const px = x(opts.refValue.value);
+        const w = opts.refValue.label.length * TEXT_W;
+        const anchorEnd = px + w / 2 > width; // keep the label inside the chart
+        root.append(svg("text", { class: "tick-label", x: anchorEnd ? px : Math.max(m.left, px), y: 12,
+          "text-anchor": anchorEnd ? "end" : (px - w / 2 < m.left ? "start" : "middle"), text: opts.refValue.label }));
       }
     } else {
       height = opts.height || 260;
       const xLabelRows = data.some((d) => d.label.length * TEXT_W > width / data.length - 4) ? 2 : 1;
       const maxTick = Math.max(...nice.ticks.map((t) => tickFmt(t).length));
-      const m = { top: opts.valueLabels ? 18 : 8, right: 8, bottom: 20 + (xLabelRows - 1) * 12, left: maxTick * TEXT_W + 14 };
+      // A reference label sits in its own right margin, level with its line, so it never touches a column.
+      const refW = opts.refValue?.label ? opts.refValue.label.length * TEXT_W + 10 : 0;
+      const m = { top: opts.valueLabels ? 18 : 8, right: 8 + refW, bottom: 20 + (xLabelRows - 1) * 12, left: maxTick * TEXT_W + 14 };
       const iw = Math.max(40, width - m.left - m.right);
       const ih = height - m.top - m.bottom;
       const y = linear(nice.domain, [m.top + ih, m.top]);
@@ -117,7 +124,7 @@ export function barChart(host, options) {
       if (opts.refValue) {
         const py = y(opts.refValue.value);
         root.append(svg("line", { class: "ref-line", x1: m.left, x2: m.left + iw, y1: py, y2: py, "stroke-width": 1.5 }));
-        if (opts.refValue.label) root.append(svg("text", { class: "tick-label", x: m.left + iw, y: py - 5, "text-anchor": "end", text: opts.refValue.label }));
+        if (opts.refValue.label) root.append(svg("text", { class: "tick-label", x: m.left + iw + 6, y: py + 4, "text-anchor": "start", text: opts.refValue.label }));
       }
       const base = y(Math.max(nice.domain[0], Math.min(0, nice.domain[1])));
       data.forEach((d, i) => {

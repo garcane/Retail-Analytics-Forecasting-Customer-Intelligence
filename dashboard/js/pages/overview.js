@@ -23,7 +23,7 @@ registerPage({
       { label: "Average order value", value: f.brl(kpis.avg_order_value), note: "net revenue / net orders" },
       { label: "Late deliveries", value: f.pct(kpis.late_rate), note: `${f.int(kpis.late_orders)} of ${f.int(kpis.labelled_orders)} delivered orders` },
       { label: "Average review score", value: f.num(kpis.avg_review_score, 2), note: "latest review per order, 1-5" },
-      { label: "One-time customers", value: f.pct(kpis.one_time_customer_share), note: "placed exactly one order" },
+      { label: "One-time customers", value: f.pct(kpis.one_time_customer_share, 2), note: "placed exactly one order" },
     ]);
 
     const months = analytics.monthly_kpis.rows;

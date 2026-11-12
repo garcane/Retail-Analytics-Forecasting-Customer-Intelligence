@@ -54,3 +54,8 @@
 .boot-error p + p { margin-top: 8px; }
 
 .section-title { margin: 28px 0 12px; font-size: 16px; }
+
+main.page:focus { outline: none; }
+@media (min-width: 900px) { .kpi-row > .kpi.hero { grid-column: span 2; } }
+.card .kpi-row { grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); margin-bottom: 12px; }
+.card .kpi-value { font-size: 22px; }
