@@ -5,8 +5,10 @@ Tiers (which scripts can run against which backend):
       src/ml/forecast_baseline.py       -> weekly_series            (MARTS.mart_weekly_orders_revenue)
       src/ml/late_delivery_baseline.py  -> late_delivery_features   (MARTS.mart_late_delivery_features)
                                            unlabelled_share         (MARTS.fact_orders)
+      src/ml/export_scores.py           -> build_from(con): late_delivery_features + order_category
+                                           (INTERMEDIATE.int_late_delivery_item_agg); build(db) stays DuckDB-file based
   Tier 2, DuckDB only for now (they read warehouse tables directly with their own SQL, nothing here serves them):
-      src/ml/drift_analysis.py, src/ml/export_scores.py, src/powerbi/export_data.py, src/analytics/run_analytics.py
+      src/ml/drift_analysis.py, src/powerbi/export_data.py (except forecast_backtest), src/analytics/run_analytics.py
 
 DuckDB path: the SQL below is the existing SQL, unchanged (late_delivery_features reads sql/ml/late_delivery_features.sql
 itself); tests assert it returns exactly what the functions in src/ml return. Snowflake path: a plain read of the dbt
@@ -20,7 +22,7 @@ Schemas are {column: kind} derived from the DuckDB output (kinds: str, int, floa
 `float` accepts any numeric dtype, `int` needs an integer dtype, `datetime` is any datetime64 unit.
 tests/test_data_access.py re-derives the column lists from the DuckDB SQL and fails if they drift.
 
-The Snowflake queries are UNVERIFIED against a live account (no live step has been run).
+The Snowflake queries read the prod marts built by `dbt build` (live run 2026-11-12; the marts reconcile with DuckDB, 22/22).
 """
 
 from __future__ import annotations
@@ -161,10 +163,46 @@ def unlabelled_share(conn, *, marts_schema: str = DEFAULT_MARTS_SCHEMA) -> dict[
     return {ym: round(1 - int(labelled) / int(n), 4) for ym, n, labelled in zip(df["ym"], df["n"], df["labelled"])}
 
 
+ORDER_CATEGORY_SCHEMA: dict[str, str] = {"order_id": "str", "category": "str"}
+
+# The category of each labelled order's most expensive item (ties -> alphabetically first), as in
+# drift_analysis.KEYS_SQL and sql/ml/late_delivery_features.sql. Used by src/ml/export_scores.py for the risk roll-ups.
+_ORDER_CATEGORY_DUCKDB = """
+with pop as (
+    select order_id from fact_orders
+    where order_status = 'delivered' and is_late is not null and not has_timestamp_anomaly
+), it as (
+    select oi.order_id, oi.price, p.product_category_name_english as category
+    from fact_order_items oi
+    join pop using (order_id)
+    join dim_product p    on p.product_key = oi.product_key
+    join dim_seller s     on s.seller_key = oi.seller_key
+    join dim_geography cg on cg.geography_key = oi.customer_geography_key
+)
+select order_id, coalesce(first(category order by price desc, category), 'unknown') as category
+from it group by order_id order by order_id
+"""
+
+
+def order_category(conn, *, intermediate_schema: str = "INTERMEDIATE") -> pd.DataFrame:
+    """One row per labelled order with items: the category of its most expensive item (ordered by order_id).
+
+    Snowflake reads the dbt model int_late_delivery_item_agg, which applies the same tie rule (DD-21)."""
+    conn = _conn(conn)
+    if conn.backend == "duckdb":
+        df = conn.read_sql(_ORDER_CATEGORY_DUCKDB)
+    else:
+        df = conform_frame(conn.read_sql(
+            "select order_id, coalesce(category, 'unknown') as category "
+            f"from {_schema_ident(intermediate_schema)}.int_late_delivery_item_agg order by order_id"), ORDER_CATEGORY_SCHEMA)
+    return validate_frame(df, ORDER_CATEGORY_SCHEMA, name="order_category")
+
+
 DATASETS: dict[str, tuple[Mapping[str, str], Callable]] = {
     "weekly_series": (WEEKLY_SERIES_SCHEMA, weekly_series),
     "late_delivery_features": (LATE_DELIVERY_FEATURES_SCHEMA, late_delivery_features),
     "unlabelled_share": (UNLABELLED_SHARE_SCHEMA, unlabelled_share),
+    "order_category": (ORDER_CATEGORY_SCHEMA, order_category),
 }
 
 

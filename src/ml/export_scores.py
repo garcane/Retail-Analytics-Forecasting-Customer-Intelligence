@@ -42,9 +42,27 @@ def score_test_months(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def build(db: Path) -> pd.DataFrame:
+    """Scores from a DuckDB warehouse file (the Power BI export path)."""
     con = duckdb.connect(str(db), read_only=True)
-    df = ldb.load(con).merge(con.execute(KEYS_SQL).df()[["order_id", "category"]], on="order_id", how="left")
-    con.close()
+    try:
+        return build_from(con)
+    finally:
+        con.close()
+
+
+def build_from(con) -> pd.DataFrame:
+    """Scores from an open connection: a raw DuckDB connection, or a src/data_access connection to DuckDB or Snowflake.
+
+    The features come from ldb.load (sql/ml/late_delivery_features.sql, or MARTS.mart_late_delivery_features on
+    Snowflake) and the order category from KEYS_SQL or data_access.datasets.order_category. Both engines resolve price
+    ties the same way (DD-21), so the scores agree."""
+    if ldb._is_data_access(con):
+        from data_access import datasets  # imported here so the plain DuckDB path needs no extra sys.path entry
+
+        keys = datasets.order_category(con)
+    else:
+        keys = con.execute(KEYS_SQL).df()[["order_id", "category"]]
+    df = ldb.load(con).merge(keys, on="order_id", how="left")
     df["category"] = df["category"].fillna("unknown")
     scored = score_test_months(df)
     columns = ["order_id", "month", "purchase_date_key", "risk_score", "risk_percentile", "flagged_top10", "is_late",

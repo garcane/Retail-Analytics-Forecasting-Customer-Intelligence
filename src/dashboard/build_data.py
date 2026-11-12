@@ -12,11 +12,14 @@ place that touches the warehouse. It combines
 and writes one JSON file per dataset plus manifest.json, which lists every dataset with its source and row count.
 Only aggregates are written: no order-level rows, no review text.
 
-    uv run python src/dashboard/build_data.py [--backend duckdb|snowflake] [--db warehouse.duckdb] [--out dashboard/data]
-    python -m http.server 8000 --directory dashboard      # then open http://localhost:8000
+    uv run python src/dashboard/build_data.py --yes                 # default: Snowflake marts (RETAIL_OLIST.MARTS)
+    uv run python src/dashboard/build_data.py --backend duckdb      # offline fallback: the DuckDB reference warehouse
+    python -m http.server 8000 --directory dashboard                # then open http://localhost:8000
 
---backend snowflake reads the dbt marts through src/data_access (needs --yes, see snowflake/README.md). The risk-score
-roll-ups need the DuckDB warehouse (export_scores is DuckDB-only) and are skipped with a note on Snowflake.
+The default source is Snowflake (DD-22): the dbt marts, read through src/data_access with the key-pair credentials in
+the environment (see snowflake/README.md; --yes confirms the printed target). The DuckDB path needs no credentials and
+produces the same figures (the live reconciliation shows 0 differences); set DASHBOARD_BACKEND=duckdb to make it the
+default locally. The risk roll-ups retrain the v1 model per test month on whichever backend is used.
 """
 
 from __future__ import annotations
@@ -58,6 +61,8 @@ def clean(value):
         return {str(k): clean(v) for k, v in value.items()}
     if isinstance(value, (list, tuple)):
         return [clean(v) for v in value]
+    if value is pd.NA or value is pd.NaT:
+        return None
     if hasattr(value, "item") and not isinstance(value, (str, bytes)):
         try:
             value = value.item()
@@ -87,11 +92,27 @@ def read_json(name: str) -> dict:
 
 
 # --------------------------------------------------------------------------------------------- tracked outputs
-def analytics_tables() -> dict:
+def analytics_tables(con=None, schema: str = "") -> dict:
+    """The eight business tables. From the Snowflake marts (MARTS.mart_<key>) when `con` is a Snowflake connection,
+    otherwise from the tracked CSVs written by the DuckDB pipeline. Snowflake tables have no row order, so rows are put
+    in the CSV's key order (its first column); the columns and their order are the CSV's (the marts reconcile 0-diff)."""
+    from data_access.normalise import normalise_frame
+
     out = {}
     for key, file in ANALYTICS.items():
-        df = pd.read_csv(REPORTS / "analytics" / file)
-        out[key] = {"source": f"reports/analytics/{file}", "columns": list(df.columns), "rows": records(df)}
+        ref = pd.read_csv(REPORTS / "analytics" / file)
+        if con is None or getattr(con, "backend", "duckdb") != "snowflake":
+            out[key] = {"source": f"reports/analytics/{file}", "columns": list(ref.columns), "rows": records(ref)}
+            continue
+        df = normalise_frame(con.read_sql(f"select * from {schema}mart_{key}"))
+        missing = [c for c in ref.columns if c not in df.columns]
+        if missing:
+            raise ValueError(f"{schema}mart_{key} lacks columns {missing} that reports/analytics/{file} has")
+        df = df[list(ref.columns)]
+        k = ref.columns[0]
+        order = {str(v): i for i, v in enumerate(ref[k])}
+        df = df.assign(_o=df[k].astype(str).map(order).fillna(len(order))).sort_values(["_o", k]).drop(columns="_o")
+        out[key] = {"source": f"Snowflake {schema}mart_{key}", "columns": list(ref.columns), "rows": records(df)}
     return out
 
 
@@ -189,11 +210,11 @@ def forecasts(con) -> dict:
     }
 
 
-def risk_rollups(db: Path) -> dict:
-    """Out-of-time v1 scores (export_scores.build) rolled up: no order-level rows leave this function."""
+def risk_rollups(con) -> dict:
+    """Out-of-time v1 scores (export_scores.build_from, on either backend) rolled up: no order-level rows leave here."""
     import export_scores
 
-    s = export_scores.build(db)
+    s = export_scores.build_from(con)
     s["decile"] = (s["risk_percentile"] * 10).apply(math.ceil).clip(1, 10).astype(int)
     base = s.groupby("month")["is_late"].mean().rename("base_rate")
     dec = (s.groupby(["month", "decile"]).agg(orders=("is_late", "size"), late=("is_late", "sum")).reset_index()
@@ -239,8 +260,10 @@ def write(out: Path, name: str, payload: dict, manifest: dict, title: str, sourc
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    # The dashboard is built from the Snowflake marts by default (DD-22); DuckDB is the offline fallback.
+    # $DASHBOARD_BACKEND overrides the default for this script only.
     parser.add_argument("--backend", choices=("duckdb", "snowflake"),
-                        default=os.environ.get("DATA_BACKEND", "duckdb").strip().lower() or "duckdb")
+                        default=os.environ.get("DASHBOARD_BACKEND", "snowflake").strip().lower() or "snowflake")
     parser.add_argument("--db", type=Path, default=None, help="DuckDB warehouse (default: $DUCKDB_PATH or warehouse.duckdb)")
     parser.add_argument("--out", type=Path, default=ROOT / "dashboard" / "data")
     parser.add_argument("--yes", action="store_true", help="confirm the printed Snowflake target")
@@ -259,32 +282,43 @@ def main() -> int:
     manifest = {"generated_at": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"), "git_sha": git_sha(),
                 "backend": args.backend, "datasets": {}, "notes": []}
 
-    con = connect(args.backend, confirm=args.yes, duckdb_path=db) if args.backend == "snowflake" else \
-        connect("duckdb", duckdb_path=db)
+    if args.backend == "snowflake":
+        from data_access.backend import ConfirmationRequired, MissingConfigError
+        try:
+            con = connect("snowflake", confirm=args.yes)
+        except (ConfirmationRequired, MissingConfigError) as exc:
+            print(f"{exc}\nRe-run with --yes after checking the target, or build offline with --backend duckdb.",
+                  file=sys.stderr)
+            return 1
+    else:
+        con = connect("duckdb", duckdb_path=db)
     schema = "MARTS." if args.backend == "snowflake" else ""
+    where = "Snowflake RETAIL_OLIST.MARTS" if args.backend == "snowflake" else "DuckDB warehouse"
+    risk = None
     try:
         write(args.out, "kpis", headline_kpis(con, schema), manifest, "Headline KPIs",
-              f"{args.backend}: fact_order_items, fact_orders, fact_reviews; reports/analytics/07")
+              f"{where}: fact_order_items, fact_orders, fact_reviews; reports/analytics/07")
         fc = forecasts(con)
         write(args.out, "forecast", {**fc, "metrics": forecast_metrics()}, manifest, "Weekly forecasts",
-              fc["source"] + "; " + forecast_metrics()["source"], rows=len(fc["backtest"]))
+              f"{where}: {fc['source']}; {forecast_metrics()['source']}", rows=len(fc["backtest"]))
+        tables = analytics_tables(con, schema)
+        write(args.out, "analytics", tables, manifest, "Business analytics (8 queries)",
+              f"{where}: mart_* (dbt)" if args.backend == "snowflake" else "reports/analytics/*.csv (sql/analytics)",
+              rows=sum(len(t["rows"]) for t in tables.values()))
+        if not args.skip_scores:
+            risk = risk_rollups(con)
+            risk["source"] = f"{where}: {risk['source']}"
     finally:
         con.close()
-
-    tables = analytics_tables()
-    write(args.out, "analytics", tables, manifest, "Business analytics (8 queries)",
-          "reports/analytics/*.csv (sql/analytics)", rows=sum(len(t["rows"]) for t in tables.values()))
     write(args.out, "models", model_outputs(), manifest, "Late-delivery model results",
           "reports/late_delivery_metrics.json, explainability, recalibration, drift")
     lin = lineage()
     write(args.out, "lineage", lin, manifest, "DuckDB vs Snowflake reconciliation", lin["source"], rows=len(lin["checks"]))
 
-    if args.backend == "duckdb" and not args.skip_scores:
-        risk = risk_rollups(db)
+    if risk is not None:
         write(args.out, "risk", risk, manifest, "Risk-score roll-ups", risk["source"], rows=risk["n_scored"])
     else:
-        manifest["notes"].append("risk.json not rebuilt: the score roll-ups need the DuckDB warehouse "
-                                 "(export_scores is DuckDB-only) or were skipped with --skip-scores.")
+        manifest["notes"].append("risk.json not rebuilt (--skip-scores); the previous build is served if present.")
         previous = args.out / "risk.json"
         if previous.exists():  # keep serving the last DuckDB build of the roll-ups, and say so
             risk = json.loads(previous.read_text(encoding="utf-8"))

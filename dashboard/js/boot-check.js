@@ -31,8 +31,9 @@
       "This page loads its data and modules with fetch(), which browsers block for files opened from disk.",
       "From the repository root, run:",
       { code: "python -m http.server 8000 --directory dashboard" },
-      "then open http://localhost:8000. To refresh the data first:",
-      { code: "uv run python src/dashboard/build_data.py" },
+      "then open http://localhost:8000. To refresh the data first (Snowflake by default, or offline from DuckDB):",
+      { code: "uv run python src/dashboard/build_data.py --yes" },
+      { code: "uv run python src/dashboard/build_data.py --backend duckdb" },
     ]);
     return;
   }
@@ -41,7 +42,7 @@
     if (!window.__dashboardReady) {
       show("The dashboard did not start", [
         "The application module failed to load. Check the browser console, and that dashboard/data/manifest.json exists",
-        "(build it with: uv run python src/dashboard/build_data.py).",
+        "(build it with: uv run python src/dashboard/build_data.py --yes, or --backend duckdb offline).",
       ]);
     }
   }, 8000);

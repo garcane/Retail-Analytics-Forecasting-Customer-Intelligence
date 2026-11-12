@@ -51,7 +51,7 @@ async function route() {
     main.append(el("div", { class: "boot-error" },
       el("h1", { text: `Could not load "${page.title}"` }),
       el("p", { text: String(err.message || err) }),
-      el("p", { text: "Rebuild the data with: uv run python src/dashboard/build_data.py" })));
+      el("p", { text: "Rebuild the data with: uv run python src/dashboard/build_data.py --yes (Snowflake) or --backend duckdb (offline)" })));
   } finally {
     main.removeAttribute("aria-busy");
   }
