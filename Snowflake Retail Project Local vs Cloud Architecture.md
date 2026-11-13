@@ -21,9 +21,9 @@ Unlike the Google Cloud design, most of this mapping is built and has run: each 
 | **Reconciliation** | `src/reconciliation`: Snowflake vs the DuckDB reference | (DuckDB is the reference) | **Run**: 22/22, 0 differences |
 | **Feature engineering** | dbt `mart_late_delivery_features` (`ASOF JOIN`), `mart_weekly_orders_revenue` | `sql/ml/late_delivery_features.sql` | **Run**, reconciled 0-diff |
 | **Model training** | Today: scikit-learn on the client, reading Snowflake. Target: Snowpark Python / Snowflake ML, inside Snowflake | scikit-learn in `src/ml/` | **Partly**: client-side training on Snowflake data has run; in-Snowflake training not built |
-| **Experiment results** | Today: `reports/snowflake/*.json` on the client. Target: tables in `ML` | `reports/*.json` | **Run** (client files) |
+| **Experiment results** | Metrics: `reports/snowflake/*.json` on the client. Scores and forecast backtests: tables in `ML` | `reports/*.json` | **Run** |
 | **Model registry** | Snowflake Model Registry (`snowflake-ml-python`) | none (metrics files and the model card) | **Not built** |
-| **Batch inference** | Write scores to `ML.LATE_DELIVERY_SCORES` (code exists); target: registry model run in a scheduled Task | `export_scores.py` to Parquet | **Not run**: write-back code exists but no script calls it yet |
+| **Batch inference** | Today: scores computed on the client and published to `ML.LATE_DELIVERY_SCORES` by `publish_ml.py`. Target: registry model run in a scheduled Task | `export_scores.py` to Parquet | **Run** (client-side scoring, results in Snowflake, 2026-11-13) |
 | **Online inference** | Not planned (the model is used by rank, in batch) | none | n/a |
 | **Orchestration** | Snowflake Tasks or an external scheduler calling `load_raw.py` and `dbt build` | run by hand | **Not built** |
 | **Monitoring** | Resource monitor (`RETAIL_MONITOR`, 5 credits a month), `ACCOUNT_USAGE` views, dbt test results; ML drift as SQL over the `ML` tables | `drift_analysis.py` | **Partly**: monitor exists; ML monitoring not built |
@@ -72,11 +72,12 @@ What that means:
 
 - **Ported:** feature engineering, including the leakage-safe `ASOF JOIN` history, the training data, and the weekly series.
 - **Client-side, by design for now:** training and evaluation (rolling-origin backtests over six test months).
-- **Not yet ported:** results stored in Snowflake (the `ML.*` write-back is written and unit-tested but not called by any script), a model registry, in-warehouse scoring, scheduling and ML monitoring.
+- **Ported on 2026-11-13:** the results. `src/ml/publish_ml.py` writes the scores, forecast backtest and flag shares to `ML.*` under one run id; they match the DuckDB outputs.
+- **Not yet ported:** a model registry, in-warehouse scoring, scheduling and ML monitoring.
 
 The next steps, in order of value per effort:
 
-1. Wire the write-back into `export_scores.py` and the forecast backtest, and run it once with `FORECAST_WRITEBACK=1`. That puts the scores in `ML.LATE_DELIVERY_SCORES`, which Power BI and the dashboard can read.
+1. ~~Publish the results to the `ML` schema~~ (done 2026-11-13, `publish_ml.py`).
 2. Log the v1 scikit-learn pipeline to the Snowflake Model Registry, with its metrics and the git commit.
 3. Score inside Snowflake from the registered model, scheduled by a Task.
 4. Move the drift and calibration checks to SQL over the `ML` tables.

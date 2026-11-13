@@ -2,7 +2,7 @@
 
 A second, cloud implementation of the Olist star schema: **RAW -> dbt staging -> intermediate -> marts -> Python forecasting, the HTML dashboard and Power BI** on Snowflake. The DuckDB implementation (`sql/`, `src/`, `warehouse.duckdb`) is unchanged and remains the reference; this folder sits next to it and does not replace it.
 
-> **Status (2026-11-13): the pipeline has run end to end on a live Snowflake account.** Setup, RAW load, `dbt build` (367 of 367 passed), the DuckDB-vs-Snowflake reconciliation (22 of 22 checks, 0 differences), both Tier 1 Python models and the dashboard data build have all run against `RETAIL_OLIST`. Not run yet: the ML write-back and the Power BI patched copy. Each section below gives its own status, the date it ran and the measured result.
+> **Status (2026-11-13): the pipeline has run end to end on a live Snowflake account.** Setup, RAW load, `dbt build` (367 of 367 passed), the DuckDB-vs-Snowflake reconciliation (22 of 22 checks, 0 differences), both Tier 1 Python models and the dashboard data build have all run against `RETAIL_OLIST`. The ML outputs (scores, forecast backtest) are published to the `ML` schema. Not run yet: the Power BI patched copy. Each section below gives its own status, the date it ran and the measured result.
 
 Related pages: [architecture](../docs/architecture/SNOWFLAKE_ARCHITECTURE.md) | [SQL migration inventory](../docs/migration/SNOWFLAKE_MIGRATION.md) | [data dictionary](../docs/data_dictionary/DATA_DICTIONARY.md) | [ingestion runbook](../docs/migration/INGESTION_RUNBOOK.md) | [Power BI switch guide](../docs/migration/POWERBI_SWITCH_GUIDE.md) | [dbt project README](dbt/README.md) | [reconciliation report](../docs/validation/RECONCILIATION_REPORT.md) | [dashboard](../dashboard/README.md)
 
@@ -58,7 +58,7 @@ Get-Content .env.retail | Where-Object { $_ -match '^\s*[A-Za-z_][A-Za-z0-9_]*\s
 | `DATA_BACKEND` | `src/data_access`, the ML scripts | `duckdb` |
 | `DASHBOARD_BACKEND` | `src/dashboard/build_data.py` | `snowflake` |
 | `DUCKDB_PATH` | `src/data_access`, reconciliation, dashboard build | `warehouse.duckdb` |
-| `FORECAST_WRITEBACK` | opt-in `ML` table write-back | unset (off) |
+| `FORECAST_WRITEBACK` | opt-in `ML` write-back for callers of `src/data_access/writeback.py` (`publish_ml.py` uses its own `--write` flag instead) | unset (off) |
 | `REQUESTS_CA_BUNDLE` | dbt only, behind a TLS-inspecting proxy (section 7) | unset |
 
 If your shell has `RETAIL_SF_ROLE=RETAIL_TRANSFORMER`, the RAW load fails (that role cannot write `RAW`). Pass `--role RETAIL_LOADER` to the loader explicitly.
@@ -149,7 +149,18 @@ A Snowflake run writes to `reports/snowflake/`, so it never overwrites the track
 
 `drift_analysis`, `export_scores`, `export_data` and `run_analytics` stay DuckDB-only. `export_scores` reads the order category through `datasets.order_category`, which works on both backends, so the dashboard's risk page can be built from Snowflake.
 
-**Write-back - NOT RUN, and not wired in yet.** The functions exist and are unit-tested, but no script calls them, so a run needs a small change to `export_scores.py` and the forecast backtest first. Writing the forecast backtest, late-delivery scores and flag shares to `ML.FORECAST_BACKTEST`, `ML.LATE_DELIVERY_SCORES` and `ML.FLAG_SHARE` is off by default. It runs only with `FORECAST_WRITEBACK=1` on the Snowflake backend and only issues `CREATE TABLE IF NOT EXISTS`, `DELETE ... WHERE run_id = ?` and an append. Details: `src/data_access/writeback.py`.
+### Publishing the ML outputs to Snowflake - RUN 2026-11-13
+
+```powershell
+.\.venv\Scripts\python.exe src\ml\publish_ml.py --yes            # computes and validates the three outputs; writes nothing
+.\.venv\Scripts\python.exe src\ml\publish_ml.py --yes --write    # writes them under one new run_id
+```
+
+`publish_ml.py` computes the late-delivery scores (`export_scores.build_from`), the forecast backtest (`export_data.forecast_backtest`) and the flag shares from the Snowflake marts and writes them to `ML.LATE_DELIVERY_SCORES`, `ML.FORECAST_BACKTEST` and `ML.FLAG_SHARE`, all under one `run_id`. A dry run is the default; `--write` is required to write. Earlier runs are kept; consumers read the latest `run_id`. `--run-id` replaces the rows of an existing run and accepts only the generated form (`YYYYMMDDTHHMMSSZ-xxxxxxxx`): the Power BI templates take the text-greatest `run_id` as the latest, which holds only for that form.
+
+Each table is written by `src/data_access/writeback.py`: `CREATE TABLE IF NOT EXISTS`; `PUT` of one Parquet file into the user stage `@~`; then `BEGIN; DELETE ... WHERE run_id = ?; COPY INTO ...; COMMIT`, so a run's rows are replaced atomically; then the staged file is removed. It uses the user stage because `write_pandas` would need `CREATE STAGE` on `ML`, which `RETAIL_TRANSFORMER` does not have. Nothing is dropped, replaced or truncated.
+
+Measured (run `20261113T122357Z-a99b8a21`, about 35 seconds): 38,988 scores (six test months; late rate 0.088; the 3,901 flagged orders have a late rate of 0.215), 1,610 backtest rows and 6 flag shares, read back with matching counts. Column types are as declared (`DATE`, `BOOLEAN`, `NUMBER(38,0)`, `FLOAT`, `TEXT`), the user stage is empty afterwards, and `RETAIL_REPORTER` has `SELECT` on the new tables through the future grants. Re-publishing the same `run_id` left exactly one copy of its rows. Against the same outputs built from DuckDB: the backtest is identical; the scores cover the same orders with identical flags, labels, months, states and categories, and the risk scores differ by at most 8e-7 (floating-point summation order, as in section 9), which reorders 8 near-tied orders within their month by one position.
 
 ## 10. Step 6: the HTML dashboard - RUN 2026-11-12
 
@@ -161,7 +172,7 @@ A Snowflake run writes to `reports/snowflake/`, so it never overwrites the track
 .\.venv\Scripts\python.exe powerbi\snowflake\apply_snowflake_source.py --ml-on-files
 ```
 
-This writes a git-ignored copy to `powerbi_snowflake/` and rewrites only `expressions.tmdl` and the data-source block of each import table. The `PBI` views it reads now exist. The copy has not been opened in Power BI Desktop and the sign-in method is undecided: follow [`../docs/migration/POWERBI_SWITCH_GUIDE.md`](../docs/migration/POWERBI_SWITCH_GUIDE.md). Keep `--ml-on-files` until the write-back has run.
+This writes a git-ignored copy to `powerbi_snowflake/` and rewrites only `expressions.tmdl` and the data-source block of each import table. The `PBI` views it reads now exist. The copy has not been opened in Power BI Desktop and the sign-in method is undecided: follow [`../docs/migration/POWERBI_SWITCH_GUIDE.md`](../docs/migration/POWERBI_SWITCH_GUIDE.md). The `ML` tables now exist too (section 9), so the copy can be made without `--ml-on-files` and read all 12 tables from Snowflake.
 
 ## 12. Cost
 
@@ -190,6 +201,6 @@ Without step 1 the script stops with a message rather than reporting zero. Witho
 | Reconciliation | fixture and perturbation tests | RUN: 22/22, 0 differences |
 | Python on Snowflake (Tier 1) | fake-connector tests | RUN 2026-11-13: forecast identical; late-delivery equal to 6e-6 |
 | Dashboard data build | unit tests | RUN 2026-11-12: identical to the DuckDB build |
-| ML write-back | fake-connector tests | NOT RUN |
+| ML outputs in Snowflake (`publish_ml.py`) | stage-fake tests: statement order, rollback, clean-up | RUN 2026-11-13: run `20261113T122357Z-a99b8a21`, counts read back, matches DuckDB |
 | Power BI patched copy | byte-identity tests | NOT RUN (not opened in Desktop) |
 | Credit use | | MEASURED 2026-11-13: 0.34 credits of the 5-credit monthly quota (section 12) |
