@@ -83,7 +83,7 @@ The same analytical workload exists twice. **DuckDB** is the complete, tested, r
 | DuckDB-vs-Snowflake reconciliation (`src/reconciliation`) | **Run live** | 22 of 22 checks pass with 0 differences ([report](docs/validation/RECONCILIATION_REPORT.md)) |
 | `DATA_BACKEND=duckdb` or `snowflake` switch for Python (`src/data_access`) | **Run live** 2026-11-13 | Forecast metrics identical to DuckDB; late-delivery metrics equal to within 6e-6 (floating-point summation order) |
 | HTML dashboard data from Snowflake | **Run live** 2026-11-12 | Identical to a DuckDB build |
-| ML write-back to `ML.*` tables | Written, **not run** | Offline tests with a fake connector |
+| ML write-back to `ML.*` tables | Functions written and unit-tested, **not yet called by any script and not run**; models still train on the client, with no Snowflake model registry or in-warehouse scoring yet ([what is and is not ported](Snowflake%20Retail%20Project%20Local%20vs%20Cloud%20Architecture.md)) | Offline tests with a fake connector |
 | Power BI on Snowflake | Patched-copy script and templates; **never opened in Desktop** | 68 offline tests that the report, measures and relationships stay byte-identical ([guide](docs/migration/POWERBI_SWITCH_GUIDE.md)) |
 | CI (`.github/workflows`) | Written; **has not run on GitHub**; `python-ci` is red on the 10 known `test_powerbi_project.py` failures | `actionlint` and the same commands locally |
 
