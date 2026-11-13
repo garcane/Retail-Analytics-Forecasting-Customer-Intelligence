@@ -28,7 +28,8 @@ The least glamorous result is also the most useful one: **several well-motivated
 3. **Machine learning.** The prediction moment (purchase time) was fixed before any feature was written, in a leakage analysis ([docs/ml/LEAKAGE_ANALYSIS.md](docs/ml/LEAKAGE_ANALYSIS.md)). Models are scored by rolling-origin backtests, one test month at a time.
 4. **Notebooks.** The ML is presented with its charts in Jupyter notebooks, and as interactive marimo apps (month pickers, a "flag the riskiest X%" slider). Both call the same tested code in `src/ml/`.
 5. **Power BI.** A four-page dashboard (sales, delivery and reviews, late-delivery risk, weekly forecast) with 38 measures. It was specified first in HTML ([docs/powerbi/DAX_SPECIFICATION.html](docs/powerbi/DAX_SPECIFICATION.html)), pictured in an interactive mock-up ([docs/powerbi/DASHBOARD_MOCKUP.html](docs/powerbi/DASHBOARD_MOCKUP.html)), then delivered as a Power BI Project. See [powerbi/README.md](powerbi/README.md) for how to open it.
-6. **Quality.** 96 automated tests, including tests for the leakage rules (which were shown to fail when leaks were planted deliberately), a clean-clone reproduction of the whole pipeline, and a written audit ([docs/AUDIT.md](docs/AUDIT.md)).
+6. **HTML dashboard.** A seven-page interactive dashboard ([dashboard/](dashboard/README.md)) that puts the analytics next to the model results, risk operating points, forecasts and data lineage. It is a static site with separate CSS and JavaScript modules, and new pages register themselves. Its data is aggregated from Snowflake by default (or DuckDB offline) by `src/dashboard/build_data.py`; run it with `python src/dashboard/serve.py`.
+7. **Quality.** 96 automated tests, including tests for the leakage rules (which were shown to fail when leaks were planted deliberately), a clean-clone reproduction of the whole pipeline, and a written audit ([docs/AUDIT.md](docs/AUDIT.md)).
 
 ## Data architecture
 
@@ -76,10 +77,13 @@ The same analytical workload exists twice. **DuckDB** is the complete, tested, r
 | Capability | State | How it was checked |
 |---|---|---|
 | DuckDB build, 22 checks, analytics, ML, forecast, Power BI project | Working | Existing test suite and documents above |
-| Snowflake setup SQL, RAW ingestion (`snowflake/ingestion/load_raw.py`) | Written, **not run on Snowflake** | Offline tests with a fake connector |
-| dbt project: staging, intermediate, dimensions, facts, 8 analytics marts, late-delivery features, weekly series, `PBI` views, dbt tests | Written, **not run on Snowflake** | `dbt parse` and `dbt compile` offline; compiled SQL run on DuckDB over the real CSVs matches the DuckDB reference tables |
-| `DATA_BACKEND=duckdb` or `snowflake` switch for Python (`src/data_access`) | Written; DuckDB path verified identical to the original code, Snowflake path **not run** | Offline tests; real warehouse (read-only) |
-| DuckDB-vs-Snowflake reconciliation (`src/reconciliation`) | Framework written; **no reconciliation has been run** ([report](docs/validation/RECONCILIATION_REPORT.md) is a NOT RUN stub) | Offline self-comparison and perturbation tests |
+| Snowflake setup SQL, resource monitor (5 credits a month), key-pair service user | **Run live** 2026-11-12 | Run in Snowsight; re-running is a no-op |
+| RAW ingestion (`snowflake/ingestion/load_raw.py`) | **Run live** 2026-11-12 | All nine tables loaded with exactly the CSV record counts; a second run skipped every file |
+| dbt project: staging, intermediate, dimensions, facts, 8 analytics marts, late-delivery features, weekly series, `PBI` views | **Run live** 2026-11-12 | `dbt build`: 46 models and 321 tests, PASS=367 |
+| DuckDB-vs-Snowflake reconciliation (`src/reconciliation`) | **Run live** | 22 of 22 checks pass with 0 differences ([report](docs/validation/RECONCILIATION_REPORT.md)) |
+| `DATA_BACKEND=duckdb` or `snowflake` switch for Python (`src/data_access`) | **Run live** 2026-11-13 | Forecast metrics identical to DuckDB; late-delivery metrics equal to within 6e-6 (floating-point summation order) |
+| HTML dashboard data from Snowflake | **Run live** 2026-11-12 | Identical to a DuckDB build |
+| ML write-back to `ML.*` tables | Written, **not run** | Offline tests with a fake connector |
 | Power BI on Snowflake | Patched-copy script and templates; **never opened in Desktop** | 68 offline tests that the report, measures and relationships stay byte-identical ([guide](docs/migration/POWERBI_SWITCH_GUIDE.md)) |
 | CI (`.github/workflows`) | Written; **has not run on GitHub**; `python-ci` is red on the 10 known `test_powerbi_project.py` failures | `actionlint` and the same commands locally |
 
@@ -88,7 +92,7 @@ Where to read more: the [SQL migration inventory](docs/migration/SNOWFLAKE_MIGRA
 ## Where it is honestly unfinished
 
 - **The Power BI project was generated, then opened in Power BI Desktop, where it needed two fixes** (a measure that shared a name with a column, ignoring case, and an empty key row in the date table). It now loads. The dashboard's headline numbers have not yet been compared with the expected values listed in the specification's first-open checklist, and the report layouts are being refined by hand in Desktop.
-- **The Google Cloud implementation is a plan, not a build.** The layers, the mapping and the migration steps are documented, but nothing has been run on Google Cloud, so the SQL translations and costs are untested. The Snowflake implementation is written and checked offline but has not yet been run on a Snowflake account (see the table above).
+- **The Google Cloud implementation is a plan, not a build.** The layers, the mapping and the migration steps are documented, but nothing has been run on Google Cloud, so the SQL translations and costs are untested. The Snowflake implementation, by contrast, has run end to end on a live account and reconciles with DuckDB; its ML write-back and the Power BI switch have not run, and its credit use has not been measured (see the table above).
 - **The model is modest by design of the data.** A better late-delivery model would need information this dataset does not contain, such as carrier or warehouse data.
 - **Everything is a snapshot.** The data ends in 2018, and the forecast and model results describe that period only.
 
@@ -107,6 +111,7 @@ Where to read more: the [SQL migration inventory](docs/migration/SNOWFLAKE_MIGRA
 | `ARCHITECTURE.md`, `DECISIONS.md`, `SECURITY.md`, `COST.md` | Design, decision log, security and cost (the cost is $0) |
 | `snowflake/` | The Snowflake + dbt implementation: `setup/` (idempotent SQL), `ingestion/` (RAW loader), `dbt/` (models, tests, macros; its own Python environment) |
 | `src/data_access/`, `src/reconciliation/` | Backend switch for Python (DuckDB or Snowflake) and the DuckDB-vs-Snowflake comparison tool |
+| `dashboard/`, `src/dashboard/` | The HTML dashboard (HTML, CSS, JavaScript modules, built JSON data) and its data build and local server |
 | `powerbi/snowflake/` | M templates and the script that writes a Snowflake-sourced copy of the Power BI project |
 | `.github/workflows/` | Offline `dbt parse` CI, Python tests and a manual-only live dbt build |
 | `PROJECT_STATUS.md`, `docs/HANDOFF.md` | Where the project stands, for a new reader |
