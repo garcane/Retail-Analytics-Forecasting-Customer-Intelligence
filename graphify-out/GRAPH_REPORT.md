@@ -1,17 +1,17 @@
 # Graph Report - Retail-Analytics-Forecasting-Customer-Intelligence  (2026-11-13)
 
 ## Corpus Check
-- 305 files · ~289,698 words
+- 305 files · ~289,901 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 50 file(s) not represented in the graph (top: .tmdl 17, .css 9, (none) 8)
 
 ## Summary
-- 2233 nodes · 4203 edges · 245 communities (105 shown, 140 thin omitted)
+- 2233 nodes · 4204 edges · 245 communities (105 shown, 140 thin omitted)
 - Extraction: 94% EXTRACTED · 6% INFERRED · 0% AMBIGUOUS · INFERRED: 242 edges (avg confidence: 0.88)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `3437220e`
+- Built from commit: `63380b38`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -621,13 +621,13 @@ Nodes (3): _scan(), test_no_real_looking_account_or_credential_strings(), test_s
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `month()` connect `month` to `format.js`?**
-  _High betweenness centrality (0.110) - this node is a cross-community bridge._
+  _High betweenness centrality (0.111) - this node is a cross-community bridge._
 - **What connects `gcp`, `retail-olist-dbt`, `Always-predict-training-late-rate baseline` to the rest of the system?**
   _35 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Architecture Philosophy (Shared Across Cloud Projects)` be split into smaller, more focused modules?**
   _Cohesion score 0.13725490196078433 - nodes in this community are weakly interconnected._
 - **Why does `7. Construct-by-construct translation` connect `month` to `pytest`, `DuckDB to Snowflake + dbt: SQL migration inventory`?**
-  _High betweenness centrality (0.108) - this node is a cross-community bridge._
+  _High betweenness centrality (0.109) - this node is a cross-community bridge._
 - **Should `fact_order_items (grain: order item, 112,650 rows)` be split into smaller, more focused modules?**
   _Cohesion score 0.06025641025641026 - nodes in this community are weakly interconnected._
 - **Why does `DuckDB to Snowflake + dbt: SQL migration inventory` connect `DuckDB to Snowflake + dbt: SQL migration inventory` to `FakeCursor`, `Comparison`, `README.md`, `month`?**
