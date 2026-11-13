@@ -39,6 +39,7 @@ Later decisions can supersede earlier ones; when that happens the entry says so.
 | DD-23 | 2026-11-13 | Build the dashboard data from Snowflake by default | Active |
 | DD-24 | 2026-11-13 | Remove the marimo notebooks; the Jupyter notebooks and the HTML dashboard remain | Active |
 | DD-25 | 2026-11-13 | Register the late-delivery model in the Snowflake Model Registry from an isolated environment | Active |
+| DD-26 | 2026-11-13 | ML inside Snowflake: notebooks for analysis and training, SQL for scheduled scoring and monitoring | Active |
 
 ---
 
@@ -344,3 +345,35 @@ Evidence for these entries is in [docs/data/EDA_FINDINGS.md](docs/data/EDA_FINDI
 - **Verified:** version `V1_20261113_CC90DC8` registered on 2026-11-13; 2,000 orders scored inside Snowflake equal the local model to 1.1e-16.
 - **Trade-offs:** a third Python environment to keep. Training still happens on the client; only the trained model lives in Snowflake. The first version was logged with the library's default `relax_version=True` before the script pinned it, so its pins (scikit-learn, `snowflake-ml-python`) are ranges; it stays (versions are immutable) and `--verify` can re-check it.
 - **Rejected:** upgrading or downgrading the root environment (would change the reference results); a model registry outside Snowflake such as MLflow (another service to run, and the model would not sit next to the data it scores); training inside Snowflake for now (the backtests and the dashboard depend on the client code; a stored procedure is the next step, not this one).
+
+### DD-26: ML inside Snowflake: notebooks for analysis and training, SQL for scheduled scoring and monitoring
+
+- **Context:** The owner asked whether the Jupyter notebooks could simply be ported to Snowflake's notebooks, since training and scoring still ran on the laptop and drift checks were Python over DuckDB.
+- **Options:**
+  - Port everything, including scheduled scoring and monitoring, to scheduled notebooks.
+  - Notebooks for the interactive work, and SQL for anything scheduled.
+  - Legacy warehouse-runtime notebooks. Not an option: their creation was disabled on 2026-09-01, and `EXECUTE NOTEBOOK` stops working in November 2026.
+- **Chosen:** the split.
+  - **Notebooks.** Notebooks 02 and 03 are generated from the originals with only the data access changed (`scripts/make_snowflake_notebooks.py`, `src/data_access/snowpark.py`), and notebook 04 trains and registers inside Snowflake. They run as `RETAIL_TRANSFORMER` in a Git-connected workspace on the CPU compute pool.
+  - **Scheduled scoring** is a SQL Task on `RETAIL_WH` that calls the registered model with `MODEL(...)!PREDICT_PROBA` and writes `ML.LATE_DELIVERY_SCORES_REGISTRY`.
+  - **Drift and calibration** are dbt views in `ML_MONITORING`.
+- **Reason:**
+  - A notebook service runs on a compute pool node: it bills while running (24 hours idle by default) and is not covered by the warehouse resource monitor.
+  - The scheduled parts need no Python, so they run on the warehouse, are cheaper, and are capped by `RETAIL_MONITOR`.
+  - SQL views are tested by dbt and readable by anyone with a role.
+- **Verified (2026-11-13):**
+  - The notebooks reproduce the committed metrics on Snowflake data (forecast 0.0, late delivery 0.0 against the Snowflake backtest and 6.04e-6 against DuckDB).
+  - The monitoring views equal the Python results (calibration exact, AUC to 5e-13).
+  - The scoring block scored 6,306 orders equal to the local model to 2.8e-16, and a rerun replaced them.
+- **Trade-offs:**
+  - **Separate scores table.** The registered model was trained on every month, so its 2018 scores are in-sample. They go to their own table and never replace the out-of-time backtest scores Power BI reads.
+  - **A replay, not a feed.** The dataset is static, so a scheduled run replays a month.
+  - **Not covered by SQL.** The smoothed-rate and lag experiments of `drift_analysis.py` stay in Python.
+- **Cost / Security:**
+  - **Pool cost.** Notebooks cost compute-pool credits while running; suspend the service after use, and consider the idle-timeout account parameter.
+  - **Approvals pending.** The Git API integration (`setup/07`), `EXECUTE TASK` (`setup/08`) and the idle-timeout parameter are account-level and wait for the owner's approval. The branch was pushed with approval on 2026-11-13.
+  - **No credentials in notebooks.** They use the notebook's own session.
+- **Rejected:**
+  - Scheduled notebooks or code bundles for scoring: they bill the pool on every run.
+  - Legacy notebooks: being retired.
+  - Writing the registry's scores into `ML.LATE_DELIVERY_SCORES`: it would hide the backtest from Power BI, which reads the latest `run_id`.

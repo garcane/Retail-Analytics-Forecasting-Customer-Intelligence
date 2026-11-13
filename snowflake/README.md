@@ -86,6 +86,8 @@ Run in a Snowsight worksheet, in this order. The author ran them in the `Retail_
 5. As `RETAIL_LOADER`: `ingestion/file_formats.sql`, then `ingestion/ddl_raw.sql`. The loader expects `RAW.INGESTION_LOG` to exist, so run these before the first load.
 6. Optional, `ACCOUNTADMIN`: `setup/05_monitor_grant.sql`, so the service user can report credit use (section 12). Run 2026-11-13.
 7. For the Model Registry, `SYSADMIN`: `setup/06_model_registry_grants.sql` (section 9). Run 2026-11-13.
+8. For the notebooks in a Git-connected workspace, `ACCOUNTADMIN`: `setup/07_git_workspace.sql`. **Not run.**
+9. For the scheduled scoring task, `ACCOUNTADMIN` and `SYSADMIN`: `setup/08_scoring_task_grants.sql`, then `ml/scoring_task.sql` as `RETAIL_TRANSFORMER`. **Grants not run**; the tables and config of `ml/scoring_task.sql` exist.
 
 Result: the database, six schemas, warehouse, three roles, monitor and service user exist; re-running each file is a no-op. Objects of other projects on the account were not touched.
 
@@ -182,6 +184,24 @@ Measured: `RETAIL_OLIST.ML.LATE_DELIVERY_RISK` version `V1_20261113_CC90DC8` (th
 
 Not built yet: scoring new orders inside Snowflake on a schedule (a Task calling the model) and ML monitoring in SQL. Publishing (above) still scores on the client.
 
+### ML inside Snowflake: notebooks, scheduled scoring, monitoring (DD-26)
+
+| Piece | Where it runs | Status (2026-11-13) |
+|---|---|---|
+| `notebooks/snowflake/02_late_delivery_model_sf.ipynb`, `03_weekly_forecast_sf.ipynb` | Notebooks in Workspaces (Container Runtime, CPU compute pool), run by hand | Built. Every cell executed against Snowflake data from the laptop: the forecast metrics equal the DuckDB reference (0.0); the late-delivery metrics equal the Snowflake backtest (0.0) and are within 6.04e-6 of DuckDB. **Not yet run inside a workspace** (needs the Git integration, below). |
+| `notebooks/snowflake/04_train_register_sf.ipynb` | Same, run by hand | Built; trains v1 inside Snowflake and logs a `V1WS_<date>_<tag>` version without changing the default. **Not run yet.** |
+| `snowflake/ml/scoring_task.sql`: task `ML.SCORE_LATE_DELIVERY` into `ML.LATE_DELIVERY_SCORES_REGISTRY` | SQL on `RETAIL_WH`, no compute pool | Tables and config created; the scoring block was run twice live (6,306 orders of 2018-08, the rerun replaced them, scores equal to the local model to 2.8e-16). **The task itself is not created:** it needs `setup/08_scoring_task_grants.sql`. |
+| `snowflake/dbt/models/monitoring/` (schema `ML_MONITORING`) | dbt views on `RETAIL_WH` | **Built live** (PASS=18). Calibration equals the Python calculation exactly; single-feature AUCs match `drift_analysis.py` E1 to 5e-13; the drift view shows 74.8% of August 2018 orders promised under 20 days. |
+
+Notes:
+- **How the notebooks are made.** They are generated from the originals by `scripts/make_snowflake_notebooks.py`, so edit the originals or the script. They read the marts through the notebook's own session (`src/data_access/snowpark.py`): no keys inside Snowflake.
+- **Running them.** Run them as `RETAIL_TRANSFORMER` (PUBLIC already has USAGE on `SYSTEM_COMPUTE_POOL_CPU`). Use the Git-connected workspace from `setup/07_git_workspace.sql`, and **suspend the notebook service after each session**: the compute pool bills while it runs and is not covered by `RETAIL_MONITOR`. The default idle timeout is 24 hours unless an admin sets `NOTEBOOK_VNEXT_IDLE_TIMEOUT_OPTIONS_MINUTES`.
+- **Why scheduled scoring writes its own table.** The registered model was trained on every month, so its 2018 scores are in-sample. They go to their own table, never to `ML.LATE_DELIVERY_SCORES`, which holds the out-of-time backtest that Power BI and the monitoring views read. The dataset ends in 2018, so a scheduled run replays the same month; `ML.SCORING_CONFIG` pins the model version and the month.
+- **Waiting for the owner's approval:**
+  - `setup/07_git_workspace.sql`: an API integration, which is account-level.
+  - `setup/08_scoring_task_grants.sql`: `EXECUTE TASK` on the account.
+  - The notebook idle-timeout account parameter.
+
 ## 10. Step 6: the HTML dashboard - RUN 2026-11-12
 
 `src/dashboard/build_data.py` builds `dashboard/data/*.json` from Snowflake by default (DD-22): KPIs and weekly series from `MARTS`, the analytics tables from `MARTS.mart_*`, risk roll-ups from a v1 retrain on the Snowflake features. A build from Snowflake and one from DuckDB (`--backend duckdb`) gave identical files for the KPIs, analytics, forecast and risk. See [`../dashboard/README.md`](../dashboard/README.md).
@@ -224,4 +244,7 @@ Without step 1 the script stops with a message rather than reporting zero. Witho
 | ML outputs in Snowflake (`publish_ml.py`) | stage-fake tests: statement order, rollback, clean-up | RUN 2026-11-13: run `20261113T122357Z-a99b8a21`, counts read back, matches DuckDB |
 | Power BI patched copy | byte-identity tests | NOT RUN (not opened in Desktop) |
 | Model Registry (`ml/register_model.py`) | fake-registry tests: gate, no replacement, exact pin, verify | RUN 2026-11-13: `LATE_DELIVERY_RISK` `V1_20261113_CC90DC8`, scored inside Snowflake, equal to local to 1.1e-16 |
+| Notebooks in Snowflake (`notebooks/snowflake/`) | generator check, parse and hygiene tests; executed against Snowflake data | NOT RUN in a workspace (needs `setup/07`) |
+| Scheduled scoring (`ml/scoring_task.sql`) | statement-shape tests | Block RUN twice live 2026-11-13 (6,306 orders, 2.8e-16); task NOT CREATED (needs `setup/08`) |
+| Drift and calibration in SQL (`dbt/models/monitoring/`) | AUC formula test | RUN 2026-11-13: PASS=18, equal to the Python results |
 | Credit use | | MEASURED 2026-11-13: 0.34 credits of the 5-credit monthly quota (section 12) |
