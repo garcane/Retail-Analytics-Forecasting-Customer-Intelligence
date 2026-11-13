@@ -1,5 +1,7 @@
 # Snowflake + dbt architecture
 
+> **Live status (2026-11-13):** this page was written before the live run and its body is kept as the design record. The pipeline has since run on Snowflake: setup and RAW load (counts exact, no stray carriage returns), `dbt build` PASS=367 including the `ASOF JOIN`, reconciliation 22/22 with 0 differences, and the Tier 1 Python models. Not run: the ML write-back and the Power BI patched copy. Where this page says NOT YET RUN or UNVERIFIED about those steps, read [snowflake/README.md](../../snowflake/README.md) for the measured result.
+
 Status as of 2026-11-06 on branch `feature/snowflake-dbt-migration`. This page describes what exists in the repository now. **Nothing on the Snowflake side has been run against a Snowflake account**: every box in the "Snowflake path" is built and tested offline only (fake connectors, `dbt parse`, a DuckDB logic simulation). Anything marked NOT YET RUN is unproven. The DuckDB path is unchanged and is the reference.
 
 Related pages: [SQL migration inventory](../migration/SNOWFLAKE_MIGRATION.md) | [data dictionary](../data_dictionary/DATA_DICTIONARY.md) | [setup runbook](../../snowflake/README.md) | [ingestion runbook](../migration/INGESTION_RUNBOOK.md) | [Power BI switch guide](../migration/POWERBI_SWITCH_GUIDE.md) | [live checks](../../snowflake/dbt/README_LIVE_CHECKS.md) | [reconciliation report (NOT RUN stub)](../validation/RECONCILIATION_REPORT.md)

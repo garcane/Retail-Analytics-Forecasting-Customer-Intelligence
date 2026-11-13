@@ -1,5 +1,7 @@
 # DuckDB to Snowflake + dbt: SQL migration inventory
 
+> **Live status (2026-11-13):** this page was written before the live run and its body is kept as the design record. The pipeline has since run on Snowflake: setup and RAW load (counts exact, no stray carriage returns), `dbt build` PASS=367 including the `ASOF JOIN`, reconciliation 22/22 with 0 differences, and the Tier 1 Python models. Not run: the ML write-back and the Power BI patched copy. Where this page says NOT YET RUN or UNVERIFIED about those steps, read [snowflake/README.md](../../snowflake/README.md) for the measured result.
+
 Status as of 2026-11-06, branch `feature/snowflake-dbt-migration`. **Everything on this page was produced and checked offline. No SQL in this repository has been executed on Snowflake.** Where a statement depends on Snowflake behaviour it is marked UNVERIFIED and listed in [section 9](#9-unverified-until-a-live-snowflake-run).
 
 The DuckDB implementation (`sql/**`, `src/**`) is unchanged and remains the reference. The Snowflake implementation lives next to it in `snowflake/`, `src/data_access/`, `src/reconciliation/` and `powerbi/snowflake/`. This page records, for every SQL file and every SQL snippet embedded in Python or a notebook, how hard the move to Snowflake is, what had to change, which dbt model replaces it (as built, from `snowflake/dbt/models`) and how the result is checked.
