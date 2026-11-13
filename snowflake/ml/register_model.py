@@ -92,6 +92,41 @@ def version_name(sha: str, today: str) -> str:
     return f"V1_{today}_{sha}".upper()
 
 
+def predict_proba_sql(version: str, source: str = f"{DATABASE}.MARTS.MART_LATE_DELIVERY_FEATURES") -> str:
+    """SQL that scores every row of `source` with a registered version: order_id plus P(late) as risk_score.
+
+    The arguments follow the model signature (SHOW FUNCTIONS IN MODEL ...): the v1 numeric features as FLOAT, then the
+    categoricals as text, in FEATURES order. The method returns an OBJECT whose output_feature_1 is P(late)."""
+    if not version.replace("_", "").isalnum():
+        raise ValueError(f"invalid version name {version!r}")
+    args = ", ".join([f"{c}::float" for c in ldb.NUMERIC_V1] + list(ldb.CATEGORICAL))
+    return (f"select order_id, MODEL({DATABASE}.{SCHEMA}.{MODEL_NAME}, {version})!PREDICT_PROBA({args})"
+            f":output_feature_1::float as risk_score from {source}")
+
+
+def parity_sample(train: pd.DataFrame) -> pd.DataFrame:
+    """The fixed sample of training orders scored in Snowflake and locally to compare the two."""
+    return train[FEATURES].sample(n=min(PARITY_SAMPLE, len(train)), random_state=0).reset_index(drop=True)
+
+
+def log_kwargs(version: str, sample: pd.DataFrame, metrics: dict, sklearn_version: str, extra: dict) -> dict:
+    """Arguments for Registry.log_model, shared by this script (laptop) and notebooks/snowflake/04 (in Snowflake)."""
+    return {
+        "model_name": MODEL_NAME,
+        "version_name": version,
+        "sample_input_data": sample.head(100),
+        "target_platforms": ["WAREHOUSE"],
+        "conda_dependencies": [f"scikit-learn=={sklearn_version}"],
+        # Pin exactly: the default (relax_version=True) would let Snowflake resolve a different scikit-learn later.
+        "options": {"relax_version": False},
+        "comment": ("Late-delivery risk at purchase time, v1 logistic regression. Use by rank (flag the riskiest X% "
+                    "of a month), not as a calibrated probability: see docs/ml/MODEL_CARD.md."),
+        "metrics": {**{f"backtest_{k}": v for k, v in metrics.items()},
+                    "feature_table": f"{DATABASE}.MARTS.MART_LATE_DELIVERY_FEATURES", "lifecycle_stage": "VALIDATED",
+                    **extra},
+    }
+
+
 def warehouse_parity(mv, model, sample: pd.DataFrame) -> dict:
     """Score `sample` inside Snowflake with the registered version and compare with the local model."""
     remote = mv.run(sample, function_name="predict_proba")
@@ -163,7 +198,7 @@ def main(argv: list[str] | None = None) -> int:
     with db:
         train = training_frame(db)
         model = fit(train)
-        sample = train[FEATURES].sample(n=min(PARITY_SAMPLE, len(train)), random_state=0).reset_index(drop=True)
+        sample = parity_sample(train)
 
         if args.verify:
             _session, reg = registry_session(db)
@@ -209,21 +244,9 @@ def main(argv: list[str] | None = None) -> int:
                   file=sys.stderr)
             return 2
 
-        mv = reg.log_model(
-            model,
-            model_name=MODEL_NAME,
-            version_name=version,
-            sample_input_data=sample.head(100),
-            target_platforms=["WAREHOUSE"],
-            conda_dependencies=[f"scikit-learn=={sklearn.__version__}"],
-            # Pin exactly: the default (relax_version=True) would let Snowflake resolve a different scikit-learn later.
-            options={"relax_version": False},
-            comment=("Late-delivery risk at purchase time, v1 logistic regression. Use by rank (flag the riskiest X% "
-                     "of a month), not as a calibrated probability: see docs/ml/MODEL_CARD.md."),
-            metrics={**{f"backtest_{k}": v for k, v in metrics.items()},
-                     "training_rows": summary["training_rows"], "git_commit": sha,
-                     "feature_table": summary["feature_table"], "lifecycle_stage": "VALIDATED"},
-        )
+        mv = reg.log_model(model, **log_kwargs(version, sample, metrics, sklearn.__version__,
+                                               {"training_rows": summary["training_rows"], "git_commit": sha,
+                                                "source": "laptop"}))
         reg.get_model(MODEL_NAME).default = version
         summary["registered_at"] = datetime.now(UTC).isoformat(timespec="seconds")
         summary["default_version"] = True

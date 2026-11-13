@@ -1,17 +1,17 @@
 # Graph Report - Retail-Analytics-Forecasting-Customer-Intelligence  (2026-11-13)
 
 ## Corpus Check
-- 312 files · ~294,994 words
+- 327 files · ~300,009 words
 - Verdict: corpus is large enough that graph structure adds value.
-- Unclassified: 53 file(s) not represented in the graph (top: .tmdl 17, (none) 10, .css 9)
+- Unclassified: 56 file(s) not represented in the graph (top: .tmdl 17, (none) 10, .css 9)
 
 ## Summary
-- 2335 nodes · 4417 edges · 262 communities (113 shown, 149 thin omitted)
-- Extraction: 94% EXTRACTED · 6% INFERRED · 0% AMBIGUOUS · INFERRED: 257 edges (avg confidence: 0.88)
+- 2425 nodes · 4582 edges · 278 communities (122 shown, 156 thin omitted)
+- Extraction: 94% EXTRACTED · 6% INFERRED · 0% AMBIGUOUS · INFERRED: 267 edges (avg confidence: 0.88)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `cc90dc89`
+- Built from commit: `f660d7ab`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -23,20 +23,20 @@
 - fact_order_items (grain: order item, 112,650 rows)
 - re
 - test_powerbi_project.py
-- conftest.py
+- Architecture
 - experiment_recalibration
 - run_analytics.py
 - Late-delivery model (v1 logistic regression)
 - test_feature_leakage.py
 - Phase 0 — Discovery Report
 - AUDIT.md
-- .read_sql
+- DataAccess
 - weekly_series
 - DECISIONS.md
-- sql/bigquery — the same layers in GoogleSQL
+- SnowparkAccess
 - fact_order_items
 - README.md
-- powerbi/README.md
+- DRIFT_ANALYSIS.md
 - test_reconciliation.py
 - `${PROJECT}.staging.stg_customers`
 - Orders delivered late % (metric)
@@ -54,7 +54,7 @@
 - Agentic Loop (PLAN to DECIDE)
 - Documentation Standard (README, ARCHITECTURE, DECISIONS, COST, SECURITY)
 - `${PROJECT}.staging.stg_order_items`
-- Security
+- pandas
 - AGENTS.md
 - test_register_model.py
 - stage_wrapper
@@ -81,9 +81,9 @@
 - `${PROJECT}.staging.stg_products`
 - `${PROJECT}.staging.stg_sellers`
 - `${PROJECT}.staging.stg_category_translation`
-- pandas
+- late_delivery_baseline.py
 - duckdb
-- numpy
+- forecast_baseline.py
 - Check details
 - drift_analysis.py
 - pathlib
@@ -94,7 +94,7 @@
 - fetch.py
 - test_snowflake_ingestion.py
 - report.py
-- data_access/__init__.py
+- numpy
 - cli.py
 - checks.py
 - pytest
@@ -107,11 +107,11 @@
 - writeback.py
 - Semantic model (12 tables, 13 relationships, 38 measures)
 - datasets.py
-- build_data.py
+- json
 - Snowflake + dbt implementation: setup and runbook
 - build_pbip.py
 - 4. Procedure
-- warehouse
+- CI setup (GitHub Actions)
 - model_spec.py
 - format.js
 - ddl_raw.sql
@@ -133,8 +133,8 @@
 - dbt project: Olist on Snowflake
 - validate_frame
 - FakeCursor
-- ML layer (src/ml, sql/ml)
-- orders
+- ARCHITECTURE.md
+- Marts, analytics (MARTS, tables)
 - SKILL.md
 - Effects
 - Visuals
@@ -146,22 +146,31 @@
 - register_model.py
 - Power BI project
 - recalibration.py
-- publish_ml.py
-- check_wrapped_equals_raw
+- ConfirmationRequired
+- export_scores.py
 - test_yes_flag_is_passed_to_connect_as_confirmation
-- test_duckdb_sql_text_matches_the_ml_modules
-- test_writeback_columns_match_export_schemas
-- Architecture
-- Data model: Olist star schema
+- make_snowflake_notebooks.py
+- weekly_series
+- forecast_backtest
+- DuckDB to Snowflake + dbt: SQL migration inventory
 - table_tmdl
 - test_warehouse.py
-- build_warehouse.py
+- test_notebooks_snowflake.py
 - Phase 2: baseline results
 - test_drift_helpers.py
-- Live verification checklist (dbt base: staging, intermediate, core marts)
+- MiniWarehouse
 - Retail analytics dashboard (HTML)
 - Model card
 - retail-olist-ml-registry
+- build_mockup_html.py
+- test_scoring_task_sql.py
+- warehouse
+- damped_trend
+- Lessons learned
+- month
+- _scan
+- scoring_task.sql
+- ar1_with_trend
 
 ## God Nodes (most connected - your core abstractions)
 1. `el()` - 41 edges
@@ -180,11 +189,11 @@
   docs/migration/SNOWFLAKE_MIGRATION.md → src/data_access/datasets.py
 - `3. What changes` --references--> `load()`  [INFERRED]
   docs/MIGRATING_TO_CLOUD.md → src/ml/late_delivery_baseline.py
-- ``mart_weekly_orders_revenue`` --references--> `orders()`  [INFERRED]
+- ``mart_category_performance`` --references--> `orders()`  [INFERRED]
   docs/data_dictionary/DATA_DICTIONARY.md → tests/test_recalibration.py
-- `RAW sources (`olist_raw`)` --references--> `orders()`  [INFERRED]
+- ``mart_delivery_vs_reviews`` --references--> `orders()`  [INFERRED]
   docs/data_dictionary/DATA_DICTIONARY.md → tests/test_recalibration.py
-- ``stg_olist__orders`` --references--> `orders()`  [INFERRED]
+- ``mart_monthly_kpis`` --references--> `orders()`  [INFERRED]
   docs/data_dictionary/DATA_DICTIONARY.md → tests/test_recalibration.py
 
 ## Import Cycles
@@ -202,7 +211,7 @@
 - **Leakage controls: purchase-time prediction, point-in-time stats, time-ordered split, planted-leak tests** — docs_ml_leakage_analysis_purchase_time_prediction, docs_ml_leakage_analysis_point_in_time_statistics, docs_ml_leakage_analysis_time_ordered_split, docs_audit_planted_leak_checks [INFERRED 0.85]
 - **Monthly KPIs chart: metrics, trend insight and data source** — docs_analytics_figures_monthly_kpis_net_revenue_per_month, docs_analytics_figures_monthly_kpis_average_order_value, docs_analytics_figures_monthly_kpis_olist_orders_data [INFERRED 0.85]
 
-## Communities (262 total, 149 thin omitted)
+## Communities (278 total, 156 thin omitted)
 
 ### Community 0 - "build_spec_html.py"
 Cohesion: 0.21
@@ -221,32 +230,32 @@ Cohesion: 0.14
 Nodes (9): Cloud Portfolio Master Agent Prompt, Data Warehousing and Analytical Modelling (grain, star schema), Layered Data Architecture (RAW/STAGING/CURATED/ANALYTICAL), Local to Cloud Progression Lifecycle, Three-Project Cloud Portfolio (Azure Healthcare, AWS Finance, GCP Retail), Architecture Philosophy (Shared Across Cloud Projects), dbt as First-Class Component, Multi-Cloud View (three production targets of one philosophy) (+1 more)
 
 ### Community 4 - "fact_order_items (grain: order item, 112,650 rows)"
-Cohesion: 0.09
-Nodes (29): Net revenue R$ 13.49M over 98,199 orders, dim_customer (grain: customer_unique_id, 96,097 rows), dim_date (generated calendar 2016-2020, 1,828 rows), dim_geography (one row per zip prefix, 19,012 rows), dim_product (32,952 rows), dim_seller (3,096 rows), fact_order_items (grain: order item, 112,650 rows), fact_orders (grain: order) (+21 more)
+Cohesion: 0.06
+Nodes (39): Data model: Olist star schema, Design rules, dim_customer (grain: customer_unique_id, 96,097 rows), dim_date (generated calendar 2016-2020, 1,828 rows), dim_geography (one row per zip prefix, 19,012 rows), dim_product (32,952 rows), dim_seller (3,096 rows), Dimensions (+31 more)
 
 ### Community 5 - "re"
-Cohesion: 0.16
-Nodes (16): local_columns(), read(), stems(), strip_comments(), test_each_raw_file_is_an_external_table_over_its_csv(), test_each_staging_file_is_a_view_over_its_raw_table_with_the_typed_casts(), test_every_local_column_reaches_the_view(), test_raw_columns_match_the_local_column_list_in_order_and_as_strings() (+8 more)
+Cohesion: 0.18
+Nodes (14): local_columns(), read(), stems(), strip_comments(), test_each_raw_file_is_an_external_table_over_its_csv(), test_each_staging_file_is_a_view_over_its_raw_table_with_the_typed_casts(), test_every_local_column_reaches_the_view(), test_raw_columns_match_the_local_column_list_in_order_and_as_strings() (+6 more)
 
 ### Community 6 - "test_powerbi_project.py"
 Cohesion: 0.12
 Nodes (10): _columns(), _fetch(), generated(), _json_files(), registry(), _retrieve(), test_every_json_file_validates_against_its_published_schema(), test_every_visual_field_exists() (+2 more)
 
-### Community 7 - "conftest.py"
-Cohesion: 0.11
-Nodes (8): Components, run_sql_file(), mini(), MiniWarehouse, data_dir(), test_missing_raw_file_gives_a_clear_error(), test_no_parquet_is_read_or_written(), test_staging_keeps_leading_zeros_and_types()
+### Community 7 - "Architecture"
+Cohesion: 0.09
+Nodes (19): Architecture, Components, Cost, Data flow, Deployment and monitoring, Failure points, ML (baselines built, D-007), Processing (+11 more)
 
 ### Community 8 - "experiment_recalibration"
-Cohesion: 0.23
-Nodes (11): calibration_split(), expected_calibration_error(), experiment_recalibration(), experiment_window(), fit_v1(), logit(), macro(), make_calibrator() (+3 more)
+Cohesion: 0.21
+Nodes (12): calibration_split(), expected_calibration_error(), experiment_recalibration(), experiment_window(), fit_v1(), logit(), macro(), main() (+4 more)
 
 ### Community 9 - "run_analytics.py"
 Cohesion: 0.20
 Nodes (12): draw(), load_graph(), main(), node_label(), fig_categories(), fig_monthly(), fig_promise(), fig_reviews() (+4 more)
 
 ### Community 10 - "Late-delivery model (v1 logistic regression)"
-Cohesion: 0.06
-Nodes (40): DD-07: Customer segmentation is optional, DD-11: No recalibration or window tuning; use the model by rank, DD-12: Close the ML experiments; v1 and the simple forecasts are final, About modelling, About process, About the data, Lessons learned, What I would do differently (+32 more)
+Cohesion: 0.12
+Nodes (18): DD-11: No recalibration or window tuning; use the model by rank, DD-12: Close the ML experiments; v1 and the simple forecasts are final, Planted-leak checks, August 2018 delivery promise change (concept drift), Always-predict-training-late-rate baseline, Grouped permutation importance, Features v2: route and category late-rate history, Features v3: trailing 28-day system late rate (+10 more)
 
 ### Community 11 - "test_feature_leakage.py"
 Cohesion: 0.22
@@ -254,35 +263,35 @@ Nodes (12): day(), test_an_order_never_sees_its_own_outcome(), test_delivery_tim
 
 ### Community 12 - "Phase 0 — Discovery Report"
 Cohesion: 0.09
-Nodes (23): 10. Current GCP services, pricing and free-tier implications, 11. IAM and security requirements (to implement in Phase 3, not yet), 12. Cost risks and mitigations, 13. Evidence plan, 14. Items covered (child prompt §43 checklist), 15. Decisions, 16. Known limitations of this discovery, 1. Dataset source and licence (+15 more)
+Nodes (22): 10. Current GCP services, pricing and free-tier implications, 11. IAM and security requirements (to implement in Phase 3, not yet), 12. Cost risks and mitigations, 13. Evidence plan, 14. Items covered (child prompt §43 checklist), 15. Decisions, 16. Known limitations of this discovery, 1. Dataset source and licence (+14 more)
 
 ### Community 13 - "AUDIT.md"
-Cohesion: 0.08
-Nodes (28): Compute, Measured compute timings, Cost, If the project moved to the cloud, Total cloud cost $0, Late delivery vs review score association (4.29 on time, 2.57 late), 2018 delivery promise shortened (75% of August orders under 20 days), 97% of customers buy once (repeat = 5.6% of revenue) (+20 more)
+Cohesion: 0.07
+Nodes (31): Compute, Measured compute timings, Cost, If the project moved to the cloud, Total cloud cost $0, DD-06: Convert geolocation CSV to Parquet in the build, Current state (2026-10-13), Data findings (Phase 0 and EDA) (+23 more)
 
 ### Community 15 - "weekly_series"
 Cohesion: 0.17
 Nodes (8): backtest(), linear_trend(), f(), main(), score(), weekly_series(), beats_naive_share(), main()
 
 ### Community 16 - "DECISIONS.md"
-Cohesion: 0.22
-Nodes (12): D-001: Implementations use DuckDB, D-002: Local only, D-003: Idiomatic DuckDB SQL, D-004: No dbt, D-005: No Prometheus, Grafana or FastAPI, D-006: `.gitignore` coverage, D-007: ML target is late delivery, plus a weekly forecast, D-008: Untrack `data/` (+4 more)
+Cohesion: 0.18
+Nodes (14): D-001: Implementations use DuckDB, D-002: Local only, D-003: Idiomatic DuckDB SQL, D-004: No dbt, D-005: No Prometheus, Grafana or FastAPI, D-006: `.gitignore` coverage, D-007: ML target is late delivery, plus a weekly forecast, D-008: Untrack `data/` (+6 more)
 
-### Community 17 - "sql/bigquery — the same layers in GoogleSQL"
-Cohesion: 0.33
-Nodes (6): Alternative not taken, Folders, How to run (untested, like the rest of the guide), sql/bigquery — the same layers in GoogleSQL, Tokens, Type mapping
+### Community 17 - "SnowparkAccess"
+Cohesion: 0.07
+Nodes (16): Alternative not taken, Folders, How to run (untested, like the rest of the guide), sql/bigquery — the same layers in GoogleSQL, Tokens, Type mapping, _clean(), from_active_session() (+8 more)
 
 ### Community 18 - "fact_order_items"
 Cohesion: 0.14
 Nodes (9): dim_customer, dim_date, dim_geography, dim_product, dim_seller, fact_order_items, fact_orders, fact_payments (+1 more)
 
 ### Community 19 - "README.md"
-Cohesion: 0.20
-Nodes (6): Raw data (data/), Staging SQL (sql/staging), Phase 0 cloud architecture proposal (GCS, BigQuery, Dataflow, Vertex AI), Olist Brazilian E-Commerce dataset (Kaggle, CC BY-NC-SA 4.0), Unverified BigQuery, Dataflow and Vertex AI pricing, Olist Brazilian E-Commerce dataset (Kaggle)
+Cohesion: 0.22
+Nodes (3): Phase 0 cloud architecture proposal (GCS, BigQuery, Dataflow, Vertex AI), Olist Brazilian E-Commerce dataset (Kaggle, CC BY-NC-SA 4.0), Unverified BigQuery, Dataflow and Vertex AI pricing
 
-### Community 20 - "powerbi/README.md"
-Cohesion: 0.23
-Nodes (12): Power BI generators and project (src/powerbi, powerbi/), DD-06: Convert geolocation CSV to Parquet in the build, Out-of-time late-delivery scores export (export_scores.py), DASHBOARD_MOCKUP.html, DataFolder parameter, export_data.py (Power BI data export), First-open checklist, model_spec.py (single definition) (+4 more)
+### Community 20 - "DRIFT_ANALYSIS.md"
+Cohesion: 0.09
+Nodes (26): DD-07: Customer segmentation is optional, Late delivery vs review score association (4.29 on time, 2.57 late), Net revenue R$ 13.49M over 98,199 orders, 2018 delivery promise shortened (75% of August orders under 20 days), 97% of customers buy once (repeat = 5.6% of revenue), Rio de Janeiro late-rate outlier (13.5% late, median 12 days), Seller concentration (top 10% of sellers = 67.5% of revenue), Insights correction: on-time orders produce ~70% of 1-2 star reviews (+18 more)
 
 ### Community 21 - "test_reconciliation.py"
 Cohesion: 0.05
@@ -340,9 +349,9 @@ Nodes (4): Agentic Loop (PLAN to DECIDE), Development Phases 0-10, Human Approva
 Cohesion: 0.50
 Nodes (4): Documentation Standard (README, ARCHITECTURE, DECISIONS, COST, SECURITY), Evidence Requirement and Evidence Integrity, Failure Documentation, Security Principles (least privilege, no secrets in Git)
 
-### Community 38 - "Security"
-Cohesion: 0.33
-Nodes (6): Data and privacy, Licence, Not applicable by design, Practices to keep, Security, What was checked (2026-10-13)
+### Community 38 - "pandas"
+Cohesion: 0.20
+Nodes (6): _conform_column(), _non_null(), _normalise_object_column(), _to_int(), test_smoothing_does_not_modify_the_input(), test_smoothing_returns_prior_without_history_and_raw_rate_with_lots()
 
 ### Community 39 - "AGENTS.md"
 Cohesion: 0.50
@@ -354,7 +363,7 @@ Nodes (7): env(), FakeDB, FakeModelRef, FakeRegistry, FakeVersion, feature_frame
 
 ### Community 41 - "stage_wrapper"
 Cohesion: 0.14
-Nodes (18): backtest_frame(), scores_frame(), stage_wrapper(), test_create_table_sql_is_idempotent_ddl(), test_each_write_uses_a_fresh_stage_folder(), test_failed_copy_rolls_back_and_cleans_up(), test_failed_parquet_write_leaves_no_temp_files_and_no_staging(), test_local_temporary_file_is_deleted() (+10 more)
+Nodes (17): backtest_frame(), scores_frame(), stage_wrapper(), test_create_table_sql_is_idempotent_ddl(), test_each_write_uses_a_fresh_stage_folder(), test_failed_copy_rolls_back_and_cleans_up(), test_failed_parquet_write_leaves_no_temp_files_and_no_staging(), test_local_temporary_file_is_deleted() (+9 more)
 
 ### Community 42 - "el"
 Cohesion: 0.06
@@ -372,17 +381,17 @@ Nodes (26): args, chrome, positionals, args, chrome, file, frame, frames (+18 mo
 Cohesion: 0.05
 Nodes (36): Access control, Batch inference, Customer, Data processing choice, dbt, Delivery, Dialect migration, Forecasting (+28 more)
 
-### Community 84 - "pandas"
-Cohesion: 0.11
-Nodes (14): 4. Python integration, add_smoothed_rates(), calibration_table(), evaluate(), _is_data_access(), load(), main(), mean_days_to_deliver() (+6 more)
+### Community 84 - "late_delivery_baseline.py"
+Cohesion: 0.10
+Nodes (15): 4. Python integration, main(), permutation_drop(), add_smoothed_rates(), calibration_table(), evaluate(), _is_data_access(), load() (+7 more)
 
 ### Community 85 - "duckdb"
-Cohesion: 0.11
-Nodes (12): main(), permutation_drop(), main(), render(), export(), main(), manifest(), test_exported_scores_reproduce_the_stored_pr_auc() (+4 more)
+Cohesion: 0.14
+Nodes (6): manifest(), test_exported_scores_reproduce_the_stored_pr_auc(), test_manifest_row_counts_equal_the_files(), test_no_fact_key_is_missing_from_its_dimension(), test_review_comment_text_is_not_exported(), test_sql_auc_equals_sklearn_with_ties()
 
-### Community 86 - "numpy"
-Cohesion: 0.10
-Nodes (19): moving_average(), naive(), ar1_with_trend(), combination(), damped_trend(), simple_exponential_smoothing(), series(), test_changing_future_weeks_does_not_change_earlier_forecasts() (+11 more)
+### Community 86 - "forecast_baseline.py"
+Cohesion: 0.24
+Nodes (8): moving_average(), naive(), combination(), series(), test_changing_future_weeks_does_not_change_earlier_forecasts(), test_horizon_shifts_the_target(), test_naive_and_moving_average_values(), test_score_is_below_one_for_a_better_model_than_naive()
 
 ### Community 87 - "Check details"
 Cohesion: 0.07
@@ -393,8 +402,8 @@ Cohesion: 0.30
 Nodes (8): add_relative_rates(), e1_feature_skill(), e2_persistence(), e_lag(), fit_score(), macro(), main(), with_system_counts()
 
 ### Community 89 - "pathlib"
-Cohesion: 0.08
-Nodes (11): main(), main(), main(), NoCacheHandler, build(), build_from(), main(), score_test_months() (+3 more)
+Cohesion: 0.11
+Nodes (8): main(), main(), read_monitor(), main(), main(), NoCacheHandler, export(), main()
 
 ### Community 90 - "Data dictionary: Snowflake + dbt implementation"
 Cohesion: 0.15
@@ -410,7 +419,7 @@ Nodes (20): _as_decimal(), _candidates(), _coerce(), _compare_expected(), ok(), 
 
 ### Community 93 - "test_powerbi_snowflake.py"
 Cohesion: 0.08
-Nodes (20): patched(), patched_ml_files(), _project_files(), _scan(), _split_outside_block(), test_ml_on_files_patches_only_the_nine_pbi_tables(), test_model_files_are_byte_identical(), test_no_datafolder_left_in_data_sources() (+12 more)
+Nodes (19): patched(), patched_ml_files(), _project_files(), _split_outside_block(), test_expressions_define_the_two_snowflake_parameters(), test_ml_on_files_keeps_datafolder_beside_the_snowflake_parameters(), test_ml_on_files_patches_only_the_nine_pbi_tables(), test_model_files_are_byte_identical() (+11 more)
 
 ### Community 94 - "fetch.py"
 Cohesion: 0.09
@@ -424,9 +433,9 @@ Nodes (24): expected_rows_for(), FakeConnection, run_main(), test_changed_file_i
 Cohesion: 0.16
 Nodes (15): ColumnResult, display_value(), _cell(), _col_rows(), collect_run_metadata(), _comparison_block(), _git(), _key_text() (+7 more)
 
-### Community 97 - "data_access/__init__.py"
-Cohesion: 0.13
-Nodes (8): main(), read_monitor(), connect(), InvalidBackendError, resolve_backend(), resolve_duckdb_path(), wrap_duckdb(), test_order_category_matches_keys_sql_on_the_mini_warehouse()
+### Community 97 - "numpy"
+Cohesion: 0.23
+Nodes (8): series(), test_ar1_trend_extends_an_exact_linear_series(), test_combination_is_the_mean_of_its_parts(), test_constant_series_is_forecast_as_constant_by_every_model(), test_damped_trend_continues_a_rising_series_but_less_than_a_straight_line(), test_exponential_smoothing_follows_the_latest_level_after_a_step(), test_forecasts_are_never_negative(), test_no_model_sees_weeks_after_its_origin()
 
 ### Community 98 - "cli.py"
 Cohesion: 0.13
@@ -441,16 +450,16 @@ Cohesion: 0.28
 Nodes (11): net(), table(), test_category_revenue_matches_and_shares_are_consistent(), test_delay_buckets_cover_every_reviewed_delivered_order(), test_delivery_trend_covers_the_same_population_as_the_ml_features(), test_monthly_growth_is_blank_next_to_thin_months(), test_monthly_kpis_add_up_to_net_revenue(), test_payment_shares_add_up_and_total_matches_the_fact() (+3 more)
 
 ### Community 101 - "backend.py"
-Cohesion: 0.24
-Nodes (7): _confirmed(), _connect_snowflake(), _load_private_key_der(), _load_snowflake_connector(), MissingConfigError, resolve_snowflake_target(), SnowflakeTarget
+Cohesion: 0.15
+Nodes (11): _confirmed(), connect(), _connect_snowflake(), InvalidBackendError, _load_private_key_der(), _load_snowflake_connector(), MissingConfigError, resolve_backend() (+3 more)
 
 ### Community 102 - "render_data_dictionary.py"
 Cohesion: 0.15
 Nodes (13): collect(), describe_test(), first_comment(), layer_of(), load_manifest(), main(), md_cell(), mermaid_id() (+5 more)
 
 ### Community 103 - "test_data_access.py"
-Cohesion: 0.10
-Nodes (8): sf_wrapper(), test_conform_integral_floats_to_ints_and_numbers_to_float(), test_marts_schema_override_is_validated(), test_snowflake_dataset_with_missing_column_fails_validation(), test_snowflake_execute_and_close(), test_snowflake_late_features_match_duckdb_after_load(), test_snowflake_unlabelled_share_matches_duckdb(), test_snowflake_weekly_series_through_the_ml_function()
+Cohesion: 0.08
+Nodes (5): check_wrapped_equals_raw(), test_duckdb_sql_text_matches_the_ml_modules(), test_normalise_dtypes(), test_real_warehouse_wrapped_equals_raw_and_validates(), test_writeback_columns_match_export_schemas()
 
 ### Community 104 - "load_table"
 Cohesion: 0.18
@@ -465,24 +474,24 @@ Cohesion: 0.13
 Nodes (5): FakeDB, frames(), patched(), test_compute_rejects_a_frame_with_a_missing_column(), test_hand_picked_run_ids_are_refused_before_connecting()
 
 ### Community 107 - "writeback.py"
-Cohesion: 0.15
-Nodes (14): DataAccess, copy_sql(), create_table_sql(), delete_sql(), _load(), new_run_id(), _prepare(), _qualified() (+6 more)
+Cohesion: 0.12
+Nodes (17): DataAccessError, copy_sql(), create_table_sql(), delete_sql(), _load(), new_run_id(), _prepare(), _qualified() (+9 more)
 
 ### Community 108 - "Semantic model (12 tables, 13 relationships, 38 measures)"
-Cohesion: 0.16
-Nodes (17): Use the model by rank, not probability, flag_share helper table, forecast_backtest table, late_delivery_scores table, DAX measure group: Delivery, DAX measure group: Forecast, DAX measure group: Payments, DAX measure group: Reviews (+9 more)
+Cohesion: 0.14
+Nodes (22): Out-of-time late-delivery scores export (export_scores.py), flag_share helper table, forecast_backtest table, late_delivery_scores table, DAX measure group: Delivery, DAX measure group: Forecast, DAX measure group: Payments, DAX measure group: Reviews (+14 more)
 
 ### Community 109 - "datasets.py"
-Cohesion: 0.12
-Nodes (17): 6. Inventory C: SQL embedded in Python and notebooks, _conn(), late_delivery_features(), load_dataset(), order_category(), _schema_ident(), unlabelled_share(), weekly_series() (+9 more)
+Cohesion: 0.14
+Nodes (12): 6. Inventory C: SQL embedded in Python and notebooks, is_data_access(), wrap_duckdb(), _conn(), late_delivery_features(), order_category(), _schema_ident(), unlabelled_share() (+4 more)
 
-### Community 110 - "build_data.py"
-Cohesion: 0.15
-Nodes (16): Extending it, analytics_tables(), clean(), commit(), discard(), forecast_metrics(), forecasts(), git_sha() (+8 more)
+### Community 110 - "json"
+Cohesion: 0.16
+Nodes (14): analytics_tables(), clean(), commit(), discard(), forecast_metrics(), forecasts(), headline_kpis(), lineage() (+6 more)
 
 ### Community 111 - "Snowflake + dbt implementation: setup and runbook"
-Cohesion: 0.08
-Nodes (26): Authentication (UNVERIFIED), Known leftovers and limits, Power BI switch guide: from the local files to Snowflake, Step by step, Table to Snowflake object mapping, The three tables that depend on Python write-back, What the patched copy changes, What the `PBI` views must expose (+18 more)
+Cohesion: 0.14
+Nodes (14): 10. Step 6: the HTML dashboard - RUN 2026-11-12, 11. Step 7: Power BI patched copy - NOT RUN, 12. Cost, 13. Where things stand, 1. Prerequisites, 2. Credentials and environment variables, 3. Offline checks (no Snowflake connection), 4. Step 1: preflight and setup - RUN 2026-11-12 (+6 more)
 
 ### Community 112 - "build_pbip.py"
 Cohesion: 0.26
@@ -492,17 +501,17 @@ Nodes (9): dump(), field_json(), files(), lit(), main(), projection(), q(), rela
 Cohesion: 0.17
 Nodes (12): 1. What each piece does, and what it never does, 2. Approval gate: what the account owner must approve, 3. Prerequisites, 4.0 Dry run (always do this first), 4.1 First load, 4.2 Re-run (no-op), 4.3 Reload, 4.4 Failure and recovery (+4 more)
 
-### Community 114 - "warehouse"
-Cohesion: 0.15
-Nodes (13): Action versions, CI setup (GitHub Actions), dbt-ci, dbt-live (manual), Known baseline failures (CI will be red until fixed), python-ci, Repository hygiene note, Required secrets (+5 more)
+### Community 114 - "CI setup (GitHub Actions)"
+Cohesion: 0.22
+Nodes (8): Action versions, CI setup (GitHub Actions), dbt-ci, dbt-live (manual), Repository hygiene note, Required secrets, UNVERIFIED, Verification record
 
 ### Community 115 - "model_spec.py"
 Cohesion: 0.15
 Nodes (9): Check, col(), compute_checks(), guid(), load_schema(), mea(), Measure, Relationship (+1 more)
 
 ### Community 116 - "format.js"
-Cohesion: 0.10
-Nodes (32): brl(), cache, compact(), DASH, day(), int(), isNum(), month() (+24 more)
+Cohesion: 0.25
+Nodes (16): brl(), cache, compact(), DASH, day(), int(), isNum(), MONTHS (+8 more)
 
 ### Community 117 - "ddl_raw.sql"
 Cohesion: 0.18
@@ -529,8 +538,8 @@ Cohesion: 0.18
 Nodes (4): 9. UNVERIFIED until a live Snowflake run, FakeCursor, FakeCursorPandas, StageCursor
 
 ### Community 124 - "test_dashboard.py"
-Cohesion: 0.10
-Nodes (6): _FakeSnowflake, test_every_js_file_parses(), test_failed_build_leaves_the_previous_build_intact(), test_no_innerhtml_in_dashboard_code(), test_order_category_reads_the_snowflake_intermediate_model(), test_snowflake_analytics_marts_are_put_in_the_reference_order()
+Cohesion: 0.09
+Nodes (7): _FakeSnowflake, test_every_js_file_parses(), test_failed_build_leaves_the_previous_build_intact(), test_no_innerhtml_in_dashboard_code(), test_order_category_matches_keys_sql_on_the_mini_warehouse(), test_order_category_reads_the_snowflake_intermediate_model(), test_snowflake_analytics_marts_are_put_in_the_reference_order()
 
 ### Community 125 - "Signs of slop"
 Cohesion: 0.18
@@ -568,13 +577,13 @@ Nodes (6): Commands, dbt project: Olist on Snowflake, Environment (isolated from
 Cohesion: 0.24
 Nodes (7): _kind_ok(), SchemaError, validate_frame(), test_validate_frame_accepts_matching_frame_and_other_units(), test_validate_frame_extra_columns_policy(), test_validate_frame_fails_on_missing_column(), test_validate_frame_fails_on_wrong_dtype()
 
-### Community 136 - "ML layer (src/ml, sql/ml)"
-Cohesion: 0.31
-Nodes (6): ML layer (src/ml, sql/ml), Notebooks (01 discovery, 02 late-delivery, 03 forecast, marimo versions), Test suite (96 pytest tests), warehouse.duckdb, Planted-leak checks, ML notebooks: Jupyter + marimo versions
+### Community 136 - "ARCHITECTURE.md"
+Cohesion: 0.21
+Nodes (11): ML layer (src/ml, sql/ml), Notebooks (01 discovery, 02 late-delivery, 03 forecast, marimo versions), Power BI generators and project (src/powerbi, powerbi/), Raw data (data/), Staging SQL (sql/staging), Test suite (96 pytest tests), Validation checks (sql/validation/checks.sql, 22 checks), warehouse.duckdb (+3 more)
 
-### Community 137 - "orders"
-Cohesion: 0.24
-Nodes (10): `mart_category_performance`, `mart_delivery_trend`, `mart_delivery_vs_reviews`, `mart_monthly_kpis`, `mart_payments`, `mart_repeat_customers`, `mart_seller_concentration`, `mart_state_performance` (+2 more)
+### Community 137 - "Marts, analytics (MARTS, tables)"
+Cohesion: 0.22
+Nodes (9): `mart_category_performance`, `mart_delivery_trend`, `mart_delivery_vs_reviews`, `mart_monthly_kpis`, `mart_payments`, `mart_repeat_customers`, `mart_seller_concentration`, `mart_state_performance` (+1 more)
 
 ### Community 139 - "Effects"
 Cohesion: 0.29
@@ -598,31 +607,43 @@ Nodes (3): ML Methodology (target, leakage, baseline first), MLOps Lifecycle, Mo
 
 ### Community 237 - "parametrize"
 Cohesion: 0.29
-Nodes (5): test_entry_points_reject_unknown_backend_from_env(), test_entry_points_snowflake_backend_needs_config_and_confirmation(), test_only_confirm_one_counts(), test_snowflake_read_sql_normalises_and_binds_params(), test_writeback_statement_sequence_is_atomic_and_never_destructive()
+Nodes (5): test_entry_points_reject_unknown_backend_from_env(), test_entry_points_snowflake_backend_needs_config_and_confirmation(), test_only_confirm_one_counts(), test_writeback_rejects_unsafe_run_ids_before_touching_snowflake(), test_writeback_statement_sequence_is_atomic_and_never_destructive()
 
 ### Community 238 - "register_model.py"
-Cohesion: 0.18
-Nodes (12): backtest_metrics(), check_in_warehouse(), fit(), git_sha(), main(), registry_session(), training_frame(), uncommitted_model_code() (+4 more)
+Cohesion: 0.14
+Nodes (15): backtest_metrics(), check_in_warehouse(), fit(), git_sha(), log_kwargs(), main(), parity_sample(), predict_proba_sql() (+7 more)
 
 ### Community 239 - "Power BI project"
 Cohesion: 0.33
 Nodes (6): If the first refresh fails, Known limits, Open it, Optional, Power BI project, Regenerate (only to start over)
 
 ### Community 240 - "recalibration.py"
+Cohesion: 0.21
+Nodes (11): 3. Data quality findings, orders(), test_base_and_calibration_rows_do_not_overlap(), test_base_model_outcomes_are_known_before_the_calibration_window_starts(), test_calibrators_return_probabilities(), test_ece_is_zero_for_a_perfectly_calibrated_split(), test_platt_reduces_overconfidence(), test_shift_calibrator_matches_the_observed_rate() (+3 more)
+
+### Community 245 - "ConfirmationRequired"
+Cohesion: 0.47
+Nodes (5): ConfirmationRequired, test_refuses_without_confirmation(), connect(), test_refuses_without_confirmation(), connect()
+
+### Community 246 - "export_scores.py"
 Cohesion: 0.20
-Nodes (9): test_base_and_calibration_rows_do_not_overlap(), test_base_model_outcomes_are_known_before_the_calibration_window_starts(), test_calibrators_return_probabilities(), test_ece_is_zero_for_a_perfectly_calibrated_split(), test_platt_reduces_overconfidence(), test_shift_calibrator_matches_the_observed_rate(), test_split_uses_only_outcomes_known_before_the_test_month(), test_unknown_calibrator_is_rejected() (+1 more)
+Nodes (7): 9. Step 5: Python on Snowflake - RUN 2026-11-13, Publishing the ML outputs to Snowflake - RUN 2026-11-13, The model in the Snowflake Model Registry - RUN 2026-11-13, build(), build_from(), main(), score_test_months()
 
-### Community 245 - "publish_ml.py"
-Cohesion: 0.18
-Nodes (9): ConfirmationRequired, DataAccessError, compute(), main(), written_rows(), test_refuses_without_confirmation(), connect(), test_refuses_without_confirmation() (+1 more)
+### Community 248 - "make_snowflake_notebooks.py"
+Cohesion: 0.27
+Nodes (10): code(), main(), md(), must_replace(), nb02(), nb03(), nb04(), port() (+2 more)
 
-### Community 250 - "Architecture"
-Cohesion: 0.18
-Nodes (11): Architecture, Cost, Data flow, Deployment and monitoring, Failure points, ML (baselines built, D-007), Processing, Related documents (+3 more)
+### Community 249 - "weekly_series"
+Cohesion: 0.17
+Nodes (11): load_dataset(), weekly_series(), sf_wrapper(), test_dataset_accepts_a_raw_duckdb_connection(), test_marts_schema_override_is_validated(), test_snowflake_dataset_with_missing_column_fails_validation(), test_snowflake_execute_and_close(), test_snowflake_late_features_match_duckdb_after_load() (+3 more)
 
-### Community 251 - "Data model: Olist star schema"
-Cohesion: 0.18
-Nodes (11): Data model: Olist star schema, Design rules, Dimensions, Entity-relationship diagram, `fact_order_items` - the core sales fact, `fact_orders` - order lifecycle, `fact_payments` - payments, `fact_reviews` - reviews (+3 more)
+### Community 250 - "forecast_backtest"
+Cohesion: 0.21
+Nodes (9): Authentication (UNVERIFIED), Known leftovers and limits, Power BI switch guide: from the local files to Snowflake, Step by step, Table to Snowflake object mapping, The three tables that depend on Python write-back, What the patched copy changes, What the `PBI` views must expose (+1 more)
+
+### Community 251 - "DuckDB to Snowflake + dbt: SQL migration inventory"
+Cohesion: 0.17
+Nodes (12): 10. Inventory D: SQL added for Snowflake (93 files), 1. Classification, 2. Reconciling `git ls-files "*.sql"`, 3. Summary counts, 4.1 Staging (9 files, class 3), 4.2 Dimensions (5 files), 4.3 Facts (4 files, class 2), 4.4 Analytics (8 files, class 2) (+4 more)
 
 ### Community 252 - "table_tmdl"
 Cohesion: 0.27
@@ -632,9 +653,9 @@ Nodes (6): m_load(), prop(), table_tmdl(), column_hidden(), m_type(), Table
 Cohesion: 0.22
 Nodes (3): features(), test_seller_history_matches_a_direct_recount_on_real_data(), test_weekly_series_covers_the_documented_window()
 
-### Community 254 - "build_warehouse.py"
-Cohesion: 0.32
-Nodes (4): Validation checks (sql/validation/checks.sql, 22 checks), Clean-clone reproduction, check_raw_files(), main()
+### Community 254 - "test_notebooks_snowflake.py"
+Cohesion: 0.24
+Nodes (7): git_sha(), code_cells(), test_cells_parse_and_use_the_notebook_session(), test_notebooks_store_no_outputs(), test_ported_notebooks_keep_every_original_analysis_cell(), test_the_three_notebooks_exist_and_are_up_to_date(), test_train_register_notebook_never_sets_the_default_version()
 
 ### Community 255 - "Phase 2: baseline results"
 Cohesion: 0.29
@@ -644,17 +665,41 @@ Nodes (7): Do richer history features help? No., Limits, Phase 2: baseline resul
 Cohesion: 0.57
 Nodes (5): frame(), test_relative_rates_are_positive_for_a_late_route(), test_relative_rates_are_zero_when_route_matches_the_system(), test_system_counts_do_not_depend_on_row_order(), test_system_counts_use_only_orders_delivered_strictly_before_purchase()
 
-### Community 257 - "Live verification checklist (dbt base: staging, intermediate, core marts)"
-Cohesion: 0.33
-Nodes (6): Known non-live caveats, Late-delivery feature models (A3c): `int_late_delivery_*`, `mart_late_delivery_features`, Live verification checklist (dbt base: staging, intermediate, core marts), Needs live verification, Rounding boundary checks (analytics marts), What was verified offline (2026-11-06)
+### Community 257 - "MiniWarehouse"
+Cohesion: 0.17
+Nodes (7): Known non-live caveats, Late-delivery feature models (A3c): `int_late_delivery_*`, `mart_late_delivery_features`, Live verification checklist (dbt base: staging, intermediate, core marts), Needs live verification, Rounding boundary checks (analytics marts), What was verified offline (2026-11-06), MiniWarehouse
 
 ### Community 258 - "Retail analytics dashboard (HTML)"
-Cohesion: 0.50
-Nodes (4): How it is organised, Refresh the data, Retail analytics dashboard (HTML), Run it
+Cohesion: 0.40
+Nodes (5): Extending it, How it is organised, Refresh the data, Retail analytics dashboard (HTML), Run it
 
 ### Community 259 - "Model card"
 Cohesion: 0.50
 Nodes (4): 1. Late-delivery model, 2. Weekly order forecast, 3. Reproducing, Model card
+
+### Community 262 - "build_mockup_html.py"
+Cohesion: 0.24
+Nodes (4): main(), render(), build(), test_mockup_cubes_add_up_to_the_specification_checks()
+
+### Community 263 - "test_scoring_task_sql.py"
+Cohesion: 0.31
+Nodes (5): strip_comments(), test_predict_proba_arguments_match_the_shared_helper(), test_setup_files_are_additive_and_keep_placeholders(), test_task_is_idempotent_and_non_destructive(), test_task_never_writes_the_backtest_scores_table()
+
+### Community 264 - "warehouse"
+Cohesion: 0.32
+Nodes (6): Known baseline failures (CI will be red until fixed), python-ci, The `DataFolder` local-path issue, mini(), warehouse(), test_committed_project_is_complete_and_holds_no_machine_path()
+
+### Community 266 - "Lessons learned"
+Cohesion: 0.40
+Nodes (5): About modelling, About process, About the data, Lessons learned, What I would do differently
+
+### Community 267 - "month"
+Cohesion: 0.50
+Nodes (4): month(), `dim_date`, `pbi_dim_date`, 7. Construct-by-construct translation
+
+### Community 268 - "_scan"
+Cohesion: 0.50
+Nodes (3): _scan(), test_no_real_looking_account_or_credential_strings(), test_secret_scanner_would_catch_real_looking_values()
 
 ## Ambiguous Edges - Review These
 - `Late-delivery spikes: ~14% in 2017-11 and ~21% in 2018-03, versus ~3-5% baseline` → `Rising share of short delivery promises: near 0% in early 2017 to 75% by 2018-08`  [AMBIGUOUS]
@@ -662,24 +707,24 @@ Nodes (4): 1. Late-delivery model, 2. Weekly order forecast, 3. Reproducing, Mod
 
 ## Knowledge Gaps
 - **36 isolated node(s):** `gcp`, `retail-olist-dbt`, `retail-olist-ml-registry`, `Always-predict-training-late-rate baseline`, `Seller own-history rate baseline` (+31 more)
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 1062 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
-- **149 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 1098 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+- **156 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `7. Construct-by-construct translation` connect `format.js` to `pytest`, `backend.py`?**
-  _High betweenness centrality (0.099) - this node is a cross-community bridge._
+- **Why does `month()` connect `month` to `format.js`?**
+  _High betweenness centrality (0.102) - this node is a cross-community bridge._
 - **What connects `gcp`, `retail-olist-dbt`, `retail-olist-ml-registry` to the rest of the system?**
   _36 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Architecture Philosophy (Shared Across Cloud Projects)` be split into smaller, more focused modules?**
   _Cohesion score 0.13725490196078433 - nodes in this community are weakly interconnected._
-- **Why does `orders()` connect `orders` to `Staging (STAGING, views)`, `Phase 0 — Discovery Report`, `datasets.py`, `recalibration.py`, `pandas`, `numpy`, `Data dictionary: Snowflake + dbt implementation`?**
-  _High betweenness centrality (0.047) - this node is a cross-community bridge._
+- **Why does `7. Construct-by-construct translation` connect `month` to `DuckDB to Snowflake + dbt: SQL migration inventory`, `pytest`, `datasets.py`?**
+  _High betweenness centrality (0.101) - this node is a cross-community bridge._
 - **Should `fact_order_items (grain: order item, 112,650 rows)` be split into smaller, more focused modules?**
-  _Cohesion score 0.08866995073891626 - nodes in this community are weakly interconnected._
-- **Should `test_powerbi_project.py` be split into smaller, more focused modules?**
-  _Cohesion score 0.11594202898550725 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.0620782726045884 - nodes in this community are weakly interconnected._
+- **Why does `DuckDB to Snowflake + dbt: SQL migration inventory` connect `DuckDB to Snowflake + dbt: SQL migration inventory` to `month`, `FakeCursor`, `README.md`, `datasets.py`?**
+  _High betweenness centrality (0.042) - this node is a cross-community bridge._
 
 ### Low-confidence Hints
 _AMBIGUOUS edges — the extractor was unsure. Verify before acting on these._

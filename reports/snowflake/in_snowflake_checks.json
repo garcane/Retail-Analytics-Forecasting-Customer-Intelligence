@@ -1,0 +1,33 @@
+{
+ "measured": "2026-11-13, RETAIL_OLIST as RETAIL_TRANSFORMER on RETAIL_WH (service user RETAIL_SVC)",
+ "sql_model_call": {
+  "what": "MODEL(RETAIL_OLIST.ML.LATE_DELIVERY_RISK, V1_20261113_CC90DC8)!PREDICT_PROBA(...):output_feature_1 over every training order (snowflake/ml/register_model.py predict_proba_sql), against a local retrain",
+  "rows": 96019,
+  "unmatched": 0,
+  "max_abs_diff": 3.331e-16
+ },
+ "ported_notebooks_run_against_snowflake_data": {
+  "how": "every code cell of the generated notebooks executed from the laptop with the notebook session replaced by the key-pair connection (same data_access interface); the install cell skipped",
+  "03_weekly_forecast_sf": {"vs reports/forecast_models_metrics.json (DuckDB)": "largest relative difference 0.0"},
+  "02_late_delivery_model_sf": {
+   "vs reports/snowflake/late_delivery_metrics.json": "largest difference 0.0",
+   "vs reports/late_delivery_metrics.json (DuckDB)": "largest difference 6.04e-06 (float summation order)"
+  },
+  "not_yet": "running them inside a Snowflake workspace on a compute pool"
+ },
+ "monitoring_views": {
+  "dbt": "dbt build -s monitoring --target prod: PASS=18 (5 views, 13 tests), schema ML_MONITORING",
+  "mon_calibration_by_month vs late_delivery_baseline.calibration_table on the same scores": "30 of 30 cells, max difference 0.0",
+  "mon_calibration vs reports/snowflake/late_delivery_metrics.json (rounded to 4 places)": "max difference 4.2e-05",
+  "mon_feature_auc_by_month vs reports/drift_metrics.json E1": {"promised_days": 4.98e-13, "distance_km": 4.97e-13,
+   "seller_prior_late_rate": 4.98e-13, "months": 18},
+  "mon_score_drift 2018-08 share promised under 20 days": 0.748
+ },
+ "scoring_block": {
+  "how": "the block of snowflake/ml/scoring_task.sql run twice as an anonymous EXECUTE IMMEDIATE (the task itself needs the 08 grants)",
+  "result": ["run 20261113T132737Z-8da1e630: scored 6306 orders of 2018-08 with V1_20261113_CC90DC8",
+             "run 20261113T132752Z-34ef44c1: scored 6306 orders of 2018-08 with V1_20261113_CC90DC8"],
+  "after_rerun": "one run left, 6306 rows = the mart's 2018-08 orders",
+  "max_abs_diff_vs_local": 2.776e-16
+ }
+}
