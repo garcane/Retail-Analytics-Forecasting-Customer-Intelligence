@@ -36,7 +36,9 @@ export function brl(v, { compact: short = false, digits = 2 } = {}) {
 /** pct(0.081) -> "8.1%" when fraction; pct(8.1, 1, {fraction: false}) -> "8.1%" */
 export function pct(v, digits = 1, { fraction = true } = {}) {
   if (!isNum(v)) return DASH;
-  return `${nf({ minimumFractionDigits: digits, maximumFractionDigits: digits }).format(fraction ? v * 100 : v)}%`;
+  let x = fraction ? v * 100 : v;
+  if (Math.abs(x) < 0.5 * 10 ** -digits) x = 0; // no "-0.0%"
+  return `${nf({ minimumFractionDigits: digits, maximumFractionDigits: digits }).format(x)}%`;
 }
 
 export function signed(v, digits = 1, suffix = "") {
@@ -54,23 +56,32 @@ const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "
 /** Parse "YYYY-MM", "YYYY-MM-DD" or ISO timestamps as UTC milliseconds. */
 export function toTime(value) {
   if (value instanceof Date) return value.getTime();
-  if (typeof value === "number") return value;
-  const s = String(value);
+  if (typeof value === "number") return Number.isFinite(value) ? value : NaN;
+  const s = String(value ?? "");
   if (/^\d{4}-\d{2}$/.test(s)) return Date.UTC(+s.slice(0, 4), +s.slice(5, 7) - 1, 1);
-  return Date.UTC(+s.slice(0, 4), +s.slice(5, 7) - 1, +s.slice(8, 10));
+  if (/^\d{4}-\d{2}-\d{2}/.test(s)) return Date.UTC(+s.slice(0, 4), +s.slice(5, 7) - 1, +s.slice(8, 10));
+  return NaN; // anything else is not a date this dashboard produces
+}
+
+function utc(value) {
+  const t = toTime(value);
+  return Number.isFinite(t) ? new Date(t) : null;
 }
 
 export function month(value) {
-  const d = new Date(toTime(value));
+  const d = utc(value);
+  if (!d) return DASH;
   return `${MONTHS[d.getUTCMonth()]} ${d.getUTCFullYear()}`;
 }
 
 export function day(value) {
-  const d = new Date(toTime(value));
+  const d = utc(value);
+  if (!d) return DASH;
   return `${d.getUTCDate()} ${MONTHS[d.getUTCMonth()]} ${d.getUTCFullYear()}`;
 }
 
 export function monthShort(value) {
-  const d = new Date(toTime(value));
+  const d = utc(value);
+  if (!d) return DASH;
   return `${MONTHS[d.getUTCMonth()]} ${String(d.getUTCFullYear()).slice(2)}`;
 }

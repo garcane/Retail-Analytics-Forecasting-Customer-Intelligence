@@ -5,7 +5,7 @@
 import { registerPage } from "../core/registry.js";
 import { el } from "../core/dom.js";
 import * as f from "../core/format.js";
-import { series, MUTED } from "../core/theme.js";
+import { series, MUTED, allocateSlots } from "../core/theme.js";
 import { modelInfo, METRICS, FEATURE_SETS, humanize } from "../core/labels.js";
 import { card, grid } from "../components/card.js";
 import { controlsRow, select, segmented } from "../components/controls.js";
@@ -14,7 +14,6 @@ import { lineChart } from "../charts/line-chart.js";
 import { heatmap } from "../charts/heatmap.js";
 import { legend } from "../charts/legend.js";
 
-const FAMILY_COLOR = { "Logistic regression": series(1), "Gradient boosting": series(2), Baseline: MUTED };
 const fmt3 = (v) => f.num(v, 3);
 
 registerPage({
@@ -29,8 +28,9 @@ registerPage({
     const keys = Object.keys(ld.macro_average);
     const info = Object.fromEntries(keys.map((k) => [k, modelInfo(k)]));
     // A fixed colour slot per non-baseline model, by its position in the data: colour follows the model, not its rank.
-    const slot = {};
-    keys.filter((k) => !info[k].baseline).forEach((k, i) => { slot[k] = series(i + 1); });
+    // One colour per model on every chart of this page (bars, lines, calibration); baselines are grey. Models beyond
+    // the 8-slot palette are drawn muted rather than reusing a colour (allocateSlots warns in the console).
+    const slot = allocateSlots(keys.filter((k) => !info[k].baseline));
     const colorOf = (k) => slot[k] || MUTED;
     const months = [...new Set(Object.values(ld.per_month).flat().map((r) => r.month))].sort();
     const baseRate = ld.macro_average.constant_train_rate?.base_rate ?? Object.values(ld.macro_average)[0]?.base_rate;
@@ -60,7 +60,6 @@ registerPage({
         { key: "label", label: "Model" }, { key: "featureSet", label: "Features" },
         ...availableMetrics.map((m) => ({ key: m, label: METRICS[m].label, num: true, format: fmt3 })),
       ], rows: keys.map((k) => ({ label: info[k].label, featureSet: info[k].featureSet || "-", ...ld.macro_average[k] })), caption: "Macro average over the six test months" }) });
-    cmp.body.append(legend(families.map((x) => ({ id: x, label: x, color: FAMILY_COLOR[x] || MUTED, shape: "rect" }))));
     const cmpChart = barChart(cmp.body, { data: [], format: fmt3, rowHeight: 26, ariaLabel: "Model comparison" });
 
     // 2. Per-month heatmap
@@ -81,12 +80,12 @@ registerPage({
       const meta = METRICS[m];
       metricNote.textContent = `${meta.label}: ${meta.description}.`;
       const vk = visibleKeys();
-      const data = vk.map((k) => ({ key: k, label: info[k].label, value: ld.macro_average[k][m], color: FAMILY_COLOR[info[k].family] || MUTED,
+      const data = vk.map((k) => ({ key: k, label: info[k].label, value: ld.macro_average[k][m], color: colorOf(k),
         note: info[k].featureSet ? FEATURE_SETS[info[k].featureSet] || info[k].featureSet : "baseline" }))
         .sort((a, b) => (meta.higherIsBetter ? b.value - a.value : a.value - b.value));
       const ref = refFor(m);
       cmpChart.update({ data, refValue: ref && Number.isFinite(ref.value) ? ref : undefined, valueName: meta.label, ariaLabel: `Models ranked by ${meta.label}` });
-      cmp.setFoot(`Ranked by ${meta.label}${meta.higherIsBetter ? " (higher is better)" : " (lower is better)"}. The vertical line is the ${ref?.label || "reference"}.`);
+      cmp.setFoot(`Ranked by ${meta.label}${meta.higherIsBetter ? " (higher is better)" : " (lower is better)"}. The vertical line is the ${ref?.label || "reference"}. Each model keeps its colour on every chart of this page; baselines are grey.`);
       hmChart.update({ rows: vk.map((k) => ({ key: k, label: info[k].label })), value: (k, mo) => lookup[k][mo]?.[m], higherIsBetter: meta.higherIsBetter, valueName: meta.label, ariaLabel: `${meta.label} by model and month` });
       // Name the hardest month from the data (the month most models score worst in on this metric).
       const worst = {};

@@ -30,8 +30,8 @@
     show("Serve the dashboard over HTTP", [
       "This page loads its data and modules with fetch(), which browsers block for files opened from disk.",
       "From the repository root, run:",
-      { code: "python -m http.server 8000 --directory dashboard" },
-      "then open http://localhost:8000. To refresh the data first (Snowflake by default, or offline from DuckDB):",
+      { code: "uv run python src/dashboard/serve.py" },
+      "then open http://127.0.0.1:8000 (it turns caching off, so edits and rebuilt data always show). To refresh the data first (Snowflake by default, or offline from DuckDB):",
       { code: "uv run python src/dashboard/build_data.py --yes" },
       { code: "uv run python src/dashboard/build_data.py --backend duckdb" },
     ]);

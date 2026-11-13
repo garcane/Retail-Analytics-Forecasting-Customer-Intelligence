@@ -182,3 +182,17 @@ def test_order_category_reads_the_snowflake_intermediate_model():
     df = datasets.order_category(Fake())
     assert "INTERMEDIATE.int_late_delivery_item_agg" in seen["sql"]
     assert list(df.columns[:2]) == ["order_id", "category"]
+
+
+def test_failed_build_leaves_the_previous_build_intact(tmp_path):
+    """Datasets are staged as .tmp and swapped in only by commit(); discard() drops a half-finished build."""
+    (tmp_path / "kpis.json").write_text('{"old": true}\n', encoding="utf-8")
+    manifest = {"datasets": {}}
+    build_data.write(tmp_path, "kpis", {"new": True}, manifest, "Headline KPIs", "test")
+    assert json.loads((tmp_path / "kpis.json").read_text(encoding="utf-8")) == {"old": True}, "nothing swapped before commit"
+    build_data.discard(tmp_path)
+    assert not list(tmp_path.glob("*.tmp"))
+    build_data.write(tmp_path, "kpis", {"new": True}, manifest, "Headline KPIs", "test")
+    build_data.commit(tmp_path, manifest)
+    assert json.loads((tmp_path / "kpis.json").read_text(encoding="utf-8")) == {"new": True}
+    assert json.loads((tmp_path / "manifest.json").read_text(encoding="utf-8"))["datasets"]["kpis"]["file"] == "kpis.json"

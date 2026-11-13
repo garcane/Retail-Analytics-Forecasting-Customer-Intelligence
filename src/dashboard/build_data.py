@@ -186,6 +186,8 @@ def headline_kpis(con, schema: str) -> dict:
     span.columns = [c.lower() for c in span.columns]
     r = {**sales.iloc[0].to_dict(), **deliv.iloc[0].to_dict(), **rev.iloc[0].to_dict(), **span.iloc[0].to_dict()}
     r = {k: (float(v) if hasattr(v, "as_tuple") else v) for k, v in r.items()}  # Decimal -> float
+    for k in ("net_orders", "items", "labelled_orders", "late_orders"):  # counts stay integers on both backends
+        r[k] = int(r[k]) if r[k] is not None else None
     r["avg_order_value"] = r["net_revenue"] / r["net_orders"]
     r["late_rate"] = r["late_orders"] / r["labelled_orders"]
     rep = pd.read_csv(REPORTS / "analytics" / ANALYTICS["repeat_customers"])
@@ -252,10 +254,28 @@ def risk_rollups(con) -> dict:
 
 # -------------------------------------------------------------------------------------------------------- main
 def write(out: Path, name: str, payload: dict, manifest: dict, title: str, source: str, rows: int | None = None) -> None:
-    path = out / f"{name}.json"
-    path.write_text(json.dumps(clean(payload), separators=(",", ":"), ensure_ascii=False) + "\n", encoding="utf-8")
-    manifest["datasets"][name] = {"file": path.name, "title": title, "source": source, "rows": rows,
-                                  "bytes": path.stat().st_size}
+    """Stage <name>.json.tmp. commit() swaps every staged file in only after the whole build succeeded, so a failed
+    build never leaves a mix of two builds or a manifest whose sizes and sources do not match the files."""
+    final = out / f"{name}.json"
+    tmp = out / f"{name}.json.tmp"
+    tmp.write_text(json.dumps(clean(payload), separators=(",", ":"), ensure_ascii=False) + "\n", encoding="utf-8")
+    manifest["datasets"][name] = {"file": final.name, "title": title, "source": source, "rows": rows,
+                                  "bytes": tmp.stat().st_size}
+
+
+def commit(out: Path, manifest: dict) -> None:
+    for meta in manifest["datasets"].values():
+        tmp = out / f"{meta['file']}.tmp"
+        if tmp.exists():
+            os.replace(tmp, out / meta["file"])
+    tmp = out / "manifest.json.tmp"
+    tmp.write_text(json.dumps(manifest, indent=1) + "\n", encoding="utf-8")
+    os.replace(tmp, out / "manifest.json")  # last: readers only ever see a complete, matching build
+
+
+def discard(out: Path) -> None:
+    for tmp in out.glob("*.json.tmp"):
+        tmp.unlink()
 
 
 def main() -> int:
@@ -295,6 +315,7 @@ def main() -> int:
     schema = "MARTS." if args.backend == "snowflake" else ""
     where = "Snowflake RETAIL_OLIST.MARTS" if args.backend == "snowflake" else "DuckDB warehouse"
     risk = None
+    discard(args.out)  # leftovers from an interrupted build
     try:
         write(args.out, "kpis", headline_kpis(con, schema), manifest, "Headline KPIs",
               f"{where}: fact_order_items, fact_orders, fact_reviews; reports/analytics/07")
@@ -308,6 +329,9 @@ def main() -> int:
         if not args.skip_scores:
             risk = risk_rollups(con)
             risk["source"] = f"{where}: {risk['source']}"
+    except BaseException:
+        discard(args.out)  # nothing was swapped in: the previous build stays intact
+        raise
     finally:
         con.close()
     write(args.out, "models", model_outputs(), manifest, "Late-delivery model results",
@@ -320,13 +344,13 @@ def main() -> int:
     else:
         manifest["notes"].append("risk.json not rebuilt (--skip-scores); the previous build is served if present.")
         previous = args.out / "risk.json"
-        if previous.exists():  # keep serving the last DuckDB build of the roll-ups, and say so
+        if previous.exists():  # keep serving the previous build of the roll-ups, and say so
             risk = json.loads(previous.read_text(encoding="utf-8"))
             manifest["datasets"]["risk"] = {"file": previous.name, "title": "Risk-score roll-ups (previous build)",
                                             "source": risk.get("source", ""), "rows": risk.get("n_scored"),
                                             "bytes": previous.stat().st_size}
 
-    (args.out / "manifest.json").write_text(json.dumps(manifest, indent=1) + "\n", encoding="utf-8")
+    commit(args.out, manifest)
     for name, meta in manifest["datasets"].items():
         print(f"  {name:10s} {meta['bytes']:>9,} bytes  {meta['title']}")
     print(f"wrote {args.out} ({args.backend}, git {manifest['git_sha']})")

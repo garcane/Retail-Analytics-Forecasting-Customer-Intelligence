@@ -15,6 +15,25 @@ export function manifest() {
   return manifestPromise;
 }
 
+/**
+ * Re-read manifest.json (called on every navigation). If the data was rebuilt since the tab loaded it
+ * (generated_at changed), drop every cached dataset so the next page shows the new build, e.g. a risk.json that
+ * did not exist when the tab was opened. Returns true when a newer build was found.
+ */
+export async function refresh() {
+  let fresh;
+  try {
+    fresh = await fetchJson("data/manifest.json");
+  } catch {
+    return false; // keep serving what is loaded; the page will report its own errors
+  }
+  const current = manifestPromise ? await manifestPromise.catch(() => null) : null;
+  if (current && current.generated_at === fresh.generated_at) return false;
+  cache.clear();
+  manifestPromise = Promise.resolve(fresh);
+  return Boolean(current);
+}
+
 export async function dataset(name) {
   if (!cache.has(name)) {
     const m = await manifest();

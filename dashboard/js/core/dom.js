@@ -67,8 +67,16 @@ export function onResize(host, draw) {
   ro.observe(host);
   const redraw = () => { last = -1; run(); };
   window.addEventListener("themechange", redraw);
+  // "layoutchange": something was shown or resized outside a ResizeObserver frame (e.g. a card switching back
+  // from its table). Re-measure now; run() reads clientWidth synchronously, so this does not wait for a frame.
+  window.addEventListener("layoutchange", run);
   requestAnimationFrame(run);
-  const stop = () => { ro.disconnect(); window.removeEventListener("themechange", redraw); live.delete(stop); };
+  const stop = () => {
+    ro.disconnect();
+    window.removeEventListener("themechange", redraw);
+    window.removeEventListener("layoutchange", run);
+    live.delete(stop);
+  };
   live.add(stop);
   return { redraw, stop };
 }

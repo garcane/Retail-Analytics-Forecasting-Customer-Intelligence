@@ -25,10 +25,11 @@ export function card(parent, { title, subtitle, span = 12, foot, table, actions 
   for (const a of actions) actionsEl.append(a);
 
   let showingTable = false;
+  let userSort = null; // the reader's sort survives filter changes (refreshTable)
   const renderTable = () => {
     tableHost.replaceChildren();
     const spec = table();
-    dataTable(tableHost, spec);
+    dataTable(tableHost, { ...spec, initialSort: userSort ?? spec.initialSort, onSort: (s) => { userSort = s; } });
   };
   if (table) {
     const toggle = el("button", { type: "button", class: "icon-button", "aria-pressed": "false", text: "Table" });
@@ -39,6 +40,8 @@ export function card(parent, { title, subtitle, span = 12, foot, table, actions 
       if (showingTable) renderTable();
       body.hidden = showingTable;
       tableHost.hidden = !showingTable;
+      // A chart updated while hidden has width 0 to draw at; tell charts to re-measure now that it is visible.
+      if (!showingTable) window.dispatchEvent(new CustomEvent("layoutchange"));
     });
     actionsEl.append(toggle);
   }
