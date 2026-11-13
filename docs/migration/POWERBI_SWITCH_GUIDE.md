@@ -25,14 +25,14 @@ Report pages and visuals, relationships, measures, column definitions, formattin
 
 ## Step by step
 
-1. **Prerequisite (UNVERIFIED, not done yet):** the Snowflake objects exist and `dbt build` has populated the `PBI` schema (and, for the full switch, the `ML` tables are written; see [the ML tables](#the-three-tables-that-depend-on-python-write-back)). Without these the refresh fails at the first table.
+1. **Prerequisite (done 2026-11-13):** the Snowflake objects exist, `dbt build` has populated the `PBI` schema, and `src/ml/publish_ml.py --yes --write` has written the `ML` tables (see [the ML tables](#the-three-tables-that-depend-on-python-write-back)).
 2. **Create the patched copy** from the repo root (use the repo venv; do not run `uv sync`):
 
    ```
-   .\.venv\Scripts\python.exe powerbi/snowflake/apply_snowflake_source.py --ml-on-files
+   .\.venv\Scripts\python.exe powerbi/snowflake/apply_snowflake_source.py
    ```
 
-   `--ml-on-files` is the right choice until the Python write-back to `ML` has run: it patches the nine `PBI` tables and leaves `late_delivery_scores`, `forecast_backtest` and `flag_share` on their Parquet/CSV sources (the `DataFolder` parameter is kept for them). Once the `ML` tables exist, run it again **without** that flag and `--force` to switch all 12 tables.
+   This switches all 12 tables to Snowflake. `--ml-on-files` patches only the nine `PBI` tables and leaves `late_delivery_scores`, `forecast_backtest` and `flag_share` on their Parquet/CSV sources (keeping the `DataFolder` parameter); it was needed only before the `ML` tables existed.
    The script refuses to write into a non-empty target without `--force`, and `--force` replaces only the three project items by name.
 3. **Check that `powerbi_snowflake/` is git-ignored** (`git check-ignore powerbi_snowflake` should print the path; the repo `.gitignore` lists it). The patched copy will contain your account name once you enter it, so it must never be committed.
 4. **Open** `powerbi_snowflake\RetailAnalytics.pbip` in Power BI Desktop (same preview-feature requirements as `powerbi/README.md`). It has **not been opened in Desktop by anyone yet**; if Desktop reports an error, note the exact message and the file it names.
@@ -41,7 +41,7 @@ Report pages and visuals, relationships, measures, column definitions, formattin
    - `SnowflakeWarehouse`: `RETAIL_WH`.
    - With `--ml-on-files`, also set `DataFolder` to the full path of `powerbi/data` as in `powerbi/README.md` (the exported Parquet/CSV files must exist for the three ML tables).
 6. **Sign in** when Desktop prompts for the Snowflake data source (see below). Use a user whose **default role** is `RETAIL_REPORTER`, which should be the only role with `SELECT` on the `PBI` (and `ML`) schemas. The templates do not set a role option, so Desktop uses the user's default role. UNVERIFIED that no explicit role is needed.
-7. **Close & Apply**, then run the **first-open checklist** from `powerbi/README.md` / the DAX specification. The DuckDB reference figures are: net revenue R$ 13,494,400.74, 98,199 net orders, 8.13% late, 21.5% late among the riskiest 10%. If the cards match, the views, types and relationships are right; if not, first compare the PBI view columns with the table below. (These are DuckDB-derived numbers; Snowflake-side parity is what `src/reconciliation` is for and has not been run.)
+7. **Close & Apply**, then run the **first-open checklist** from `powerbi/README.md` / the DAX specification. The DuckDB reference figures are: net revenue R$ 13,494,400.74, 98,199 net orders, 8.13% late, 21.5% late among the riskiest 10%. If the cards match, the views, types and relationships are right; if not, first compare the PBI view columns with the table below. (These are DuckDB-derived numbers; the reconciliation has since shown the Snowflake marts equal to DuckDB, 22/22 checks with 0 differences.)
 
 ## Authentication (UNVERIFIED)
 
@@ -94,11 +94,11 @@ Other points the views must reproduce from the export:
 - `dim_date` excludes the "Not applicable" row (`date_key` -1, null `full_date`): a date table's key cannot contain blanks. Facts pointing at -1 fall into Power BI's own (Blank) member.
 - `fact_reviews` exposes only `review_id, order_id, customer_key, review_creation_date_key, review_answer_date_key, review_creation_ts, review_answer_ts, review_score, has_comment, is_latest_review_for_order`. Review comment text is deliberately not exposed.
 - `fact_order_items` is `fact_order_items` plus `is_net_order`; `fact_payments` and the other dimensions are the mart columns as they are.
-- `late_delivery_scores`, `forecast_backtest` and `flag_share` have the same columns as `late_delivery_scores.parquet`, `forecast_backtest.csv` and `flag_share.csv`, plus a leading `run_id` column added by the write-back. Write-back appends one block of rows per run and never deletes other runs, so the three ML templates keep only the latest `run_id` (text maximum; `run_id` is a UTC timestamp plus uuid) and drop the column before typing. This filter is UNVERIFIED against a live Snowflake table.
+- `late_delivery_scores`, `forecast_backtest` and `flag_share` have the same columns as `late_delivery_scores.parquet`, `forecast_backtest.csv` and `flag_share.csv`, plus a leading `run_id` column added by the write-back. Write-back appends one block of rows per run and never deletes other runs, so the three ML templates keep only the latest `run_id` (text maximum; `run_id` is a UTC timestamp plus uuid) and drop the column before typing. The generated `run_id`s sort by time as text (for example `20261113T122357Z-a99b8a21`). The filter has not been run in Power BI Desktop.
 
 ## The three tables that depend on Python write-back
 
-`late_delivery_scores`, `forecast_backtest` and `flag_share` are not produced by dbt. They come from the Python model scoring and forecast backtests, which would write to `ML.LATE_DELIVERY_SCORES`, `ML.FORECAST_BACKTEST` and `ML.FLAG_SHARE` through the opt-in write-back (`src/data_access`). Until that has run against Snowflake (UNVERIFIED, not run), keep these three on their file sources: generate the copy with `--ml-on-files`. The report's Risk and Forecast pages depend on them.
+`late_delivery_scores`, `forecast_backtest` and `flag_share` are not produced by dbt. They come from the Python model scoring and forecast backtests, which would write to `ML.LATE_DELIVERY_SCORES`, `ML.FORECAST_BACKTEST` and `ML.FLAG_SHARE` through the opt-in write-back (`src/data_access`). That has run (2026-11-13, `src/ml/publish_ml.py --yes --write`): the three tables exist, are readable by `RETAIL_REPORTER`, and hold one run whose values match the DuckDB-built files. Re-run `publish_ml.py` to publish a new run; the templates pick the latest `run_id`. The report's Risk and Forecast pages depend on them.
 
 ## The `DataFolder` local-path issue
 

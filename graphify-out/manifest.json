@@ -72,15 +72,15 @@
     "semantic_hash": ""
   },
   "PROJECT_STATUS.md": {
-    "mtime": 1794568905.1239526,
-    "seen": 1794568963.6088302,
-    "ast_hash": "9e7a1106ca06050a114b0e7027a8ed7e",
+    "mtime": 1794572846.6851847,
+    "seen": 1794573320.225459,
+    "ast_hash": "50290d68c850476571425cd288823ece",
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1794568905.0942495,
-    "seen": 1794568963.6088302,
-    "ast_hash": "c1298ebf54eb2efbe42f114eddd444cf",
+    "mtime": 1794572846.680185,
+    "seen": 1794573320.225459,
+    "ast_hash": "ff6d4046e8968b1834f1ddc5f5455d8e",
     "semantic_hash": ""
   },
   "docs/HANDOFF.md": {
@@ -276,9 +276,9 @@
     "semantic_hash": ""
   },
   "SECURITY.md": {
-    "mtime": 1794568925.097976,
-    "seen": 1794568963.6088302,
-    "ast_hash": "5363eea108f2182bead1a55903ace0c9",
+    "mtime": 1794572846.7301874,
+    "seen": 1794573320.225459,
+    "ast_hash": "3d6f14bb4bd2e61e80ba6bf66d8f48f0",
     "semantic_hash": ""
   },
   "docs/AUDIT.md": {
@@ -732,9 +732,9 @@
     "semantic_hash": ""
   },
   "powerbi/snowflake/apply_snowflake_source.py": {
-    "mtime": 1793980549.5204308,
-    "seen": 1794172496.95836,
-    "ast_hash": "20032acee635d24569824cda1b5a16fe",
+    "mtime": 1794572846.7791872,
+    "seen": 1794573320.2244577,
+    "ast_hash": "79ef6483453ce0b86321b861f211f0f5",
     "semantic_hash": ""
   },
   "powerbi/snowflake/templates/dim_customer.m": {
@@ -1410,9 +1410,9 @@
     "semantic_hash": ""
   },
   "src/data_access/writeback.py": {
-    "mtime": 1793978351.203546,
-    "seen": 1794172496.95836,
-    "ast_hash": "9065a4d5799efc8dc2bb2dce54ec32bd",
+    "mtime": 1794573165.8945575,
+    "seen": 1794573320.225459,
+    "ast_hash": "106831fc7e649fe71d969370e9c41878",
     "semantic_hash": ""
   },
   "src/reconciliation/__init__.py": {
@@ -1458,9 +1458,9 @@
     "semantic_hash": ""
   },
   "tests/test_data_access.py": {
-    "mtime": 1794172364.026065,
-    "seen": 1794172496.95836,
-    "ast_hash": "20b6aed299cfb2d6dd2d0bef03af4048",
+    "mtime": 1794573186.1793287,
+    "seen": 1794573320.225459,
+    "ast_hash": "4471f5dabf53f8cc40f68812e437948f",
     "semantic_hash": ""
   },
   "tests/test_powerbi_snowflake.py": {
@@ -1500,9 +1500,9 @@
     "semantic_hash": ""
   },
   "docs/architecture/SNOWFLAKE_ARCHITECTURE.md": {
-    "mtime": 1794567432.9138613,
-    "seen": 1794567753.2985492,
-    "ast_hash": "9b8e9c6e38243505e89e3f08337a6348",
+    "mtime": 1794573165.8995585,
+    "seen": 1794573320.225459,
+    "ast_hash": "be52be7fe4a115e869238fd4a7415856",
     "semantic_hash": ""
   },
   "docs/data_dictionary/DATA_DICTIONARY.md": {
@@ -1524,15 +1524,15 @@
     "semantic_hash": ""
   },
   "docs/migration/POWERBI_SWITCH_GUIDE.md": {
-    "mtime": 1794567432.9168625,
-    "seen": 1794567753.2985492,
-    "ast_hash": "c9c936f07f0ca04a0055818df74b4b03",
+    "mtime": 1794572846.7691865,
+    "seen": 1794573320.225459,
+    "ast_hash": "530deb89e84746c88a4330ce33479ca3",
     "semantic_hash": ""
   },
   "docs/migration/SNOWFLAKE_MIGRATION.md": {
-    "mtime": 1794568215.1018987,
-    "seen": 1794568393.6540742,
-    "ast_hash": "e22d114840fd5c5dcfa79aaf2defbcc5",
+    "mtime": 1794572846.7731912,
+    "seen": 1794573320.225459,
+    "ast_hash": "4f64967c1f5a13b1964c8c2472c07c65",
     "semantic_hash": ""
   },
   "docs/validation/RECONCILIATION_REPORT.md": {
@@ -1542,9 +1542,9 @@
     "semantic_hash": ""
   },
   "snowflake/README.md": {
-    "mtime": 1794568925.1039762,
-    "seen": 1794568963.6088302,
-    "ast_hash": "02cd5d5e347d121741037252e15b7e19",
+    "mtime": 1794573165.90056,
+    "seen": 1794573320.225459,
+    "ast_hash": "f17d2160b104ff9a1eec5d19a164844a",
     "semantic_hash": ""
   },
   "snowflake/dbt/README.md": {
@@ -1980,9 +1980,9 @@
     "semantic_hash": ""
   },
   "Snowflake Retail Project Local vs Cloud Architecture.md": {
-    "mtime": 1794568905.1249557,
-    "seen": 1794568963.6088302,
-    "ast_hash": "bd32c1a9078940b6f7401a074876ce76",
+    "mtime": 1794572846.7441845,
+    "seen": 1794573320.225459,
+    "ast_hash": "7cf7d3537bd4ba03c4d422cfbdb262ea",
     "semantic_hash": ""
   },
   "dashboard/README.md": {
@@ -2037,6 +2037,18 @@
     "mtime": 1794568271.7181833,
     "seen": 1794568393.6540742,
     "ast_hash": "8050379021b2e5ee1d604bcf162b3b20",
+    "semantic_hash": ""
+  },
+  "src/ml/publish_ml.py": {
+    "mtime": 1794573165.8985572,
+    "seen": 1794573320.225459,
+    "ast_hash": "f69dd64909d070ae9fc18a9e29853224",
+    "semantic_hash": ""
+  },
+  "tests/test_publish_ml.py": {
+    "mtime": 1794573186.1711242,
+    "seen": 1794573320.225459,
+    "ast_hash": "04c36b211ab28b086aa86ec4cdfb2ddb",
     "semantic_hash": ""
   }
 }

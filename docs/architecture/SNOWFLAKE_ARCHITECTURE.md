@@ -38,7 +38,7 @@ flowchart TB
     MARTS[("MARTS tables<br/>PBI views")]
     DA["src/data_access<br/>DATA_BACKEND=snowflake"]
     PYS["forecast_baseline.weekly_series<br/>late_delivery_baseline.load / unlabelled_share"]
-    ML[("ML tables<br/>written only with FORECAST_WRITEBACK=1")]
+    ML[("ML tables<br/>written by src/ml/publish_ml.py --write")]
     PBIS["powerbi_snowflake/ patched copy<br/>(git-ignored, made by apply_snowflake_source.py)"]
     LOAD --> RAW
     RAW --> DBT
@@ -314,7 +314,7 @@ Behaviour that is guarded in code and covered by offline tests with a fake conne
 - default backend `duckdb`; an invalid `DATA_BACKEND` raises; the DuckDB connection is read-only and honours `DUCKDB_PATH`;
 - a Snowflake connect without confirmation does not import the connector, read a key or connect; secrets are never printed;
 - results are normalised to the DuckDB dtypes and checked with `validate_frame` (missing columns and wrong kinds fail);
-- write-back is off unless `FORECAST_WRITEBACK=1` (or `enabled=True`), refuses a non-Snowflake backend, validates before any SQL, and issues only `CREATE TABLE IF NOT EXISTS`, `DELETE ... WHERE run_id = ?` and a `write_pandas` append. The delete and the insert are not one transaction (re-run with the same `run_id` after a failure). The `ML` tables carry an extra leading `run_id` column that the export files do not have.
+- write-back is off unless `FORECAST_WRITEBACK=1` (or `enabled=True`), refuses a non-Snowflake backend and validates before any SQL. Per table it runs `CREATE TABLE IF NOT EXISTS`, `PUT`s the frame as one Parquet file into the user stage `@~/retail_olist_ml/<run_id>/<nonce>/`, then `BEGIN; DELETE ... WHERE run_id = ?; COPY INTO ... (PARQUET, MATCH_BY_COLUMN_NAME, FORCE, PURGE)`, checks the loaded row count and `COMMIT`s (`ROLLBACK` on any error), and finally `REMOVE`s the staged folder. (Updated 2026-11-13: this replaced an earlier `write_pandas` append, which needed `CREATE STAGE` on `ML` and was not transactional; the new flow ran live, see `snowflake/README.md` section 9.) The `ML` tables carry an extra leading `run_id` column that the export files do not have.
 
 Reconciliation (`src/reconciliation`) has its own injectable fetcher and does not go through `data_access`, because converting `Decimal` to float would turn the exact-money comparison into a float comparison. It sends only single `SELECT`/`WITH` statements and refuses to run without `--yes`.
 

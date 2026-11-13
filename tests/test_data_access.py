@@ -1,4 +1,4 @@
-"""Offline tests for src/data_access: no network, no Snowflake. The connector, key loader and write_pandas are fakes."""
+"""Offline tests for src/data_access: no network, no Snowflake. The connector, key loader and the stage are fakes."""
 
 import re
 from datetime import date, datetime, timedelta
@@ -463,16 +463,35 @@ def test_marts_schema_override_is_validated():
 FORBIDDEN = re.compile(r"\b(DROP|REPLACE|TRUNCATE|OVERWRITE)\b", re.IGNORECASE)
 
 
-@pytest.fixture
-def fake_write_pandas(monkeypatch):
-    calls = []
+class StageCursor(FakeCursor):
+    """Behaves like the user stage: PUT reads the local Parquet file (it is deleted after the call), COPY INTO reports
+    one row per file with rows_loaded = the rows of the last PUT (or conn.copy_rows when a test overrides it)."""
 
-    def write_pandas(conn, df, table_name, **kwargs):
-        calls.append({"conn": conn, "df": df.copy(), "table": table_name, "kwargs": kwargs})
-        return True, 1, len(df), []
+    def execute(self, sql, params=None):
+        self.conn.log.append((sql, params))
+        self.description, self._rows = None, []
+        if sql.startswith("PUT "):
+            local = re.match(r"PUT 'file://([^']+)'", sql).group(1)
+            self.conn.uploads.append(pd.read_parquet(local))
+        elif sql.startswith("COPY INTO"):
+            if self.conn.fail_copy:
+                raise RuntimeError("simulated COPY failure")
+            n = self.conn.copy_rows if self.conn.copy_rows is not None else len(self.conn.uploads[-1])
+            self.description = [("file",), ("status",), ("rows_parsed",), ("rows_loaded",)]
+            self._rows = [("retail_ml/x.parquet", "LOADED", n, n)]
+        return self
 
-    monkeypatch.setattr(writeback, "_write_pandas", lambda: write_pandas)
-    return calls
+
+class StageConn(FakeConn):
+    def __init__(self, copy_rows=None, fail_copy=False):
+        super().__init__()
+        self.cursor_cls = StageCursor
+        self.uploads, self.copy_rows, self.fail_copy = [], copy_rows, fail_copy
+
+
+def stage_wrapper(**kw):
+    target = be.SnowflakeTarget("acct", "RETAIL_OLIST", "RETAIL_TRANSFORMER", "RETAIL_WH")
+    return be.DataAccess("snowflake", StageConn(**kw), target=target)
 
 
 def backtest_frame():
@@ -492,17 +511,17 @@ def scores_frame():
     })
 
 
-def test_writeback_is_off_by_default(fake_write_pandas):
-    db = sf_wrapper()
+def test_writeback_is_off_by_default():
+    db = stage_wrapper()
     assert writeback.write_forecast_backtest(db, backtest_frame(), "run1") == 0
-    assert db.raw.log == [] and fake_write_pandas == []
+    assert db.raw.log == []
     assert writeback.writeback_enabled() is False
 
 
-def test_writeback_env_opt_in_and_explicit_flag_wins(fake_write_pandas, monkeypatch):
+def test_writeback_env_opt_in_and_explicit_flag_wins(monkeypatch):
     monkeypatch.setenv("FORECAST_WRITEBACK", "1")
     assert writeback.writeback_enabled() is True
-    db = sf_wrapper()
+    db = stage_wrapper()
     assert writeback.write_forecast_backtest(db, backtest_frame(), "run1", enabled=False) == 0
     assert db.raw.log == []
     assert writeback.write_forecast_backtest(db, backtest_frame(), "run1") == 2
@@ -510,36 +529,43 @@ def test_writeback_env_opt_in_and_explicit_flag_wins(fake_write_pandas, monkeypa
     assert writeback.writeback_enabled() is False
 
 
-def test_writeback_requires_a_snowflake_connection(fake_write_pandas):
+def test_writeback_requires_a_snowflake_connection():
     with pytest.raises(be.DataAccessError, match="Snowflake"):
         writeback.write_forecast_backtest(be.wrap_duckdb(duckdb.connect(":memory:")), backtest_frame(), "r", enabled=True)
-    assert fake_write_pandas == []
 
 
-@pytest.mark.parametrize("fn,frame", [
-    (writeback.write_forecast_backtest, backtest_frame),
-    (writeback.write_late_delivery_scores, scores_frame),
+@pytest.mark.parametrize("fn,frame,table", [
+    (writeback.write_forecast_backtest, backtest_frame, "FORECAST_BACKTEST"),
+    (writeback.write_late_delivery_scores, scores_frame, "LATE_DELIVERY_SCORES"),
 ])
-def test_writeback_statements_never_drop_or_replace(fake_write_pandas, fn, frame):
-    db = sf_wrapper()
-    n = fn(db, frame(), "run-42", enabled=True)
-    assert n == 2
-    statements = db.raw.sql
-    assert len(statements) == 2
-    assert statements[0].startswith("CREATE TABLE IF NOT EXISTS RETAIL_OLIST.ML.")
-    assert re.fullmatch(r"DELETE FROM RETAIL_OLIST\.ML\.[A-Z_]+ WHERE run_id = \?", statements[1])
-    assert db.raw.log[1][1] == ("run-42",)  # bound, not interpolated
-    assert not any(FORBIDDEN.search(s) for s in statements)
-    (call,) = fake_write_pandas
-    kw = call["kwargs"]
-    assert kw["auto_create_table"] is False and kw["overwrite"] is False and kw["quote_identifiers"] is False
-    assert kw["schema"] == "ML" and kw["database"] == "RETAIL_OLIST"
-    assert call["table"] in ("FORECAST_BACKTEST", "LATE_DELIVERY_SCORES")
-    assert call["df"].columns[0] == "RUN_ID" and set(call["df"]["RUN_ID"]) == {"run-42"}
-    assert all(c == c.upper() for c in call["df"].columns)
+def test_writeback_statement_sequence_is_atomic_and_never_destructive(fn, frame, table):
+    db = stage_wrapper()
+    assert fn(db, frame(), "run-42", enabled=True) == 2
+    sql = db.raw.sql
+    assert sql[0].startswith(f"CREATE TABLE IF NOT EXISTS RETAIL_OLIST.ML.{table}")
+    assert re.fullmatch(r"PUT 'file://[^']+\.parquet' '@~/retail_olist_ml/run-42/[0-9a-f]{32}/' AUTO_COMPRESS = FALSE",
+                        sql[1])
+    assert sql[2] == "BEGIN"
+    assert sql[3] == f"DELETE FROM RETAIL_OLIST.ML.{table} WHERE run_id = ?" and db.raw.log[3][1] == ("run-42",)
+    folder = re.search(r"'(@~/[^']+)'", sql[1]).group(1)
+    assert sql[4].startswith(f"COPY INTO RETAIL_OLIST.ML.{table} FROM '{folder}'") and "FORCE = TRUE" in sql[4]
+    assert sql[5] == "COMMIT"
+    assert sql[6] == f"REMOVE '{folder}'" and len(sql) == 7
+    assert not any(FORBIDDEN.search(s) for s in sql)
+    (up,) = db.raw.uploads
+    assert up.columns[0] == "RUN_ID" and set(up["RUN_ID"]) == {"run-42"}
+    assert all(c == c.upper() for c in up.columns)
 
 
-def test_writeback_columns_match_export_schemas(fake_write_pandas):
+def test_each_write_uses_a_fresh_stage_folder():
+    db = stage_wrapper()
+    writeback.write_flag_share(db, "r", enabled=True)
+    writeback.write_flag_share(db, "r", enabled=True)
+    puts = [s for s in db.raw.sql if s.startswith("PUT ")]
+    assert len(puts) == 2 and puts[0] != puts[1]
+
+
+def test_writeback_columns_match_export_schemas():
     """Table columns are the Power BI export columns (model_spec FIXED_SCHEMAS) plus run_id."""
     from model_spec import FIXED_SCHEMAS
 
@@ -548,39 +574,104 @@ def test_writeback_columns_match_export_schemas(fake_write_pandas):
         assert [c for c, _ in writeback.TABLE_COLUMNS[table]] == ["run_id"] + [c for c, _ in FIXED_SCHEMAS[spec]]
 
 
-def test_writeback_target_week_is_written_as_date(fake_write_pandas):
-    writeback.write_forecast_backtest(sf_wrapper(), backtest_frame(), "r", enabled=True)
-    assert fake_write_pandas[0]["df"]["TARGET_WEEK"].tolist() == [date(2017, 7, 3), date(2017, 7, 10)]
+def test_uploaded_columns_are_the_table_columns_in_order():
+    for fn, frame, table in ((writeback.write_forecast_backtest, backtest_frame, "FORECAST_BACKTEST"),
+                             (writeback.write_late_delivery_scores, scores_frame, "LATE_DELIVERY_SCORES")):
+        db = stage_wrapper()
+        fn(db, frame(), "r", enabled=True)
+        assert list(db.raw.uploads[0].columns) == [c.upper() for c, _ in writeback.TABLE_COLUMNS[table]]
 
 
-def test_writeback_flag_share_defaults(fake_write_pandas):
-    db = sf_wrapper()
+def test_writeback_target_week_is_written_as_date():
+    db = stage_wrapper()
+    writeback.write_forecast_backtest(db, backtest_frame(), "r", enabled=True)
+    assert db.raw.uploads[0]["TARGET_WEEK"].tolist() == [date(2017, 7, 3), date(2017, 7, 10)]
+
+
+def test_writeback_flag_share_defaults():
+    db = stage_wrapper()
     assert writeback.write_flag_share(db, "r", enabled=True) == 6
-    assert fake_write_pandas[0]["df"]["FLAG_PCT"].tolist() == [5, 10, 15, 20, 25, 30]
+    assert db.raw.uploads[0]["FLAG_PCT"].tolist() == [5, 10, 15, 20, 25, 30]
     assert "FLAG_SHARE" in db.raw.sql[0]
 
 
-def test_writeback_validates_before_touching_snowflake(fake_write_pandas):
-    db = sf_wrapper()
+@pytest.mark.parametrize("bad", [" ", "", "a b", "x'; drop", "a/b", "x" * 101])
+def test_writeback_rejects_unsafe_run_ids_before_touching_snowflake(bad):
+    db = stage_wrapper()
+    with pytest.raises(ValueError, match="run_id"):
+        writeback.write_forecast_backtest(db, backtest_frame(), bad, enabled=True)
+    assert db.raw.log == []
+
+
+def test_writeback_validates_before_touching_snowflake():
+    db = stage_wrapper()
     with pytest.raises(SchemaError, match="abs_error"):
         writeback.write_forecast_backtest(db, backtest_frame().drop(columns="abs_error"), "r", enabled=True)
-    with pytest.raises(ValueError, match="run_id"):
-        writeback.write_forecast_backtest(db, backtest_frame(), " ", enabled=True)
-    assert db.raw.log == [] and fake_write_pandas == []
+    assert db.raw.log == []
 
 
-def test_writeback_failed_load_raises(monkeypatch):
-    monkeypatch.setattr(writeback, "_write_pandas", lambda: (lambda *a, **k: (False, 0, 0, [])))
-    with pytest.raises(be.DataAccessError, match="write_pandas"):
-        writeback.write_forecast_backtest(sf_wrapper(), backtest_frame(), "r", enabled=True)
+def test_short_load_rolls_back_and_cleans_up():
+    db = stage_wrapper(copy_rows=1)
+    with pytest.raises(be.DataAccessError, match="loaded 1 rows, expected 2"):
+        writeback.write_forecast_backtest(db, backtest_frame(), "r", enabled=True)
+    sql = db.raw.sql
+    assert "COMMIT" not in sql and sql[-2] == "ROLLBACK" and sql[-1].startswith("REMOVE '@~/retail_olist_ml/r/")
 
 
-def test_new_run_id_is_unique_and_non_empty():
-    assert writeback.new_run_id() != writeback.new_run_id()
+def test_failed_copy_rolls_back_and_cleans_up():
+    db = stage_wrapper(fail_copy=True)
+    with pytest.raises(RuntimeError, match="simulated"):
+        writeback.write_forecast_backtest(db, backtest_frame(), "r", enabled=True)
+    sql = db.raw.sql
+    assert "COMMIT" not in sql and sql[-2] == "ROLLBACK" and sql[-1].startswith("REMOVE ")
+
+
+def test_local_temporary_file_is_deleted(tmp_path, monkeypatch):
+    made = []
+
+    def mkdtemp(prefix=""):
+        d = tmp_path / f"w{len(made)}"
+        d.mkdir()
+        made.append(d)
+        return str(d)
+
+    monkeypatch.setattr(writeback.tempfile, "mkdtemp", mkdtemp)
+    writeback.write_flag_share(stage_wrapper(), "r", enabled=True)
+    assert made and not any(d.exists() for d in made)
+
+
+def test_quote_in_the_temp_path_fails_cleanly_before_any_sql(tmp_path, monkeypatch):
+    bad = tmp_path / "O'Neil"
+    monkeypatch.setattr(writeback.tempfile, "mkdtemp", lambda prefix="": (bad.mkdir(), str(bad))[1])
+    db = stage_wrapper()
+    with pytest.raises(be.DataAccessError, match="single quote"):
+        writeback.write_flag_share(db, "r", enabled=True)
+    assert [s for s in db.raw.sql if not s.startswith("CREATE TABLE")] == [] and not bad.exists()
+
+
+def test_failed_parquet_write_leaves_no_temp_files_and_no_staging(tmp_path, monkeypatch):
+    work = tmp_path / "w"
+    monkeypatch.setattr(writeback.tempfile, "mkdtemp", lambda prefix="": (work.mkdir(), str(work))[1])
+
+    def boom(self, *a, **k):
+        (work / "partial.parquet").write_bytes(b"x")
+        raise OSError("disk full")
+
+    monkeypatch.setattr(pd.DataFrame, "to_parquet", boom)
+    db = stage_wrapper()
+    with pytest.raises(OSError, match="disk full"):
+        writeback.write_flag_share(db, "r", enabled=True)
+    assert not work.exists()
+    assert not any(s.startswith(("PUT", "REMOVE", "BEGIN")) for s in db.raw.sql)
+
+
+def test_new_run_id_is_unique_and_a_valid_run_id():
+    a, b = writeback.new_run_id(), writeback.new_run_id()
+    assert a != b and writeback._RUN_ID.match(a)
 
 
 def test_create_table_sql_is_idempotent_ddl():
-    sql = writeback.create_table_sql(sf_wrapper(), "FLAG_SHARE")
+    sql = writeback.create_table_sql(stage_wrapper(), "FLAG_SHARE")
     assert sql.startswith("CREATE TABLE IF NOT EXISTS RETAIL_OLIST.ML.FLAG_SHARE") and not FORBIDDEN.search(sql)
 
 

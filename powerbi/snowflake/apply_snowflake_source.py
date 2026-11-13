@@ -9,7 +9,8 @@ What it does
      and, in each of the 12 import tables, the partition `source` block with the Power Query M template in templates/<table>.m.
   3. Leaves every other file byte-identical (report pages, relationships, measures, columns, formatting).
   With --ml-on-files only the nine PBI-schema tables are patched; late_delivery_scores, forecast_backtest and flag_share keep their
-  file sources and the DataFolder parameter is kept (use this until the Python write-back to the ML schema has run).
+  file sources and the DataFolder parameter is kept (only needed where the ML tables have not been published by
+  src/ml/publish_ml.py --write).
 
 Safety
   * Refuses to write into a non-empty --out unless --force is given; --force replaces only the three project items by name,
@@ -174,7 +175,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--force", action="store_true", help="replace the project items in a non-empty --out")
     parser.add_argument("--ml-on-files", action="store_true",
                         help="keep late_delivery_scores, forecast_backtest and flag_share on their file sources (and keep the DataFolder "
-                             "parameter) until the Python write-back to the ML schema exists")
+                             "parameter); only needed where src/ml/publish_ml.py has not published the ML tables")
     args = parser.parse_args(argv)
     try:
         written = apply(args.source, args.out, args.force, args.ml_on_files)
