@@ -47,3 +47,17 @@ export function initTheme(button) {
 /** Categorical slot colour by position (1-based), as a CSS value that follows the theme. */
 export const series = (slot) => `var(--series-${((slot - 1) % 8) + 1})`;
 export const MUTED = "var(--series-muted)";
+export const SLOTS = 8;
+
+/**
+ * Give each key a fixed categorical slot, in the order given (colour follows the entity, never its rank).
+ * `reserved` slots at the start are kept for something else (e.g. "Actual"). Keys beyond the palette get MUTED
+ * instead of a wrapped, already-used colour, and a console warning says so (fold them into "Other" or facet).
+ */
+export function allocateSlots(keys, { reserved = 0 } = {}) {
+  const out = {};
+  const free = SLOTS - reserved;
+  keys.forEach((k, i) => { out[k] = i < free ? series(i + 1 + reserved) : MUTED; });
+  if (keys.length > free) console.warn(`allocateSlots: ${keys.length - free} series beyond the ${SLOTS}-colour palette are drawn muted`, keys.slice(free));
+  return out;
+}

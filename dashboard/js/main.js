@@ -3,9 +3,9 @@
 
 import "./pages/index.js";
 import "./insights/index.js";
-import { el, clear } from "./core/dom.js";
+import { el, clear, disposeCharts } from "./core/dom.js";
 import { getPages, getPage } from "./core/registry.js";
-import { load, manifest } from "./core/data-store.js";
+import { load, manifest, refresh } from "./core/data-store.js";
 import { initTheme } from "./core/theme.js";
 
 const nav = document.getElementById("nav");
@@ -33,23 +33,31 @@ async function route() {
   const id = currentId();
   const page = getPage(id);
   const token = ++renderToken;
+  const isCurrent = () => token === renderToken;
   renderNav(id);
   document.title = `${page.title} · Retail Analytics Dashboard`;
   main.setAttribute("aria-busy", "true");
   try {
+    if (await refresh()) renderFooter(); // a newer data build: drop stale caches before loading
     const data = await load(page.needs, page.optional);
-    if (token !== renderToken) return; // a newer navigation won
-    clear(main);
-    main.append(el("div", { class: "page-head", "data-ghost": page.title },
+    if (!isCurrent()) return; // a newer navigation won
+    disposeCharts();
+    // Each page renders into its own view. render() may be async (the overview loads more data); a page that
+    // finishes after the user has moved on writes only into its own detached view, never into the next page.
+    const view = el("div", { class: "page-view" });
+    main.replaceChildren(view);
+    view.append(el("div", { class: "page-head", "data-ghost": page.title },
       page.eyebrow ? el("span", { class: "eyebrow", text: page.eyebrow }) : null,
       el("h2", { text: page.title }),
       page.description ? el("p", { text: page.description }) : null));
-    page.render(main, data, { navigate });
+    await page.render(view, data, { navigate, isCurrent });
+    if (!isCurrent()) return;
     main.focus({ preventScroll: true });
     window.scrollTo(0, 0);
   } catch (err) {
     console.error(err);
-    if (token !== renderToken) return;
+    if (!isCurrent()) return;
+    disposeCharts();
     clear(main);
     main.append(el("div", { class: "boot-error" },
       el("h1", { text: `Could not load "${page.title}"` }),

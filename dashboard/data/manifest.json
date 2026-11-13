@@ -1,6 +1,6 @@
 {
- "generated_at": "2026-11-12T17:55:51+00:00",
- "git_sha": "94d069e",
+ "generated_at": "2026-11-12T22:15:01+00:00",
+ "git_sha": "5b3c63c",
  "backend": "snowflake",
  "datasets": {
   "kpis": {
@@ -8,7 +8,7 @@
    "title": "Headline KPIs",
    "source": "Snowflake RETAIL_OLIST.MARTS: fact_order_items, fact_orders, fact_reviews; reports/analytics/07",
    "rows": null,
-   "bytes": 298
+   "bytes": 294
   },
   "forecast": {
    "file": "forecast.json",

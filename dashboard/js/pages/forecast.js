@@ -3,7 +3,7 @@
 
 import { registerPage } from "../core/registry.js";
 import * as f from "../core/format.js";
-import { series, MUTED } from "../core/theme.js";
+import { series, allocateSlots, MUTED } from "../core/theme.js";
 import { methodLabel } from "../core/labels.js";
 import { card, grid } from "../components/card.js";
 import { controlsRow, segmented } from "../components/controls.js";
@@ -21,7 +21,7 @@ registerPage({
   render(root, { forecast }) {
     const bt = forecast.backtest;
     const methods = [...new Set(bt.map((r) => r.method))].filter((m) => m !== "actual");
-    const slot = Object.fromEntries(methods.map((m, i) => [m, series(i + 2)])); // slot 1 is reserved for "actual"
+    const slot = allocateSlots(methods, { reserved: 1 }); // slot 1 is "Actual"; extra methods are muted, never a reused colour
     const horizons = [...new Set(bt.map((r) => r.horizon))].sort((a, b) => a - b);
     const state = { target: "orders", horizon: horizons[0], selected: new Set(["naive_last_week", "moving_average_8", "combo_naive_ma8"].filter((m) => methods.includes(m))) };
     const yFmt = (v) => (state.target === "revenue" ? f.brl(v, { compact: true }) : f.int(v));
@@ -93,7 +93,7 @@ registerPage({
       drawForecast();
 
       const mr = metricRows();
-      accChart.update({ data: mr.map((r) => ({ key: r.method, label: methodLabel(r.method), value: r.mae_vs_naive, color: r.method === "naive_last_week" ? MUTED : (slot[r.method] || series(2)),
+      accChart.update({ data: mr.map((r) => ({ key: r.method, label: methodLabel(r.method), value: r.mae_vs_naive, color: slot[r.method] || MUTED,
         note: `MAE ${f.num(r.mae, 1)}, MAPE ${f.pct(r.mape)}` })).sort((a, b) => a.value - b.value),
         refValue: { value: 1, label: "naive" }, valueName: "MAE vs naive" });
       acc.refreshTable();
