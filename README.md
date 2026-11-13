@@ -2,7 +2,7 @@
 
 An end-to-end analytics project on about 100,000 real e-commerce orders (the Olist dataset from Brazil): a validated data warehouse, business analysis, a late-delivery prediction model, a weekly forecast and a Power BI dashboard. It runs entirely on one laptop with DuckDB, and every claim in it can be traced to a saved table, a test or a query.
 
-It began as a Google Cloud design (BigQuery, Dataflow, Vertex AI). Early on that was cut down to a local build, because the data is small and a cloud bill would have bought nothing. The original brief is kept unchanged in `Cloud Portfolio — Master Agent Prompt.md`, `GCP Retail Project Local vs Cloud Architecture.md` and the Retail Analytics project document, in case parts of it return. Why the scope changed, and everything else that was decided along the way, is in [DECISIONS.md](DECISIONS.md).
+It began as a Google Cloud design (BigQuery, Dataflow, Vertex AI). Early on that was cut down to a local build, because the data is small and a cloud bill would have bought nothing. The master brief is kept unchanged in `Cloud Portfolio — Master Agent Prompt.md`. The Google Cloud project brief and its local-vs-cloud mapping were later rewritten for Snowflake as [the Snowflake project brief](Snowflake%20Project%20%E2%80%94%20Retail%20Analytics%2C%20Forecasting%20%26%20Customer%20Intelligence%20Platform.md) and [the Snowflake local-vs-cloud architecture](Snowflake%20Retail%20Project%20Local%20vs%20Cloud%20Architecture.md); the Google Cloud originals remain in the git history (up to commit `a00b0a5`). Why the scope changed, and everything else that was decided along the way, is in [DECISIONS.md](DECISIONS.md).
 
 ## What the data says
 

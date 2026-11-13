@@ -72,5 +72,5 @@ Full suite (2026-11-13): see the commit that records this update; the only failu
 
 - The ML result is modest and documented as such; a better model would need information the dataset lacks (see the model card).
 - Six test months and 85 forecast weeks are small samples.
-- The original brief documents (`Cloud Portfolio — Master Agent Prompt.md`, `GCP Retail Project Local vs Cloud Architecture.md`, the Retail Analytics document) still describe BigQuery, Dataflow, Vertex AI and monitoring services. They are kept unchanged by design.
+- `Cloud Portfolio — Master Agent Prompt.md` still describes the original multi-cloud brief and is kept unchanged by design. The Google Cloud project brief and its local-vs-cloud mapping were replaced on 2026-11-13 by Snowflake rewrites (`Snowflake Project — Retail Analytics, Forecasting & Customer Intelligence Platform.md`, `Snowflake Retail Project Local vs Cloud Architecture.md`); the originals are in the git history up to commit `a00b0a5`.
 - The raw data remains in earlier commits (history not rewritten, D-008).

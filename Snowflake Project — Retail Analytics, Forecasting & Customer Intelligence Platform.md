@@ -1,7 +1,7 @@
 # SNOWFLAKE CHILD PROJECT PROMPT
 # Retail Analytics, Forecasting & Customer Intelligence Platform
 
-This is the Snowflake rewrite of `Google Cloud Project — Retail Analytics, Forecasting & Customer Intelligence Platform.md`. The original is kept unchanged as the Google Cloud brief. The business scenario, analytical questions, ML discipline, evidence rules and approval gates are carried over; the platform sections are rewritten for Snowflake.
+This is the Snowflake rewrite of the Google Cloud project brief (`Google Cloud Project — Retail Analytics, Forecasting & Customer Intelligence Platform.md`, which it replaces; the original is in the git history up to commit `a00b0a5`). The business scenario, analytical questions, ML discipline, evidence rules and approval gates are carried over; the platform sections are rewritten for Snowflake.
 
 > **Where this repository stands against this brief (2026-11-13).** Phase 0 discovery, the local prototype, the dimensional model, analytics, forecasting and the late-delivery model were done locally on DuckDB. The Snowflake data platform is built and has run live: stage and `COPY INTO`, dbt staging, intermediate and marts, 321 dbt tests, and a 0-difference reconciliation against DuckDB. **The ML lifecycle in Snowflake (sections 20 to 24) is the main gap.** Models train on the client from Snowflake data, results are files, and there is no registry, in-warehouse inference, scheduling or ML monitoring yet. See `Snowflake Retail Project Local vs Cloud Architecture.md` and `snowflake/README.md`.
 
