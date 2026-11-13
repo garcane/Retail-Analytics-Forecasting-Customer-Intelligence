@@ -4,8 +4,8 @@
 
 | item | value |
 |---|---|
-| generated | 2026-11-12 15:39:23 UTC |
-| git SHA | 5c7c3d7d87607ab85916a202e38e93c0f668e4a0 (working tree had uncommitted changes) |
+| generated | 2026-11-13 21:02:21 UTC |
+| git SHA | 0ebaf36d72be8f4adf889ca103945f31338c4a17 |
 | mode | snowflake |
 | left (reference) | duckdb file warehouse.duckdb (read-only) |
 | right | snowflake account GW***69, database RETAIL_OLIST, role RETAIL_TRANSFORMER, warehouse RETAIL_WH |
@@ -521,13 +521,13 @@ Columns with a difference (including float drift inside tolerance):
 
 | column | rule | compared | mismatches | unexplained | classified | max abs diff | max rel diff | examples (key: left vs right) |
 |---|---|---|---|---|---|---|---|---|
-| avg_seller_prior_late_rate | abs 1e-09 | 1 | 0 | 0 |  | 1.79e-15 | 3.27e-14 |  |
-| sum_promised_days | rel 1e-09 | 1 | 0 | 0 |  | 2e-08 | 8.76e-15 |  |
+| avg_seller_prior_late_rate | abs 1e-09 | 1 | 0 | 0 |  | 1.78e-15 | 3.25e-14 |  |
+| sum_promised_days | rel 1e-09 | 1 | 0 | 0 |  | 2.05e-08 | 8.96e-15 |  |
 | sum_freight_ratio | rel 1e-09 | 1 | 0 | 0 |  | 1.28e-09 | 4.33e-14 |  |
-| sum_distance_km | rel 1e-09 | 1 | 0 | 0 |  | 2.91e-07 | 5.04e-15 |  |
-| sum_seller_prior_late_rate | rel 1e-09 | 1 | 0 | 0 |  | 1.46e-10 | 3.26e-14 |  |
+| sum_distance_km | rel 1e-09 | 1 | 0 | 0 |  | 2.98e-07 | 5.17e-15 |  |
+| sum_seller_prior_late_rate | rel 1e-09 | 1 | 0 | 0 |  | 1.46e-10 | 3.24e-14 |  |
 | sum_route_prior_days | rel 1e-09 | 1 | 0 | 0 |  | 5.72e-05 | 1.13e-14 |  |
-| sum_recent_days_28d | rel 1e-09 | 1 | 0 | 0 |  | 0.000145 | 2.35e-14 |  |
+| sum_recent_days_28d | rel 1e-09 | 1 | 0 | 0 |  | 0.000146 | 2.37e-14 |  |
 
 ### mart_weekly_orders_revenue (ml): PASS
 
