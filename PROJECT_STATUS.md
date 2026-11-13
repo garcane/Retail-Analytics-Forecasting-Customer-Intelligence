@@ -40,20 +40,21 @@ _Last updated: 2026-10-13_
 
 D-001 to D-008 (user) and DD-01 to DD-17 (design) are in [DECISIONS.md](DECISIONS.md). **Open decisions:** none.
 
-## Snowflake + dbt implementation (branch feature/snowflake-dbt-migration, 2026-11-08)
+## Snowflake + dbt implementation and HTML dashboard (branch feature/snowflake-dbt-migration, updated 2026-11-13)
 
 | Area | Built | Verified how | Not verified |
 |---|---|---|---|
-| Python data access (`src/data_access`) | yes | Offline tests with fake connectors; DuckDB path gives identical results to the original code on the real warehouse (read-only) | Any Snowflake query, `write_pandas`, key-pair login |
-| Reconciliation (`src/reconciliation`) | yes | DuckDB-vs-DuckDB identity and perturbed fixtures | No DuckDB-vs-Snowflake run. `docs/validation/RECONCILIATION_REPORT.md` is a NOT RUN stub |
-| Snowflake setup and RAW ingestion | yes | Offline tests (record counts incl. the reviews file, idempotency, no DROP / OR REPLACE) | Preflight, object creation, `PUT`, `COPY INTO`, CRLF handling in `COPY` |
-| dbt project (staging, intermediate, marts, PBI views, tests) | yes | `dbt parse` and `dbt compile --no-populate-cache` offline; compiled SQL transpiled to DuckDB and run on the real CSVs matches the DuckDB reference tables (dims, facts, analytics marts at 1e-9) | `dbt build` / `dbt test` on Snowflake; Snowflake function semantics; the `ASOF JOIN ... MATCH_CONDITION` (a range-join fallback exists behind a var) |
-| Power BI | patched-copy script + 12 M templates | 68 offline tests incl. byte-identical checks of report, measures and relationships | Nothing opened in Power BI Desktop; Snowflake authentication options in Desktop |
+| Snowflake setup, resource monitor, service user | yes | Run live in Snowsight 2026-11-12 (`RETAIL_OLIST`, `RETAIL_WH`, three roles, `RETAIL_MONITOR` at 5 credits a month, key-pair user `RETAIL_SVC`) | Credit use (the service user cannot read the monitor; read it as ACCOUNTADMIN) |
+| RAW ingestion | yes | Run live 2026-11-12: nine tables, loaded rows equal to the CSV record counts, rerun skipped every file, no stray carriage returns | |
+| dbt project (46 models, 321 tests) | yes | Run live 2026-11-12: `dbt build` PASS=367, including the `ASOF JOIN` | |
+| Reconciliation (`src/reconciliation`) | yes | Run live: 22/22 checks, 0 differences, headline numbers exact ([report](docs/validation/RECONCILIATION_REPORT.md)) | |
+| Python data access, Tier 1 models on Snowflake | yes | Run live 2026-11-13: forecast metrics identical; late-delivery metrics within 6e-6 (inputs differ only by float summation order, at most 1.4e-9) | Tier 2 scripts stay DuckDB-only by design |
+| ML write-back to `ML.*` | yes | Offline tests with a fake connector | Not run on Snowflake |
+| HTML dashboard (`dashboard/`, DD-22, DD-23) | yes | Data built from Snowflake, identical to a DuckDB build; all seven pages load with no console errors; `tests/test_dashboard.py` | Dark theme not checked visually |
+| Power BI on Snowflake | patched-copy script + 12 M templates | 68 offline tests incl. byte-identical checks of report, measures and relationships | Not opened in Power BI Desktop; sign-in method |
 | CI | 3 workflows | YAML and `actionlint` locally; `dbt parse` on a clean copy | No workflow has run on GitHub |
 
-Full suite (2026-11-08, Python 3.13 venv): 296 passed, 23 skipped, 10 failures/errors, all in `tests/test_powerbi_project.py` and all present before this work (baseline 74 passed, 21 skipped, same 10).
-
-Live steps not yet run (they need your approval and a Snowflake connection): read-only preflight, object creation, RAW load, `dbt build`, DuckDB-vs-Snowflake reconciliation, Snowflake-backed Python runs. Until they run, nothing here is claimed to work on Snowflake.
+Full suite (2026-11-13): see the commit that records this update; the only failures are the 10 in `tests/test_powerbi_project.py` that predate this work.
 
 ## Open items (from the audit)
 
@@ -63,7 +64,9 @@ Live steps not yet run (they need your approval and a Snowflake connection): rea
 | Raw data in early commits of the public repository | History not rewritten (D-008); the owner decides whether to rewrite it |
 | Power BI `DataFolder` holds a local path | The committed `powerbi/RetailAnalytics.SemanticModel/definition/expressions.tmdl` points at `C:\Users\Student\GCP\powerbi\data` instead of the `C:\REPLACE\WITH\FULL\PATH\TO\powerbi\data` placeholder, so `test_committed_project_is_complete_and_holds_no_machine_path` fails. The other 9 failures in `tests/test_powerbi_project.py` need `warehouse.duckdb`, which is git-ignored and absent from a fresh clone. The CI workflow `python-ci` is therefore red until the placeholder is restored and the warehouse-dependent tests skip. Not changed: it alters what Desktop opens, so it is the owner's call |
 | ~~DuckDB late-delivery feature query is not reproducible across multi-threaded runs~~ (fixed 2026-11-12, DD-21) | Cause: `arg_max` picked among 57 price-tied orders in thread order, which moved `category_prior_*` on about 26,000 rows; plus a float `avg` summed in thread order. Both are now deterministic (alphabetical tie-break, ordered aggregate), identical across 1/2/8/16 threads, and the same rule as Snowflake. The v2/v3 experiment metrics were regenerated; v1 is unchanged |
-| Snowflake-backed runs of the two Tier 1 entry points | `forecast_baseline.py` and `late_delivery_baseline.py` accept `--backend snowflake --yes` (or `DATA_BACKEND`); a Snowflake run writes to `reports/snowflake/` so it cannot overwrite the tracked DuckDB metrics. The flag logic is tested offline; no run has happened against Snowflake. Tier 2 scripts (`drift_analysis`, `export_scores`, `export_data`, `run_analytics`) stay DuckDB-only |
+| ~~Snowflake-backed runs of the two Tier 1 entry points~~ (run 2026-11-13) | `--backend snowflake --yes` wrote `reports/snowflake/*.json`: forecast identical to DuckDB, late-delivery within 6e-6. Tier 2 scripts (`drift_analysis`, `export_data`, `run_analytics`) stay DuckDB-only |
+| ML write-back and the Power BI patched copy | Built and tested offline; not run. The write-back is opt-in (`FORECAST_WRITEBACK=1`); the Power BI copy needs Desktop and a sign-in decision |
+| Snowflake credit use | Not measured: run `SHOW RESOURCE MONITORS LIKE 'RETAIL_MONITOR'` as ACCOUNTADMIN |
 
 ## Known limitations
 

@@ -1,6 +1,6 @@
 # Cost
 
-**Total cloud cost: $0. No cloud resources exist or are planned (D-002).**
+**The DuckDB implementation costs $0 and uses no cloud resources (D-002).** The Snowflake implementation (DD-19) uses a small Snowflake warehouse capped by a resource monitor; see the section below.
 
 | Item | Cost |
 |---|---|
@@ -32,14 +32,13 @@ Disk: about 79 MB of raw data (the nine Kaggle CSV files), a 112 MB warehouse fi
 
 ## Snowflake implementation (branch feature/snowflake-dbt-migration)
 
-**Nothing has been run on Snowflake, so there is no measured cost.** Every figure below is a design intent or an estimate, not a result.
+The pipeline has run on Snowflake (2026-11-12 and 2026-11-13). **Credit use has not been measured yet**: the service user `RETAIL_SVC` cannot read the resource monitor or the metering history. To read it, run `SHOW RESOURCE MONITORS LIKE 'RETAIL_MONITOR';` as ACCOUNTADMIN in Snowsight (`used_credits` for the current month).
 
 - Compute: one warehouse, `RETAIL_WH`, size XSMALL, `AUTO_SUSPEND = 60`, `AUTO_RESUME = TRUE`, created suspended. An XSMALL warehouse consumes 1 credit per hour of running time (Snowflake's published rate; the price of a credit depends on edition, region and contract and has not been checked here).
+- Cap: `RETAIL_MONITOR` (`snowflake/setup/03_resource_monitor.sql`) gives `RETAIL_WH` a quota of 5 credits a month: notify at 75%, suspend at 100%, suspend immediately at 110%.
+- Measured run times on XSMALL (wall clock, including connection and upload): RAW load of all nine files about one minute; `dbt build` (46 models, 321 tests) about one minute; reconciliation and the dashboard data build under a minute each; the late-delivery backtest on Snowflake data about 2.5 minutes, almost all of it local model training. With the 60-second auto-suspend the whole sequence is on the order of minutes of warehouse time, so a small fraction of a credit. That is an inference from run times, not a metered figure.
 - Storage: the nine CSVs are about 124 MB; RAW, STAGING, INTERMEDIATE and MARTS together are a small multiple of that. Not measured.
-- Heaviest expected steps: loading `GEOLOCATION` (1,000,163 rows), building `int_geography_rollup`, and the late-delivery history models (the `ASOF JOIN`, or the range-join fallback that is roughly 96k x 48k candidate rows for the system-wide lookups). Runtime on XSMALL is unknown.
-- Estimate: a full load plus `dbt build` is expected to take minutes on XSMALL, that is a fraction of a credit. **Replace this with the measured figure** (from `SNOWFLAKE.ACCOUNT_USAGE.WAREHOUSE_METERING_HISTORY` or the Snowflake UI) after the first live run.
-- Not created: a resource monitor (it needs ACCOUNTADMIN). Recommended before the first live run: a small monthly quota with notify and suspend.
-- The DuckDB implementation still costs $0.
+- The DuckDB implementation still costs $0, and so does the HTML dashboard (static files served locally).
 
 ## If the project moved to the cloud
 

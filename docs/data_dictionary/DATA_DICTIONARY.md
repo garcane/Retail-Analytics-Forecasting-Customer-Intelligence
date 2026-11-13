@@ -6,7 +6,7 @@
 
 - Source of truth: dbt 1.11.17 manifest (adapter `snowflake`), project `retail_olist`, rendered with plain prod schema names (STAGING, INTERMEDIATE, MARTS, PBI).
 - Contents: 9 RAW source tables, 46 models, 282 generic tests and 39 singular tests.
-- **Nothing here was observed on a Snowflake account.** `dbt parse` is offline. Descriptions, grains and tests are what the project declares. Row counts, physical column types and test results are UNVERIFIED until `dbt build` has run live (see `snowflake/dbt/README_LIVE_CHECKS.md`).
+- Rendered from the `dbt parse` manifest, so descriptions, grains and tests are what the project declares. `dbt build` ran live on 2026-11-12 and every test listed here passed (PASS=367); row counts are in `docs/validation/RECONCILIATION_REPORT.md`.
 - Column data types are not declared in the dbt YAML (no `data_type:` entries), so no type column is shown. Types are defined by each model's SQL (the logical types match the DuckDB views; see `docs/migration/SNOWFLAKE_MIGRATION.md`) and `docs/data/DATA_MODEL.md` for the DuckDB original.
 - Tests replace the primary-key and foreign-key constraints of the DuckDB warehouse: Snowflake does not enforce them, so uniqueness, not-null and referential integrity are checked by `dbt test` / `dbt build`.
 - Column coverage: this file lists the columns documented in YAML. Whether those are *all* the columns a model emits cannot be checked offline.
@@ -27,7 +27,7 @@ Models with no description or no column documentation: none.
 
 ## RAW sources (`olist_raw`)
 
-Loaded by `snowflake/ingestion/load_raw.py` (NOT YET RUN). Every business column is `VARCHAR`; four metadata columns (`_loaded_at`, `_source_file`, `_source_row_number`, `_batch_id`) are added by the loader. The source spelling (for example `product_name_lenght`) is kept. Staging types and renames the columns.
+Loaded by `snowflake/ingestion/load_raw.py` (run live 2026-11-12). Every business column is `VARCHAR`; four metadata columns (`_loaded_at`, `_source_file`, `_source_row_number`, `_batch_id`) are added by the loader. The source spelling (for example `product_name_lenght`) is kept. Staging types and renames the columns.
 
 | Source table | Snowflake relation | Description | Columns documented in dbt |
 |---|---|---|---|
@@ -969,7 +969,7 @@ Model-level tests: unique combination (review_id, order_id).
 
 ## Singular tests
 
-Each test is a query that returns the rows that violate a rule; a passing test returns zero rows. Not yet run on Snowflake.
+Each test is a query that returns the rows that violate a rule; a passing test returns zero rows. All passed on Snowflake on 2026-11-12.
 
 | Test | File | Models it reads | Purpose (first comment line) |
 |---|---|---|---|

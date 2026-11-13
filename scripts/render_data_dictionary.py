@@ -188,9 +188,9 @@ def render(manifest: dict) -> str:
       f"project `{meta.get('project_name', '?')}`, rendered with {schema_note}.")
     w(f"- Contents: {len(sources)} RAW source tables, {len(models)} models, {n_generic} generic tests and "
       f"{len(singular)} singular tests.")
-    w("- **Nothing here was observed on a Snowflake account.** `dbt parse` is offline. Descriptions, grains and tests are "
-      "what the project declares. Row counts, physical column types and test results are UNVERIFIED until `dbt build` "
-      "has run live (see `snowflake/dbt/README_LIVE_CHECKS.md`).")
+    w("- Rendered from the `dbt parse` manifest, so descriptions, grains and tests are what the project declares. "
+      "`dbt build` ran live on 2026-11-12 and every test listed here passed (PASS=367); row counts are in "
+      "`docs/validation/RECONCILIATION_REPORT.md`.")
     has_types = any(c.get("data_type") for m in models.values() for c in m["columns"].values())
     if not has_types:
         w("- Column data types are not declared in the dbt YAML (no `data_type:` entries), so no type column is shown. "
@@ -231,7 +231,7 @@ def render(manifest: dict) -> str:
     # sources
     w("## RAW sources (`olist_raw`)")
     w("")
-    w("Loaded by `snowflake/ingestion/load_raw.py` (NOT YET RUN). Every business column is `VARCHAR`; four metadata "
+    w("Loaded by `snowflake/ingestion/load_raw.py` (run live 2026-11-12). Every business column is `VARCHAR`; four metadata "
       "columns (`_loaded_at`, `_source_file`, `_source_row_number`, `_batch_id`) are added by the loader. The source "
       "spelling (for example `product_name_lenght`) is kept. Staging types and renames the columns.")
     w("")
@@ -286,7 +286,7 @@ def render(manifest: dict) -> str:
     w("## Singular tests")
     w("")
     w("Each test is a query that returns the rows that violate a rule; a passing test returns zero rows. "
-      "Not yet run on Snowflake.")
+      "All passed on Snowflake on 2026-11-12.")
     w("")
     w("| Test | File | Models it reads | Purpose (first comment line) |")
     w("|---|---|---|---|")
