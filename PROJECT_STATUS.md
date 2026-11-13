@@ -49,7 +49,7 @@ D-001 to D-008 (user) and DD-01 to DD-17 (design) are in [DECISIONS.md](DECISION
 | dbt project (46 models, 321 tests) | yes | Run live 2026-11-12: `dbt build` PASS=367, including the `ASOF JOIN` | |
 | Reconciliation (`src/reconciliation`) | yes | Run live: 22/22 checks, 0 differences, headline numbers exact ([report](docs/validation/RECONCILIATION_REPORT.md)) | |
 | Python data access, Tier 1 models on Snowflake | yes | Run live 2026-11-13: forecast metrics identical; late-delivery metrics within 6e-6 (inputs differ only by float summation order, at most 1.4e-9) | Tier 2 scripts stay DuckDB-only by design |
-| ML write-back to `ML.*` | yes | Offline tests with a fake connector | Not run on Snowflake |
+| ML write-back to `ML.*` | functions only | Offline tests with a fake connector | Not called by any script yet; not run on Snowflake. No model registry, in-warehouse scoring, Tasks or ML monitoring |
 | HTML dashboard (`dashboard/`, DD-22, DD-23) | yes | Data built from Snowflake, identical to a DuckDB build; all seven pages load with no console errors; `tests/test_dashboard.py` | Dark theme not checked visually |
 | Power BI on Snowflake | patched-copy script + 12 M templates | 68 offline tests incl. byte-identical checks of report, measures and relationships | Not opened in Power BI Desktop; sign-in method |
 | CI | 3 workflows | YAML and `actionlint` locally; `dbt parse` on a clean copy | No workflow has run on GitHub |

@@ -147,7 +147,7 @@ A Snowflake run writes to `reports/snowflake/`, so it never overwrites the track
 
 `drift_analysis`, `export_scores`, `export_data` and `run_analytics` stay DuckDB-only. `export_scores` reads the order category through `datasets.order_category`, which works on both backends, so the dashboard's risk page can be built from Snowflake.
 
-**Write-back - NOT RUN.** Writing the forecast backtest, late-delivery scores and flag shares to `ML.FORECAST_BACKTEST`, `ML.LATE_DELIVERY_SCORES` and `ML.FLAG_SHARE` is off by default. It runs only with `FORECAST_WRITEBACK=1` on the Snowflake backend and only issues `CREATE TABLE IF NOT EXISTS`, `DELETE ... WHERE run_id = ?` and an append. Details: `src/data_access/writeback.py`.
+**Write-back - NOT RUN, and not wired in yet.** The functions exist and are unit-tested, but no script calls them, so a run needs a small change to `export_scores.py` and the forecast backtest first. Writing the forecast backtest, late-delivery scores and flag shares to `ML.FORECAST_BACKTEST`, `ML.LATE_DELIVERY_SCORES` and `ML.FLAG_SHARE` is off by default. It runs only with `FORECAST_WRITEBACK=1` on the Snowflake backend and only issues `CREATE TABLE IF NOT EXISTS`, `DELETE ... WHERE run_id = ?` and an append. Details: `src/data_access/writeback.py`.
 
 ## 10. Step 6: the HTML dashboard - RUN 2026-11-12
 
