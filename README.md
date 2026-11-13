@@ -33,42 +33,56 @@ The least glamorous result is also the most useful one: **several well-motivated
 
 ## Data architecture
 
-The build is organised in the same layers as the original cloud design (RAW, STAGING, CURATED, ANALYTICAL, FEATURES, PREDICTIONS, then BI), so the local version is a working twin of the cloud one. Each box below shows what runs **today on this laptop** and what its **cloud counterpart** would be. The local half is built and tested; the cloud half is a documented design, not something that has been run.
+The build is organised in layers (RAW, STAGING, CURATED, VALIDATE, ANALYTICAL, FEATURES, MODEL, PREDICTIONS, MONITORING, then BI), and each layer exists twice: **locally** (DuckDB and Python on one laptop, the reference) and **on Snowflake** (stage, dbt, the Model Registry and SQL, DD-19 to DD-26). Each box shows both. Solid boxes have run on Snowflake and reconcile with the local build. Dashed parts are built but wait for an account-level approval. Measured results are in [snowflake/README.md](snowflake/README.md).
 
 ```mermaid
 flowchart TB
     K(["Kaggle download<br/>Olist CSVs"]) --> RAW
 
-    RAW["<b>1 RAW</b><br/>Local: data/ (nine CSVs, untouched)<br/>Cloud: Cloud Storage, raw/ prefix"]
-    STG["<b>2 STAGING</b><br/>Local: sql/staging (typed views)<br/>Cloud: BigQuery dataset staging"]
-    CUR["<b>3 CURATED</b> (star schema)<br/>Local: sql/dimensions + sql/facts<br/>in warehouse.duckdb<br/>Cloud: BigQuery dataset curated"]
-    CHK{{"<b>4 VALIDATE</b><br/>Local: sql/validation, 22 checks<br/>Cloud: the same checks as BigQuery queries"}}
-    ANA["<b>5 ANALYTICAL</b><br/>Local: sql/analytics, 8 queries<br/>Cloud: BigQuery dataset analytics"]
-    FEA["<b>6 FEATURES</b><br/>Local: sql/ml/late_delivery_features.sql<br/>Cloud: BigQuery dataset features"]
-    MOD["<b>7 MODEL</b><br/>Local: scikit-learn scripts, src/ml<br/>Cloud: Vertex AI training + Model Registry"]
-    PRE["<b>8 PREDICTIONS</b><br/>Local: scores file + reports/*.json<br/>Cloud: BigQuery table from batch prediction"]
-    BI["<b>9 BI</b><br/>Local: Power BI Desktop on exported files<br/>Cloud: Power BI on BigQuery"]
+    RAW["<b>1 RAW</b><br/>Local: data/ (nine CSVs, untouched)<br/>Snowflake: stage RAW.OLIST_STAGE, COPY INTO nine RAW tables<br/>(row counts exact, reloads skipped by checksum)"]
+    STG["<b>2 STAGING</b><br/>Local: sql/staging (typed views)<br/>Snowflake: dbt views in STAGING"]
+    CUR["<b>3 CURATED</b> (star schema)<br/>Local: sql/dimensions + sql/facts in warehouse.duckdb<br/>Snowflake: dbt INTERMEDIATE + MARTS dim_* / fact_*"]
+    CHK{{"<b>4 VALIDATE</b><br/>Local: sql/validation, 22 checks<br/>Snowflake: 321 dbt tests + reconciliation<br/>against DuckDB, 22 of 22, 0 differences"}}
+    ANA["<b>5 ANALYTICAL</b><br/>Local: sql/analytics, 8 queries<br/>Snowflake: MARTS.mart_* (8 dbt models)"]
+    FEA["<b>6 FEATURES</b><br/>Local: sql/ml/late_delivery_features.sql<br/>Snowflake: MARTS.MART_LATE_DELIVERY_FEATURES<br/>(point-in-time ASOF JOIN)"]
+    MOD["<b>7 MODEL</b><br/>Local: scikit-learn, src/ml<br/>Snowflake: Model Registry ML.LATE_DELIVERY_RISK<br/>(v1, scores equal to local to 1e-16)"]
+    PRE["<b>8 PREDICTIONS</b><br/>Local: scores file + reports/*.json<br/>Snowflake: ML.LATE_DELIVERY_SCORES,<br/>FORECAST_BACKTEST, FLAG_SHARE"]
+    MON["<b>9 MONITORING</b><br/>Local: drift_analysis.py<br/>Snowflake: dbt views in ML_MONITORING<br/>(calibration, feature AUC by month, score drift)"]
+    BI["<b>10 BI</b><br/>Local: Power BI on exported files, HTML dashboard<br/>Snowflake: PBI views for Power BI;<br/>dashboard data built from MARTS"]
+
+    NB["Training inside Snowflake<br/>notebooks/snowflake on a compute pool<br/>(Git-connected workspace)"]
+    TSK["Scheduled scoring<br/>Task ML.SCORE_LATE_DELIVERY:<br/>SQL MODEL(...)!PREDICT_PROBA on RETAIL_WH"]
 
     RAW --> STG --> CUR --> CHK
     CHK -- "all pass" --> ANA
     CHK -- "all pass" --> FEA
-    FEA --> MOD --> PRE
+    FEA --> MOD --> PRE --> MON
     CUR --> BI
     ANA --> BI
     PRE --> BI
+    FEA -.-> NB -.-> MOD
+    MOD -.-> TSK -.-> PRE
 
     classDef built fill:#e8f1fc,stroke:#2a78d6,color:#0b0b0b
-    class RAW,STG,CUR,CHK,ANA,FEA,MOD,PRE,BI built
+    classDef pending fill:#ffffff,stroke:#52514e,stroke-dasharray:5 4,color:#52514e
+    class RAW,STG,CUR,CHK,ANA,FEA,MOD,PRE,MON,BI built
+    class NB,TSK pending
 ```
 
 **How the two line up**
 
-- **Same shape.** Same layers in the same order, one SQL file per table, the same grain rules and keys (a `-1` unknown member in every dimension; facts never join to facts), and the same 22 validation checks. Those carry over to the cloud unchanged in meaning.
-- **What changes** is the engine and the location: DuckDB SQL becomes GoogleSQL, a local folder becomes a Cloud Storage bucket, and a Python runner becomes a scheduled workflow with service accounts.
-- **Deliberately not mirrored** (decisions D-002, D-004, D-005): Dataflow and Apache Beam (plain SQL is enough for 100,000 orders), MLflow, an online prediction endpoint (the model is used by rank, in batch), Cloud Monitoring, IAM and Secret Manager (nothing is deployed).
-- **One real incompatibility was found while mapping it:** BigQuery has no `ASOF JOIN`, which the late-delivery features use to stay free of leakage, so that file needs a rewrite rather than a translation.
+- **Same shape.** Same layers in the same order, the same table names (`dim_*`, `fact_*`), the same grain rules and keys (a `-1` unknown member in every dimension; facts never join to facts), and the same 22 validation checks. The reconciliation compares them table by table and finds no difference.
+- **What changes is the engine and where things run.** DuckDB SQL becomes Snowflake SQL run by dbt, a local folder becomes a stage, Python reads through `src/data_access` (`DATA_BACKEND`), and the model is a versioned object in Snowflake that SQL can call. Every translated construct is listed in [docs/migration/SNOWFLAKE_MIGRATION.md](docs/migration/SNOWFLAKE_MIGRATION.md).
+- **What runs where.**
+  - **Warehouse** (`RETAIL_WH`, capped at 5 credits a month): everything scheduled or set-based, including scoring through the model and the monitoring views.
+  - **Compute pool** (billed while it runs): only the interactive notebooks.
+  - **Laptop:** the backtests, and the scores they publish to `ML`.
+- **Dashed, waiting for approval.**
+  - **Training inside Snowflake** needs the Git API integration (`snowflake/setup/07_git_workspace.sql`).
+  - **The scheduled task** needs `EXECUTE TASK` (`08_scoring_task_grants.sql`). Its scoring logic has already run live.
+- **Deliberately not mirrored:** an online prediction endpoint (the model is used by rank, in batch), and the smoothed-rate and lag experiments of `drift_analysis.py` (they stay in Python).
 
-The step-by-step plan, with the SQL constructs to change, the BigQuery and Vertex AI setup, and the numbers the cloud build must reproduce, is in [docs/MIGRATING_TO_CLOUD.md](docs/MIGRATING_TO_CLOUD.md). It has not been run on Google Cloud, and it does not quote prices, which were never verified.
+The project began as a Google Cloud design (BigQuery, Dataflow, Vertex AI). That plan is kept in [docs/MIGRATING_TO_CLOUD.md](docs/MIGRATING_TO_CLOUD.md) as a record. It was never run, and Snowflake replaced it (DD-19).
 
 ## Two implementations: DuckDB (local) and Snowflake + dbt (cloud)
 
