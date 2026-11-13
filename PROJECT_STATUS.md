@@ -16,7 +16,7 @@ _Last updated: 2026-10-13_
 | 3 Cloud foundation | Out of scope (D-002) | |
 | 4 Data engineering | Done | `sql/`, `src/transformation/build_warehouse.py`, `docs/data/DATA_MODEL.md` (22 checks) |
 | 5 Analytics | Done | `sql/analytics/`, `src/analytics/`, `docs/analytics/BUSINESS_INSIGHTS.md` |
-| 6 Machine learning | Done | `notebooks/02_late_delivery_model.ipynb` and `03_weekly_forecast.ipynb` (with charts), interactive versions in `notebooks/marimo/`, `docs/ml/MODEL_CARD.md` and the experiment documents it links |
+| 6 Machine learning | Done | `notebooks/02_late_delivery_model.ipynb` and `03_weekly_forecast.ipynb` (with charts), interactive views in the HTML dashboard (`dashboard/`), `docs/ml/MODEL_CARD.md` and the experiment documents it links |
 | Dashboard (Power BI, added later) | Built; opens and loads in Desktop (owner now edits layouts there) | `powerbi/README.md`, `docs/powerbi/DAX_SPECIFICATION.html`, `docs/powerbi/DASHBOARD_MOCKUP.html`, `powerbi/RetailAnalytics.pbip` (DD-15) |
 | 7 Deployment, 8 Monitoring | Out of scope (D-002, D-005) | |
 | 9 Documentation | Done | `README.md`, `SECURITY.md`, `COST.md`, `docs/LESSONS_LEARNED.md`, model card |
@@ -66,7 +66,7 @@ Full suite (2026-11-13): see the commit that records this update; the only failu
 | ~~DuckDB late-delivery feature query is not reproducible across multi-threaded runs~~ (fixed 2026-11-12, DD-21) | Cause: `arg_max` picked among 57 price-tied orders in thread order, which moved `category_prior_*` on about 26,000 rows; plus a float `avg` summed in thread order. Both are now deterministic (alphabetical tie-break, ordered aggregate), identical across 1/2/8/16 threads, and the same rule as Snowflake. The v2/v3 experiment metrics were regenerated; v1 is unchanged |
 | ~~Snowflake-backed runs of the two Tier 1 entry points~~ (run 2026-11-13) | `--backend snowflake --yes` wrote `reports/snowflake/*.json`: forecast identical to DuckDB, late-delivery within 6e-6. Tier 2 scripts (`drift_analysis`, `export_data`, `run_analytics`) stay DuckDB-only |
 | ML write-back and the Power BI patched copy | Built and tested offline; not run. The write-back is opt-in (`FORECAST_WRITEBACK=1`); the Power BI copy needs Desktop and a sign-in decision |
-| Snowflake credit use | Not measured: run `SHOW RESOURCE MONITORS LIKE 'RETAIL_MONITOR'` as ACCOUNTADMIN |
+| Snowflake credit use | Not measured yet: needs `snowflake/setup/05_monitor_grant.sql` run once as ACCOUNTADMIN, then `snowflake/monitoring/credit_usage.py --yes` |
 
 ## Known limitations
 

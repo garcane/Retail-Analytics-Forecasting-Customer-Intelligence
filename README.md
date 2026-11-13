@@ -26,7 +26,7 @@ The least glamorous result is also the most useful one: **several well-motivated
 1. **Warehouse.** Plain DuckDB SQL builds a star schema (4 fact tables, 5 dimensions) in about 25 seconds and then runs 22 reconciliation checks, failing loudly if any break. Facts never join to facts, and every table states its grain ([docs/data/DATA_MODEL.md](docs/data/DATA_MODEL.md)).
 2. **Analytics.** Eight SQL queries produce the tables and charts behind the business findings, and tests tie them back to the warehouse.
 3. **Machine learning.** The prediction moment (purchase time) was fixed before any feature was written, in a leakage analysis ([docs/ml/LEAKAGE_ANALYSIS.md](docs/ml/LEAKAGE_ANALYSIS.md)). Models are scored by rolling-origin backtests, one test month at a time.
-4. **Notebooks.** The ML is presented with its charts in Jupyter notebooks, and as interactive marimo apps (month pickers, a "flag the riskiest X%" slider). Both call the same tested code in `src/ml/`.
+4. **Notebooks.** The ML is presented with its charts in Jupyter notebooks that call the same tested code in `src/ml/`. The interactive views (a test-month picker, precision and recall at every flag share, forecast target, horizon and method pickers) are in the HTML dashboard.
 5. **Power BI.** A four-page dashboard (sales, delivery and reviews, late-delivery risk, weekly forecast) with 38 measures. It was specified first in HTML ([docs/powerbi/DAX_SPECIFICATION.html](docs/powerbi/DAX_SPECIFICATION.html)), pictured in an interactive mock-up ([docs/powerbi/DASHBOARD_MOCKUP.html](docs/powerbi/DASHBOARD_MOCKUP.html)), then delivered as a Power BI Project. See [powerbi/README.md](powerbi/README.md) for how to open it.
 6. **HTML dashboard.** A seven-page interactive dashboard ([dashboard/](dashboard/README.md)) that puts the analytics next to the model results, risk operating points, forecasts and data lineage. It is a static site with separate CSS and JavaScript modules, and new pages register themselves. Its data is aggregated from Snowflake by default (or DuckDB offline) by `src/dashboard/build_data.py`; run it with `python src/dashboard/serve.py`.
 7. **Quality.** 96 automated tests, including tests for the leakage rules (which were shown to fail when leaks were planted deliberately), a clean-clone reproduction of the whole pipeline, and a written audit ([docs/AUDIT.md](docs/AUDIT.md)).
@@ -103,7 +103,7 @@ Where to read more: the [SQL migration inventory](docs/migration/SNOWFLAKE_MIGRA
 | `sql/` | Staging, dimensions, facts, validation, analytics and ML feature queries, all plain DuckDB SQL |
 | `src/transformation/` | `build_warehouse.py`, which builds the warehouse and runs the checks |
 | `src/analytics/`, `src/ml/`, `src/powerbi/` | Analytics runner and charts; ML backtests, drift, recalibration, forecast and explainability; the Power BI data export and generators |
-| `notebooks/` | Discovery (01), the late-delivery model (02) and the weekly forecast (03), with stored charts; `marimo/` holds interactive versions of 02 and 03 |
+| `notebooks/` | Discovery (01), the late-delivery model (02) and the weekly forecast (03), with stored charts |
 | `powerbi/`, `docs/powerbi/` | The Power BI project, the specification and the mock-up |
 | `tests/` | The pytest suite |
 | `reports/` | Saved metrics (JSON) and analytics tables (CSV) |
@@ -181,7 +181,7 @@ Metrics are written to `reports/`, and [docs/ml/PHASE2_BASELINES.md](docs/ml/PHA
 ### 4. Explore
 
 - `notebooks/02_late_delivery_model.ipynb` and `03_weekly_forecast.ipynb`: **the machine learning, with charts.** Open them in VS Code or JupyterLab with the project's `.venv` as the kernel. They are stored with their outputs.
-- `notebooks/marimo/`: interactive versions. Run `uv run marimo edit notebooks/marimo/02_late_delivery_model.py` (editable) or `uv run marimo run ...` (app view). They store no outputs.
+- [dashboard/](dashboard/README.md): the interactive views of the same results (run `python src/dashboard/serve.py`).
 - `notebooks/01_dataset_discovery.ipynb`: the exploratory analysis behind [docs/data/EDA_FINDINGS.md](docs/data/EDA_FINDINGS.md) and [docs/phase0/PHASE0_DISCOVERY.md](docs/phase0/PHASE0_DISCOVERY.md).
 - [docs/ml/MODEL_CARD.md](docs/ml/MODEL_CARD.md): the best single place to start for the ML results.
 
