@@ -1,0 +1,18 @@
+[project]
+name = "retail-olist-ml-registry"
+version = "0.1.0"
+description = "Isolated environment for the Snowflake Model Registry (snowflake-ml-python needs pandas<3 and connector<5; the root project uses pandas 3 and connector 5)."
+requires-python = ">=3.13,<3.14"
+dependencies = [
+    # 2.8.0 = the newest snowflake-ml-python in Snowflake's own package channel (INFORMATION_SCHEMA.PACKAGES,
+    # checked 2026-11-13). The registered model depends on it at run time inside Snowflake, so client and server match.
+    "snowflake-ml-python==2.8.0",
+    # Same scikit-learn as the root project (and available in the Snowflake channel), so the registered model is the
+    # model the backtests measured.
+    "scikit-learn==1.9.1",
+    "duckdb",          # imported by src/ml/late_delivery_baseline.py at module level
+    "cryptography",    # key-pair authentication
+]
+
+[tool.uv]
+package = false
