@@ -36,3 +36,6 @@ models:
     pbi:
       +materialized: view
       +schema: pbi
+    monitoring:
+      +materialized: view
+      +schema: ml_monitoring

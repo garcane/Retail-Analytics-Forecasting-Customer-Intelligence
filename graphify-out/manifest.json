@@ -1560,9 +1560,9 @@
     "semantic_hash": ""
   },
   "snowflake/dbt/dbt_project.yml": {
-    "mtime": 1793978666.6467307,
-    "seen": 1794172496.95836,
-    "ast_hash": "2427efc75b0ad61ce7a92911a4ecb4d2",
+    "mtime": 1794576175.7510464,
+    "seen": 1794576638.7133415,
+    "ast_hash": "db84aa12cee682f6307a979239c8747d",
     "semantic_hash": ""
   },
   "snowflake/dbt/models/intermediate/late_delivery/_late_delivery.yml": {
@@ -2064,9 +2064,9 @@
     "semantic_hash": ""
   },
   "snowflake/ml/register_model.py": {
-    "mtime": 1794574800.9737766,
-    "seen": 1794574898.522464,
-    "ast_hash": "65bc392b3da25e35592c4be6ca8fd801",
+    "mtime": 1794575741.0751789,
+    "seen": 1794576638.712339,
+    "ast_hash": "78df47cff00d819c3b5df4b5c4413a3b",
     "semantic_hash": ""
   },
   "snowflake/setup/06_model_registry_grants.sql": {
@@ -2079,6 +2079,114 @@
     "mtime": 1794574800.9767792,
     "seen": 1794574898.522464,
     "ast_hash": "34d1c0fd1aaaa55daaab23eb4de0eb70",
+    "semantic_hash": ""
+  },
+  "reports/snowflake/in_snowflake_checks.json": {
+    "mtime": 1794576567.0202823,
+    "seen": 1794576638.7113397,
+    "ast_hash": "2e4f3a2958337804d3806937fe4e36b9",
+    "semantic_hash": ""
+  },
+  "scripts/make_snowflake_notebooks.py": {
+    "mtime": 1794575919.2943306,
+    "seen": 1794576638.7113397,
+    "ast_hash": "d09bc262412bbb9629344d5cba17633f",
+    "semantic_hash": ""
+  },
+  "snowflake/dbt/models/monitoring/mon_calibration.sql": {
+    "mtime": 1794576273.046965,
+    "seen": 1794576638.7113397,
+    "ast_hash": "d4da19bc4aee71f4059b23706dd25cac",
+    "semantic_hash": ""
+  },
+  "snowflake/dbt/models/monitoring/mon_calibration_by_month.sql": {
+    "mtime": 1794576273.0569668,
+    "seen": 1794576638.7113397,
+    "ast_hash": "017f5865afad69aa7e44a679c1bcfb2f",
+    "semantic_hash": ""
+  },
+  "snowflake/dbt/models/monitoring/mon_feature_auc_by_month.sql": {
+    "mtime": 1794576273.0649633,
+    "seen": 1794576638.7113397,
+    "ast_hash": "1b12f75ac4f80b6bfd653a247587d5dd",
+    "semantic_hash": ""
+  },
+  "snowflake/dbt/models/monitoring/mon_score_drift.sql": {
+    "mtime": 1794576273.0729678,
+    "seen": 1794576638.7113397,
+    "ast_hash": "f74d49b9068b9f43641b1f1335b55e22",
+    "semantic_hash": ""
+  },
+  "snowflake/dbt/models/monitoring/mon_scores_latest_run.sql": {
+    "mtime": 1794576273.0789652,
+    "seen": 1794576638.7113397,
+    "ast_hash": "949a4a27a99d71918aa4520ff241e843",
+    "semantic_hash": ""
+  },
+  "snowflake/ml/scoring_task.sql": {
+    "mtime": 1794576441.6365912,
+    "seen": 1794576638.712339,
+    "ast_hash": "283beeaf857056ee526db9c7689850e8",
+    "semantic_hash": ""
+  },
+  "snowflake/setup/07_git_workspace.sql": {
+    "mtime": 1794576384.0336857,
+    "seen": 1794576638.712339,
+    "ast_hash": "cb0f07215d64c59a404e504a33edb6cd",
+    "semantic_hash": ""
+  },
+  "snowflake/setup/08_scoring_task_grants.sql": {
+    "mtime": 1794576384.921117,
+    "seen": 1794576638.712339,
+    "ast_hash": "33e5b172e3a3de7e0d889f106c2e9bc2",
+    "semantic_hash": ""
+  },
+  "src/data_access/snowpark.py": {
+    "mtime": 1794575597.113163,
+    "seen": 1794576638.712339,
+    "ast_hash": "d8fea92767094a1c6253e61e5a44f4da",
+    "semantic_hash": ""
+  },
+  "tests/test_notebooks_snowflake.py": {
+    "mtime": 1794576533.7565112,
+    "seen": 1794576638.712339,
+    "ast_hash": "120b59c4e64939f1e3fbaf29c805c46d",
+    "semantic_hash": ""
+  },
+  "tests/test_scoring_task_sql.py": {
+    "mtime": 1794576534.6390693,
+    "seen": 1794576638.712339,
+    "ast_hash": "3cce32843c484b643e9a3f182ee83239",
+    "semantic_hash": ""
+  },
+  "tests/test_snowpark_adapter.py": {
+    "mtime": 1794575611.819013,
+    "seen": 1794576638.712339,
+    "ast_hash": "b4abe870df6f25e09733636a2955cdad",
+    "semantic_hash": ""
+  },
+  "tests/test_sql_auc.py": {
+    "mtime": 1794576535.504799,
+    "seen": 1794576638.712339,
+    "ast_hash": "d83963ad538be6dd8c572527293273bf",
+    "semantic_hash": ""
+  },
+  "notebooks/snowflake/requirements.txt": {
+    "mtime": 1794575921.9192612,
+    "seen": 1794576638.7133415,
+    "ast_hash": "fe11a30ea158e487315c7aaa58577abb",
+    "semantic_hash": ""
+  },
+  "snowflake/dbt/models/monitoring/_monitoring.yml": {
+    "mtime": 1794576219.713598,
+    "seen": 1794576638.7133415,
+    "ast_hash": "6798ba9be5bf1e6f8988390f227825d2",
+    "semantic_hash": ""
+  },
+  "snowflake/dbt/models/monitoring/_sources_ml.yml": {
+    "mtime": 1794576169.6132636,
+    "seen": 1794576638.7133415,
+    "ast_hash": "45a45b63077cec66a736a450741e4f81",
     "semantic_hash": ""
   }
 }

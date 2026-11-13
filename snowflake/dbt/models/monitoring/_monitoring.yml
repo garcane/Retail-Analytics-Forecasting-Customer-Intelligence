@@ -1,0 +1,43 @@
+version: 2
+
+models:
+  - name: mon_scores_latest_run
+    description: "The latest published run of ML.LATE_DELIVERY_SCORES with purchase_ts and promised_days from the feature mart."
+    columns:
+      - name: order_id
+        data_tests: [not_null, unique]
+      - name: risk_score
+        data_tests:
+          - not_null
+          - dbt_utils.accepted_range: {arguments: {min_value: 0, max_value: 1}}
+
+  - name: mon_calibration_by_month
+    description: "Per test month and risk group (0-4): mean predicted risk vs observed late rate."
+    data_tests:
+      - dbt_utils.unique_combination_of_columns: {arguments: {combination_of_columns: [month, risk_group]}}
+    columns:
+      - name: risk_group
+        data_tests:
+          - dbt_utils.accepted_range: {arguments: {min_value: 0, max_value: 4}}
+
+  - name: mon_calibration
+    description: "Calibration averaged over the test months (compare with reports/snowflake/late_delivery_metrics.json)."
+    columns:
+      - name: risk_group
+        data_tests: [unique, not_null]
+
+  - name: mon_feature_auc_by_month
+    description: "Single-feature ROC-AUC by month for promised_days, distance_km and seller_prior_late_rate (E1 of drift_analysis.py)."
+    data_tests:
+      - dbt_utils.unique_combination_of_columns: {arguments: {combination_of_columns: [month, feature]}}
+    columns:
+      - name: roc_auc
+        data_tests:
+          - not_null
+          - dbt_utils.accepted_range: {arguments: {min_value: 0, max_value: 1}}
+
+  - name: mon_score_drift
+    description: "Per month: predicted vs actual late rate, share flagged and its late rate, and the delivery promise."
+    columns:
+      - name: month
+        data_tests: [unique, not_null]
