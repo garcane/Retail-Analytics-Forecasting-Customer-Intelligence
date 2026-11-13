@@ -32,7 +32,7 @@ Disk: about 79 MB of raw data (the nine Kaggle CSV files), a 112 MB warehouse fi
 
 ## Snowflake implementation (branch feature/snowflake-dbt-migration)
 
-The pipeline has run on Snowflake (2026-11-12 and 2026-11-13). **Credit use has not been measured yet**: the service user `RETAIL_SVC` cannot read the resource monitor or the metering history. To read it, run `SHOW RESOURCE MONITORS LIKE 'RETAIL_MONITOR';` as ACCOUNTADMIN in Snowsight (`used_credits` for the current month).
+The pipeline has run on Snowflake (2026-11-12 and 2026-11-13). **Credit use has not been measured yet**: the service user `RETAIL_SVC` cannot read the resource monitor. Run `snowflake/setup/05_monitor_grant.sql` once as ACCOUNTADMIN, then `python snowflake/monitoring/credit_usage.py --yes` reports the month's used and remaining credits (see `snowflake/README.md`, section 12).
 
 - Compute: one warehouse, `RETAIL_WH`, size XSMALL, `AUTO_SUSPEND = 60`, `AUTO_RESUME = TRUE`, created suspended. An XSMALL warehouse consumes 1 credit per hour of running time (Snowflake's published rate; the price of a credit depends on edition, region and contract and has not been checked here).
 - Cap: `RETAIL_MONITOR` (`snowflake/setup/03_resource_monitor.sql`) gives `RETAIL_WH` a quota of 5 credits a month: notify at 75%, suspend at 100%, suspend immediately at 110%.

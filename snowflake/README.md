@@ -14,6 +14,7 @@ Related pages: [architecture](../docs/architecture/SNOWFLAKE_ARCHITECTURE.md) | 
 | `setup/01_objects.sql` | Database `RETAIL_OLIST`, schemas `RAW, STAGING, INTERMEDIATE, MARTS, PBI, ML`, warehouse `RETAIL_WH` (XSMALL, auto-suspend 60 s), roles | Yes, additive (`IF NOT EXISTS`) |
 | `setup/02_grants.sql` | Least-privilege grants for `RETAIL_LOADER`, `RETAIL_TRANSFORMER`, `RETAIL_REPORTER` | Yes, additive |
 | `setup/03_resource_monitor.sql` | `RETAIL_MONITOR`: 5 credits a month on `RETAIL_WH`; notify at 75%, suspend at 100%, suspend immediately at 110% | Yes (needs `ACCOUNTADMIN`) |
+| `setup/05_monitor_grant.sql`, `monitoring/credit_usage.py` | Read-only `MONITOR` on `RETAIL_MONITOR` for `RETAIL_TRANSFORMER`; a script that reports the month's credit use | Grant only (needs `ACCOUNTADMIN`) |
 | `setup/04_service_user.sql`, `setup/generate_key_pair.py` | Service user `RETAIL_SVC` (key-pair only, no password) with the loader and transformer roles; the script writes the key pair to `~/.snowflake/keys`, never inside the repo | Yes (needs `SECURITYADMIN`) |
 | `ingestion/file_formats.sql`, `ingestion/ddl_raw.sql` | CSV file format and stage; nine RAW tables and `RAW.INGESTION_LOG` | Yes, additive |
 | `ingestion/load_raw.py` | `PUT` + `COPY INTO` loader with checksum log and record-count checks | Writes data into `RAW` only |
@@ -163,11 +164,16 @@ This writes a git-ignored copy to `powerbi_snowflake/` and rewrites only `expres
 
 ## 12. Cost
 
-`RETAIL_WH` is XSMALL with a 60-second auto-suspend, and `RETAIL_MONITOR` suspends it at 5 credits a month. Everything above ran in a few minutes of warehouse time in total. **Credit use has not been measured**: `RETAIL_SVC` cannot see the monitor or the metering history. To read it, run as `ACCOUNTADMIN` in Snowsight:
+`RETAIL_WH` is XSMALL with a 60-second auto-suspend, and `RETAIL_MONITOR` suspends it at 5 credits a month. Everything above ran in a few minutes of warehouse time in total. **Credit use has not been measured yet.** A resource monitor is visible only to roles that hold a privilege on it, so `RETAIL_SVC` cannot read it. To measure it:
 
-```sql
-SHOW RESOURCE MONITORS LIKE 'RETAIL_MONITOR';   -- used_credits for the current month
+1. Once, as `ACCOUNTADMIN` in Snowsight, run `setup/05_monitor_grant.sql`. It grants `MONITOR` (read-only) on `RETAIL_MONITOR` to `RETAIL_TRANSFORMER`, and nothing account-wide.
+2. Then, at any time:
+
+```powershell
+.\.venv\Scripts\python.exe snowflake\monitoring\credit_usage.py --yes   # quota, used and remaining credits for the current month
 ```
+
+Without step 1 the script stops with a message rather than reporting zero. Without either, `SHOW RESOURCE MONITORS LIKE 'RETAIL_MONITOR';` as `ACCOUNTADMIN` in Snowsight gives the same figures.
 
 ## 13. Where things stand
 

@@ -27,10 +27,17 @@ Later decisions can supersede earlier ones; when that happens the entry says so.
 | DD-11 | 2026-10-13 | No recalibration or window tuning; use the model by rank | Active |
 | DD-12 | 2026-10-13 | Close the late-delivery feature search; v1 is final. Forecast: recommend the simple averages | Active |
 | DD-13 | 2026-10-13 | Present the ML in Jupyter notebooks that call the tested `src/ml` code | Active |
-| DD-14 | 2026-10-13 | Add interactive marimo versions of the ML notebooks, keeping the Jupyter ones | Active |
+| DD-14 | 2026-10-13 | Add interactive marimo versions of the ML notebooks, keeping the Jupyter ones | Superseded by DD-24 |
 | DD-15 | 2026-10-15 | Deliver Power BI specification-first from one definition | Active |
 | DD-16 | 2026-10-16 | Read the geolocation CSV directly; no Parquet conversion | Active |
 | DD-17 | 2026-10-16 | Document the local build as a twin of the cloud design, with a migration guide (nothing built in the cloud) | Active |
+| DD-18 | 2026-10-18 | Translate the staging layer to BigQuery SQL in `sql/bigquery/` | Active |
+| DD-19 | 2026-11-08 | Add a Snowflake + dbt implementation next to DuckDB (supersedes D-002 and D-004 for that implementation) | Active |
+| DD-20 | 2026-11-08 | Snowflake modelling choices (text RAW, DuckDB mart names, keys as dbt tests, patched Power BI copy) | Active |
+| DD-21 | 2026-11-12 | Make the late-delivery feature query deterministic | Active |
+| DD-22 | 2026-11-13 | Add a modular HTML dashboard next to Power BI | Active |
+| DD-23 | 2026-11-13 | Build the dashboard data from Snowflake by default | Active |
+| DD-24 | 2026-11-13 | Remove the marimo notebooks; the Jupyter notebooks and the HTML dashboard remain | Active |
 
 ---
 
@@ -223,6 +230,8 @@ Evidence for these entries is in [docs/data/EDA_FINDINGS.md](docs/data/EDA_FINDI
 
 ### DD-14: marimo notebooks alongside the Jupyter ones
 
+*Superseded by DD-24 (2026-11-13): the marimo notebooks were removed.*
+
 - **Context:** The project owner wanted the ML notebooks in marimo as well. DD-13 had chosen Jupyter, and the reasons for it (stored charts, familiar format) still hold.
 - **Options:** Replace the Jupyter notebooks; keep both; convert cell for cell without changes.
 - **Chosen:** Keep both. The marimo versions are `notebooks/marimo/02_late_delivery_model.py` and `03_weekly_forecast.py`, rewritten by hand rather than auto-converted, with interactive controls added.
@@ -318,3 +327,11 @@ Evidence for these entries is in [docs/data/EDA_FINDINGS.md](docs/data/EDA_FINDI
 - **Chosen:** `build_data.py` defaults to `--backend snowflake` (override with `--backend duckdb` or `DASHBOARD_BACKEND`). It prints the target and needs `--yes` before it connects; without credentials it stops with a hint to use DuckDB. KPIs, weekly series and analytics tables come from `MARTS`; the risk roll-ups retrain the v1 model on the Snowflake feature table. Model metrics still come from the tracked `reports/*.json`, which the Python ML scripts produce. Files are written to temporary names and swapped in only when the whole build succeeds; `manifest.json` goes last and records the source.
 - **Verified:** a Snowflake build and a DuckDB build gave identical files for the KPIs, analytics, forecast and risk (2026-11-12).
 - **Trade-offs:** a Snowflake build needs credentials and a running warehouse (a few seconds of XSMALL time); offline work uses `--backend duckdb`.
+
+### DD-24: The marimo notebooks are removed
+
+- **Context:** DD-14 added interactive marimo versions of the two ML notebooks. Since then the HTML dashboard (DD-22) has taken over the interactive role: its risk page has a test-month picker and shows precision and recall across every flag share (where the marimo app had a "flag the riskiest X%" slider), and its forecast page has target and horizon pickers and method toggles.
+- **Chosen:** the project owner removed `notebooks/marimo/` (commit `0568c7d`). The Jupyter notebooks stay as the stored, charted walk-through of the ML; `tests/test_marimo.py` was removed with them.
+- **Reason:** two copies of each notebook had to be kept in step, and the interactive exploration they offered is now in the dashboard.
+- **Trade-offs:** no notebook-style interactive environment over the live `src/ml` code; use the Jupyter notebooks or the dashboard. `marimo` is still listed as a development dependency in `pyproject.toml` and `uv.lock`; removing it needs `uv lock`, which is left to the owner because `uv` at the repository root rebuilds `.venv`.
+- **Rejected:** keeping the marimo files untested.
