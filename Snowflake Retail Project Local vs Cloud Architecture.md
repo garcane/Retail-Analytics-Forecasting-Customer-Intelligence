@@ -20,9 +20,9 @@ Unlike the Google Cloud design, most of this mapping is built and has run: each 
 | **Data quality** | dbt generic and singular tests (keys, relationships, the 22 checks) | `sql/validation/checks.sql` | **Run**: all pass |
 | **Reconciliation** | `src/reconciliation`: Snowflake vs the DuckDB reference | (DuckDB is the reference) | **Run**: 22/22, 0 differences |
 | **Feature engineering** | dbt `mart_late_delivery_features` (`ASOF JOIN`), `mart_weekly_orders_revenue` | `sql/ml/late_delivery_features.sql` | **Run**, reconciled 0-diff |
-| **Model training** | Today: scikit-learn on the client, reading Snowflake. Target: Snowpark Python / Snowflake ML, inside Snowflake | scikit-learn in `src/ml/` | **Partly**: client-side training on Snowflake data has run; in-Snowflake training not built |
+| **Model training** | Today: scikit-learn on the client, reading Snowflake; the trained model is then logged to the registry. Target: training inside Snowflake (stored procedure) | scikit-learn in `src/ml/` | **Partly**: client-side training on Snowflake data; the model lives in Snowflake |
 | **Experiment results** | Metrics: `reports/snowflake/*.json` on the client. Scores and forecast backtests: tables in `ML` | `reports/*.json` | **Run** |
-| **Model registry** | Snowflake Model Registry (`snowflake-ml-python`) | none (metrics files and the model card) | **Not built** |
+| **Model registry** | Snowflake Model Registry (`snowflake-ml-python`, `snowflake/ml/register_model.py`) | none (metrics files and the model card) | **Run** 2026-11-13: `ML.LATE_DELIVERY_RISK` `V1_20261113_CC90DC8` |
 | **Batch inference** | Today: scores computed on the client and published to `ML.LATE_DELIVERY_SCORES` by `publish_ml.py`. Target: registry model run in a scheduled Task | `export_scores.py` to Parquet | **Run** (client-side scoring, results in Snowflake, 2026-11-13) |
 | **Online inference** | Not planned (the model is used by rank, in batch) | none | n/a |
 | **Orchestration** | Snowflake Tasks or an external scheduler calling `load_raw.py` and `dbt build` | run by hand | **Not built** |
@@ -73,12 +73,13 @@ What that means:
 - **Ported:** feature engineering, including the leakage-safe `ASOF JOIN` history, the training data, and the weekly series.
 - **Client-side, by design for now:** training and evaluation (rolling-origin backtests over six test months).
 - **Ported on 2026-11-13:** the results. `src/ml/publish_ml.py` writes the scores, forecast backtest and flag shares to `ML.*` under one run id; they match the DuckDB outputs.
-- **Not yet ported:** a model registry, in-warehouse scoring, scheduling and ML monitoring.
+- **Ported on 2026-11-13:** the model. `snowflake/ml/register_model.py` logs the v1 model to the Snowflake Model Registry (`ML.LATE_DELIVERY_RISK`, version `V1_20261113_CC90DC8`), and scoring inside Snowflake with it matches the local model to 1.1e-16.
+- **Not yet ported:** scheduled scoring inside Snowflake, training inside Snowflake and ML monitoring.
 
 The next steps, in order of value per effort:
 
 1. ~~Publish the results to the `ML` schema~~ (done 2026-11-13, `publish_ml.py`).
-2. Log the v1 scikit-learn pipeline to the Snowflake Model Registry, with its metrics and the git commit.
+2. ~~Log the v1 scikit-learn pipeline to the Snowflake Model Registry, with its metrics and the git commit~~ (done 2026-11-13, `snowflake/ml/register_model.py`).
 3. Score inside Snowflake from the registered model, scheduled by a Task.
 4. Move the drift and calibration checks to SQL over the `ML` tables.
 

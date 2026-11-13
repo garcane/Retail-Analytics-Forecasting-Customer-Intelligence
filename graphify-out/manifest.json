@@ -66,21 +66,21 @@
     "semantic_hash": ""
   },
   "DECISIONS.md": {
-    "mtime": 1794568234.1058023,
-    "seen": 1794568393.6540742,
-    "ast_hash": "5cc07b12786221fd2b7bbf7efc0d5025",
+    "mtime": 1794574800.965784,
+    "seen": 1794574898.522464,
+    "ast_hash": "7f51a983f49541378d412b1012a75809",
     "semantic_hash": ""
   },
   "PROJECT_STATUS.md": {
-    "mtime": 1794572846.6851847,
-    "seen": 1794573320.225459,
-    "ast_hash": "50290d68c850476571425cd288823ece",
+    "mtime": 1794574800.9677784,
+    "seen": 1794574898.522464,
+    "ast_hash": "9f8c9b8c84ee036b8a2976da092560b6",
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1794572846.680185,
-    "seen": 1794573320.225459,
-    "ast_hash": "ff6d4046e8968b1834f1ddc5f5455d8e",
+    "mtime": 1794574201.7015665,
+    "seen": 1794574898.522464,
+    "ast_hash": "d505271ee8ff2a349a29817fb07312a4",
     "semantic_hash": ""
   },
   "docs/HANDOFF.md": {
@@ -276,9 +276,9 @@
     "semantic_hash": ""
   },
   "SECURITY.md": {
-    "mtime": 1794572846.7301874,
-    "seen": 1794573320.225459,
-    "ast_hash": "3d6f14bb4bd2e61e80ba6bf66d8f48f0",
+    "mtime": 1794574201.7065654,
+    "seen": 1794574898.522464,
+    "ast_hash": "29c8f6a49e92ceff2ce38e81d710fbb2",
     "semantic_hash": ""
   },
   "docs/AUDIT.md": {
@@ -300,9 +300,9 @@
     "semantic_hash": "57f00118798684e39c1fcc27f0aa31fc"
   },
   "docs/ml/MODEL_CARD.md": {
-    "mtime": 1794568234.1108077,
-    "seen": 1794568393.6540742,
-    "ast_hash": "b48da6fd977ea521d9ec7ef478e8d35b",
+    "mtime": 1794574201.7085655,
+    "seen": 1794574898.522464,
+    "ast_hash": "a634306089c5635e00d0e2d838e1fc19",
     "semantic_hash": ""
   },
   "docs/analytics/figures/categories.png": {
@@ -1410,9 +1410,9 @@
     "semantic_hash": ""
   },
   "src/data_access/writeback.py": {
-    "mtime": 1794573165.8945575,
-    "seen": 1794573320.225459,
-    "ast_hash": "106831fc7e649fe71d969370e9c41878",
+    "mtime": 1794574798.432361,
+    "seen": 1794574898.522464,
+    "ast_hash": "4dd0d7f3485634bffc34f6013cc6d31b",
     "semantic_hash": ""
   },
   "src/reconciliation/__init__.py": {
@@ -1542,9 +1542,9 @@
     "semantic_hash": ""
   },
   "snowflake/README.md": {
-    "mtime": 1794573165.90056,
-    "seen": 1794573320.225459,
-    "ast_hash": "f17d2160b104ff9a1eec5d19a164844a",
+    "mtime": 1794574800.9647777,
+    "seen": 1794574898.522464,
+    "ast_hash": "309841b5c677970d20e33ddb32692513",
     "semantic_hash": ""
   },
   "snowflake/dbt/README.md": {
@@ -1974,15 +1974,15 @@
     "semantic_hash": ""
   },
   "Snowflake Project \u2014 Retail Analytics, Forecasting & Customer Intelligence Platform.md": {
-    "mtime": 1794567792.808709,
-    "seen": 1794568393.6540742,
-    "ast_hash": "e647ec14ff39431a18bda1ab4d48c853",
+    "mtime": 1794574201.7055657,
+    "seen": 1794574898.522464,
+    "ast_hash": "d0e9406d0bcd7fbca47add5786b0e85f",
     "semantic_hash": ""
   },
   "Snowflake Retail Project Local vs Cloud Architecture.md": {
-    "mtime": 1794572846.7441845,
-    "seen": 1794573320.225459,
-    "ast_hash": "7cf7d3537bd4ba03c4d422cfbdb262ea",
+    "mtime": 1794574201.7035644,
+    "seen": 1794574898.522464,
+    "ast_hash": "ee2d202cdb4a7cc54c9e682172ea10a9",
     "semantic_hash": ""
   },
   "dashboard/README.md": {
@@ -2049,6 +2049,36 @@
     "mtime": 1794573186.1711242,
     "seen": 1794573320.225459,
     "ast_hash": "04c36b211ab28b086aa86ec4cdfb2ddb",
+    "semantic_hash": ""
+  },
+  "reports/snowflake/model_registry.json": {
+    "mtime": 1794574072.0981786,
+    "seen": 1794574898.522464,
+    "ast_hash": "3783f9be1c15c80d5e2a6eccdccf119b",
+    "semantic_hash": ""
+  },
+  "snowflake/ml/pyproject.toml": {
+    "mtime": 1794573588.9106066,
+    "seen": 1794574898.522464,
+    "ast_hash": "04426fdeedaadd0a1b8308587c1b698e",
+    "semantic_hash": ""
+  },
+  "snowflake/ml/register_model.py": {
+    "mtime": 1794574800.9737766,
+    "seen": 1794574898.522464,
+    "ast_hash": "65bc392b3da25e35592c4be6ca8fd801",
+    "semantic_hash": ""
+  },
+  "snowflake/setup/06_model_registry_grants.sql": {
+    "mtime": 1794574759.935567,
+    "seen": 1794574898.522464,
+    "ast_hash": "ddd96ce10c5c7fd4db88040a5300ec87",
+    "semantic_hash": ""
+  },
+  "tests/test_register_model.py": {
+    "mtime": 1794574800.9767792,
+    "seen": 1794574898.522464,
+    "ast_hash": "34d1c0fd1aaaa55daaab23eb4de0eb70",
     "semantic_hash": ""
   }
 }

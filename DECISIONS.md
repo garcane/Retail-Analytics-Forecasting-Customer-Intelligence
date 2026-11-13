@@ -38,6 +38,7 @@ Later decisions can supersede earlier ones; when that happens the entry says so.
 | DD-22 | 2026-11-13 | Add a modular HTML dashboard next to Power BI | Active |
 | DD-23 | 2026-11-13 | Build the dashboard data from Snowflake by default | Active |
 | DD-24 | 2026-11-13 | Remove the marimo notebooks; the Jupyter notebooks and the HTML dashboard remain | Active |
+| DD-25 | 2026-11-13 | Register the late-delivery model in the Snowflake Model Registry from an isolated environment | Active |
 
 ---
 
@@ -335,3 +336,11 @@ Evidence for these entries is in [docs/data/EDA_FINDINGS.md](docs/data/EDA_FINDI
 - **Reason:** two copies of each notebook had to be kept in step, and the interactive exploration they offered is now in the dashboard.
 - **Trade-offs:** no notebook-style interactive environment over the live `src/ml` code; use the Jupyter notebooks or the dashboard. `marimo` is still listed as a development dependency in `pyproject.toml` and `uv.lock`; removing it needs `uv lock`, which is left to the owner because `uv` at the repository root rebuilds `.venv`.
 - **Rejected:** keeping the marimo files untested.
+
+### DD-25: The late-delivery model is registered in the Snowflake Model Registry from its own environment
+
+- **Context:** After the ML outputs were published to `ML` tables, the next step towards ML inside Snowflake was a registered, versioned model. `snowflake-ml-python` 2.8/2.9 needs pandas below 3 and `snowflake-connector-python` below 5; the root project uses pandas 3 and connector 5.
+- **Chosen:** a separate environment `snowflake/ml/` (Python 3.13, `snowflake-ml-python` 2.8.0, the newest in Snowflake's package channel, so client and in-warehouse runtime match; scikit-learn 1.9.1, the repo version). `register_model.py` trains the v1 pipeline on the Snowflake feature mart, logs it with the out-of-time backtest metrics and the git commit, names versions `V1_<date>_<commit>`, never replaces a version, pins dependencies exactly (`relax_version=False`) and checks in-warehouse scores against the local model. Grants: `CREATE MODEL` and `CREATE STAGE` on `ML` only (`06_model_registry_grants.sql`).
+- **Verified:** version `V1_20261113_CC90DC8` registered on 2026-11-13; 2,000 orders scored inside Snowflake equal the local model to 1.1e-16.
+- **Trade-offs:** a third Python environment to keep. Training still happens on the client; only the trained model lives in Snowflake. The first version was logged with the library's default `relax_version=True` before the script pinned it, so its pins (scikit-learn, `snowflake-ml-python`) are ranges; it stays (versions are immutable) and `--verify` can re-check it.
+- **Rejected:** upgrading or downgrading the root environment (would change the reference results); a model registry outside Snowflake such as MLflow (another service to run, and the model would not sit next to the data it scores); training inside Snowflake for now (the backtests and the dashboard depend on the client code; a stored procedure is the next step, not this one).

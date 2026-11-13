@@ -16,8 +16,9 @@ Re-running with the same run_id therefore replaces that run's rows atomically, a
 Never DROP, REPLACE, TRUNCATE or OVERWRITE.
 
 Why the user stage: every user has one and may use it without any grant, whereas write_pandas creates a temporary stage
-in the target schema, which needs CREATE STAGE on ML (RETAIL_TRANSFORMER has USAGE and CREATE TABLE there, and nothing
-more). COPY INTO <table> is DML, so the delete and the load commit together.
+in the target schema, which needs CREATE STAGE on ML (granted to RETAIL_TRANSFORMER only since
+06_model_registry_grants.sql, for the Model Registry; the write-back does not rely on it). COPY INTO <table> is DML, so
+the delete and the load commit together.
 """
 
 from __future__ import annotations
