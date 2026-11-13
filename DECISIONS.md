@@ -365,13 +365,14 @@ Evidence for these entries is in [docs/data/EDA_FINDINGS.md](docs/data/EDA_FINDI
   - The notebooks reproduce the committed metrics on Snowflake data (forecast 0.0, late delivery 0.0 against the Snowflake backtest and 6.04e-6 against DuckDB).
   - The monitoring views equal the Python results (calibration exact, AUC to 5e-13).
   - The scoring block scored 6,306 orders equal to the local model to 2.8e-16, and a rerun replaced them.
+  - In a Git-connected workspace (2026-11-13): notebooks 02 and 03 ran on Snowflake data. Notebook 04 trained inside Snowflake and registered `V1WS_20261113_7370C92`, equal to the laptop version to 1.1e-12. The workspace runtime's numpy and scipy moved the scipy-optimised results by up to 3.5e-7, so the notebook checks allow 1e-6 there and stay exact for closed-form results.
 - **Trade-offs:**
   - **Separate scores table.** The registered model was trained on every month, so its 2018 scores are in-sample. They go to their own table and never replace the out-of-time backtest scores Power BI reads.
   - **A replay, not a feed.** The dataset is static, so a scheduled run replays a month.
   - **Not covered by SQL.** The smoothed-rate and lag experiments of `drift_analysis.py` stay in Python.
 - **Cost / Security:**
   - **Pool cost.** Notebooks cost compute-pool credits while running; suspend the service after use, and consider the idle-timeout account parameter.
-  - **Approvals pending.** The Git API integration (`setup/07`), `EXECUTE TASK` (`setup/08`) and the idle-timeout parameter are account-level and wait for the owner's approval. The branch was pushed with approval on 2026-11-13.
+  - **Approvals.** The Git API integration (`setup/07`) was approved and run on 2026-11-13. `EXECUTE TASK` (`setup/08`) and the account idle-timeout parameter are still pending; the notebook service was given a 15-minute idle timeout per service instead. The branch was pushed with approval on 2026-11-13.
   - **No credentials in notebooks.** They use the notebook's own session.
 - **Rejected:**
   - Scheduled notebooks or code bundles for scoring: they bill the pool on every run.

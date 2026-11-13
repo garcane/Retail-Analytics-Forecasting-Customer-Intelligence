@@ -8,26 +8,70 @@
  },
  "ported_notebooks_run_against_snowflake_data": {
   "how": "every code cell of the generated notebooks executed from the laptop with the notebook session replaced by the key-pair connection (same data_access interface); the install cell skipped",
-  "03_weekly_forecast_sf": {"vs reports/forecast_models_metrics.json (DuckDB)": "largest relative difference 0.0"},
+  "03_weekly_forecast_sf": {
+   "vs reports/forecast_models_metrics.json (DuckDB)": "largest relative difference 0.0"
+  },
   "02_late_delivery_model_sf": {
    "vs reports/snowflake/late_delivery_metrics.json": "largest difference 0.0",
    "vs reports/late_delivery_metrics.json (DuckDB)": "largest difference 6.04e-06 (float summation order)"
   },
-  "not_yet": "running them inside a Snowflake workspace on a compute pool"
+  "not_yet": "superseded: see workspace_run"
  },
  "monitoring_views": {
   "dbt": "dbt build -s monitoring --target prod: PASS=18 (5 views, 13 tests), schema ML_MONITORING",
   "mon_calibration_by_month vs late_delivery_baseline.calibration_table on the same scores": "30 of 30 cells, max difference 0.0",
   "mon_calibration vs reports/snowflake/late_delivery_metrics.json (rounded to 4 places)": "max difference 4.2e-05",
-  "mon_feature_auc_by_month vs reports/drift_metrics.json E1": {"promised_days": 4.98e-13, "distance_km": 4.97e-13,
-   "seller_prior_late_rate": 4.98e-13, "months": 18},
+  "mon_feature_auc_by_month vs reports/drift_metrics.json E1": {
+   "promised_days": 4.98e-13,
+   "distance_km": 4.97e-13,
+   "seller_prior_late_rate": 4.98e-13,
+   "months": 18
+  },
   "mon_score_drift 2018-08 share promised under 20 days": 0.748
  },
  "scoring_block": {
   "how": "the block of snowflake/ml/scoring_task.sql run twice as an anonymous EXECUTE IMMEDIATE (the task itself needs the 08 grants)",
-  "result": ["run 20261113T132737Z-8da1e630: scored 6306 orders of 2018-08 with V1_20261113_CC90DC8",
-             "run 20261113T132752Z-34ef44c1: scored 6306 orders of 2018-08 with V1_20261113_CC90DC8"],
+  "result": [
+   "run 20261113T132737Z-8da1e630: scored 6306 orders of 2018-08 with V1_20261113_CC90DC8",
+   "run 20261113T132752Z-34ef44c1: scored 6306 orders of 2018-08 with V1_20261113_CC90DC8"
+  ],
   "after_rerun": "one run left, 6306 rows = the mart's 2018-08 orders",
   "max_abs_diff_vs_local": 2.776e-16
+ },
+ "workspace_run": {
+  "when": "2026-11-13, Git-connected workspace on branch feature/snowflake-dbt-migration (commit a875917)",
+  "setup": "API integration RETAIL_GIT_API (setup/07, run as ACCOUNTADMIN with the owner's approval); public repository, read-only",
+  "service": "one notebook service on SYSTEM_COMPUTE_POOL_CPU (CPU_X64_S), runtime v3.0 Python 3.12, idle timeout 15 minutes (per service); role RETAIL_TRANSFORMER, warehouse RETAIL_WH; suspended afterwards (pool resumed 07:26, service suspended about 07:45 account time)",
+  "runtime_libraries": {
+   "numpy": "2.3.5",
+   "scipy": "1.15.3",
+   "pandas": "2.3.3",
+   "scikit-learn": "1.9.1 (pinned by the install cell)"
+  },
+  "03_weekly_forecast_sf": {
+   "all analysis cells": "ran, charts rendered from Snowflake data",
+   "vs reports/forecast_models_metrics.json": {
+    "naive_last_week": 0.0,
+    "moving_average_8": 0.0,
+    "combo_naive_ma8": 0.0,
+    "simple_exp_smoothing": 2.27e-13,
+    "ar1_trend_26w": 1.35e-11,
+    "damped_trend": 3.48e-07
+   },
+   "note": "the committed check asserted 1e-9 for every method and failed on the scipy-optimised ones; it now allows 1e-6 for those three and stays exact for the closed-form methods"
+  },
+  "02_late_delivery_model_sf": {
+   "all analysis cells": "ran",
+   "vs reports/snowflake/late_delivery_metrics.json": 1.29e-09,
+   "vs reports/late_delivery_metrics.json (DuckDB)": "not reached in Snowflake (the first assert, 1e-9, stopped the cell; now 1e-6)"
+  },
+  "04_train_register_sf": {
+   "trained on": "96,019 orders inside Snowflake",
+   "registered": "RETAIL_OLIST.ML.LATE_DELIVERY_RISK version V1WS_20261113_7370C92 (not default; no git metadata in the workspace, so the tag is a hash of the model code and a training-data fingerprint)",
+   "parity_rows": 96019,
+   "mv_run_vs_notebook": 1.11e-16,
+   "sql_vs_notebook": 3.33e-16,
+   "new_vs_laptop_registered_version": 1.13e-12
+  }
  }
 }
