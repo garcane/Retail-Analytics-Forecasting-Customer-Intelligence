@@ -44,7 +44,7 @@ D-001 to D-008 (user) and DD-01 to DD-17 (design) are in [DECISIONS.md](DECISION
 
 | Area | Built | Verified how | Not verified |
 |---|---|---|---|
-| Snowflake setup, resource monitor, service user | yes | Run live in Snowsight 2026-11-12 (`RETAIL_OLIST`, `RETAIL_WH`, three roles, `RETAIL_MONITOR` at 5 credits a month, key-pair user `RETAIL_SVC`) | Credit use (the service user cannot read the monitor; read it as ACCOUNTADMIN) |
+| Snowflake setup, resource monitor, service user | yes | Run live in Snowsight 2026-11-12 (`RETAIL_OLIST`, `RETAIL_WH`, three roles, `RETAIL_MONITOR` at 5 credits a month, key-pair user `RETAIL_SVC`) | |
 | RAW ingestion | yes | Run live 2026-11-12: nine tables, loaded rows equal to the CSV record counts, rerun skipped every file, no stray carriage returns | |
 | dbt project (46 models, 321 tests) | yes | Run live 2026-11-12: `dbt build` PASS=367, including the `ASOF JOIN` | |
 | Reconciliation (`src/reconciliation`) | yes | Run live: 22/22 checks, 0 differences, headline numbers exact ([report](docs/validation/RECONCILIATION_REPORT.md)) | |
@@ -66,7 +66,7 @@ Full suite (2026-11-13): see the commit that records this update; the only failu
 | ~~DuckDB late-delivery feature query is not reproducible across multi-threaded runs~~ (fixed 2026-11-12, DD-21) | Cause: `arg_max` picked among 57 price-tied orders in thread order, which moved `category_prior_*` on about 26,000 rows; plus a float `avg` summed in thread order. Both are now deterministic (alphabetical tie-break, ordered aggregate), identical across 1/2/8/16 threads, and the same rule as Snowflake. The v2/v3 experiment metrics were regenerated; v1 is unchanged |
 | ~~Snowflake-backed runs of the two Tier 1 entry points~~ (run 2026-11-13) | `--backend snowflake --yes` wrote `reports/snowflake/*.json`: forecast identical to DuckDB, late-delivery within 6e-6. Tier 2 scripts (`drift_analysis`, `export_data`, `run_analytics`) stay DuckDB-only |
 | ML write-back and the Power BI patched copy | Built and tested offline; not run. The write-back is opt-in (`FORECAST_WRITEBACK=1`); the Power BI copy needs Desktop and a sign-in decision |
-| Snowflake credit use | Not measured yet: needs `snowflake/setup/05_monitor_grant.sql` run once as ACCOUNTADMIN, then `snowflake/monitoring/credit_usage.py --yes` |
+| ~~Snowflake credit use~~ (measured 2026-11-13) | 0.34 of the 5-credit monthly quota for everything run so far; re-measure with `snowflake/monitoring/credit_usage.py --yes` (`05_monitor_grant.sql` was run once as ACCOUNTADMIN) |
 
 ## Known limitations
 

@@ -31,16 +31,17 @@ The data is CC BY-NC-SA 4.0 (attribution, non-commercial, share-alike). Non-comm
 
 ## Snowflake and dbt implementation (DD-19)
 
-| Control | State (2026-11-08) |
+| Control | State (2026-11-08, updated 2026-11-13) |
 |---|---|
 | Authentication | Key-pair only. Variables `SNOWFLAKE_ACCOUNT`, `SNOWFLAKE_USER`, `SNOWFLAKE_PRIVATE_KEY_PATH`, optional `SNOWFLAKE_PRIVATE_KEY_PASSPHRASE`. The private key file stays outside the repository. No password variable exists. |
 | Where values live | The shell environment or a git-ignored `.env`. `.env.example` is tracked and holds placeholders only. Nothing in the repository loads `.env` automatically. |
 | Live access is gated | `src/data_access` opens a Snowflake connection only with `confirm=True` or `RETAIL_SF_CONFIRM=1`; the ingestion and reconciliation commands print the resolved account, database, role and warehouse and need `--yes`. The printed target never includes the user, key path or passphrase (offline tests assert this). |
-| Setup SQL | `snowflake/setup/01_objects.sql` and `02_grants.sql` use `IF NOT EXISTS` only: no `OR REPLACE`, no `DROP`, no account-level settings, no resource monitor. `00_preflight.sql` is read-only. A test asserts this. |
+| Setup SQL | `snowflake/setup/01_objects.sql` and `02_grants.sql` use `IF NOT EXISTS` only: no `OR REPLACE`, no `DROP`, no account-level settings. `00_preflight.sql` is read-only. A test asserts this. Added later with the owner's approval: `03_resource_monitor.sql` (5-credit monthly cap on `RETAIL_WH`), `04_service_user.sql` (service user `RETAIL_SVC`, key-pair only, loader and transformer roles) and `05_monitor_grant.sql` (read-only `MONITOR` on that one monitor for `RETAIL_TRANSFORMER`; deliberately not the account-wide `USAGE_VIEWER` or `MONITOR USAGE`). |
 | Write-back | Off by default; opt-in with a flag or `FORECAST_WRITEBACK=1`; creates tables if absent, deletes and inserts by `run_id`, never drops or replaces. |
 | CI | `dbt-ci.yml` runs `dbt parse` with dummy values and no secrets. `dbt-live.yml` runs only on manual dispatch, never on pull requests, and skips when secrets are absent. No credentials are stored in workflow files. |
 | Tracked-file scan (2026-11-08) | A pattern search of every tracked file for private-key blocks, `snowflakecomputing.com` hosts and credential-like assignments found only test sentinels in `tests/`. `.env` and key files are not tracked. |
-| Not checked | Anything that happens on a live Snowflake account: grants as created, role separation, network policy, MFA on human users. None of the live steps has been run. |
+| Live account | Setup, load, `dbt build` and the Python runs ran on 2026-11-12/13 as `RETAIL_SVC` with the loader and transformer roles; setup ran once as `ACCOUNTADMIN` in Snowsight. The pipeline never uses `ACCOUNTADMIN` or `SYSADMIN`. |
+| Not checked | An audit of the grants as created (`SHOW GRANTS` per role), network policy, MFA on human users. |
 
 ## Not applicable by design
 

@@ -14,8 +14,8 @@ Related pages: [architecture](../docs/architecture/SNOWFLAKE_ARCHITECTURE.md) | 
 | `setup/01_objects.sql` | Database `RETAIL_OLIST`, schemas `RAW, STAGING, INTERMEDIATE, MARTS, PBI, ML`, warehouse `RETAIL_WH` (XSMALL, auto-suspend 60 s), roles | Yes, additive (`IF NOT EXISTS`) |
 | `setup/02_grants.sql` | Least-privilege grants for `RETAIL_LOADER`, `RETAIL_TRANSFORMER`, `RETAIL_REPORTER` | Yes, additive |
 | `setup/03_resource_monitor.sql` | `RETAIL_MONITOR`: 5 credits a month on `RETAIL_WH`; notify at 75%, suspend at 100%, suspend immediately at 110% | Yes (needs `ACCOUNTADMIN`) |
-| `setup/05_monitor_grant.sql`, `monitoring/credit_usage.py` | Read-only `MONITOR` on `RETAIL_MONITOR` for `RETAIL_TRANSFORMER`; a script that reports the month's credit use | Grant only (needs `ACCOUNTADMIN`) |
 | `setup/04_service_user.sql`, `setup/generate_key_pair.py` | Service user `RETAIL_SVC` (key-pair only, no password) with the loader and transformer roles; the script writes the key pair to `~/.snowflake/keys`, never inside the repo | Yes (needs `SECURITYADMIN`) |
+| `setup/05_monitor_grant.sql`, `monitoring/credit_usage.py` | Read-only `MONITOR` on `RETAIL_MONITOR` for `RETAIL_TRANSFORMER`; a script that reports the month's credit use | Grant only (needs `ACCOUNTADMIN`) |
 | `ingestion/file_formats.sql`, `ingestion/ddl_raw.sql` | CSV file format and stage; nine RAW tables and `RAW.INGESTION_LOG` | Yes, additive |
 | `ingestion/load_raw.py` | `PUT` + `COPY INTO` loader with checksum log and record-count checks | Writes data into `RAW` only |
 | `dbt/` | The dbt project (46 models, 321 tests) in its own Python 3.13 environment | Creates views and tables in `STAGING` to `PBI` |
@@ -82,6 +82,7 @@ Run in a Snowsight worksheet, in this order. The author ran them in the `Retail_
 3. `setup/03_resource_monitor.sql` (`ACCOUNTADMIN`).
 4. `setup/04_service_user.sql` after pasting the public key printed by `generate_key_pair.py` in place of `<RSA_PUBLIC_KEY>` in your worksheet copy. Keep the placeholder in the committed file.
 5. As `RETAIL_LOADER`: `ingestion/file_formats.sql`, then `ingestion/ddl_raw.sql`. The loader expects `RAW.INGESTION_LOG` to exist, so run these before the first load.
+6. Optional, `ACCOUNTADMIN`: `setup/05_monitor_grant.sql`, so the service user can report credit use (section 12). Run 2026-11-13.
 
 Result: the database, six schemas, warehouse, three roles, monitor and service user exist; re-running each file is a no-op. Objects of other projects on the account were not touched.
 
@@ -164,9 +165,13 @@ This writes a git-ignored copy to `powerbi_snowflake/` and rewrites only `expres
 
 ## 12. Cost
 
-`RETAIL_WH` is XSMALL with a 60-second auto-suspend, and `RETAIL_MONITOR` suspends it at 5 credits a month. Everything above ran in a few minutes of warehouse time in total. **Credit use has not been measured yet.** A resource monitor is visible only to roles that hold a privilege on it, so `RETAIL_SVC` cannot read it. To measure it:
+`RETAIL_WH` is XSMALL with a 60-second auto-suspend, and `RETAIL_MONITOR` suspends it at 5 credits a month. Everything above ran in a few minutes of warehouse time in total.
 
-1. Once, as `ACCOUNTADMIN` in Snowsight, run `setup/05_monitor_grant.sql`. It grants `MONITOR` (read-only) on `RETAIL_MONITOR` to `RETAIL_TRANSFORMER`, and nothing account-wide.
+**0.34 credits measured** (2026-11-13, `RETAIL_MONITOR`: 0.34 of the 5-credit monthly quota, 6.8%, 4.66 remaining). The monitor was created during setup, before the first load, so this covers everything that has run on `RETAIL_WH`: the RAW load and its idempotent rerun, every `dbt build`, the reconciliation runs, the dashboard data builds, the Snowflake ML runs and the ad hoc checks.
+
+A resource monitor is visible only to roles that hold a privilege on it. To measure credits as the service user:
+
+1. Once, as `ACCOUNTADMIN` in Snowsight, run `setup/05_monitor_grant.sql` (done 2026-11-13). It grants `MONITOR` (read-only) on `RETAIL_MONITOR` to `RETAIL_TRANSFORMER`, and nothing account-wide.
 2. Then, at any time:
 
 ```powershell
@@ -187,4 +192,4 @@ Without step 1 the script stops with a message rather than reporting zero. Witho
 | Dashboard data build | unit tests | RUN 2026-11-12: identical to the DuckDB build |
 | ML write-back | fake-connector tests | NOT RUN |
 | Power BI patched copy | byte-identity tests | NOT RUN (not opened in Desktop) |
-| Credit use | | NOT MEASURED (see section 12) |
+| Credit use | | MEASURED 2026-11-13: 0.34 credits of the 5-credit monthly quota (section 12) |

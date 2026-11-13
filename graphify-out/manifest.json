@@ -72,15 +72,15 @@
     "semantic_hash": ""
   },
   "PROJECT_STATUS.md": {
-    "mtime": 1794568300.2703433,
-    "seen": 1794568393.6540742,
-    "ast_hash": "fc31e902bad8e4d51cce5ed6bee5c3d0",
+    "mtime": 1794568905.1239526,
+    "seen": 1794568963.6088302,
+    "ast_hash": "9e7a1106ca06050a114b0e7027a8ed7e",
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1794568234.1088028,
-    "seen": 1794568393.6540742,
-    "ast_hash": "2474520f59e069ef71eb9d6c3010f173",
+    "mtime": 1794568905.0942495,
+    "seen": 1794568963.6088302,
+    "ast_hash": "c1298ebf54eb2efbe42f114eddd444cf",
     "semantic_hash": ""
   },
   "docs/HANDOFF.md": {
@@ -270,15 +270,15 @@
     "semantic_hash": "a76ebd8575a62b9bced5dc087839dd7c"
   },
   "COST.md": {
-    "mtime": 1794568300.2693431,
-    "seen": 1794568393.6540742,
-    "ast_hash": "5f84f1458ff63cea93c364a78aef3368",
+    "mtime": 1794568905.1042542,
+    "seen": 1794568963.6088302,
+    "ast_hash": "961320e45dec65d26b1382d40b985c6e",
     "semantic_hash": ""
   },
   "SECURITY.md": {
-    "mtime": 1794171880.836143,
-    "seen": 1794172496.95836,
-    "ast_hash": "92bc88af9fd011cf4b8c37c04994b3c0",
+    "mtime": 1794568925.097976,
+    "seen": 1794568963.6088302,
+    "ast_hash": "5363eea108f2182bead1a55903ace0c9",
     "semantic_hash": ""
   },
   "docs/AUDIT.md": {
@@ -1542,9 +1542,9 @@
     "semantic_hash": ""
   },
   "snowflake/README.md": {
-    "mtime": 1794568300.2683454,
-    "seen": 1794568393.6540742,
-    "ast_hash": "27d17949d34cbcc62b6f82938827ff90",
+    "mtime": 1794568925.1039762,
+    "seen": 1794568963.6088302,
+    "ast_hash": "02cd5d5e347d121741037252e15b7e19",
     "semantic_hash": ""
   },
   "snowflake/dbt/README.md": {
@@ -1980,9 +1980,9 @@
     "semantic_hash": ""
   },
   "Snowflake Retail Project Local vs Cloud Architecture.md": {
-    "mtime": 1794567792.8107083,
-    "seen": 1794568393.6540742,
-    "ast_hash": "eac11f4e3dd7179bb3a22b56569331b1",
+    "mtime": 1794568905.1249557,
+    "seen": 1794568963.6088302,
+    "ast_hash": "bd32c1a9078940b6f7401a074876ce76",
     "semantic_hash": ""
   },
   "dashboard/README.md": {

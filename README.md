@@ -92,7 +92,7 @@ Where to read more: the [SQL migration inventory](docs/migration/SNOWFLAKE_MIGRA
 ## Where it is honestly unfinished
 
 - **The Power BI project was generated, then opened in Power BI Desktop, where it needed two fixes** (a measure that shared a name with a column, ignoring case, and an empty key row in the date table). It now loads. The dashboard's headline numbers have not yet been compared with the expected values listed in the specification's first-open checklist, and the report layouts are being refined by hand in Desktop.
-- **The Google Cloud implementation is a plan, not a build.** The layers, the mapping and the migration steps are documented, but nothing has been run on Google Cloud, so the SQL translations and costs are untested. The Snowflake implementation, by contrast, has run end to end on a live account and reconciles with DuckDB; its ML write-back and the Power BI switch have not run, and its credit use has not been measured (see the table above).
+- **The Google Cloud implementation is a plan, not a build.** The layers, the mapping and the migration steps are documented, but nothing has been run on Google Cloud, so the SQL translations and costs are untested. The Snowflake implementation, by contrast, has run end to end on a live account and reconciles with DuckDB; its ML write-back and the Power BI switch have not run, and its credit use so far is 0.34 Snowflake credits, measured by the resource monitor (see the table above and [COST.md](COST.md)).
 - **The model is modest by design of the data.** A better late-delivery model would need information this dataset does not contain, such as carrier or warehouse data.
 - **Everything is a snapshot.** The data ends in 2018, and the forecast and model results describe that period only.
 

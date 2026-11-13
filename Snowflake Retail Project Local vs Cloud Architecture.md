@@ -100,4 +100,4 @@ Every translation is listed in [docs/migration/SNOWFLAKE_MIGRATION.md](docs/migr
 
 ### Cost control
 
-One XSMALL warehouse with a 60-second auto-suspend, capped by a 5-credit monthly resource monitor. There is no always-on compute and no endpoint.
+One XSMALL warehouse with a 60-second auto-suspend, capped by a 5-credit monthly resource monitor. There is no always-on compute and no endpoint. Measured on 2026-11-13: the whole build so far used 0.34 credits.
