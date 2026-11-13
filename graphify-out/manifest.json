@@ -66,21 +66,21 @@
     "semantic_hash": ""
   },
   "DECISIONS.md": {
-    "mtime": 1794576802.499728,
-    "seen": 1794576885.6505885,
-    "ast_hash": "cc389e4042d121c43991b1752e8d131d",
+    "mtime": 1794584837.1231163,
+    "seen": 1794584933.7197971,
+    "ast_hash": "53d204b91f7b1c8c16e899bf3167d975",
     "semantic_hash": ""
   },
   "PROJECT_STATUS.md": {
-    "mtime": 1794576802.4797313,
-    "seen": 1794576885.6505885,
-    "ast_hash": "8ef96800802982a894e1391646daf360",
+    "mtime": 1794584837.1021187,
+    "seen": 1794584933.7197971,
+    "ast_hash": "8a7fc1ea23c793203b40469d967947a0",
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1794576802.4767292,
-    "seen": 1794576885.6505885,
-    "ast_hash": "17016a267d59d2bfa61b7277e523bf1f",
+    "mtime": 1794584826.07109,
+    "seen": 1794584933.7197971,
+    "ast_hash": "f7ef382606563db6cc1cc90a723e5794",
     "semantic_hash": ""
   },
   "docs/HANDOFF.md": {
@@ -270,9 +270,9 @@
     "semantic_hash": "a76ebd8575a62b9bced5dc087839dd7c"
   },
   "COST.md": {
-    "mtime": 1794576802.5017262,
-    "seen": 1794576885.6505885,
-    "ast_hash": "bdcae3cc4088a3ee3439d8864f0f723c",
+    "mtime": 1794584837.1261213,
+    "seen": 1794584933.7197971,
+    "ast_hash": "8607915e4adf4e26373bc8297a622fcc",
     "semantic_hash": ""
   },
   "SECURITY.md": {
@@ -300,9 +300,9 @@
     "semantic_hash": "57f00118798684e39c1fcc27f0aa31fc"
   },
   "docs/ml/MODEL_CARD.md": {
-    "mtime": 1794576802.5027294,
-    "seen": 1794576885.6505885,
-    "ast_hash": "71637a3fa5c56a25e805e474edfc748c",
+    "mtime": 1794584837.1271164,
+    "seen": 1794584933.7197971,
+    "ast_hash": "a6f8b3a8eb61823842ded42fe4fd78ff",
     "semantic_hash": ""
   },
   "docs/analytics/figures/categories.png": {
@@ -1542,9 +1542,9 @@
     "semantic_hash": ""
   },
   "snowflake/README.md": {
-    "mtime": 1794576802.4737298,
-    "seen": 1794576885.6505885,
-    "ast_hash": "efdd41232e610b72fae32b5ef118d60a",
+    "mtime": 1794584826.0960903,
+    "seen": 1794584933.7197971,
+    "ast_hash": "88b4d395e78287d903a10c47c7448685",
     "semantic_hash": ""
   },
   "snowflake/dbt/README.md": {
@@ -1980,9 +1980,9 @@
     "semantic_hash": ""
   },
   "Snowflake Retail Project Local vs Cloud Architecture.md": {
-    "mtime": 1794576802.496729,
-    "seen": 1794576885.6505885,
-    "ast_hash": "4787faf3bf25864be2db71882ba2bafa",
+    "mtime": 1794584837.108117,
+    "seen": 1794584933.7197971,
+    "ast_hash": "f9a65728d8c9e4776fcdf354a80b3217",
     "semantic_hash": ""
   },
   "dashboard/README.md": {
@@ -2082,15 +2082,15 @@
     "semantic_hash": ""
   },
   "reports/snowflake/in_snowflake_checks.json": {
-    "mtime": 1794576567.0202823,
-    "seen": 1794576638.7113397,
-    "ast_hash": "2e4f3a2958337804d3806937fe4e36b9",
+    "mtime": 1794584826.0180879,
+    "seen": 1794584933.7197971,
+    "ast_hash": "76375e2c96aa1308c3e53d5d3c2bc5b0",
     "semantic_hash": ""
   },
   "scripts/make_snowflake_notebooks.py": {
-    "mtime": 1794575919.2943306,
-    "seen": 1794576638.7113397,
-    "ast_hash": "d09bc262412bbb9629344d5cba17633f",
+    "mtime": 1794584704.3781662,
+    "seen": 1794584933.7197971,
+    "ast_hash": "9d90b7f393f3e33867a05ce31c2f092f",
     "semantic_hash": ""
   },
   "snowflake/dbt/models/monitoring/mon_calibration.sql": {
@@ -2172,8 +2172,8 @@
     "semantic_hash": ""
   },
   "notebooks/snowflake/requirements.txt": {
-    "mtime": 1794575921.9192612,
-    "seen": 1794576638.7133415,
+    "mtime": 1794584707.4388,
+    "seen": 1794584933.7197971,
     "ast_hash": "fe11a30ea158e487315c7aaa58577abb",
     "semantic_hash": ""
   },

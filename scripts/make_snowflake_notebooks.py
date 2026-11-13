@@ -42,41 +42,50 @@ CONNECT = (
     "\n"
     "db = from_active_session()   # this notebook's own Snowflake session: no keys, no passwords\n"
     'print(f"database {db.target.database}, role {db.target.role}, warehouse {db.target.warehouse}")\n'
-    "import sklearn  # noqa: E402\n"
+    "import scipy, sklearn  # noqa: E402,E401\n"
+    'print(f"numpy {np.__version__}, scipy {scipy.__version__}, pandas {pd.__version__}, scikit-learn {sklearn.__version__}")\n'
     'assert sklearn.__version__ == "1.9.1", f"scikit-learn {sklearn.__version__}: run the install cell, then restart"\n'
 )
 
-VERIFY_02 = '''# Snowflake check. The metrics above were computed from Snowflake data. They must equal the Snowflake-backed backtest
-# committed in reports/snowflake/ (same data, same code), and match the DuckDB reference within the float-summation
-# noise measured on 2026-11-13 (about 6e-6).
+VERIFY_02 = '''# Snowflake check. The metrics above were computed from Snowflake data. Against the Snowflake-backed backtest committed
+# in reports/snowflake/ (same data, same code) the only differences come from the numeric libraries: the logistic
+# regression is fitted by scipy's L-BFGS, and this runtime's numpy/scipy are not the laptop's (measured 2026-11-13:
+# 0.0 on the laptop, 1.3e-09 in a Snowflake workspace). Against the DuckDB reference add the float-summation noise of
+# the features (about 6e-6).
 def per_month(path):
     rows = json.loads((ROOT / path).read_text(encoding="utf-8"))["per_month"]["logistic_regression_v1"]
     return pd.DataFrame(rows).set_index("month")
 
 
 cols = ["n", "base_rate", "pr_auc", "roc_auc", "brier", "precision_at_top", "recall_at_top"]
-for path, tol in [("reports/snowflake/late_delivery_metrics.json", 1e-9), ("reports/late_delivery_metrics.json", 1e-5)]:
+for path, tol in [("reports/snowflake/late_delivery_metrics.json", 1e-6), ("reports/late_delivery_metrics.json", 1e-5)]:
     ref = per_month(path).loc[summary.index, cols]
     gap = float((summary[cols].astype(float) - ref.astype(float)).abs().max().max())
     print(f"{path}: largest difference {gap:.2e} (allowed {tol:g})")
     assert gap <= tol, path
 print("checks passed")'''
 
-VERIFY_03 = '''# Snowflake check. The weekly series from Snowflake equals the DuckDB one (reconciled 0-diff), so every backtest
-# metric must equal the committed DuckDB reference in reports/forecast_models_metrics.json.
+VERIFY_03 = '''# Snowflake check. The weekly series from Snowflake equals the DuckDB one (reconciled 0-diff), so the methods with a
+# closed form must reproduce the committed DuckDB reference (reports/forecast_models_metrics.json) exactly. The methods
+# fitted with scipy.optimize can move slightly with the numpy/scipy version (measured 2026-11-13 in a Snowflake
+# workspace: damped trend 3.5e-07, AR(1) 1.3e-11, exponential smoothing 2.3e-13; 0.0 on the laptop).
 import json
 
 ref = json.loads((ROOT / "reports" / "forecast_models_metrics.json").read_text(encoding="utf-8"))
-worst = 0.0
+OPTIMISED = {"simple_exp_smoothing", "damped_trend", "ar1_trend_26w"}
+worst = {}
 for (target, h), sc in scores.items():
     r = ref[f"{target} | main (to 2018-08-13) | h={h}"]
     for method, values in sc.items():
         if method.startswith("_"):
             continue
         for key in ("mae", "mape", "mae_vs_naive", "bias"):
-            worst = max(worst, abs(values[key] - r[method][key]) / max(1.0, abs(r[method][key])))
-print(f"largest relative difference from reports/forecast_models_metrics.json: {worst:.2e}")
-assert worst <= 1e-9
+            gap = abs(values[key] - r[method][key]) / max(1.0, abs(r[method][key]))
+            worst[method] = max(worst.get(method, 0.0), gap)
+for method, gap in sorted(worst.items()):
+    tol = 1e-6 if method in OPTIMISED else 1e-9
+    print(f"{method:22s} largest relative difference {gap:.2e} (allowed {tol:g})")
+    assert gap <= tol, method
 print("checks passed")'''
 
 

@@ -20,7 +20,7 @@ Unlike the Google Cloud design, most of this mapping is built and has run: each 
 | **Data quality** | dbt generic and singular tests (keys, relationships, the 22 checks) | `sql/validation/checks.sql` | **Run**: all pass |
 | **Reconciliation** | `src/reconciliation`: Snowflake vs the DuckDB reference | (DuckDB is the reference) | **Run**: 22/22, 0 differences |
 | **Feature engineering** | dbt `mart_late_delivery_features` (`ASOF JOIN`), `mart_weekly_orders_revenue` | `sql/ml/late_delivery_features.sql` | **Run**, reconciled 0-diff |
-| **Model training** | Notebooks in Workspaces (`notebooks/snowflake/02`, `04`) on a CPU compute pool; until then scikit-learn on the client, reading Snowflake | scikit-learn in `src/ml/` | **Built**, not yet run inside a workspace (needs the Git API integration) |
+| **Model training** | Notebooks in Workspaces (`notebooks/snowflake/02`, `04`) on a CPU compute pool; also scikit-learn on the client, reading Snowflake | scikit-learn in `src/ml/` | **Run** 2026-11-13: trained inside Snowflake and registered `V1WS_20261113_7370C92` |
 | **Experiment results** | Metrics: `reports/snowflake/*.json` on the client. Scores and forecast backtests: tables in `ML` | `reports/*.json` | **Run** |
 | **Model registry** | Snowflake Model Registry (`snowflake-ml-python`, `snowflake/ml/register_model.py`) | none (metrics files and the model card) | **Run** 2026-11-13: `ML.LATE_DELIVERY_RISK` `V1_20261113_CC90DC8` |
 | **Batch inference** | Backtest scores: computed on the client, published to `ML.LATE_DELIVERY_SCORES` by `publish_ml.py`. Scheduled scoring: SQL `MODEL(...)!PREDICT_PROBA` on `RETAIL_WH` (`snowflake/ml/scoring_task.sql`) into `ML.LATE_DELIVERY_SCORES_REGISTRY` | `export_scores.py` to Parquet | **Run** (client) / scoring block **run live** 2026-11-13; the scheduled task waits for the `EXECUTE TASK` grant |
@@ -75,7 +75,8 @@ What that means:
 - **Ported on 2026-11-13:** the results. `src/ml/publish_ml.py` writes the scores, forecast backtest and flag shares to `ML.*` under one run id; they match the DuckDB outputs.
 - **Ported on 2026-11-13:** the model. `snowflake/ml/register_model.py` logs the v1 model to the Snowflake Model Registry (`ML.LATE_DELIVERY_RISK`, version `V1_20261113_CC90DC8`), and scoring inside Snowflake with it matches the local model to 1.1e-16.
 - **Ported on 2026-11-13:** drift and calibration as SQL (`ML_MONITORING`, equal to the Python results), and the in-Snowflake scoring logic (verified live).
-- **Built, waiting for account approvals:** the notebooks running inside a Git-connected workspace (training inside Snowflake), and the scheduled scoring task.
+- **Ported on 2026-11-13:** training inside Snowflake. The notebooks ran in a Git-connected workspace, and notebook 04 registered `V1WS_20261113_7370C92`.
+- **Built, waiting for an account approval:** the scheduled scoring task (`EXECUTE TASK`).
 
 The next steps, in order of value per effort:
 
