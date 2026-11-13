@@ -14,13 +14,15 @@ import argparse
 import functools
 import http.server
 from pathlib import Path
+from typing import ClassVar
 
 ROOT = Path(__file__).resolve().parents[2]
 DASHBOARD = ROOT / "dashboard"
 
 
 class NoCacheHandler(http.server.SimpleHTTPRequestHandler):
-    extensions_map = {**http.server.SimpleHTTPRequestHandler.extensions_map, ".js": "text/javascript", ".json": "application/json"}
+    extensions_map: ClassVar[dict[str, str]] = {
+        **http.server.SimpleHTTPRequestHandler.extensions_map, ".js": "text/javascript", ".json": "application/json"}
 
     def end_headers(self) -> None:
         self.send_header("Cache-Control", "no-cache")

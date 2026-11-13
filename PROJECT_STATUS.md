@@ -32,7 +32,7 @@ _Last updated: 2026-10-13_
 
 ## Quality evidence
 
-- `uv run pytest`: **96 tests pass** (about 45 seconds). Leakage tests were shown to fail when leaks were planted.
+- `uv run pytest`: **392 tests pass** (2026-11-13, about 70 seconds; 96 at the DuckDB audit). 22 skip without the local `warehouse.duckdb`, and 10 in `tests/test_powerbi_project.py` fail for the reasons under Open items. Leakage tests were shown to fail when leaks were planted.
 - A **clean clone** plus the raw data rebuilt the warehouse (22/22), passed all tests and regenerated the analytics tables and figures byte-for-byte. Late-delivery metrics reproduce to within about 0.001 to 0.002 (multithreaded numerics); v1 was identical.
 - Security scan: no secrets, no tracked data or credentials ([SECURITY.md](SECURITY.md)). Cost: $0 ([COST.md](COST.md)).
 
@@ -52,7 +52,7 @@ D-001 to D-008 (user) and DD-01 to DD-17 (design) are in [DECISIONS.md](DECISION
 | ML outputs in Snowflake (`publish_ml.py`) | yes | Run live 2026-11-13 (run `20261113T122357Z-a99b8a21`): 38,988 scores, 1,610 backtest rows, 6 flag shares; read back; matches DuckDB (backtest identical, scores within 8e-7); re-publish replaces a run atomically | Scored on the client, not yet inside Snowflake |
 | Snowflake Model Registry (`snowflake/ml/`) | yes | Run live 2026-11-13: `ML.LATE_DELIVERY_RISK` `V1_20261113_CC90DC8`, 96,019 training orders, backtest metrics and commit attached; scored 2,000 orders inside Snowflake, equal to local to 1.1e-16 | Scheduled scoring (Task) and ML monitoring not built; this first version's dependencies (scikit-learn, `snowflake-ml-python`) are ranges, not exact pins |
 | ML inside Snowflake (`notebooks/snowflake/`, `snowflake/ml/scoring_task.sql`, dbt `monitoring`) | yes | Run live 2026-11-13. The notebooks pass their checks in a Git-connected workspace. Notebook 04 registered `V1WS_20261113_7370C92` from inside Snowflake. Task `ML.SCORE_LATE_DELIVERY` executed once (SUCCEEDED, 6,306 orders) and is kept suspended. Monitoring views equal the Python results | No new data to score on a schedule (static 2018 snapshot); the account idle-timeout parameter is unchanged |
-| HTML dashboard (`dashboard/`, DD-22, DD-23) | yes | Data built from Snowflake, identical to a DuckDB build; all seven pages load with no console errors; `tests/test_dashboard.py` | Dark theme not checked visually |
+| HTML dashboard (`dashboard/`, DD-22, DD-23) | yes | Data built from Snowflake, identical to a DuckDB build; all seven pages load with no console errors; `tests/test_dashboard.py`. Dark theme checked visually on 2026-11-13; the heatmap caption now names the right end of the ramp in each theme | |
 | Power BI on Snowflake | patched-copy script + 12 M templates | 68 offline tests incl. byte-identical checks of report, measures and relationships | Not opened in Power BI Desktop; sign-in method |
 | CI | 3 workflows | YAML and `actionlint` locally; `dbt parse` on a clean copy | No workflow has run on GitHub |
 

@@ -22,8 +22,19 @@ from pathlib import Path
 
 from . import checks as checks_mod
 from .compare import CheckResult, duckdb_side, run_checks, snowflake_side
-from .fetch import DuckDBFetcher, SnowflakeFetcher, redact_secrets, resolve_snowflake_settings
-from .report import DEFAULT_REPORT_PATH, ReconciliationRun, ReportError, collect_run_metadata, write_report
+from .fetch import (
+    DuckDBFetcher,
+    SnowflakeFetcher,
+    redact_secrets,
+    resolve_snowflake_settings,
+)
+from .report import (
+    DEFAULT_REPORT_PATH,
+    ReconciliationRun,
+    ReportError,
+    collect_run_metadata,
+    write_report,
+)
 
 
 def _split(value: str | None) -> list[str] | None:
