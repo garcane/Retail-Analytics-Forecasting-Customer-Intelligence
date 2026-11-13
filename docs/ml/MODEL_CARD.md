@@ -6,6 +6,8 @@ Two models trained on the Olist Brazilian e-commerce dataset (about 100,000 orde
 
 ## 1. Late-delivery model
 
+*In Snowflake (2026-11-13):* the v1 model is registered as `RETAIL_OLIST.ML.LATE_DELIVERY_RISK`, version `V1_20261113_CC90DC8`, trained on all labelled orders from 2017 on, with the backtest metrics below attached. Its scores inside Snowflake match the local model. See `snowflake/README.md` section 9.
+
 | | |
 |---|---|
 | **Task** | Given an order at the moment of purchase, rank it by how likely it is to arrive after the promised delivery date |

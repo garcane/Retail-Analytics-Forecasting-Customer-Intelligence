@@ -1,0 +1,60 @@
+{
+ "model_name": "RETAIL_OLIST.ML.LATE_DELIVERY_RISK",
+ "version_name": "V1_20261113_CC90DC8",
+ "model": "v1 logistic regression (src/ml/late_delivery_baseline.py make_models)",
+ "features": [
+  "purchase_dow",
+  "purchase_hour",
+  "promised_days",
+  "item_count",
+  "items_price",
+  "items_freight",
+  "freight_ratio",
+  "n_sellers",
+  "total_weight_g",
+  "max_volume_cm3",
+  "max_item_freight",
+  "distance_km",
+  "same_state",
+  "max_installments",
+  "seller_prior_late_rate",
+  "seller_prior_n",
+  "customer_state",
+  "seller_state",
+  "main_payment_type"
+ ],
+ "feature_table": "RETAIL_OLIST.MARTS.MART_LATE_DELIVERY_FEATURES",
+ "training_rows": 96019,
+ "training_late_rate": 0.081432,
+ "training_window": [
+  "2017-01-05 11:56:06",
+  "2018-08-29 15:00:37"
+ ],
+ "git_commit": "cc90dc8",
+ "scikit_learn": "1.9.1",
+ "python": "3.13.5",
+ "evaluation": "rolling-origin backtest, 6 test months 2018-03..2018-08, each scored by a model trained only on orders delivered before the month (reports/snowflake/late_delivery_metrics.json)",
+ "backtest_macro_average": {
+  "n_test": 38988.0,
+  "base_rate": 0.08542103978386639,
+  "pr_auc": 0.18367639279210937,
+  "roc_auc": 0.7073898347350062,
+  "brier": 0.07776607363945635,
+  "precision_at_top": 0.20741389092828552,
+  "recall_at_top": 0.27845186067832123
+ },
+ "registered_at": "2026-11-13T12:46:11+00:00",
+ "default_version": true,
+ "warehouse_parity": {
+  "rows": 2000,
+  "output_columns": [
+   "output_feature_0",
+   "output_feature_1"
+  ],
+  "max_abs_diff": 1.1102230246251565e-16,
+  "within_tolerance": true,
+  "tolerance": 1e-09,
+  "checked_at": "2026-11-13T12:47:52+00:00"
+ },
+ "verify_retrain_training_rows": 96019
+}

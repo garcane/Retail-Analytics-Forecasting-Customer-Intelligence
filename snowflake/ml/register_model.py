@@ -6,6 +6,7 @@ Runs in this folder's own environment (snowflake-ml-python needs pandas<3 and co
     .venv/Scripts/python.exe register_model.py                               # prints the target and stops
     .venv/Scripts/python.exe register_model.py --yes                         # trains and evaluates; registers nothing
     .venv/Scripts/python.exe register_model.py --yes --register              # ... and logs a new model version
+    .venv/Scripts/python.exe register_model.py --yes --verify V1_...         # re-check an existing version in Snowflake
 
 What is registered: the v1 pipeline from src/ml/late_delivery_baseline.py (median imputation and scaling of the v1
 numeric features, one-hot of the three categoricals, LogisticRegression C=0.5), trained on every labelled order from
@@ -16,8 +17,10 @@ orders); a model trained on all months has no honest held-out score of its own, 
 After logging, the script scores a sample of orders inside Snowflake with the registered version (PREDICT_PROBA) and
 compares the result with the local model; the comparison and the version details go to
 reports/snowflake/model_registry.json. An existing version is never replaced: a version name that already exists is an
-error. Needs, on RETAIL_OLIST.ML: CREATE MODEL (and CREATE STAGE for the library's fallback upload path); see
-snowflake/setup/06_model_registry_grants.sql.
+error. Needs, on RETAIL_OLIST.ML: CREATE MODEL; CREATE STAGE (mv.run uploads its pandas input through a temporary stage on
+every in-warehouse check, and the library's fallback model upload uses one too); CREATE TABLE (the temporary input
+table; granted in 02_grants.sql). See snowflake/setup/06_model_registry_grants.sql. --register refuses to run when the
+code that builds the model has uncommitted changes, so the version's git commit is the code that trained it.
 """
 
 from __future__ import annotations
@@ -48,6 +51,8 @@ BACKTEST_METRICS = ROOT / "reports" / "snowflake" / "late_delivery_metrics.json"
 EVIDENCE = ROOT / "reports" / "snowflake" / "model_registry.json"
 PARITY_SAMPLE = 2000
 PARITY_TOLERANCE = 1e-9
+# The code that builds and registers the model. Its git commit names the version, so it must be committed.
+MODEL_CODE = ["src/ml", "src/data_access", "snowflake/ml"]
 
 
 def git_sha() -> str:
@@ -56,6 +61,15 @@ def git_sha() -> str:
                               check=True).stdout.strip()
     except (OSError, subprocess.CalledProcessError):
         return "unknown"
+
+
+def uncommitted_model_code() -> str:
+    """`git status --porcelain` for the model code; empty when it is all committed (the .venv is git-ignored)."""
+    try:
+        return subprocess.run(["git", "status", "--porcelain", "--", *MODEL_CODE], cwd=ROOT, capture_output=True,
+                              text=True, check=True).stdout.strip()
+    except (OSError, subprocess.CalledProcessError):
+        return "git status unavailable"
 
 
 def training_frame(db) -> pd.DataFrame:
@@ -89,11 +103,54 @@ def warehouse_parity(mv, model, sample: pd.DataFrame) -> dict:
             "within_tolerance": bool(diff.max() <= PARITY_TOLERANCE), "tolerance": PARITY_TOLERANCE}
 
 
+def registry_session(db):
+    """A Snowpark session on the same connection, with the ML schema current (mv.run uploads its input there)."""
+    from snowflake.ml.registry import Registry
+    from snowflake.snowpark import Session
+
+    session = Session.builder.configs({"connection": db.raw}).create()
+    session.use_schema(f"{DATABASE}.{SCHEMA}")
+    return session, Registry(session=session, database_name=DATABASE, schema_name=SCHEMA)
+
+
+def versions(reg) -> set[str]:
+    if MODEL_NAME not in {m.name for m in reg.models()}:
+        return set()
+    return {v.version_name for v in reg.get_model(MODEL_NAME).versions()}
+
+
+def check_in_warehouse(mv, model, sample, summary: dict) -> None:
+    try:
+        summary["warehouse_parity"] = warehouse_parity(mv, model, sample)
+        print(f"in-warehouse PREDICT_PROBA on {len(sample):,} orders: max abs diff vs local "
+              f"{summary['warehouse_parity']['max_abs_diff']:.3e}")
+    except Exception as exc:  # noqa: BLE001 - registration stands; record why scoring in Snowflake failed
+        summary["warehouse_parity"] = {"error": f"{type(exc).__name__}: {exc}"[:2000]}
+        print(f"scoring inside Snowflake failed: {summary['warehouse_parity']['error'][:500]}", file=sys.stderr)
+    summary["warehouse_parity"]["checked_at"] = datetime.now(UTC).isoformat(timespec="seconds")
+
+
+def write_evidence(summary: dict) -> int:
+    EVIDENCE.parent.mkdir(parents=True, exist_ok=True)
+    EVIDENCE.write_text(json.dumps(summary, indent=1, default=str) + "\n", encoding="utf-8")
+    print(f"wrote {EVIDENCE.relative_to(ROOT)}")
+    return 0 if summary.get("warehouse_parity", {}).get("within_tolerance") is True else 3
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--yes", action="store_true", help="confirm the printed Snowflake target and connect")
-    parser.add_argument("--register", action="store_true", help="log a new model version (default: train only)")
+    mode = parser.add_mutually_exclusive_group()
+    mode.add_argument("--register", action="store_true", help="log a new model version (default: train only)")
+    mode.add_argument("--verify", metavar="VERSION",
+                      help="score a sample inside Snowflake with an existing VERSION and compare with a local retrain")
     args = parser.parse_args(argv)
+    if args.register:
+        dirty = uncommitted_model_code()
+        if dirty:
+            print("refusing to register: the model code has uncommitted changes, so the version's git commit would not "
+                  f"be the code that trained it. Commit first.\n{dirty}", file=sys.stderr)
+            return 4
 
     try:
         db = connect("snowflake", confirm=args.yes)
@@ -106,6 +163,21 @@ def main(argv: list[str] | None = None) -> int:
     with db:
         train = training_frame(db)
         model = fit(train)
+        sample = train[FEATURES].sample(n=min(PARITY_SAMPLE, len(train)), random_state=0).reset_index(drop=True)
+
+        if args.verify:
+            _session, reg = registry_session(db)
+            if args.verify.upper() not in versions(reg):
+                print(f"{MODEL_NAME} has no version {args.verify}", file=sys.stderr)
+                return 2
+            mv = reg.get_model(MODEL_NAME).version(args.verify)
+            summary = json.loads(EVIDENCE.read_text(encoding="utf-8")) if EVIDENCE.exists() else {}
+            if summary.get("version_name") != args.verify.upper():
+                summary = {"model_name": f"{DATABASE}.{SCHEMA}.{MODEL_NAME}", "version_name": args.verify.upper()}
+            summary["verify_retrain_training_rows"] = int(len(train))
+            check_in_warehouse(mv, model, sample, summary)
+            return write_evidence(summary)
+
         metrics = backtest_metrics()
         sha = git_sha()
         today = datetime.now(UTC).strftime("%Y%m%d")
@@ -131,18 +203,12 @@ def main(argv: list[str] | None = None) -> int:
             print("dry run: nothing registered (add --register to log the version)")
             return 0
 
-        from snowflake.ml.registry import Registry
-        from snowflake.snowpark import Session
-
-        session = Session.builder.configs({"connection": db.raw}).create()
-        reg = Registry(session=session, database_name=DATABASE, schema_name=SCHEMA)
-        existing = {m.name for m in reg.models()}
-        if MODEL_NAME in existing and version in {v.version_name for v in reg.get_model(MODEL_NAME).versions()}:
+        _session, reg = registry_session(db)
+        if version in versions(reg):
             print(f"{MODEL_NAME} version {version} already exists; nothing replaced. Commit first for a new version.",
                   file=sys.stderr)
             return 2
 
-        sample = train[FEATURES].sample(n=min(PARITY_SAMPLE, len(train)), random_state=0).reset_index(drop=True)
         mv = reg.log_model(
             model,
             model_name=MODEL_NAME,
@@ -150,32 +216,21 @@ def main(argv: list[str] | None = None) -> int:
             sample_input_data=sample.head(100),
             target_platforms=["WAREHOUSE"],
             conda_dependencies=[f"scikit-learn=={sklearn.__version__}"],
+            # Pin exactly: the default (relax_version=True) would let Snowflake resolve a different scikit-learn later.
+            options={"relax_version": False},
             comment=("Late-delivery risk at purchase time, v1 logistic regression. Use by rank (flag the riskiest X% "
                      "of a month), not as a calibrated probability: see docs/ml/MODEL_CARD.md."),
             metrics={**{f"backtest_{k}": v for k, v in metrics.items()},
                      "training_rows": summary["training_rows"], "git_commit": sha,
                      "feature_table": summary["feature_table"], "lifecycle_stage": "VALIDATED"},
         )
-        model_ref = reg.get_model(MODEL_NAME)
-        model_ref.default = version
+        reg.get_model(MODEL_NAME).default = version
         summary["registered_at"] = datetime.now(UTC).isoformat(timespec="seconds")
         summary["default_version"] = True
+        summary["relax_version"] = False
         print(f"registered {summary['model_name']} version {version} (now the default version)")
-
-        try:
-            summary["warehouse_parity"] = warehouse_parity(mv, model, sample)
-            print(f"in-warehouse PREDICT_PROBA on {PARITY_SAMPLE:,} orders: max abs diff vs local "
-                  f"{summary['warehouse_parity']['max_abs_diff']:.3e}")
-        except Exception as exc:  # noqa: BLE001 - registration stands; record why scoring in Snowflake failed
-            summary["warehouse_parity"] = {"error": f"{type(exc).__name__}: {exc}"[:2000]}
-            print(f"registered, but scoring inside Snowflake failed: {summary['warehouse_parity']['error'][:500]}",
-                  file=sys.stderr)
-
-        EVIDENCE.parent.mkdir(parents=True, exist_ok=True)
-        EVIDENCE.write_text(json.dumps(summary, indent=1, default=str) + "\n", encoding="utf-8")
-        print(f"wrote {EVIDENCE.relative_to(ROOT)}")
-        ok = summary["warehouse_parity"].get("within_tolerance") is True
-        return 0 if ok else 3
+        check_in_warehouse(mv, model, sample, summary)
+        return write_evidence(summary)
 
 
 if __name__ == "__main__":

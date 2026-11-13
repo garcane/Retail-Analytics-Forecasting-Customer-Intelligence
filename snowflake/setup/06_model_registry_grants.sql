@@ -2,8 +2,11 @@
 -- (snowflake/ml/register_model.py, Snowflake Model Registry).
 --
 -- CREATE MODEL   creates the MODEL object and its versions (Registry.log_model).
--- CREATE STAGE   only for snowflake-ml-python's fallback upload path, which puts the model files on a
---                SCOPED TEMPORARY stage in the same schema (dropped automatically at the end of the session).
+-- CREATE STAGE   needed on every in-warehouse scoring call from Python: ModelVersion.run with a pandas frame
+--                (register_model.py --verify, and the check after --register) uploads the input through
+--                write_pandas, which puts it on a TEMPORARY stage and a temporary table in ML (the table uses
+--                the CREATE TABLE on ML from 02_grants.sql). snowflake-ml-python's fallback model upload also
+--                uses a SCOPED TEMPORARY stage here. All are dropped at the end of the session.
 -- Both are limited to the ML schema. Nothing account-wide, nothing on other schemas or other projects.
 -- RETAIL_REPORTER is not given the models: Power BI reads scores from ML tables, not the model.
 --

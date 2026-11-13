@@ -15,6 +15,8 @@ Related pages: [architecture](../docs/architecture/SNOWFLAKE_ARCHITECTURE.md) | 
 | `setup/02_grants.sql` | Least-privilege grants for `RETAIL_LOADER`, `RETAIL_TRANSFORMER`, `RETAIL_REPORTER` | Yes, additive |
 | `setup/03_resource_monitor.sql` | `RETAIL_MONITOR`: 5 credits a month on `RETAIL_WH`; notify at 75%, suspend at 100%, suspend immediately at 110% | Yes (needs `ACCOUNTADMIN`) |
 | `setup/04_service_user.sql`, `setup/generate_key_pair.py` | Service user `RETAIL_SVC` (key-pair only, no password) with the loader and transformer roles; the script writes the key pair to `~/.snowflake/keys`, never inside the repo | Yes (needs `SECURITYADMIN`) |
+| `setup/06_model_registry_grants.sql` | `CREATE MODEL` and `CREATE STAGE` on `RETAIL_OLIST.ML` for `RETAIL_TRANSFORMER` (the Model Registry) | Grant only (needs `SYSADMIN`) |
+| `ml/` | Isolated Python 3.13 environment and `register_model.py` for the Snowflake Model Registry (section 9) | Creates model versions in `ML` |
 | `setup/05_monitor_grant.sql`, `monitoring/credit_usage.py` | Read-only `MONITOR` on `RETAIL_MONITOR` for `RETAIL_TRANSFORMER`; a script that reports the month's credit use | Grant only (needs `ACCOUNTADMIN`) |
 | `ingestion/file_formats.sql`, `ingestion/ddl_raw.sql` | CSV file format and stage; nine RAW tables and `RAW.INGESTION_LOG` | Yes, additive |
 | `ingestion/load_raw.py` | `PUT` + `COPY INTO` loader with checksum log and record-count checks | Writes data into `RAW` only |
@@ -83,6 +85,7 @@ Run in a Snowsight worksheet, in this order. The author ran them in the `Retail_
 4. `setup/04_service_user.sql` after pasting the public key printed by `generate_key_pair.py` in place of `<RSA_PUBLIC_KEY>` in your worksheet copy. Keep the placeholder in the committed file.
 5. As `RETAIL_LOADER`: `ingestion/file_formats.sql`, then `ingestion/ddl_raw.sql`. The loader expects `RAW.INGESTION_LOG` to exist, so run these before the first load.
 6. Optional, `ACCOUNTADMIN`: `setup/05_monitor_grant.sql`, so the service user can report credit use (section 12). Run 2026-11-13.
+7. For the Model Registry, `SYSADMIN`: `setup/06_model_registry_grants.sql` (section 9). Run 2026-11-13.
 
 Result: the database, six schemas, warehouse, three roles, monitor and service user exist; re-running each file is a no-op. Objects of other projects on the account were not touched.
 
@@ -158,9 +161,26 @@ A Snowflake run writes to `reports/snowflake/`, so it never overwrites the track
 
 `publish_ml.py` computes the late-delivery scores (`export_scores.build_from`), the forecast backtest (`export_data.forecast_backtest`) and the flag shares from the Snowflake marts and writes them to `ML.LATE_DELIVERY_SCORES`, `ML.FORECAST_BACKTEST` and `ML.FLAG_SHARE`, all under one `run_id`. A dry run is the default; `--write` is required to write. Earlier runs are kept; consumers read the latest `run_id`. `--run-id` replaces the rows of an existing run and accepts only the generated form (`YYYYMMDDTHHMMSSZ-xxxxxxxx`): the Power BI templates take the text-greatest `run_id` as the latest, which holds only for that form.
 
-Each table is written by `src/data_access/writeback.py`: `CREATE TABLE IF NOT EXISTS`; `PUT` of one Parquet file into the user stage `@~`; then `BEGIN; DELETE ... WHERE run_id = ?; COPY INTO ...; COMMIT`, so a run's rows are replaced atomically; then the staged file is removed. It uses the user stage because `write_pandas` would need `CREATE STAGE` on `ML`, which `RETAIL_TRANSFORMER` does not have. Nothing is dropped, replaced or truncated.
+Each table is written by `src/data_access/writeback.py`: `CREATE TABLE IF NOT EXISTS`; `PUT` of one Parquet file into the user stage `@~`; then `BEGIN; DELETE ... WHERE run_id = ?; COPY INTO ...; COMMIT`, so a run's rows are replaced atomically; then the staged file is removed. It uses the user stage, which needs no grant, so the write-back does not depend on `CREATE STAGE` on `ML` (granted since `setup/06_model_registry_grants.sql`, for the Model Registry only); `write_pandas` would also not have been transactional. Nothing is dropped, replaced or truncated.
 
 Measured (run `20261113T122357Z-a99b8a21`, about 35 seconds): 38,988 scores (six test months; late rate 0.088; the 3,901 flagged orders have a late rate of 0.215), 1,610 backtest rows and 6 flag shares, read back with matching counts. Column types are as declared (`DATE`, `BOOLEAN`, `NUMBER(38,0)`, `FLOAT`, `TEXT`), the user stage is empty afterwards, and `RETAIL_REPORTER` has `SELECT` on the new tables through the future grants. Re-publishing the same `run_id` left exactly one copy of its rows. Against the same outputs built from DuckDB: the backtest is identical; the scores cover the same orders with identical flags, labels, months, states and categories, and the risk scores differ by at most 8e-7 (floating-point summation order, as in section 9), which reorders 8 near-tied orders within their month by one position.
+
+### The model in the Snowflake Model Registry - RUN 2026-11-13
+
+```powershell
+cd snowflake\ml; uv sync --native-tls; cd ..\..                                   # once: its own Python 3.13 environment
+snowflake\ml\.venv\Scripts\python.exe snowflake\ml\register_model.py --yes             # trains and reports; registers nothing
+snowflake\ml\.venv\Scripts\python.exe snowflake\ml\register_model.py --yes --register  # logs a new version (named V1_<date>_<commit>)
+snowflake\ml\.venv\Scripts\python.exe snowflake\ml\register_model.py --yes --verify V1_20261113_CC90DC8  # re-checks a version in Snowflake
+```
+
+`snowflake-ml-python` needs pandas below 3 and a connector below 5, so the registry code runs in `snowflake/ml/.venv` (Python 3.13, `snowflake-ml-python` 2.8.0, the newest in Snowflake's own package channel, and scikit-learn 1.9.1, the repo's version and in the channel). Behind a TLS-inspecting proxy set `REQUESTS_CA_BUNDLE` as in section 7. It needs `setup/06_model_registry_grants.sql` (once, `SYSADMIN`).
+
+The registered model is the v1 logistic regression from `src/ml/late_delivery_baseline.py`, trained on every labelled order in `MARTS.MART_LATE_DELIVERY_FEATURES` from 2017 on. It carries the out-of-time backtest metrics from `reports/snowflake/late_delivery_metrics.json` (a model trained on all months has no honest held-out score of its own), the git commit and the feature table. An existing version is never replaced; a new commit gives a new version name.
+
+Measured: `RETAIL_OLIST.ML.LATE_DELIVERY_RISK` version `V1_20261113_CC90DC8` (the default version) was trained on 96,019 orders and exposes `PREDICT_PROBA`, `PREDICT`, `DECISION_FUNCTION` and `PREDICT_LOG_PROBA`, runnable in warehouses, with Python 3.13 and `snowflake-ml-python` 2.8.0 from Snowflake's Anaconda channel. Scoring 2,000 orders inside Snowflake with it matched the local model to 1.1e-16. Its backtest metrics: ROC AUC 0.707, PR AUC 0.184, precision in the riskiest 10% 0.207 against a base rate of 0.085. Details: `reports/snowflake/model_registry.json`. One caveat: this first version was logged before the script pinned dependencies exactly (`relax_version` defaulted to true), so its exact pins, scikit-learn and `snowflake-ml-python` among them, were relaxed to compatible ranges, and Snowflake may resolve newer versions of them for it in future. Versions logged from now on keep every pin exact, and `--verify` re-checks a version against a local retrain.
+
+Not built yet: scoring new orders inside Snowflake on a schedule (a Task calling the model) and ML monitoring in SQL. Publishing (above) still scores on the client.
 
 ## 10. Step 6: the HTML dashboard - RUN 2026-11-12
 
@@ -203,4 +223,5 @@ Without step 1 the script stops with a message rather than reporting zero. Witho
 | Dashboard data build | unit tests | RUN 2026-11-12: identical to the DuckDB build |
 | ML outputs in Snowflake (`publish_ml.py`) | stage-fake tests: statement order, rollback, clean-up | RUN 2026-11-13: run `20261113T122357Z-a99b8a21`, counts read back, matches DuckDB |
 | Power BI patched copy | byte-identity tests | NOT RUN (not opened in Desktop) |
+| Model Registry (`ml/register_model.py`) | fake-registry tests: gate, no replacement, exact pin, verify | RUN 2026-11-13: `LATE_DELIVERY_RISK` `V1_20261113_CC90DC8`, scored inside Snowflake, equal to local to 1.1e-16 |
 | Credit use | | MEASURED 2026-11-13: 0.34 credits of the 5-credit monthly quota (section 12) |
