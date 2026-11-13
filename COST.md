@@ -32,6 +32,8 @@ Disk: about 79 MB of raw data (the nine Kaggle CSV files), a 112 MB warehouse fi
 
 ## Snowflake implementation (branch feature/snowflake-dbt-migration)
 
+**Compute pools are billed separately.** The Snowflake notebooks (`notebooks/snowflake/`, DD-26) run on a compute pool (`SYSTEM_COMPUTE_POOL_CPU`, CPU_X64_S) that bills while a notebook service is running. A service's idle timeout defaults to 24 hours, and `RETAIL_MONITOR` covers only the warehouse. Suspend the notebook service after each session. None has run yet, so no pool credits have been used by this project. The scheduled scoring and the monitoring views run on `RETAIL_WH`, inside the monitor.
+
 The pipeline has run on Snowflake (2026-11-12 and 2026-11-13). **0.34 credits measured** (2026-11-13, `RETAIL_MONITOR`: 0.34 of the 5-credit monthly quota, 6.8%, 4.66 remaining). The monitor was created during setup, before the first load, so this covers everything that has run on `RETAIL_WH`: the RAW load and its idempotent rerun, every `dbt build`, the reconciliation runs, the dashboard data builds, the Snowflake ML runs and the ad hoc checks. The money cost depends on the account's credit price (edition, region, contract), which has not been checked, so no currency figure is given. To re-measure at any time: `python snowflake/monitoring/credit_usage.py --yes` (see `snowflake/README.md`, section 12).
 
 - Compute: one warehouse, `RETAIL_WH`, size XSMALL, `AUTO_SUSPEND = 60`, `AUTO_RESUME = TRUE`, created suspended. An XSMALL warehouse consumes 1 credit per hour of running time (Snowflake's published rate; the price of a credit depends on edition, region and contract and has not been checked here).
