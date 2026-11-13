@@ -33,7 +33,7 @@ The least glamorous result is also the most useful one: **several well-motivated
 
 ## Data architecture
 
-The build is organised in layers (RAW, STAGING, CURATED, VALIDATE, ANALYTICAL, FEATURES, MODEL, PREDICTIONS, MONITORING, then BI), and each layer exists twice: **locally** (DuckDB and Python on one laptop, the reference) and **on Snowflake** (stage, dbt, the Model Registry and SQL, DD-19 to DD-26). Each box shows both. Solid boxes have run on Snowflake and reconcile with the local build. The dashed box is built but waits for an account-level approval. Measured results are in [snowflake/README.md](snowflake/README.md).
+The build is organised in layers (RAW, STAGING, CURATED, VALIDATE, ANALYTICAL, FEATURES, MODEL, PREDICTIONS, MONITORING, then BI), and each layer exists twice: **locally** (DuckDB and Python on one laptop, the reference) and **on Snowflake** (stage, dbt, the Model Registry and SQL, DD-19 to DD-26). Each box shows both. Every box has run on Snowflake and reconciles with the local build. The scoring task has run once and is kept suspended; there is no new data for it to score. Measured results are in [snowflake/README.md](snowflake/README.md).
 
 ```mermaid
 flowchart TB
@@ -51,7 +51,7 @@ flowchart TB
     BI["<b>10 BI</b><br/>Local: Power BI on exported files, HTML dashboard<br/>Snowflake: PBI views for Power BI;<br/>dashboard data built from MARTS"]
 
     NB["Training inside Snowflake<br/>notebooks/snowflake in a Git-connected workspace<br/>on a CPU compute pool (version V1WS_...)"]
-    TSK["Scheduled scoring<br/>Task ML.SCORE_LATE_DELIVERY:<br/>SQL MODEL(...)!PREDICT_PROBA on RETAIL_WH"]
+    TSK["Scheduled scoring<br/>Task ML.SCORE_LATE_DELIVERY:<br/>SQL MODEL(...)!PREDICT_PROBA on RETAIL_WH<br/>(run once, kept suspended)"]
 
     RAW --> STG --> CUR --> CHK
     CHK -- "all pass" --> ANA
@@ -61,12 +61,11 @@ flowchart TB
     ANA --> BI
     PRE --> BI
     FEA --> NB --> MOD
-    MOD -.-> TSK -.-> PRE
+    MOD --> TSK --> PRE
 
     classDef built fill:#e8f1fc,stroke:#2a78d6,color:#0b0b0b
     classDef pending fill:#ffffff,stroke:#52514e,stroke-dasharray:5 4,color:#52514e
-    class RAW,STG,CUR,CHK,ANA,FEA,MOD,PRE,MON,BI,NB built
-    class TSK pending
+    class RAW,STG,CUR,CHK,ANA,FEA,MOD,PRE,MON,BI,NB,TSK built
 ```
 
 **How the two line up**
@@ -78,7 +77,7 @@ flowchart TB
   - **Compute pool** (billed while it runs): only the interactive notebooks.
   - **Laptop:** the backtests, and the scores they publish to `ML`.
 - **Training inside Snowflake** ran on 2026-11-13 in a Git-connected workspace. Notebook 04 trained v1 on 96,019 orders and registered `V1WS_20261113_7370C92`, whose scores match the laptop-registered version to 1e-12.
-- **Dashed, waiting for approval:** the scheduled task needs `EXECUTE TASK` (`08_scoring_task_grants.sql`). Its scoring logic has already run live.
+- **Scheduled scoring** runs as a Snowflake Task on the warehouse. It was created and executed once on 2026-11-13: it scored the 6,306 orders of 2018-08 in 16 seconds. It is kept suspended because the dataset is a static snapshot.
 - **Deliberately not mirrored:** an online prediction endpoint (the model is used by rank, in batch), and the smoothed-rate and lag experiments of `drift_analysis.py` (they stay in Python).
 
 The project began as a Google Cloud design (BigQuery, Dataflow, Vertex AI). That plan is kept in [docs/MIGRATING_TO_CLOUD.md](docs/MIGRATING_TO_CLOUD.md) as a record. It was never run, and Snowflake replaced it (DD-19).
@@ -98,7 +97,7 @@ The same analytical workload exists twice. **DuckDB** is the complete, tested, r
 | HTML dashboard data from Snowflake | **Run live** 2026-11-12 | Identical to a DuckDB build |
 | ML outputs in Snowflake (`src/ml/publish_ml.py`) | **Run live** 2026-11-13 | Scores, forecast backtest and flag shares written to `ML.*` under one run id, read back, and matching the DuckDB outputs (backtest identical; scores within 8e-7). Models still train on the client; scheduled scoring inside Snowflake is not built yet ([what is and is not ported](Snowflake%20Retail%20Project%20Local%20vs%20Cloud%20Architecture.md)) |
 | Snowflake Model Registry (`snowflake/ml/register_model.py`) | **Run live** 2026-11-13 | `ML.LATE_DELIVERY_RISK` version `V1_20261113_CC90DC8` with its backtest metrics and git commit; scoring 2,000 orders inside Snowflake matched the local model to 1.1e-16 |
-| ML inside Snowflake: notebooks, scoring task, SQL monitoring (DD-26) | Monitoring views, scoring logic and **notebooks run live** (Git-connected workspace, 2026-11-13); scheduled task **not created** | Notebook 04 trained and registered `V1WS_20261113_7370C92` inside Snowflake (scores equal to the laptop version to 1e-12). Notebooks 02 and 03 reproduce the committed metrics within numeric-library noise (at most 3.5e-7). Drift and calibration views equal the Python results. The task waits for `EXECUTE TASK` ([details](snowflake/README.md)) |
+| ML inside Snowflake: notebooks, scoring task, SQL monitoring (DD-26) | **Run live** 2026-11-13 (Git-connected workspace; task run once, kept suspended) | Notebooks 02 and 03 pass their checks inside Snowflake. Notebook 04 trained and registered `V1WS_20261113_7370C92` (equal to the laptop version to 1e-12). Task `ML.SCORE_LATE_DELIVERY` SUCCEEDED, scoring 6,306 orders. Drift and calibration views equal the Python results ([details](snowflake/README.md)) |
 | Power BI on Snowflake | Patched-copy script and templates; **never opened in Desktop** | 68 offline tests that the report, measures and relationships stay byte-identical ([guide](docs/migration/POWERBI_SWITCH_GUIDE.md)) |
 | CI (`.github/workflows`) | Written; **has not run on GitHub**; `python-ci` is red on the 10 known `test_powerbi_project.py` failures | `actionlint` and the same commands locally |
 

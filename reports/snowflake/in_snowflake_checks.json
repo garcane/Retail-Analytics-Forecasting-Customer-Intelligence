@@ -63,7 +63,7 @@
   "02_late_delivery_model_sf": {
    "all analysis cells": "ran",
    "vs reports/snowflake/late_delivery_metrics.json": 1.29e-09,
-   "vs reports/late_delivery_metrics.json (DuckDB)": "not reached in Snowflake (the first assert, 1e-9, stopped the cell; now 1e-6)"
+   "vs reports/late_delivery_metrics.json (DuckDB)": "6.04e-06 (re-run 2026-11-13 after the check fix)"
   },
   "04_train_register_sf": {
    "trained on": "96,019 orders inside Snowflake",
@@ -73,5 +73,25 @@
    "sql_vs_notebook": 3.33e-16,
    "new_vs_laptop_registered_version": 1.13e-12
   }
+ },
+ "workspace_rerun_after_check_fix": {
+  "when": "2026-11-13 afternoon, workspace pulled to commit 2654b48",
+  "03_weekly_forecast_sf": "checks passed (closed-form methods 0.0; damped trend 3.48e-07, AR(1) 1.35e-11, exp. smoothing 2.27e-13, all within 1e-6)",
+  "02_late_delivery_model_sf": "checks passed (Snowflake backtest 1.29e-09, DuckDB reference 6.04e-06)",
+  "service": "resumed for the run, suspended afterwards"
+ },
+ "scheduled_task": {
+  "grants": "setup/08 run 2026-11-13 with the owner's approval (EXECUTE TASK on account, CREATE TASK on ML)",
+  "task": "RETAIL_OLIST.ML.SCORE_LATE_DELIVERY, owner RETAIL_TRANSFORMER, warehouse RETAIL_WH, USING CRON 0 6 * * 1 UTC, state suspended",
+  "execute_task": "SUCCEEDED (scheduled 12:59:28, completed 12:59:44 account time)",
+  "rows": "run 20261113T205929Z-79b45b11: 6,306 orders of 2018-08 with V1_20261113_CC90DC8; earlier rows for that month and version replaced",
+  "note": "TASK_HISTORY.return_value is empty: the block's RETURN is not a task return value (that needs SYSTEM$SET_RETURN_VALUE)"
+ },
+ "credits": {
+  "measured": "2026-11-13 as ACCOUNTADMIN, SNOWFLAKE.ACCOUNT_USAGE.METERING_HISTORY (lags a few hours) and RETAIL_MONITOR",
+  "RETAIL_WH_since_2026-11-12": 0.9035,
+  "RETAIL_MONITOR_used_of_5": 0.9,
+  "SYSTEM_COMPUTE_POOL_CPU_morning_session": 0.0396,
+  "SYSTEM_COMPUTE_POOL_CPU_afternoon_rerun": "not yet visible in ACCOUNT_USAGE when measured (about 7 minutes of pool time)"
  }
 }

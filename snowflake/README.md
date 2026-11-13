@@ -87,7 +87,7 @@ Run in a Snowsight worksheet, in this order. The author ran them in the `Retail_
 6. Optional, `ACCOUNTADMIN`: `setup/05_monitor_grant.sql`, so the service user can report credit use (section 12). Run 2026-11-13.
 7. For the Model Registry, `SYSADMIN`: `setup/06_model_registry_grants.sql` (section 9). Run 2026-11-13.
 8. For the notebooks in a Git-connected workspace, `ACCOUNTADMIN`: `setup/07_git_workspace.sql`. Run 2026-11-13 (prefix `https://github.com/<owner>/`). Then *Workspaces → + → Git workspace*, public repository, switch to the branch; connect a notebook service on `SYSTEM_COMPUTE_POOL_CPU` with a **15-minute idle timeout**, as `RETAIL_TRANSFORMER` on `RETAIL_WH`; suspend the service afterwards (*Monitoring → Services & jobs*).
-9. For the scheduled scoring task, `ACCOUNTADMIN` and `SYSADMIN`: `setup/08_scoring_task_grants.sql`, then `ml/scoring_task.sql` as `RETAIL_TRANSFORMER`. **Grants not run**; the tables and config of `ml/scoring_task.sql` exist.
+9. For the scheduled scoring task, `ACCOUNTADMIN` and `SYSADMIN`: `setup/08_scoring_task_grants.sql`, then `ml/scoring_task.sql` as `RETAIL_TRANSFORMER`. Run 2026-11-13; the task is suspended.
 
 Result: the database, six schemas, warehouse, three roles, monitor and service user exist; re-running each file is a no-op. Objects of other projects on the account were not touched.
 
@@ -188,18 +188,16 @@ Not built yet: scoring new orders inside Snowflake on a schedule (a Task calling
 
 | Piece | Where it runs | Status (2026-11-13) |
 |---|---|---|
-| `notebooks/snowflake/02_late_delivery_model_sf.ipynb`, `03_weekly_forecast_sf.ipynb` | Notebooks in Workspaces (Container Runtime, CPU compute pool), run by hand | **Run in a Git-connected workspace 2026-11-13** (runtime numpy 2.3.5, scipy 1.15.3, pandas 2.3.3; scikit-learn 1.9.1 pinned). All cells ran on Snowflake data. Closed-form forecast methods match the DuckDB reference exactly; the scipy-optimised ones within 3.5e-7, and late delivery within 1.3e-9 of the Snowflake backtest. Those gaps come from the library versions (0.0 on the laptop). |
+| `notebooks/snowflake/02_late_delivery_model_sf.ipynb`, `03_weekly_forecast_sf.ipynb` | Notebooks in Workspaces (Container Runtime, CPU compute pool), run by hand | **Run in a Git-connected workspace 2026-11-13; checks pass.** The runtime ships numpy 2.3.5, scipy 1.15.3 and pandas 2.3.3, with scikit-learn 1.9.1 pinned. Forecast: closed-form methods equal the DuckDB reference exactly, scipy-optimised ones within 3.5e-7. Late delivery: within 1.3e-9 of the Snowflake backtest and 6.0e-6 of DuckDB. |
 | `notebooks/snowflake/04_train_register_sf.ipynb` | Same, run by hand | **Run 2026-11-13:** trained v1 inside Snowflake on 96,019 orders and registered `V1WS_20261113_7370C92` (not default). Over all 96,019 orders, `mv.run` and SQL scores equal the in-notebook model to 3.3e-16, and the laptop-registered version to 1.1e-12. |
-| `snowflake/ml/scoring_task.sql`: task `ML.SCORE_LATE_DELIVERY` into `ML.LATE_DELIVERY_SCORES_REGISTRY` | SQL on `RETAIL_WH`, no compute pool | Tables and config created; the scoring block was run twice live (6,306 orders of 2018-08, the rerun replaced them, scores equal to the local model to 2.8e-16). **The task itself is not created:** it needs `setup/08_scoring_task_grants.sql`. |
+| `snowflake/ml/scoring_task.sql`: task `ML.SCORE_LATE_DELIVERY` into `ML.LATE_DELIVERY_SCORES_REGISTRY` | SQL on `RETAIL_WH`, no compute pool | **Created and run 2026-11-13** after `setup/08`. `EXECUTE TASK` SUCCEEDED in 16 s and scored 6,306 orders of 2018-08 with `V1_20261113_CC90DC8`, replacing that month's earlier rows. The task is kept **suspended** (`ALTER TASK ML.SCORE_LATE_DELIVERY RESUME` to schedule it). TASK_HISTORY shows no return value: the block's `RETURN` is not one. |
 | `snowflake/dbt/models/monitoring/` (schema `ML_MONITORING`) | dbt views on `RETAIL_WH` | **Built live** (PASS=18). Calibration equals the Python calculation exactly; single-feature AUCs match `drift_analysis.py` E1 to 5e-13; the drift view shows 74.8% of August 2018 orders promised under 20 days. |
 
 Notes:
 - **How the notebooks are made.** They are generated from the originals by `scripts/make_snowflake_notebooks.py`, so edit the originals or the script. They read the marts through the notebook's own session (`src/data_access/snowpark.py`): no keys inside Snowflake.
 - **Running them.** Run them as `RETAIL_TRANSFORMER` (PUBLIC already has USAGE on `SYSTEM_COMPUTE_POOL_CPU`). Use the Git-connected workspace from `setup/07_git_workspace.sql`, and **suspend the notebook service after each session**: the compute pool bills while it runs and is not covered by `RETAIL_MONITOR`. The default idle timeout is 24 hours unless an admin sets `NOTEBOOK_VNEXT_IDLE_TIMEOUT_OPTIONS_MINUTES`.
 - **Why scheduled scoring writes its own table.** The registered model was trained on every month, so its 2018 scores are in-sample. They go to their own table, never to `ML.LATE_DELIVERY_SCORES`, which holds the out-of-time backtest that Power BI and the monitoring views read. The dataset ends in 2018, so a scheduled run replays the same month; `ML.SCORING_CONFIG` pins the model version and the month.
-- **Waiting for the owner's approval:**
-  - `setup/08_scoring_task_grants.sql`: `EXECUTE TASK` on the account.
-  - The notebook idle-timeout account parameter.
+- **Not changed:** the account-wide notebook idle-timeout parameter (each notebook service is given a 15-minute idle timeout instead).
 
 ## 10. Step 6: the HTML dashboard - RUN 2026-11-12
 
@@ -243,7 +241,7 @@ Without step 1 the script stops with a message rather than reporting zero. Witho
 | ML outputs in Snowflake (`publish_ml.py`) | stage-fake tests: statement order, rollback, clean-up | RUN 2026-11-13: run `20261113T122357Z-a99b8a21`, counts read back, matches DuckDB |
 | Power BI patched copy | byte-identity tests | NOT RUN (not opened in Desktop) |
 | Model Registry (`ml/register_model.py`) | fake-registry tests: gate, no replacement, exact pin, verify | RUN 2026-11-13: `LATE_DELIVERY_RISK` `V1_20261113_CC90DC8`, scored inside Snowflake, equal to local to 1.1e-16 |
-| Notebooks in Snowflake (`notebooks/snowflake/`) | generator check, parse and hygiene tests; executed against Snowflake data | RUN in a workspace 2026-11-13; 04 registered `V1WS_20261113_7370C92` |
-| Scheduled scoring (`ml/scoring_task.sql`) | statement-shape tests | Block RUN twice live 2026-11-13 (6,306 orders, 2.8e-16); task NOT CREATED (needs `setup/08`) |
+| Notebooks in Snowflake (`notebooks/snowflake/`) | generator check, parse and hygiene tests; executed against Snowflake data | RUN in a workspace 2026-11-13, checks pass; 04 registered `V1WS_20261113_7370C92` |
+| Scheduled scoring (`ml/scoring_task.sql`) | statement-shape tests | RUN 2026-11-13: task created, EXECUTE TASK SUCCEEDED (6,306 orders); kept suspended |
 | Drift and calibration in SQL (`dbt/models/monitoring/`) | AUC formula test | RUN 2026-11-13: PASS=18, equal to the Python results |
 | Credit use | | MEASURED 2026-11-13: 0.34 credits of the 5-credit monthly quota (section 12) |

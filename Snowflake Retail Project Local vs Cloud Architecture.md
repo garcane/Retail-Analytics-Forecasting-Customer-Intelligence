@@ -23,9 +23,9 @@ Unlike the Google Cloud design, most of this mapping is built and has run: each 
 | **Model training** | Notebooks in Workspaces (`notebooks/snowflake/02`, `04`) on a CPU compute pool; also scikit-learn on the client, reading Snowflake | scikit-learn in `src/ml/` | **Run** 2026-11-13: trained inside Snowflake and registered `V1WS_20261113_7370C92` |
 | **Experiment results** | Metrics: `reports/snowflake/*.json` on the client. Scores and forecast backtests: tables in `ML` | `reports/*.json` | **Run** |
 | **Model registry** | Snowflake Model Registry (`snowflake-ml-python`, `snowflake/ml/register_model.py`) | none (metrics files and the model card) | **Run** 2026-11-13: `ML.LATE_DELIVERY_RISK` `V1_20261113_CC90DC8` |
-| **Batch inference** | Backtest scores: computed on the client, published to `ML.LATE_DELIVERY_SCORES` by `publish_ml.py`. Scheduled scoring: SQL `MODEL(...)!PREDICT_PROBA` on `RETAIL_WH` (`snowflake/ml/scoring_task.sql`) into `ML.LATE_DELIVERY_SCORES_REGISTRY` | `export_scores.py` to Parquet | **Run** (client) / scoring block **run live** 2026-11-13; the scheduled task waits for the `EXECUTE TASK` grant |
+| **Batch inference** | Backtest scores: computed on the client, published to `ML.LATE_DELIVERY_SCORES` by `publish_ml.py`. Scheduled scoring: SQL `MODEL(...)!PREDICT_PROBA` on `RETAIL_WH` (`snowflake/ml/scoring_task.sql`) into `ML.LATE_DELIVERY_SCORES_REGISTRY` | `export_scores.py` to Parquet | **Run**: client scoring published, and the task executed in Snowflake (6,306 orders) |
 | **Online inference** | Not planned (the model is used by rank, in batch) | none | n/a |
-| **Orchestration** | Snowflake Task `ML.SCORE_LATE_DELIVERY` (SQL, warehouse); notebooks run by hand | run by hand | **Built, not created**: needs `setup/08_scoring_task_grants.sql` |
+| **Orchestration** | Snowflake Task `ML.SCORE_LATE_DELIVERY` (SQL, warehouse); notebooks run by hand | run by hand | **Run** 2026-11-13: executed once (SUCCEEDED), kept suspended |
 | **Monitoring** | Resource monitor (`RETAIL_MONITOR`, 5 credits a month); dbt views in `ML_MONITORING` for calibration, single-feature AUC by month and score drift | `drift_analysis.py` | **Run** 2026-11-13: equal to the Python results |
 | **Access control** | Roles `RETAIL_LOADER`, `RETAIL_TRANSFORMER`, `RETAIL_REPORTER`; service user `RETAIL_SVC` with key-pair authentication | none needed | **Run** |
 | **BI** | Power BI on the `PBI` views; HTML dashboard built from `MARTS` | Power BI on exported files; HTML dashboard | Dashboard **run**; Power BI copy **not opened** |
@@ -76,13 +76,13 @@ What that means:
 - **Ported on 2026-11-13:** the model. `snowflake/ml/register_model.py` logs the v1 model to the Snowflake Model Registry (`ML.LATE_DELIVERY_RISK`, version `V1_20261113_CC90DC8`), and scoring inside Snowflake with it matches the local model to 1.1e-16.
 - **Ported on 2026-11-13:** drift and calibration as SQL (`ML_MONITORING`, equal to the Python results), and the in-Snowflake scoring logic (verified live).
 - **Ported on 2026-11-13:** training inside Snowflake. The notebooks ran in a Git-connected workspace, and notebook 04 registered `V1WS_20261113_7370C92`.
-- **Built, waiting for an account approval:** the scheduled scoring task (`EXECUTE TASK`).
+- **Ported on 2026-11-13:** scheduled scoring. Task `ML.SCORE_LATE_DELIVERY` ran once and is kept suspended.
 
 The next steps, in order of value per effort:
 
 1. ~~Publish the results to the `ML` schema~~ (done 2026-11-13, `publish_ml.py`).
 2. ~~Log the v1 scikit-learn pipeline to the Snowflake Model Registry, with its metrics and the git commit~~ (done 2026-11-13, `snowflake/ml/register_model.py`).
-3. Score inside Snowflake from the registered model, scheduled by a Task (built; the task waits for `EXECUTE TASK`).
+3. ~~Score inside Snowflake from the registered model, scheduled by a Task~~ (done 2026-11-13; kept suspended).
 4. ~~Move the drift and calibration checks to SQL over the `ML` tables~~ (done 2026-11-13, dbt `monitoring`).
 
 ## 4. Key Snowflake Technologies and Portability

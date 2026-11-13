@@ -335,7 +335,7 @@ Evidence for these entries is in [docs/data/EDA_FINDINGS.md](docs/data/EDA_FINDI
 - **Context:** DD-14 added interactive marimo versions of the two ML notebooks. Since then the HTML dashboard (DD-22) has taken over the interactive role: its risk page has a test-month picker and shows precision and recall across every flag share (where the marimo app had a "flag the riskiest X%" slider), and its forecast page has target and horizon pickers and method toggles.
 - **Chosen:** the project owner removed `notebooks/marimo/` (commit `0568c7d`). The Jupyter notebooks stay as the stored, charted walk-through of the ML; `tests/test_marimo.py` was removed with them.
 - **Reason:** two copies of each notebook had to be kept in step, and the interactive exploration they offered is now in the dashboard.
-- **Trade-offs:** no notebook-style interactive environment over the live `src/ml` code; use the Jupyter notebooks or the dashboard. `marimo` is still listed as a development dependency in `pyproject.toml` and `uv.lock`; removing it needs `uv lock`, which is left to the owner because `uv` at the repository root rebuilds `.venv`.
+- **Trade-offs:** no notebook-style interactive environment over the live `src/ml` code; use the Jupyter notebooks or the dashboard. `marimo` was then removed from the development dependencies with the owner's approval (`uv lock` dropped it and the packages only it needed; `uv sync` rebuilt `.venv`, 2026-11-13).
 - **Rejected:** keeping the marimo files untested.
 
 ### DD-25: The late-delivery model is registered in the Snowflake Model Registry from its own environment
@@ -372,7 +372,7 @@ Evidence for these entries is in [docs/data/EDA_FINDINGS.md](docs/data/EDA_FINDI
   - **Not covered by SQL.** The smoothed-rate and lag experiments of `drift_analysis.py` stay in Python.
 - **Cost / Security:**
   - **Pool cost.** Notebooks cost compute-pool credits while running; suspend the service after use, and consider the idle-timeout account parameter.
-  - **Approvals.** The Git API integration (`setup/07`) was approved and run on 2026-11-13. `EXECUTE TASK` (`setup/08`) and the account idle-timeout parameter are still pending; the notebook service was given a 15-minute idle timeout per service instead. The branch was pushed with approval on 2026-11-13.
+  - **Approvals.** The Git API integration (`setup/07`) was approved and run on 2026-11-13. `EXECUTE TASK` (`setup/08`) was approved and run the same day, and the task was executed once and kept suspended. The account idle-timeout parameter is unchanged; each notebook service gets a 15-minute idle timeout instead. The branch was pushed with approval on 2026-11-13.
   - **No credentials in notebooks.** They use the notebook's own session.
 - **Rejected:**
   - Scheduled notebooks or code bundles for scoring: they bill the pool on every run.

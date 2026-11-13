@@ -12,9 +12,9 @@
     "semantic_hash": "5ebef3dd159986e465ab65e4014107ec"
   },
   "pyproject.toml": {
-    "mtime": 1793979642.939978,
-    "seen": 1794172496.95836,
-    "ast_hash": "569e9df45b610ad60b286076a5b45e9c",
+    "mtime": 1794602921.3331947,
+    "seen": 1794603727.1492472,
+    "ast_hash": "9e73c723a9d4827a20d6e976ffae7ae7",
     "semantic_hash": ""
   },
   "CLAUDE.md": {
@@ -66,21 +66,21 @@
     "semantic_hash": ""
   },
   "DECISIONS.md": {
-    "mtime": 1794584837.1231163,
-    "seen": 1794584933.7197971,
-    "ast_hash": "53d204b91f7b1c8c16e899bf3167d975",
+    "mtime": 1794603696.6190896,
+    "seen": 1794603727.151246,
+    "ast_hash": "f476ff18e1b48fa5c1fbccaea8dbcc02",
     "semantic_hash": ""
   },
   "PROJECT_STATUS.md": {
-    "mtime": 1794584837.1021187,
-    "seen": 1794584933.7197971,
-    "ast_hash": "8a7fc1ea23c793203b40469d967947a0",
+    "mtime": 1794603696.5520842,
+    "seen": 1794603727.151246,
+    "ast_hash": "4d7a65ee726836317030fcda6b7c7620",
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1794584826.07109,
-    "seen": 1794584933.7197971,
-    "ast_hash": "f7ef382606563db6cc1cc90a723e5794",
+    "mtime": 1794603696.5220876,
+    "seen": 1794603727.151246,
+    "ast_hash": "1764732c5d617468873da02ad861599e",
     "semantic_hash": ""
   },
   "docs/HANDOFF.md": {
@@ -270,15 +270,15 @@
     "semantic_hash": "a76ebd8575a62b9bced5dc087839dd7c"
   },
   "COST.md": {
-    "mtime": 1794584837.1261213,
-    "seen": 1794584933.7197971,
-    "ast_hash": "8607915e4adf4e26373bc8297a622fcc",
+    "mtime": 1794603696.6270883,
+    "seen": 1794603727.151246,
+    "ast_hash": "3563da7a366830f60ceb8f9ba45a4307",
     "semantic_hash": ""
   },
   "SECURITY.md": {
-    "mtime": 1794574201.7065654,
-    "seen": 1794574898.522464,
-    "ast_hash": "29c8f6a49e92ceff2ce38e81d710fbb2",
+    "mtime": 1794603696.6290872,
+    "seen": 1794603727.151246,
+    "ast_hash": "7c91e757692913155d277acaafac227a",
     "semantic_hash": ""
   },
   "docs/AUDIT.md": {
@@ -1542,9 +1542,9 @@
     "semantic_hash": ""
   },
   "snowflake/README.md": {
-    "mtime": 1794584826.0960903,
-    "seen": 1794584933.7197971,
-    "ast_hash": "88b4d395e78287d903a10c47c7448685",
+    "mtime": 1794603696.5510862,
+    "seen": 1794603727.151246,
+    "ast_hash": "6e34c4ef8ee4c6997c4cd9853cd7385f",
     "semantic_hash": ""
   },
   "snowflake/dbt/README.md": {
@@ -1980,9 +1980,9 @@
     "semantic_hash": ""
   },
   "Snowflake Retail Project Local vs Cloud Architecture.md": {
-    "mtime": 1794584837.108117,
-    "seen": 1794584933.7197971,
-    "ast_hash": "f9a65728d8c9e4776fcdf354a80b3217",
+    "mtime": 1794603696.6000893,
+    "seen": 1794603727.151246,
+    "ast_hash": "6659e1fc9d66fa2f3aed47c1c6e85f73",
     "semantic_hash": ""
   },
   "dashboard/README.md": {
@@ -2082,9 +2082,9 @@
     "semantic_hash": ""
   },
   "reports/snowflake/in_snowflake_checks.json": {
-    "mtime": 1794584826.0180879,
-    "seen": 1794584933.7197971,
-    "ast_hash": "76375e2c96aa1308c3e53d5d3c2bc5b0",
+    "mtime": 1794603696.4780843,
+    "seen": 1794603727.1492472,
+    "ast_hash": "64c443b034dda59f8bc613dd083ce7b6",
     "semantic_hash": ""
   },
   "scripts/make_snowflake_notebooks.py": {
