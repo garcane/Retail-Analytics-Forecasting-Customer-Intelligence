@@ -27,11 +27,16 @@ for sub in ("src", "src/ml", "src/powerbi"):
     if str(ROOT / sub) not in sys.path:
         sys.path.insert(0, str(ROOT / sub))
 
-import export_data  # noqa: E402  (src/powerbi)
-import pandas as pd  # noqa: E402
-import export_scores  # noqa: E402
-from data_access import connect, writeback  # noqa: E402
-from data_access.backend import ConfirmationRequired, DataAccessError, MissingConfigError  # noqa: E402
+import export_data
+import export_scores
+import pandas as pd
+
+from data_access import connect, writeback
+from data_access.backend import (
+    ConfirmationRequired,
+    DataAccessError,
+    MissingConfigError,
+)
 
 
 def compute(db) -> dict:

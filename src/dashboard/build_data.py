@@ -246,7 +246,7 @@ def risk_rollups(con) -> dict:
               .reset_index().sort_values("orders", ascending=False).head(25))
     return {
         "source": "src/ml/export_scores.py (v1 logistic regression, trained only on orders delivered before each test month)",
-        "n_scored": int(len(s)), "months": sorted(s["month"].unique().tolist()),
+        "n_scored": len(s), "months": sorted(s["month"].unique().tolist()),
         "deciles_by_month": records(dec), "deciles_overall": records(overall),
         "operating_points": records(op), "by_customer_state": records(by_state), "by_category_top25": records(by_cat),
     }
@@ -299,7 +299,7 @@ def main() -> int:
               file=sys.stderr)
         return 1
     args.out.mkdir(parents=True, exist_ok=True)
-    manifest = {"generated_at": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"), "git_sha": git_sha(),
+    manifest = {"generated_at": dt.datetime.now(dt.UTC).isoformat(timespec="seconds"), "git_sha": git_sha(),
                 "backend": args.backend, "datasets": {}, "notes": []}
 
     if args.backend == "snowflake":

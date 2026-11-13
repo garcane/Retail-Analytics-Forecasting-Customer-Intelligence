@@ -17,8 +17,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))
 
-from data_access import connect  # noqa: E402
-from data_access.backend import ConfirmationRequired, MissingConfigError  # noqa: E402
+from data_access import connect
+from data_access.backend import ConfirmationRequired, MissingConfigError
 
 MONITOR = "RETAIL_MONITOR"
 FIELDS = ("credit_quota", "used_credits", "remaining_credits", "frequency", "start_time", "end_time",

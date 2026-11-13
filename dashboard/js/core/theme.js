@@ -44,6 +44,13 @@ export function initTheme(button) {
   });
 }
 
+/** True when the dark tokens are in effect (chosen, or "auto" on a system in dark mode). */
+export function isDark() {
+  const chosen = document.documentElement.getAttribute("data-theme");
+  if (chosen) return chosen === "dark";
+  return window.matchMedia("(prefers-color-scheme: dark)").matches;
+}
+
 /** Categorical slot colour by position (1-based), as a CSS value that follows the theme. */
 export const series = (slot) => `var(--series-${((slot - 1) % 8) + 1})`;
 export const MUTED = "var(--series-muted)";

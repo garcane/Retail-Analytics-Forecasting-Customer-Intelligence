@@ -16,9 +16,10 @@ from __future__ import annotations
 import math
 import os
 import re
+from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Callable, Mapping, Sequence
+from typing import Any
 
 import pandas as pd
 
@@ -195,8 +196,8 @@ class SnowflakeFetcher:
         self.name = "snowflake"
         env = os.environ if env is None else env
         try:
-            import snowflake.connector  # noqa: PLC0415 (lazy on purpose)
-            from cryptography.hazmat.primitives import serialization  # noqa: PLC0415
+            import snowflake.connector
+            from cryptography.hazmat.primitives import serialization
         except ImportError as exc:  # pragma: no cover - not installed in the offline venv
             raise RuntimeError("snowflake-connector-python and cryptography are required for a live run "
                                f"({exc.name} is not installed)") from exc

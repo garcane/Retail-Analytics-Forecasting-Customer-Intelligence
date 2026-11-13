@@ -25,10 +25,10 @@ comparison, so a differently numbered surrogate key cannot hide or fake a value 
 from __future__ import annotations
 
 import re
+from collections.abc import Iterable
 from dataclasses import dataclass, field
 from decimal import Decimal
 from pathlib import Path
-from typing import Iterable
 
 ROOT = Path(__file__).resolve().parents[2]
 SQL_DIR = ROOT / "sql"

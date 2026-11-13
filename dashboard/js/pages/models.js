@@ -5,7 +5,7 @@
 import { registerPage } from "../core/registry.js";
 import { el } from "../core/dom.js";
 import * as f from "../core/format.js";
-import { series, MUTED, allocateSlots } from "../core/theme.js";
+import { series, MUTED, allocateSlots, isDark } from "../core/theme.js";
 import { modelInfo, METRICS, FEATURE_SETS, humanize } from "../core/labels.js";
 import { card, grid } from "../components/card.js";
 import { controlsRow, select, segmented } from "../components/controls.js";
@@ -23,7 +23,7 @@ registerPage({
   order: 40,
   description: "Which orders will arrive late? Each model is trained only on orders delivered before the test month starts, then scored on that month (2018-03 to 2018-08). Metrics are means of the six months.",
   needs: ["models"],
-  render(root, { models }) {
+  render(root, { models }, ctx) {
     const ld = models.late_delivery;
     const keys = Object.keys(ld.macro_average);
     const info = Object.fromEntries(keys.map((k) => [k, modelInfo(k)]));
@@ -75,6 +75,18 @@ registerPage({
     pm.body.append(legendHost);
     const pmChart = lineChart(pm.body, { series: [], x: { type: "time", format: f.month, tickFormat: f.monthShort }, y: { format: fmt3 }, height: 280, ariaLabel: "Metric by test month" });
 
+    // The sequential ramp runs dark-to-light in the dark theme, so the caption names the end that means "better".
+    let hmTail = "";
+    const setHeatmapFoot = () => hm.setFoot(`${isDark() ? "Lighter" : "Darker"} = ${hmTail}`);
+    const onTheme = () => {
+      if (ctx && typeof ctx.isCurrent === "function" && !ctx.isCurrent()) {
+        window.removeEventListener("themechange", onTheme);
+        return;
+      }
+      setHeatmapFoot();
+    };
+    window.addEventListener("themechange", onTheme);
+
     function draw() {
       const m = state.metric;
       const meta = METRICS[m];
@@ -97,7 +109,8 @@ registerPage({
       }
       const [hardest, count] = Object.entries(worst).sort((a, b) => b[1] - a[1])[0] || [];
       const nModels = Object.values(worst).reduce((s, x) => s + x, 0);
-      hm.setFoot(`Darker = better ${meta.label}.${hardest ? ` ${f.month(hardest)} is the worst month for ${count} of ${nModels} models on this metric.` : ""}`);
+      hmTail = `better ${meta.label}.${hardest ? ` ${f.month(hardest)} is the worst month for ${count} of ${nModels} models on this metric.` : ""}`;
+      setHeatmapFoot();
       hm.refreshTable();
       cmp.refreshTable();
 

@@ -40,9 +40,10 @@ for sub in ("src", "src/ml"):
     if str(ROOT / sub) not in sys.path:
         sys.path.insert(0, str(ROOT / sub))
 
-import late_delivery_baseline as ldb  # noqa: E402
-from data_access import connect  # noqa: E402
-from data_access.backend import ConfirmationRequired, MissingConfigError  # noqa: E402
+import late_delivery_baseline as ldb
+
+from data_access import connect
+from data_access.backend import ConfirmationRequired, MissingConfigError
 
 MODEL_NAME = "LATE_DELIVERY_RISK"
 DATABASE, SCHEMA = "RETAIL_OLIST", "ML"
@@ -134,7 +135,7 @@ def warehouse_parity(mv, model, sample: pd.DataFrame) -> dict:
     remote_p1 = remote[prob_cols[-1]].astype(float).to_numpy()  # last output column = P(late)
     local_p1 = model.predict_proba(sample)[:, 1]
     diff = np.abs(remote_p1 - local_p1)
-    return {"rows": int(len(sample)), "output_columns": prob_cols, "max_abs_diff": float(diff.max()),
+    return {"rows": len(sample), "output_columns": prob_cols, "max_abs_diff": float(diff.max()),
             "within_tolerance": bool(diff.max() <= PARITY_TOLERANCE), "tolerance": PARITY_TOLERANCE}
 
 
@@ -209,7 +210,7 @@ def main(argv: list[str] | None = None) -> int:
             summary = json.loads(EVIDENCE.read_text(encoding="utf-8")) if EVIDENCE.exists() else {}
             if summary.get("version_name") != args.verify.upper():
                 summary = {"model_name": f"{DATABASE}.{SCHEMA}.{MODEL_NAME}", "version_name": args.verify.upper()}
-            summary["verify_retrain_training_rows"] = int(len(train))
+            summary["verify_retrain_training_rows"] = len(train)
             check_in_warehouse(mv, model, sample, summary)
             return write_evidence(summary)
 
@@ -223,7 +224,7 @@ def main(argv: list[str] | None = None) -> int:
             "model": "v1 logistic regression (src/ml/late_delivery_baseline.py make_models)",
             "features": FEATURES,
             "feature_table": f"{DATABASE}.MARTS.MART_LATE_DELIVERY_FEATURES",
-            "training_rows": int(len(train)),
+            "training_rows": len(train),
             "training_late_rate": round(float(train["is_late"].mean()), 6),
             "training_window": [str(train["purchase_ts"].min()), str(train["purchase_ts"].max())],
             "git_commit": sha,

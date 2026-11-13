@@ -13,10 +13,11 @@ from __future__ import annotations
 import importlib.metadata as importlib_metadata
 import platform
 import subprocess
+from collections.abc import Sequence
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any, Sequence
+from typing import Any
 
 from .checks import ROOT
 from .compare import CheckResult, ColumnResult, Comparison, display_value
@@ -80,7 +81,7 @@ def collect_run_metadata(mode: str, *, settings: SnowflakeSettings | None = None
     status = _git("status", "--porcelain")
     return RunMetadata(
         mode=mode,
-        generated_at=datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC"),
+        generated_at=datetime.now(UTC).strftime("%Y-%m-%d %H:%M:%S UTC"),
         git_sha=sha or "unknown",
         git_dirty=bool(status),
         account_locator=settings.account_redacted if settings else "n/a",
@@ -145,8 +146,8 @@ def _comparison_block(res: CheckResult, cmp: Comparison) -> list[str]:
           f"{cmp.duplicate_keys_left}/{cmp.duplicate_keys_right}", cmp.rows_with_diff]])
     out.append("")
     if cmp.columns_only_left or cmp.columns_only_right:
-        out += [f"Columns only on {cmp.left_name}: {', '.join(cmp.columns_only_left) or 'none'}; "
-                f"only on {cmp.right_name}: {', '.join(cmp.columns_only_right) or 'none'}.", ""]
+        out += [(f"Columns only on {cmp.left_name}: {', '.join(cmp.columns_only_left) or 'none'}; "
+                f"only on {cmp.right_name}: {', '.join(cmp.columns_only_right) or 'none'}."), ""]
     if cmp.missing_examples:
         out += [f"Missing in {cmp.right_name} (first {len(cmp.missing_examples)}): "
                 + "; ".join(f"[{_key_text(k)}]" for k in cmp.missing_examples), ""]
@@ -184,8 +185,8 @@ def render_report(run: ReconciliationRun) -> str:
     lines: list[str] = []
     if selftest:
         lines += ["# Reconciliation report: OFFLINE SELF-TEST (DuckDB vs DuckDB)", "",
-                  "> **This is not a Snowflake reconciliation.** Both sides are DuckDB; it only shows the comparison "
-                  "machinery and the registered DuckDB SQL work.", ""]
+                  ("> **This is not a Snowflake reconciliation.** Both sides are DuckDB; it only shows the comparison "
+                  "machinery and the registered DuckDB SQL work."), ""]
     else:
         lines += ["# Reconciliation report: DuckDB vs Snowflake", ""]
 
@@ -231,11 +232,11 @@ def render_report(run: ReconciliationRun) -> str:
     ties = [(r, t) for r in results for t in r.tie_breaks]
     if ties:
         lines += ["## arg_max / max_by tie-breaks", "",
-                  "DuckDB `arg_max` and Snowflake `max_by` may pick different values when the maximum is tied. Orders with "
+                  ("DuckDB `arg_max` and Snowflake `max_by` may pick different values when the maximum is tied. Orders with "
                   "a tied maximum are counted below. A difference in the picked column is classified `tie_break` only "
                   "when both values are among the order's tied candidates; differences in running category totals are "
                   "classified `downstream_of_tie_break` whenever any ambiguous order exists (a weak bound, shown so it "
-                  "can be judged). Nothing is dropped: every classified difference is still counted.", ""]
+                  "can be judged). Nothing is dropped: every classified difference is still counted."), ""]
         lines += _table(["check", "tie-break", "ambiguous orders", "picked column", "tie_break diffs",
                          "downstream columns", "downstream diffs", "note"],
                         [[r.check_name, t.name, t.n_ambiguous_orders, t.direct_column or "(not in output)", t.n_direct,
@@ -251,11 +252,11 @@ def render_report(run: ReconciliationRun) -> str:
             lines += _comparison_block(r, cmp)
 
     lines += ["## Notes", "",
-              "- Snowflake SQL is generated from `src/reconciliation/checks.py` against the dbt marts; it was written to "
-              "the model contract and is only as verified as this run.",
+              ("- Snowflake SQL is generated from `src/reconciliation/checks.py` against the dbt marts; it was written to "
+              "the model contract and is only as verified as this run."),
               "- Customer review text is compared but never printed; examples show its length only.",
-              "- Counts, keys, money (Decimal), booleans, strings, dates and timestamps compare exact; doubles relative "
-              "1e-9; `distance_km` absolute 1e-6; rates absolute 1e-9.", ""]
+              ("- Counts, keys, money (Decimal), booleans, strings, dates and timestamps compare exact; doubles relative "
+              "1e-9; `distance_km` absolute 1e-6; rates absolute 1e-9."), ""]
     return "\n".join(lines)
 
 

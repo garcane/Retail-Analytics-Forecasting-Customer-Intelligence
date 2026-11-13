@@ -41,7 +41,8 @@ The data is CC BY-NC-SA 4.0 (attribution, non-commercial, share-alike). Non-comm
 | CI | `dbt-ci.yml` runs `dbt parse` with dummy values and no secrets. `dbt-live.yml` runs only on manual dispatch, never on pull requests, and skips when secrets are absent. No credentials are stored in workflow files. |
 | Tracked-file scan (2026-11-08) | A pattern search of every tracked file for private-key blocks, `snowflakecomputing.com` hosts and credential-like assignments found only test sentinels in `tests/`. `.env` and key files are not tracked. |
 | Live account | Setup, load, `dbt build` and the Python runs ran on 2026-11-12/13 as `RETAIL_SVC` with the loader and transformer roles; setup ran once as `ACCOUNTADMIN` in Snowsight. The pipeline never uses `ACCOUNTADMIN` or `SYSADMIN`. |
-| Not checked | An audit of the grants as created (`SHOW GRANTS` per role), network policy, MFA on human users. |
+| Grants audit (2026-11-13) | `SHOW GRANTS TO ROLE` for the three roles and `SHOW GRANTS TO USER RETAIL_SVC` match the setup scripts' intent. `RETAIL_LOADER` writes `RAW` only, owning its stage and file format; it has no access to `STAGING`, `MARTS`, `ML` or `PBI`. `RETAIL_TRANSFORMER` reads `RAW`, builds `STAGING` to `PBI` and writes `ML`. It also holds the later grants: `MONITOR` on `RETAIL_MONITOR`, `CREATE MODEL`/`STAGE`/`TASK` on `ML`, `EXECUTE TASK`, and USAGE on `RETAIL_GIT_API`. `RETAIL_REPORTER` only has `SELECT` on the 9 `PBI` views and the `ML` tables, plus warehouse usage. `RETAIL_SVC` holds the loader and transformer roles only. Two Snowflake-ML-managed objects owned by `RETAIL_TRANSFORMER` appear only in the grants listing, not in `SHOW STAGES` or `SHOW EVENT TABLES`: an inference event-table placeholder and a code-bundle stage. Nothing unexpected was found. |
+| Not checked | Network policy, MFA on human users. |
 
 ## Not applicable by design
 

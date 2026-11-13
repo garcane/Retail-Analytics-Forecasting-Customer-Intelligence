@@ -18,16 +18,25 @@ from __future__ import annotations
 
 import csv
 import time
+from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass, field
 from datetime import date, datetime
 from decimal import Decimal, InvalidOperation
 from pathlib import Path
-from typing import Any, Callable, Mapping, Sequence
+from typing import Any
 
 import numpy as np
 import pandas as pd
 
-from .checks import REL_DOUBLE, SENSITIVE_COLUMNS, Check, ColumnRule, TieBreak, render_duckdb, render_snowflake
+from .checks import (
+    REL_DOUBLE,
+    SENSITIVE_COLUMNS,
+    Check,
+    ColumnRule,
+    TieBreak,
+    render_duckdb,
+    render_snowflake,
+)
 from .fetch import Fetcher, redact_secrets
 
 Classifier = Callable[[tuple, Any, Any], "str | None"]

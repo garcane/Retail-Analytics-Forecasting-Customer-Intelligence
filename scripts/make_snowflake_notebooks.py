@@ -145,19 +145,19 @@ def nb02() -> dict:
     return port(
         "02_late_delivery_model.ipynb",
         COMMON_SETUP + [
-            ('WAREHOUSE = ROOT / "warehouse.duckdb"\nif not WAREHOUSE.exists():\n    raise FileNotFoundError('
-             '"warehouse.duckdb not found. Run: uv run python src/transformation/build_warehouse.py")\n', CONNECT),
-            ("con = duckdb.connect(str(WAREHOUSE), read_only=True)\n"
+            (('WAREHOUSE = ROOT / "warehouse.duckdb"\nif not WAREHOUSE.exists():\n    raise FileNotFoundError('
+             '"warehouse.duckdb not found. Run: uv run python src/transformation/build_warehouse.py")\n'), CONNECT),
+            (("con = duckdb.connect(str(WAREHOUSE), read_only=True)\n"
              "df = ldb.load(con)          # one row per delivered order: features known at purchase, plus the label\n"
-             "con.close()\n",
+             "con.close()\n"),
              "df = ldb.load(db)           # MARTS.MART_LATE_DELIVERY_FEATURES: one row per delivered order\n"),
         ],
         VERIFY_02,
         # the experiment comparison reads the Snowflake-backed backtest; drift_metrics.json stays the DuckDB reference
         [('ROOT / "reports" / "late_delivery_metrics.json"', 'ROOT / "reports" / "snowflake" / "late_delivery_metrics.json"'),
          ('drift = json.loads((ROOT / "reports" / "drift_metrics.json")',
-          '# DuckDB reference: drift_analysis.py is not ported; the SQL monitoring views cover the raw-feature part\n'
-          'drift = json.loads((ROOT / "reports" / "drift_metrics.json")')],
+          ('# DuckDB reference: drift_analysis.py is not ported; the SQL monitoring views cover the raw-feature part\n'
+          'drift = json.loads((ROOT / "reports" / "drift_metrics.json")'))],
     )
 
 
@@ -165,11 +165,11 @@ def nb03() -> dict:
     return port(
         "03_weekly_forecast.ipynb",
         COMMON_SETUP + [
-            ('WAREHOUSE = ROOT / "warehouse.duckdb"\nif not WAREHOUSE.exists():\n    raise FileNotFoundError('
-             '"warehouse.duckdb not found. Run: uv run python src/transformation/build_warehouse.py")\n', CONNECT),
-            ("con = duckdb.connect(str(WAREHOUSE), read_only=True)\n"
+            (('WAREHOUSE = ROOT / "warehouse.duckdb"\nif not WAREHOUSE.exists():\n    raise FileNotFoundError('
+             '"warehouse.duckdb not found. Run: uv run python src/transformation/build_warehouse.py")\n'), CONNECT),
+            (("con = duckdb.connect(str(WAREHOUSE), read_only=True)\n"
              "weekly = fb.weekly_series(con)   # orders and net item revenue per ISO week\n"
-             "con.close()\n",
+             "con.close()\n"),
              "weekly = fb.weekly_series(db)    # MARTS.MART_WEEKLY_ORDERS_REVENUE: orders and net item revenue per ISO week\n"),
         ],
         VERIFY_03,

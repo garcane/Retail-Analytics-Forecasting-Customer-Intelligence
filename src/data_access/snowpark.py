@@ -14,7 +14,7 @@ Importing this module never imports Snowflake; close() leaves the notebook's ses
 from __future__ import annotations
 
 from collections.abc import Sequence
-from typing import Any
+from typing import Any, Self
 
 import pandas as pd
 
@@ -53,7 +53,7 @@ class SnowparkAccess:
     def close(self) -> None:
         """The notebook owns its session; do not close it."""
 
-    def __enter__(self) -> SnowparkAccess:
+    def __enter__(self) -> Self:
         return self
 
     def __exit__(self, *exc: object) -> None:
@@ -66,6 +66,8 @@ def _clean(value: Any) -> str:
 
 
 def from_active_session(database: str | None = DEFAULT_DATABASE) -> SnowparkAccess:
-    from snowflake.snowpark.context import get_active_session  # only available inside Snowflake
+    from snowflake.snowpark.context import (
+        get_active_session,  # only available inside Snowflake
+    )
 
     return SnowparkAccess(get_active_session(), database=database)
