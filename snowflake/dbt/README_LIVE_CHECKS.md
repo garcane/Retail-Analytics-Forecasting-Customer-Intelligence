@@ -1,5 +1,7 @@
 # Live verification checklist (dbt base: staging, intermediate, core marts)
 
+> **Live status (2026-11-13):** this page was written before the live run and its body is kept as the design record. The pipeline has since run on Snowflake: setup and RAW load (counts exact, no stray carriage returns), `dbt build` PASS=367 including the `ASOF JOIN`, reconciliation 22/22 with 0 differences, and the Tier 1 Python models. Not run: the ML write-back and the Power BI patched copy. Where this page says NOT YET RUN or UNVERIFIED about those steps, read [snowflake/README.md](../README.md) for the measured result.
+
 Nothing in this project has been run against Snowflake. Everything below is UNVERIFIED until someone runs it live.
 
 ## What was verified offline (2026-11-06)
