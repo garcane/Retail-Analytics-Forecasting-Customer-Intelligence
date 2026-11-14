@@ -1,0 +1,3 @@
+scikit-learn==1.9.1
+snowflake-ml-python==2.8.0
+duckdb

@@ -1,0 +1,109 @@
+/* Design tokens: the only file with raw colour, radius, shadow and type values. Everything else references roles.
+ *
+ * Visual language: a warm editorial system (the design brief supplied for this dashboard): putty-cream canvas, warm
+ * ink-black text and primary controls, lifted-cream cards, a radius scale of small (<=6px) / 20-40px / full pill with
+ * nothing in between, atmospheric (wide, faint) shadows, one geometric sans at 450/500/700, and a single signal orange
+ * kept for eyebrow accent dots. No brand marks are used.
+ *
+ * Chart colours are NOT taken from the brief: the categorical slots below are the validated data-viz palette
+ * (dataviz skill, palette.md), re-validated against these cream surfaces. Dark mode is its own selected steps.
+ */
+:root {
+  color-scheme: light;
+
+  /* surfaces: canvas cream -> lifted cream (cards) -> white (floating nav, satellites) -> ink (footer) */
+  --page: #f3f0ee;
+  --surface-1: #fcfbfa;
+  --surface-2: #ebe6e1;            /* wells: segmented track, table hover, empty cells */
+  --surface-float: #ffffff;
+  --surface-ink: #141413;
+  --on-ink: #f3f0ee;
+  --on-ink-muted: #a9a49e;
+  --ghost: #e8e2da;                /* cream-on-cream watermark text */
+
+  /* text */
+  --text-primary: #141413;
+  --text-secondary: #3f3e3c;
+  --text-muted: #696969;
+  --link: #3860be;
+
+  /* lines */
+  --grid: #e3ded8;
+  --axis: #c9c3bb;
+  --border: rgba(20, 20, 19, 0.10);
+  --border-strong: #141413;
+  --focus: #3860be;
+
+  /* accents: signal orange only for the eyebrow dot; light orange for decorative arcs */
+  --accent: #141413;
+  --accent-wash: rgba(20, 20, 19, 0.06);
+  --signal: #cf4500;
+  --signal-light: #f37338;
+
+  /* data-viz categorical slots (validated; see header) */
+  --series-1: #2a78d6; --series-2: #eb6834; --series-3: #1baf7a; --series-4: #eda100;
+  --series-5: #e87ba4; --series-6: #008300; --series-7: #6250d6; --series-8: #e34948;
+  --series-muted: #b4ada5;
+
+  /* sequential (heatmaps): one hue, light -> dark */
+  --seq-100: #cde2fb; --seq-200: #9ec5f4; --seq-300: #6da7ec; --seq-400: #3987e5;
+  --seq-500: #256abf; --seq-600: #184f95; --seq-700: #0d366b;
+
+  --good: #0ca30c; --warning: #fab219; --serious: #ec835a; --critical: #d03b3b;
+  --good-text: #006300;
+
+  /* radius scale: small, 20-40, or pill. No 8-16px. */
+  --radius-xs: 6px;
+  --radius-control: 20px;
+  --radius-tile: 28px;
+  --radius: 40px;                  /* cards */
+  --radius-pill: 999px;
+
+  /* elevation: atmospheric, never hard */
+  --shadow-nav: 0 4px 24px rgba(0, 0, 0, 0.04);
+  --shadow-float: 0 24px 48px rgba(0, 0, 0, 0.08);
+  --shadow: none;                  /* cards sit flat on the canvas */
+
+  --gap: 24px;
+  --font: "Sofia Sans", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+  --weight-body: 450;
+  --weight-strong: 500;
+  --tracking-display: -0.02em;
+  --tracking-eyebrow: 0.04em;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --page: #141413; --surface-1: #1d1c1b; --surface-2: #2a2927; --surface-float: #262524;
+    --surface-ink: #0b0b0a; --on-ink: #f3f0ee; --on-ink-muted: #8f8a84; --ghost: #23221f;
+    --text-primary: #f3f0ee; --text-secondary: #d6d1cb; --text-muted: #a39e98; --link: #8fa9e8;
+    --grid: #2c2b29; --axis: #403e3b; --border: rgba(243, 240, 238, 0.10); --border-strong: #f3f0ee;
+    --focus: #8fa9e8; --accent: #f3f0ee; --accent-wash: rgba(243, 240, 238, 0.08);
+    --series-1: #3987e5; --series-2: #d95926; --series-3: #199e70; --series-4: #c98500;
+    --series-5: #d55181; --series-6: #008300; --series-7: #9085e9; --series-8: #e66767;
+    --series-muted: #5d5a56;
+    --seq-100: #0d366b; --seq-200: #184f95; --seq-300: #256abf; --seq-400: #3987e5;
+    --seq-500: #6da7ec; --seq-600: #9ec5f4; --seq-700: #cde2fb;
+    --good-text: #0ca30c;
+    --shadow-nav: 0 4px 24px rgba(0, 0, 0, 0.35);
+    --shadow-float: 0 24px 48px rgba(0, 0, 0, 0.45);
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --page: #141413; --surface-1: #1d1c1b; --surface-2: #2a2927; --surface-float: #262524;
+  --surface-ink: #0b0b0a; --on-ink: #f3f0ee; --on-ink-muted: #8f8a84; --ghost: #23221f;
+  --text-primary: #f3f0ee; --text-secondary: #d6d1cb; --text-muted: #a39e98; --link: #8fa9e8;
+  --grid: #2c2b29; --axis: #403e3b; --border: rgba(243, 240, 238, 0.10); --border-strong: #f3f0ee;
+  --focus: #8fa9e8; --accent: #f3f0ee; --accent-wash: rgba(243, 240, 238, 0.08);
+  --series-1: #3987e5; --series-2: #d95926; --series-3: #199e70; --series-4: #c98500;
+  --series-5: #d55181; --series-6: #008300; --series-7: #9085e9; --series-8: #e66767;
+  --series-muted: #5d5a56;
+  --seq-100: #0d366b; --seq-200: #184f95; --seq-300: #256abf; --seq-400: #3987e5;
+  --seq-500: #6da7ec; --seq-600: #9ec5f4; --seq-700: #cde2fb;
+  --good-text: #0ca30c;
+  --shadow-nav: 0 4px 24px rgba(0, 0, 0, 0.35);
+  --shadow-float: 0 24px 48px rgba(0, 0, 0, 0.45);
+}

@@ -4,12 +4,20 @@
 
 # Raw Olist dataset (Kaggle, CC BY-NC-SA 4.0): re-downloadable, not stored in Git
 data/
+# ...but the HTML dashboard's data files are small aggregates (no order-level rows, no review text): keep them
+!dashboard/data/
 
 # Secrets and credentials (none are expected in this local-only project)
 .env
 .env.*
+!.env.example
 *.pem
 *.key
+# Snowflake key-pair authentication: PKCS#8 private keys are normally .p8 files
+*.p8
+*.p12
+*.pfx
+rsa_key*
 *service-account*.json
 *credentials*.json
 
@@ -26,3 +34,7 @@ powerbi/data/
 
 # marimo session caches (cell outputs, regenerated on every run)
 __marimo__/
+
+# Snowflake/dbt implementation: patched Power BI copy (apply_snowflake_source.py) and local tool caches
+powerbi_snowflake/
+.ruff_cache/

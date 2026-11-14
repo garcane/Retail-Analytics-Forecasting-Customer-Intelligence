@@ -1,0 +1,311 @@
+version: 2
+
+# Analytics marts: the eight reporting queries in sql/analytics/01..08, materialised as tables in MARTS.
+# Column names, order and logical types are identical to the DuckDB query output and to the tracked
+# reports/analytics/NN_*.csv files (the reconciliation workstream compares them value by value).
+# A table stores no row order: consumers must ORDER BY the grain column(s) noted in each description.
+# Money columns are NUMBER(38,2); shares, rates, averages and medians are FLOAT (DuckDB: DOUBLE).
+# Descriptions feed the generated data dictionary.
+
+models:
+  - name: mart_monthly_kpis
+    description: >
+      Monthly KPIs (port of sql/analytics/01_monthly_kpis.sql). One row per purchase month. Net revenue is the
+      item price of orders that were not canceled or unavailable (revenue comes from fact_order_items only);
+      freight is reported separately; AOV is net revenue per order that has items. Months with fewer than 500
+      orders (before 2017-01 and after 2018-08) are kept and flagged thin_month, and month-over-month growth is
+      blank next to them. Consumers must ORDER BY year_month.
+    columns:
+      - name: year_month
+        description: "Purchase month as text, YYYY-MM. Grain."
+        data_tests:
+          - unique
+          - not_null
+      - name: orders
+        description: "Distinct orders with at least one item purchased in the month (canceled/unavailable excluded)."
+        data_tests:
+          - not_null
+      - name: customers
+        description: "Distinct real customers (customer_key) who bought in the month."
+      - name: items
+        description: "Order items sold in the month."
+      - name: net_revenue
+        description: "Sum of item price, rounded to 2 decimals (R$, excludes freight)."
+      - name: freight
+        description: "Sum of freight value, rounded to 2 decimals (R$)."
+      - name: avg_order_value
+        description: "Net revenue per order, rounded to 2 decimals."
+      - name: items_per_order
+        description: "Items per order, rounded to 3 decimals."
+        data_tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 1
+      - name: revenue_mom_pct
+        description: "Month-over-month net revenue growth in percent, 1 decimal. NULL unless both the month and the previous month have at least 500 orders."
+        data_tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: -100
+      - name: thin_month
+        description: "True when the month has fewer than 500 orders."
+        data_tests:
+          - not_null
+
+  - name: mart_category_performance
+    description: >
+      Category performance, item-weighted (port of sql/analytics/02_category_performance.sql). One row per English
+      product category. Each item row carries its order's lateness and its order's latest review (one review per
+      order, so the review join does not repeat item rows). Consumers must ORDER BY net_revenue DESC, category.
+    columns:
+      - name: category
+        description: "English product category name ('unknown' when the product has none). Grain."
+        data_tests:
+          - unique
+          - not_null
+      - name: orders
+        description: "Distinct orders containing an item of the category."
+      - name: items
+        description: "Items sold in the category."
+      - name: net_revenue
+        description: "Sum of item price (R$, excludes freight), rounded to 2 decimals."
+      - name: revenue_share_pct
+        description: "Category share of total net revenue, percent, 2 decimals."
+        data_tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+                max_value: 100
+      - name: cumulative_share_pct
+        description: "Running share of net revenue when categories are ordered by net_revenue DESC, category."
+        data_tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+                max_value: 100
+      - name: avg_item_price
+        description: "Average item price (R$), 2 decimals."
+      - name: freight_pct_of_price
+        description: "Freight as a percent of item price, 1 decimal (can exceed 100 for cheap items)."
+        data_tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+      - name: late_pct
+        description: "Percent of the category's items whose order was delivered after the estimate (undelivered orders are ignored), 1 decimal."
+        data_tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+                max_value: 100
+      - name: avg_review_score
+        description: "Average latest-review score (1 to 5) of the category's items, 2 decimals."
+        data_tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 1
+                max_value: 5
+
+  - name: mart_state_performance
+    description: >
+      Customer-state performance from fact_orders (port of sql/analytics/03_state_performance.sql). One row per
+      customer state. Order grain, so items are already aggregated. Canceled/unavailable orders and orders
+      without items are excluded; delivery figures use delivered orders only. Consumers must ORDER BY
+      net_revenue DESC.
+    columns:
+      - name: customer_state
+        description: "Customer state (two-letter code, 'Unknown' for unmatched zip prefixes). Grain."
+        data_tests:
+          - unique
+          - not_null
+      - name: orders
+        description: "Net orders (not canceled/unavailable, with items)."
+      - name: net_revenue
+        description: "Sum of order item revenue (R$), 2 decimals."
+      - name: revenue_share_pct
+        description: "State share of total net revenue, percent, 2 decimals."
+        data_tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+                max_value: 100
+      - name: avg_order_value
+        description: "Net revenue per order (R$), 2 decimals."
+      - name: freight_pct_of_price
+        description: "Freight as a percent of item price, 1 decimal."
+      - name: delivered_orders
+        description: "Orders with a delivery date (is_late is not null)."
+      - name: late_pct
+        description: "Percent of delivered orders delivered after the estimate, 1 decimal."
+        data_tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+                max_value: 100
+      - name: median_delivery_days
+        description: "Median purchase-to-delivery time in days (delivered orders), 1 decimal."
+
+  - name: mart_seller_concentration
+    description: >
+      How concentrated net item revenue is across sellers (port of sql/analytics/04_seller_concentration.sql).
+      Six metric rows, ranked by net item revenue with ties broken by seller_key. The DuckDB output order is: seller
+      count, top 1, top 10, top 10%, top 50%, median; a table stores no row order, so look rows up by metric.
+    columns:
+      - name: metric
+        description: "Metric name. Grain."
+        data_tests:
+          - unique
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  - sellers with net revenue
+                  - top 1 seller share of revenue (%)
+                  - top 10 sellers share of revenue (%)
+                  - top 10% of sellers share of revenue (%)
+                  - top 50% of sellers share of revenue (%)
+                  - median seller revenue
+      - name: value
+        description: "Metric value (FLOAT): a count, a percent (2 decimals) or R$ for the median."
+        data_tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+                max_value: 100
+              config:
+                where: "metric like '%share of revenue (%)'"
+
+  - name: mart_delivery_vs_reviews
+    description: >
+      Late delivery and review score (port of sql/analytics/05_delivery_vs_reviews.sql). One row per delay
+      group, using one latest review per order and delivered orders only. An association, not a cause. Severity
+      order: on time or early, 1-3 days late, 4-7 days late, 8-14 days late, more than 14 days late.
+    columns:
+      - name: delay_group
+        description: "Delay bucket label. Grain."
+        data_tests:
+          - unique
+          - not_null
+          - accepted_values:
+              arguments:
+                values: [on time or early, 1-3 days late, 4-7 days late, 8-14 days late, more than 14 days late]
+      - name: orders
+        description: "Delivered orders with a latest review in the bucket."
+      - name: share_of_orders_pct
+        description: "Bucket share of those orders, percent, 1 decimal."
+        data_tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+                max_value: 100
+      - name: avg_review_score
+        description: "Average latest-review score (1 to 5), 2 decimals."
+        data_tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 1
+                max_value: 5
+      - name: low_score_pct
+        description: "Percent of orders with a score of 1 or 2, 1 decimal."
+        data_tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+                max_value: 100
+
+  - name: mart_payments
+    description: >
+      Payment mix (port of sql/analytics/06_payments.sql). One row per payment type. fact_payments is analysed
+      on its own: its total need not equal item revenue. Consumers must ORDER BY payment_value DESC.
+    columns:
+      - name: payment_type
+        description: "Payment method. Grain."
+        data_tests:
+          - unique
+          - not_null
+      - name: payments
+        description: "Payment records of the type."
+      - name: payment_value
+        description: "Sum of payment value (R$), 2 decimals."
+      - name: value_share_pct
+        description: "Type share of total payment value, percent, 1 decimal."
+        data_tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+                max_value: 100
+      - name: avg_payment
+        description: "Average payment value (R$), 2 decimals."
+      - name: avg_installments
+        description: "Average number of installments, 2 decimals."
+        data_tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+
+  - name: mart_repeat_customers
+    description: >
+      Repeat purchasing on real people, customer_unique_id (port of sql/analytics/07_repeat_customers.sql). One
+      row per number of orders placed ('1', '2', '3', '4+'), over orders that were not canceled/unavailable and
+      have items. Consumers must ORDER BY orders_placed.
+    columns:
+      - name: orders_placed
+        description: "Number of orders placed by the customer, '4+' for four or more (text). Grain."
+        data_tests:
+          - unique
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['1', '2', '3', '4+']
+      - name: customers
+        description: "Customers in the bucket."
+      - name: customer_share_pct
+        description: "Bucket share of customers, percent, 2 decimals."
+        data_tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+                max_value: 100
+      - name: net_revenue
+        description: "Net item revenue of the bucket (R$), 2 decimals."
+      - name: revenue_share_pct
+        description: "Bucket share of net revenue, percent, 2 decimals."
+        data_tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+                max_value: 100
+
+  - name: mart_delivery_trend
+    description: >
+      Delivery performance and the delivery promise by purchase month (port of sql/analytics/08_delivery_trend.sql).
+      Labelled delivered orders only (delivered, has an is_late label, no timestamp anomaly: the late-delivery
+      feature population). The promise columns show how far ahead the estimated date was set; they changed
+      sharply in 2018-08. Consumers must ORDER BY purchase_month.
+    columns:
+      - name: purchase_month
+        description: "Purchase month as text, YYYY-MM. Grain."
+        data_tests:
+          - unique
+          - not_null
+      - name: delivered_orders
+        description: "Labelled delivered orders purchased in the month."
+      - name: late_pct
+        description: "Percent delivered after the estimate, 1 decimal."
+        data_tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+                max_value: 100
+      - name: median_delivery_days
+        description: "Median purchase-to-delivery days, 1 decimal."
+      - name: avg_promised_days
+        description: "Average days between purchase and the estimated delivery date, 1 decimal."
+      - name: promised_under_20d_pct
+        description: "Percent of orders whose promise was shorter than 20 days, 1 decimal."
+        data_tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+                max_value: 100

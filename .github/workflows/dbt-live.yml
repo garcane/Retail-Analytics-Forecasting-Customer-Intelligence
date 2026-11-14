@@ -1,0 +1,108 @@
+# LIVE dbt build against Snowflake. MANUAL ONLY (workflow_dispatch). Never runs on push or pull_request,
+# so forks and PRs can never reach these secrets.
+#
+# Secrets are scoped to the GitHub *environment* named below (Settings > Environments), not repo-wide.
+# If the environment has no secrets, the `detect` job reports it and the `live` job is skipped (workflow stays green).
+# This workflow has NOT been run (UNVERIFIED): it needs a real Snowflake account, the objects from snowflake/setup/,
+# and loaded RAW tables. See docs/migration/CI_SETUP.md.
+name: dbt-live
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# One live run at a time; never cancel a build that is already running.
+concurrency:
+  group: dbt-live
+  cancel-in-progress: false
+
+env:
+  DBT_SEND_ANONYMOUS_USAGE_STATS: "false"
+
+jobs:
+  detect:
+    name: detect Snowflake secrets
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    environment: snowflake-prod
+    outputs:
+      has_secrets: ${{ steps.check.outputs.has_secrets }}
+    steps:
+      # Secrets are passed through env (never interpolated into the script) and only a boolean is emitted.
+      - name: Check required secrets are present
+        id: check
+        env:
+          SF_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+          SF_USER: ${{ secrets.SNOWFLAKE_USER }}
+          SF_KEY: ${{ secrets.SNOWFLAKE_PRIVATE_KEY }}
+        run: |
+          if [ -n "$SF_ACCOUNT" ] && [ -n "$SF_USER" ] && [ -n "$SF_KEY" ]; then
+            echo "has_secrets=true" >> "$GITHUB_OUTPUT"
+            echo "Required Snowflake secrets are present."
+          else
+            echo "has_secrets=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::Snowflake secrets (SNOWFLAKE_ACCOUNT, SNOWFLAKE_USER, SNOWFLAKE_PRIVATE_KEY) are not all set in environment 'snowflake-prod'; the live job is skipped."
+          fi
+
+  live:
+    name: dbt build --target prod
+    needs: detect
+    if: ${{ github.event_name == 'workflow_dispatch' && needs.detect.outputs.has_secrets == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    environment: snowflake-prod
+    defaults:
+      run:
+        working-directory: snowflake/dbt
+    env:
+      DBT_PROFILES_DIR: "."
+      SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+      SNOWFLAKE_USER: ${{ secrets.SNOWFLAKE_USER }}
+      SNOWFLAKE_PRIVATE_KEY_PASSPHRASE: ${{ secrets.SNOWFLAKE_PRIVATE_KEY_PASSPHRASE }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v7
+        with:
+          python-version: "3.13"
+          enable-cache: true
+          cache-dependency-glob: snowflake/dbt/uv.lock
+      - name: Install dbt (locked)
+        run: uv sync --locked
+
+      # profiles.yml reads a key *file* path. The key only ever exists as a 0600 file under RUNNER_TEMP, is never
+      # echoed, and is deleted at the end of the job.
+      - name: Write private key to a temp file
+        env:
+          SF_KEY: ${{ secrets.SNOWFLAKE_PRIVATE_KEY }}
+        run: |
+          set -eu
+          umask 077
+          key_file="$RUNNER_TEMP/snowflake_rsa_key.p8"
+          printf '%s\n' "$SF_KEY" > "$key_file"
+          chmod 600 "$key_file"
+          echo "SNOWFLAKE_PRIVATE_KEY_PATH=$key_file" >> "$GITHUB_ENV"
+
+      # Export the optional overrides only when non-empty. An empty string would be passed to dbt as a value and
+      # defeat the env_var() defaults in profiles.yml (RETAIL_TRANSFORMER / RETAIL_WH / RETAIL_OLIST).
+      - name: Apply optional role / warehouse / database overrides
+        env:
+          SF_ROLE: ${{ secrets.RETAIL_SF_ROLE }}
+          SF_WAREHOUSE: ${{ secrets.RETAIL_SF_WAREHOUSE }}
+          SF_DATABASE: ${{ secrets.RETAIL_SF_DATABASE }}
+        run: |
+          set -eu
+          [ -z "$SF_ROLE" ] || echo "RETAIL_SF_ROLE=$SF_ROLE" >> "$GITHUB_ENV"
+          [ -z "$SF_WAREHOUSE" ] || echo "RETAIL_SF_WAREHOUSE=$SF_WAREHOUSE" >> "$GITHUB_ENV"
+          [ -z "$SF_DATABASE" ] || echo "RETAIL_SF_DATABASE=$SF_DATABASE" >> "$GITHUB_ENV"
+
+      - name: dbt deps
+        run: uv run --no-sync dbt deps
+
+      - name: dbt build --target prod
+        run: uv run --no-sync dbt build --target prod
+
+      - name: Remove private key
+        if: always()
+        run: rm -f "$RUNNER_TEMP/snowflake_rsa_key.p8"

@@ -1,0 +1,56 @@
+/* Insight cards: eyebrow, the evidence figure, the finding in words, its source, and a circular "satellite" link
+   docked at the corner. Plus small status/fact helpers. */
+.insights { display: grid; gap: var(--gap); grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+.insight {
+  position: relative;
+  background: var(--surface-1);
+  border-radius: var(--radius);
+  padding: 32px 32px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.insight-figure { font-size: 44px; font-weight: var(--weight-strong); letter-spacing: -0.03em; line-height: 1; }
+.insight-text { color: var(--text-secondary); }
+.insight .card-foot { margin-top: auto; padding-right: 64px; }
+
+/* Satellite CTA: a white circle with an arrow, docked on the card's corner. */
+.satellite {
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--surface-float);
+  color: var(--text-primary);
+  display: grid;
+  place-items: center;
+  text-decoration: none;
+  font-size: 22px;
+  box-shadow: var(--shadow-nav);
+  transition: transform 160ms ease;
+}
+.satellite:hover { transform: translate(2px, -2px); }
+.satellite:focus-visible { outline-offset: 2px; }
+
+.status { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--text-secondary); }
+.status::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--status-color, var(--text-muted));
+}
+.status.good { --status-color: var(--good); }
+.status.warning { --status-color: var(--warning); }
+.status.critical { --status-color: var(--critical); }
+
+.pill-list { display: flex; flex-wrap: wrap; gap: 6px; }
+.pill { background: var(--surface-2); border-radius: var(--radius-pill); padding: 4px 12px; font-size: 13px; color: var(--text-secondary); }
+dl.facts { display: grid; grid-template-columns: max-content 1fr; gap: 6px 20px; margin: 0; font-size: 14px; }
+dl.facts dt { color: var(--text-muted); }
+dl.facts dd { margin: 0; overflow-wrap: anywhere; }
+
+.facts-list { margin: 0; padding-left: 20px; display: grid; gap: 10px; font-size: 14px; color: var(--text-secondary); }
+.facts-list strong { color: var(--text-primary); font-weight: 700; }

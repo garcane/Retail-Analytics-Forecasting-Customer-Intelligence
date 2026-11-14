@@ -16,7 +16,7 @@ _Last updated: 2026-10-13_
 | 3 Cloud foundation | Out of scope (D-002) | |
 | 4 Data engineering | Done | `sql/`, `src/transformation/build_warehouse.py`, `docs/data/DATA_MODEL.md` (22 checks) |
 | 5 Analytics | Done | `sql/analytics/`, `src/analytics/`, `docs/analytics/BUSINESS_INSIGHTS.md` |
-| 6 Machine learning | Done | `notebooks/02_late_delivery_model.ipynb` and `03_weekly_forecast.ipynb` (with charts), interactive versions in `notebooks/marimo/`, `docs/ml/MODEL_CARD.md` and the experiment documents it links |
+| 6 Machine learning | Done | `notebooks/02_late_delivery_model.ipynb` and `03_weekly_forecast.ipynb` (with charts), interactive views in the HTML dashboard (`dashboard/`), `docs/ml/MODEL_CARD.md` and the experiment documents it links |
 | Dashboard (Power BI, added later) | Built; opens and loads in Desktop (owner now edits layouts there) | `powerbi/README.md`, `docs/powerbi/DAX_SPECIFICATION.html`, `docs/powerbi/DASHBOARD_MOCKUP.html`, `powerbi/RetailAnalytics.pbip` (DD-15) |
 | 7 Deployment, 8 Monitoring | Out of scope (D-002, D-005) | |
 | 9 Documentation | Done | `README.md`, `SECURITY.md`, `COST.md`, `docs/LESSONS_LEARNED.md`, model card |
@@ -32,7 +32,7 @@ _Last updated: 2026-10-13_
 
 ## Quality evidence
 
-- `uv run pytest`: **96 tests pass** (about 45 seconds). Leakage tests were shown to fail when leaks were planted.
+- `uv run pytest`: **392 tests pass** (2026-11-13, about 70 seconds; 96 at the DuckDB audit). 22 skip without the local `warehouse.duckdb`, and 10 in `tests/test_powerbi_project.py` fail for the reasons under Open items. Leakage tests were shown to fail when leaks were planted.
 - A **clean clone** plus the raw data rebuilt the warehouse (22/22), passed all tests and regenerated the analytics tables and figures byte-for-byte. Late-delivery metrics reproduce to within about 0.001 to 0.002 (multithreaded numerics); v1 was identical.
 - Security scan: no secrets, no tracked data or credentials ([SECURITY.md](SECURITY.md)). Cost: $0 ([COST.md](COST.md)).
 
@@ -40,16 +40,39 @@ _Last updated: 2026-10-13_
 
 D-001 to D-008 (user) and DD-01 to DD-17 (design) are in [DECISIONS.md](DECISIONS.md). **Open decisions:** none.
 
+## Snowflake + dbt implementation and HTML dashboard (branch feature/snowflake-dbt-migration, updated 2026-11-13)
+
+| Area | Built | Verified how | Not verified |
+|---|---|---|---|
+| Snowflake setup, resource monitor, service user | yes | Run live in Snowsight 2026-11-12 (`RETAIL_OLIST`, `RETAIL_WH`, three roles, `RETAIL_MONITOR` at 5 credits a month, key-pair user `RETAIL_SVC`) | |
+| RAW ingestion | yes | Run live 2026-11-12: nine tables, loaded rows equal to the CSV record counts, rerun skipped every file, no stray carriage returns | |
+| dbt project (46 models, 321 tests) | yes | Run live 2026-11-12: `dbt build` PASS=367, including the `ASOF JOIN` | |
+| Reconciliation (`src/reconciliation`) | yes | Run live: 22/22 checks, 0 differences, headline numbers exact ([report](docs/validation/RECONCILIATION_REPORT.md)) | |
+| Python data access, Tier 1 models on Snowflake | yes | Run live 2026-11-13: forecast metrics identical; late-delivery metrics within 6e-6 (inputs differ only by float summation order, at most 1.4e-9) | Tier 2 scripts stay DuckDB-only by design |
+| ML outputs in Snowflake (`publish_ml.py`) | yes | Run live 2026-11-13 (run `20261113T122357Z-a99b8a21`): 38,988 scores, 1,610 backtest rows, 6 flag shares; read back; matches DuckDB (backtest identical, scores within 8e-7); re-publish replaces a run atomically | Scored on the client, not yet inside Snowflake |
+| Snowflake Model Registry (`snowflake/ml/`) | yes | Run live 2026-11-13: `ML.LATE_DELIVERY_RISK` `V1_20261113_CC90DC8`, 96,019 training orders, backtest metrics and commit attached; scored 2,000 orders inside Snowflake, equal to local to 1.1e-16 | Scheduled scoring (Task) and ML monitoring not built; this first version's dependencies (scikit-learn, `snowflake-ml-python`) are ranges, not exact pins |
+| ML inside Snowflake (`notebooks/snowflake/`, `snowflake/ml/scoring_task.sql`, dbt `monitoring`) | yes | Run live 2026-11-13. The notebooks pass their checks in a Git-connected workspace. Notebook 04 registered `V1WS_20261113_7370C92` from inside Snowflake. Task `ML.SCORE_LATE_DELIVERY` executed once (SUCCEEDED, 6,306 orders) and is kept suspended. Monitoring views equal the Python results | No new data to score on a schedule (static 2018 snapshot); the account idle-timeout parameter is unchanged |
+| HTML dashboard (`dashboard/`, DD-22, DD-23) | yes | Data built from Snowflake, identical to a DuckDB build; all seven pages load with no console errors; `tests/test_dashboard.py`. Dark theme checked visually on 2026-11-13; the heatmap caption now names the right end of the ramp in each theme | |
+| Power BI on Snowflake | patched-copy script + 12 M templates | 68 offline tests incl. byte-identical checks of report, measures and relationships | Not opened in Power BI Desktop; sign-in method |
+| CI | 3 workflows | YAML and `actionlint` locally; `dbt parse` on a clean copy | No workflow has run on GitHub |
+
+Full suite (2026-11-13): see the commit that records this update; the only failures are the 10 in `tests/test_powerbi_project.py` that predate this work.
+
 ## Open items (from the audit)
 
 | Item | Why open |
 |---|---|
 | Compare the Power BI cards with the first-open checklist | The project loads in Desktop; the numbers have not been compared |
 | Raw data in early commits of the public repository | History not rewritten (D-008); the owner decides whether to rewrite it |
+| Power BI `DataFolder` holds a local path | The committed `powerbi/RetailAnalytics.SemanticModel/definition/expressions.tmdl` points at `C:\Users\Student\GCP\powerbi\data` instead of the `C:\REPLACE\WITH\FULL\PATH\TO\powerbi\data` placeholder, so `test_committed_project_is_complete_and_holds_no_machine_path` fails. The other 9 failures in `tests/test_powerbi_project.py` need `warehouse.duckdb`, which is git-ignored and absent from a fresh clone. The CI workflow `python-ci` is therefore red until the placeholder is restored and the warehouse-dependent tests skip. Not changed: it alters what Desktop opens, so it is the owner's call |
+| ~~DuckDB late-delivery feature query is not reproducible across multi-threaded runs~~ (fixed 2026-11-12, DD-21) | Cause: `arg_max` picked among 57 price-tied orders in thread order, which moved `category_prior_*` on about 26,000 rows; plus a float `avg` summed in thread order. Both are now deterministic (alphabetical tie-break, ordered aggregate), identical across 1/2/8/16 threads, and the same rule as Snowflake. The v2/v3 experiment metrics were regenerated; v1 is unchanged |
+| ~~Snowflake-backed runs of the two Tier 1 entry points~~ (run 2026-11-13) | `--backend snowflake --yes` wrote `reports/snowflake/*.json`: forecast identical to DuckDB, late-delivery within 6e-6. Tier 2 scripts (`drift_analysis`, `export_data`, `run_analytics`) stay DuckDB-only |
+| Power BI patched copy | Built and tested offline; not opened. Needs Desktop and a sign-in decision. All 12 source tables now exist in Snowflake (the `ML` tables since 2026-11-13) |
+| ~~Snowflake credit use~~ (measured 2026-11-13) | 0.34 of the 5-credit monthly quota for everything run so far; re-measure with `snowflake/monitoring/credit_usage.py --yes` (`05_monitor_grant.sql` was run once as ACCOUNTADMIN) |
 
 ## Known limitations
 
 - The ML result is modest and documented as such; a better model would need information the dataset lacks (see the model card).
 - Six test months and 85 forecast weeks are small samples.
-- The original brief documents (`Cloud Portfolio — Master Agent Prompt.md`, `GCP Retail Project Local vs Cloud Architecture.md`, the Retail Analytics document) still describe BigQuery, Dataflow, Vertex AI and monitoring services. They are kept unchanged by design.
+- `Cloud Portfolio — Master Agent Prompt.md` still describes the original multi-cloud brief and is kept unchanged by design. The Google Cloud project brief and its local-vs-cloud mapping were replaced on 2026-11-13 by Snowflake rewrites (`Snowflake Project — Retail Analytics, Forecasting & Customer Intelligence Platform.md`, `Snowflake Retail Project Local vs Cloud Architecture.md`); the originals are in the git history up to commit `a00b0a5`.
 - The raw data remains in earlier commits (history not rewritten, D-008).

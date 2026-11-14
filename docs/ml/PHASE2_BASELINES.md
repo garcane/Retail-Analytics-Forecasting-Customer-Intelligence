@@ -61,23 +61,23 @@ Three feature sets were compared with the same backtest. v2 adds the late rate o
 | Model | PR-AUC | ROC-AUC | Brier | Recall, top 10% flagged |
 |---|---:|---:|---:|---:|
 | Logistic regression, v1 | **0.184** | **0.707** | **0.0778** | **0.279** |
-| Logistic regression, v2 (+ route, category) | 0.174 | 0.687 | 0.0815 | 0.273 |
-| Logistic regression, v3 (+ trailing 28 days) | 0.178 | 0.681 | 0.0859 | 0.268 |
+| Logistic regression, v2 (+ route, category) | 0.174 | 0.688 | 0.0815 | 0.275 |
+| Logistic regression, v3 (+ trailing 28 days) | 0.177 | 0.681 | 0.0859 | 0.268 |
 | Gradient boosting, v1 | 0.172 | 0.671 | 0.0796 | 0.259 |
-| Gradient boosting, v2 | 0.156 | 0.638 | 0.0803 | 0.249 |
-| Gradient boosting, v3 | 0.146 | 0.633 | 0.0861 | 0.199 |
+| Gradient boosting, v2 | 0.152 | 0.637 | 0.0806 | 0.248 |
+| Gradient boosting, v3 | 0.149 | 0.640 | 0.0855 | 0.198 |
 
 Each group of added features leaves the logistic model no better and the boosted model worse, and Brier gets worse as well. The calibration table shows the mechanism: the extra history makes the model more confident without making it more right.
 
 | Score quintile (4 = highest risk) | v1 predicted | v1 actual | v2 predicted | v2 actual | v3 predicted | v3 actual |
 |---|---:|---:|---:|---:|---:|---:|
 | 0 | 0.032 | 0.027 | 0.034 | 0.032 | 0.037 | 0.035 |
-| 1 | 0.059 | 0.056 | 0.064 | 0.062 | 0.068 | 0.067 |
-| 2 | 0.081 | 0.074 | 0.092 | 0.078 | 0.098 | 0.077 |
-| 3 | 0.112 | 0.100 | 0.133 | 0.093 | 0.147 | 0.083 |
-| 4 | 0.215 | 0.170 | 0.260 | 0.163 | 0.283 | 0.166 |
+| 1 | 0.059 | 0.056 | 0.064 | 0.063 | 0.067 | 0.067 |
+| 2 | 0.081 | 0.074 | 0.092 | 0.076 | 0.097 | 0.077 |
+| 3 | 0.112 | 0.100 | 0.133 | 0.094 | 0.146 | 0.085 |
+| 4 | 0.215 | 0.170 | 0.259 | 0.162 | 0.282 | 0.164 |
 
-(Mean over the six test months, logistic regression.) Predicted risk in the top quintile rises from 0.215 to 0.283 while the observed rate stays near 0.165.
+(Mean over the six test months, logistic regression.) Predicted risk in the top quintile rises from 0.215 to 0.282 while the observed rate stays near 0.163. The v2 and v3 figures were refreshed on 2026-11-12 after the feature query was made deterministic (DD-21); v1 is unchanged.
 
 I suspected drift, and tested it in [DRIFT_ANALYSIS.md](DRIFT_ANALYSIS.md). The answer is mixed. The trailing 28-day rate (v3) and category rate do fail because they track the regime, which does not persist. Route history does not: it is stable, but it repeats what v1 already holds in seller state, customer state and distance, so adding it only adds noise. The system-wide level shift hurts calibration, not ranking. And the ordinary promise-length feature itself flipped in August 2018, which is why that month is the weakest.
 

@@ -1,0 +1,66 @@
+# Python CI: lint (new Snowflake-related code only) + the offline pytest suite.
+# No secrets, no Snowflake connection, no DuckDB warehouse: tests that need warehouse.duckdb skip via the
+# `warehouse` fixture. Missing Snowflake credentials can never fail this workflow.
+#
+# KNOWN RED ON BASELINE (not hidden, nothing deselected): tests/test_powerbi_project.py builds its schema from a
+# ROOT/warehouse.duckdb that is git-ignored, and the committed expressions.tmdl holds a local DataFolder path.
+# See docs/migration/CI_SETUP.md ("Known baseline failures").
+name: python-ci
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: python-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  UV_PYTHON: "3.13"   # pyproject requires >=3.13; overrides the root .python-version (3.14)
+
+jobs:
+  lint:
+    name: ruff (new code only)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v7
+        with:
+          python-version: "3.13"
+      # Pinned ruff + explicit rule selection so a ruff upgrade cannot change what is checked.
+      # Scope is limited to the code added for the Snowflake implementation; legacy DuckDB code is not linted here.
+      - name: ruff check
+        run: >
+          uvx ruff@0.12.0 check --select E4,E7,E9,F
+          src/data_access
+          src/reconciliation
+          snowflake/ingestion
+          tests/test_data_access.py
+          tests/test_reconciliation.py
+          tests/test_snowflake_ingestion.py
+          tests/test_powerbi_snowflake.py
+          powerbi/snowflake
+
+  test:
+    name: pytest (offline)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v7
+        with:
+          python-version: "3.13"
+          enable-cache: true
+          cache-dependency-glob: |
+            uv.lock
+            pyproject.toml
+      # --locked fails (it never rewrites uv.lock) if uv.lock is out of date with pyproject.toml.
+      # That is intentional: regenerate the lock with `uv lock` and commit it, rather than letting CI drift.
+      - name: Install dependencies (locked, with dev group)
+        run: uv sync --locked --group dev
+      - name: pytest
+        run: uv run --no-sync python -m pytest -q -p no:cacheprovider
