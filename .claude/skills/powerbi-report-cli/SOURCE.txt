@@ -1,0 +1,6 @@
+Source: https://github.com/microsoft/skills-for-fabric
+Path: skills/powerbi-report-cli (v1.0.5)
+Commit: e31422e7d1045ef3a0906df9ff5991f2338af010 (2026-11-12)
+Requested as "powerbi-report-authoring"; upstream merged that skill (with
+powerbi-report-design/-management/-planning) into powerbi-report-cli.
+License: MIT (see LICENSE)
