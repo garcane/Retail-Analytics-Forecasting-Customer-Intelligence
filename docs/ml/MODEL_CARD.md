@@ -2,9 +2,11 @@
 
 Two models trained on the Olist Brazilian e-commerce dataset (about 100,000 orders, 2016 to 2018; CC BY-NC-SA 4.0, non-commercial use only). Both are baselines built to be honest about their limits, not production systems. All numbers come from time-ordered backtests; the supporting analyses are linked.
 
-**See it with charts:** [notebooks/02_late_delivery_model.ipynb](../../notebooks/02_late_delivery_model.ipynb) (late-delivery model) and [notebooks/03_weekly_forecast.ipynb](../../notebooks/03_weekly_forecast.ipynb) (forecast) walk through everything below with the plots, using the same tested code. Interactive marimo versions (sliders and pickers) are in [notebooks/marimo/](../../notebooks/marimo/).
+**See it with charts:** [notebooks/02_late_delivery_model.ipynb](../../notebooks/02_late_delivery_model.ipynb) (late-delivery model) and [notebooks/03_weekly_forecast.ipynb](../../notebooks/03_weekly_forecast.ipynb) (forecast) walk through everything below with the plots, using the same tested code. Interactive views (a test-month picker, precision and recall at every flag share) are in the [HTML dashboard](../../dashboard/README.md).
 
 ## 1. Late-delivery model
+
+*In Snowflake (2026-11-13):* the v1 model is registered as `RETAIL_OLIST.ML.LATE_DELIVERY_RISK`, version `V1_20261113_CC90DC8`, trained on all labelled orders from 2017 on, with the backtest metrics below attached. Its scores inside Snowflake match the local model. See `snowflake/README.md` section 9. Because it is trained on every month, its scores for the 2018 test months are **in-sample**. The scheduled scoring task writes them to `ML.LATE_DELIVERY_SCORES_REGISTRY`, never to the out-of-time backtest scores in `ML.LATE_DELIVERY_SCORES`. Calibration and single-feature drift are monitored in SQL (`ML_MONITORING`, DD-26). A second version, `V1WS_20261113_7370C92`, was trained inside Snowflake by `notebooks/snowflake/04` on the same 96,019 orders. Its scores equal the default version's to 1.1e-12; it is not the default.
 
 | | |
 |---|---|

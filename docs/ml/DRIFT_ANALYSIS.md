@@ -1,5 +1,7 @@
 # Drift analysis: why the richer history features did not help
 
+> **In Snowflake (2026-11-13):** E1 (single-feature AUC by month for `promised_days`, `distance_km` and `seller_prior_late_rate`) and the calibration table are reproduced as dbt views in `ML_MONITORING` (`snowflake/dbt/models/monitoring/`). They match this analysis to 5e-13 (AUC) and exactly (calibration). The smoothed-rate, route, category and lag experiments remain in Python (`src/ml/drift_analysis.py`).
+
 [PHASE2_BASELINES.md](PHASE2_BASELINES.md) left one explanation untested: the late rate shifts by regime, so route, category and trailing-rate features learn the training period and do not carry forward. This document tests it. The short answer is that it is **partly right and partly wrong**.
 
 Code: [src/ml/drift_analysis.py](../../src/ml/drift_analysis.py). Results: [reports/drift_metrics.json](../../reports/drift_metrics.json). Run with `uv run python src/ml/drift_analysis.py` (a few minutes). All numbers are from the six-month backtest of the earlier document unless stated, so differences of about 0.005 PR-AUC are within noise.

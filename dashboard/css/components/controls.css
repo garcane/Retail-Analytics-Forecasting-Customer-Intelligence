@@ -1,0 +1,58 @@
+/* Controls: pills. Selected = ink pill with cream text; unselected = quiet text on the well. */
+.control { display: flex; flex-direction: column; gap: 8px; }
+.control-label { font-size: 13px; color: var(--text-muted); }
+.segmented {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 4px;
+  background: var(--surface-1);
+  border-radius: var(--radius-pill);
+}
+.segmented button {
+  border: 0;
+  background: none;
+  padding: 8px 18px;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  color: var(--text-secondary);
+  font-weight: var(--weight-strong);
+  letter-spacing: -0.02em;
+  min-height: 36px;
+}
+.segmented button:hover { background: var(--accent-wash); color: var(--text-primary); }
+.segmented button[aria-pressed="true"] { background: var(--surface-ink); color: var(--on-ink); }
+.segmented button:active { transform: translateY(1px); }
+
+select.select {
+  appearance: none;
+  padding: 9px 44px 9px 20px;
+  min-height: 40px;
+  border-radius: var(--radius-pill);
+  border: 1.5px solid var(--border-strong);
+  background-color: var(--surface-float);
+  background-image: linear-gradient(45deg, transparent 50%, currentColor 50%), linear-gradient(135deg, currentColor 50%, transparent 50%);
+  background-position: calc(100% - 22px) 52%, calc(100% - 17px) 52%;
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+  font-weight: var(--weight-strong);
+  letter-spacing: -0.02em;
+  cursor: pointer;
+}
+
+/* Secondary button: outlined pill (theme toggle, chart/table toggle) */
+.icon-button {
+  border: 1.5px solid var(--border-strong);
+  background: var(--surface-float);
+  border-radius: var(--radius-control);
+  padding: 6px 18px;
+  min-height: 36px;
+  cursor: pointer;
+  color: var(--text-primary);
+  font-size: 14px;
+  font-weight: var(--weight-strong);
+  letter-spacing: -0.02em;
+}
+.icon-button:hover { background: var(--accent-wash); }
+.icon-button[aria-pressed="true"] { background: var(--surface-ink); color: var(--on-ink); border-color: var(--surface-ink); }
+.icon-button:active { transform: translateY(1px); }

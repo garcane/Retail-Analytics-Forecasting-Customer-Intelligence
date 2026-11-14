@@ -27,10 +27,19 @@ Later decisions can supersede earlier ones; when that happens the entry says so.
 | DD-11 | 2026-10-13 | No recalibration or window tuning; use the model by rank | Active |
 | DD-12 | 2026-10-13 | Close the late-delivery feature search; v1 is final. Forecast: recommend the simple averages | Active |
 | DD-13 | 2026-10-13 | Present the ML in Jupyter notebooks that call the tested `src/ml` code | Active |
-| DD-14 | 2026-10-13 | Add interactive marimo versions of the ML notebooks, keeping the Jupyter ones | Active |
+| DD-14 | 2026-10-13 | Add interactive marimo versions of the ML notebooks, keeping the Jupyter ones | Superseded by DD-24 |
 | DD-15 | 2026-10-15 | Deliver Power BI specification-first from one definition | Active |
 | DD-16 | 2026-10-16 | Read the geolocation CSV directly; no Parquet conversion | Active |
 | DD-17 | 2026-10-16 | Document the local build as a twin of the cloud design, with a migration guide (nothing built in the cloud) | Active |
+| DD-18 | 2026-10-18 | Translate the staging layer to BigQuery SQL in `sql/bigquery/` | Active |
+| DD-19 | 2026-11-08 | Add a Snowflake + dbt implementation next to DuckDB (supersedes D-002 and D-004 for that implementation) | Active |
+| DD-20 | 2026-11-08 | Snowflake modelling choices (text RAW, DuckDB mart names, keys as dbt tests, patched Power BI copy) | Active |
+| DD-21 | 2026-11-12 | Make the late-delivery feature query deterministic | Active |
+| DD-22 | 2026-11-13 | Add a modular HTML dashboard next to Power BI | Active |
+| DD-23 | 2026-11-13 | Build the dashboard data from Snowflake by default | Active |
+| DD-24 | 2026-11-13 | Remove the marimo notebooks; the Jupyter notebooks and the HTML dashboard remain | Active |
+| DD-25 | 2026-11-13 | Register the late-delivery model in the Snowflake Model Registry from an isolated environment | Active |
+| DD-26 | 2026-11-13 | ML inside Snowflake: notebooks for analysis and training, SQL for scheduled scoring and monitoring | Active |
 
 ---
 
@@ -223,6 +232,8 @@ Evidence for these entries is in [docs/data/EDA_FINDINGS.md](docs/data/EDA_FINDI
 
 ### DD-14: marimo notebooks alongside the Jupyter ones
 
+*Superseded by DD-24 (2026-11-13): the marimo notebooks were removed.*
+
 - **Context:** The project owner wanted the ML notebooks in marimo as well. DD-13 had chosen Jupyter, and the reasons for it (stored charts, familiar format) still hold.
 - **Options:** Replace the Jupyter notebooks; keep both; convert cell for cell without changes.
 - **Chosen:** Keep both. The marimo versions are `notebooks/marimo/02_late_delivery_model.py` and `03_weekly_forecast.py`, rewritten by hand rather than auto-converted, with interactive controls added.
@@ -275,3 +286,95 @@ Evidence for these entries is in [docs/data/EDA_FINDINGS.md](docs/data/EDA_FINDI
 - **Trade-offs:** views over external tables re-scan the CSVs on every query instead of reading a native staging copy; a `raw` dataset joins the guide's dataset list; `bq load` (step 4 of the guide) remains the alternative for native staging tables, and the two routes give the same object names and schema.
 - **Cost / Security:** none now — nothing is deployed; the guide's steps 1 and 11 keep credentials out of the repository and end in teardown.
 - **Rejected:** `bq load` alone (the request was for SQL, not schema files); materialised staging tables (a second copy of the data and of the typing, and staging would stop being a view layer).
+
+### DD-19: A Snowflake + dbt implementation is added next to the DuckDB one (supersedes D-002 and D-004 for that implementation only)
+
+- **Context:** The project owner asked for the same analytical workload on a cloud warehouse (Snowflake) with dbt, as a second implementation, keeping the DuckDB build, the Python forecasting and the Power BI report. D-002 (local only) and D-004 (no dbt) were right for the local project and remain the rule for the DuckDB implementation; they no longer describe the whole repository.
+- **Options:** replace DuckDB with Snowflake; a separate repository; both implementations side by side on a feature branch (`feature/snowflake-dbt-migration`).
+- **Chosen:** side by side. DuckDB stays the reference implementation and keeps `sql/`, `src/`, `tests/` and the notebooks where they are. The Snowflake implementation lives in `snowflake/` (setup SQL, RAW ingestion, an isolated dbt project). Python reads either backend through `src/data_access` (`DATA_BACKEND`, default `duckdb`). `src/reconciliation` compares the two. Nothing is moved into an `implementations/` folder.
+- **Reason:** the two implementations answer the same business questions on the same data, so a reader sees one project; DuckDB's outputs (`reports/analytics/*.csv`, the 22 checks, the headline numbers) are the yardstick for the migration. Moving the DuckDB files would break the pytest path configuration, the notebooks, the Power BI documents and the graphify map for no functional gain.
+- **Trade-offs:** two SQL dialects to keep in step; dbt runs in its own Python 3.13 environment (`snowflake/dbt/pyproject.toml`) so the root lock and the owner's Python version are untouched; the dbt pin is 1.11 (dbt-core 1.11.17, dbt-snowflake 1.11.6), because 1.10 printed a deprecation notice on every command. **Everything that runs on Snowflake is unverified until the live steps are run** (see [PROJECT_STATUS.md](PROJECT_STATUS.md)). *Update 2026-11-13: the live steps have run: RAW load exact, `dbt build` PASS=367, reconciliation 22/22 with 0 differences, Tier 1 Python on Snowflake (see [snowflake/README.md](snowflake/README.md)).*
+- **Cost / Security:** one XSMALL warehouse with `AUTO_SUSPEND = 60`; no resource monitor is created (it needs ACCOUNTADMIN). *Update 2026-11-12: at the owner's request a resource monitor was created after all (`RETAIL_MONITOR`, 5 credits a month, `setup/03_resource_monitor.sql`), and a key-pair service user `RETAIL_SVC` (`setup/04_service_user.sql`) replaced the shared user.* Key-pair authentication only; credentials come from environment variables; `.env` is git-ignored and `.env.example` holds placeholders. Setup SQL uses `IF NOT EXISTS` only (no `OR REPLACE`, no `DROP`) and every live command prints its target and needs an explicit confirmation. See [SECURITY.md](SECURITY.md) and [COST.md](COST.md).
+- **Rejected:** replacing DuckDB (loses the reference and the reconciliation); a separate repository (the data, business logic and dashboard are shared); moving the DuckDB files under `implementations/duckdb/`.
+
+### DD-20: Snowflake modelling choices
+
+- **Context:** DD-19 fixes the layout. These are the choices inside the Snowflake implementation.
+- **Chosen:** (1) RAW tables hold every column as text plus load metadata (`_loaded_at`, `_source_file`, `_source_row_number`, `_batch_id`); typing happens in dbt staging, as in `sql/bigquery/staging` and in the DuckDB `sql/staging`. (2) dbt marts keep the DuckDB names (`dim_*`, `fact_*`) so reconciliation joins name for name and the Power BI table names do not change; the eight analytics queries, the late-delivery feature table and the weekly series become `mart_*` models. (3) Primary and foreign keys are not enforced in Snowflake, so they become dbt tests. (4) No incremental models, snapshots or seeds: the dataset is a static snapshot. (5) Power BI is switched through a patched copy of the project written by `powerbi/snowflake/apply_snowflake_source.py`; the committed project is not edited. (6) No customer segmentation mart is built: DD-07 dropped segmentation because 96.96% of customers buy once, and the Snowflake side follows the real model rather than inventing marts.
+- **Reason:** keeps the migration a like-for-like port that can be reconciled, and keeps the existing report intact.
+- **Trade-offs:** the DuckDB `arg_max` tie-break is not deterministic, so the two engines can differ on `category_prior_*` features in the late-delivery table. The Snowflake model adds a deterministic tie-break, and reconciliation reports such differences as counts instead of hiding them.
+- **Cost / Security:** none beyond DD-19.
+- **Rejected:** typed RAW tables (a bad value would fail the load instead of surfacing in dbt); renaming marts to the dbt `fct_` convention (breaks name-for-name reconciliation and the Power BI table names).
+
+### DD-21: The late-delivery feature query is made deterministic
+
+- **Context:** Two runs of `sql/ml/late_delivery_features.sql` on the same warehouse gave different `category_prior_n` and `category_prior_late` (up to 29,679 rows, by up to 7,350) whenever DuckDB used more than one thread. Measured on 2026-11-12; single-threaded runs were identical.
+- **Cause:** `arg_max(category, price)` returns an arbitrary row when several items share the highest price. 57 labelled orders have such a tie across different categories, and the row DuckDB saw first depended on thread scheduling. The chosen category decides which category's running totals the order joins and feeds, so the effect cascaded to every later order in both categories. A second, minor cause: `avg(prior_late_rate)` over the sellers of a multi-seller order added doubles in thread order (differences of about 3e-17 on 2 to 4 orders). `drift_analysis.KEYS_SQL` used the same `arg_max`.
+- **Chosen:** ties resolve to the alphabetically first category (and payment type): `first(category order by price desc, category)`; the per-seller average uses `order by seller_key`. This is the rule the Snowflake models already used (DD-20), so both engines now agree row for row.
+- **Verified:** ten 8-thread runs and runs at 1, 2 and 16 threads are bit-identical; a second full run of the late-delivery backtest reproduces its metrics exactly; `tests/test_feature_determinism.py` fails on the old query and passes on the new one; the live DuckDB-vs-Snowflake reconciliation shows 0 differences in the feature table.
+- **Trade-offs:** the regenerated `reports/late_delivery_metrics.json`, `drift_metrics.json` and `recalibration_metrics.json` differ from the previous (irreproducible) versions in the v2/v3 experiments, by at most 0.0055 in a macro average. The reference model, logistic regression v1, does not use `category_prior_*` and its metrics are unchanged; the conclusions of DD-10 to DD-12 stand. `docs/ml/PHASE2_BASELINES.md` was refreshed.
+- **Rejected:** pinning DuckDB to one thread (hides the defect, slower, and the result would still be an arbitrary pick that Snowflake could not reproduce).
+
+### DD-22: A modular HTML dashboard is added next to Power BI
+
+- **Context:** The owner replaced "Decision 2" of the migration brief with an HTML dashboard: a more intuitive way to present the combined analytics and machine-learning outputs than Power BI allows, with CSS and JavaScript in separate files so it stays modular and easy to extend. The Power BI report stays as it is.
+- **Chosen:** a static site in `dashboard/` (one `index.html`, CSS split into tokens, base, layout and components, JavaScript as ES modules: `core/`, `components/`, `charts/`, `pages/`, `insights/`). Pages and insight rules register themselves (`registerPage`, `registerInsight` in `js/core/registry.js`), so a new view is one new module. Charts are hand-written SVG with a table view, keyboard access and a validated colour palette. The data is pre-aggregated by `src/dashboard/build_data.py` into small JSON files in `dashboard/data/`, served locally by `src/dashboard/serve.py`. The visual design follows the owner's design brief (warm cream and ink, Sofia Sans), without any third-party brand marks.
+- **Reason:** no build step and no framework to keep current; only aggregates leave the warehouse, so the committed data files hold no customer, order or seller identifiers (a test checks this); the ML outputs (model comparison, risk operating points, forecast backtests) sit next to the business figures they explain.
+- **Trade-offs:** charts are maintained in this repository instead of a library; the dashboard is a snapshot of the last build, not live. The only external request is the Sofia Sans font from Google Fonts; offline, the page falls back to the system font and otherwise works.
+- **Rejected:** a JavaScript framework and bundler (a build toolchain for seven pages); a chart library from a CDN (a third-party script on every view, and its defaults fight the palette and accessibility rules); querying Snowflake from the browser (would expose credentials).
+
+### DD-23: The dashboard data is built from Snowflake by default
+
+- **Context:** With the Snowflake implementation verified (DD-19 update), the owner chose Snowflake as the default source of the dashboard data.
+- **Chosen:** `build_data.py` defaults to `--backend snowflake` (override with `--backend duckdb` or `DASHBOARD_BACKEND`). It prints the target and needs `--yes` before it connects; without credentials it stops with a hint to use DuckDB. KPIs, weekly series and analytics tables come from `MARTS`; the risk roll-ups retrain the v1 model on the Snowflake feature table. Model metrics still come from the tracked `reports/*.json`, which the Python ML scripts produce. Files are written to temporary names and swapped in only when the whole build succeeds; `manifest.json` goes last and records the source.
+- **Verified:** a Snowflake build and a DuckDB build gave identical files for the KPIs, analytics, forecast and risk (2026-11-12).
+- **Trade-offs:** a Snowflake build needs credentials and a running warehouse (a few seconds of XSMALL time); offline work uses `--backend duckdb`.
+
+### DD-24: The marimo notebooks are removed
+
+- **Context:** DD-14 added interactive marimo versions of the two ML notebooks. Since then the HTML dashboard (DD-22) has taken over the interactive role: its risk page has a test-month picker and shows precision and recall across every flag share (where the marimo app had a "flag the riskiest X%" slider), and its forecast page has target and horizon pickers and method toggles.
+- **Chosen:** the project owner removed `notebooks/marimo/` (commit `0568c7d`). The Jupyter notebooks stay as the stored, charted walk-through of the ML; `tests/test_marimo.py` was removed with them.
+- **Reason:** two copies of each notebook had to be kept in step, and the interactive exploration they offered is now in the dashboard.
+- **Trade-offs:** no notebook-style interactive environment over the live `src/ml` code; use the Jupyter notebooks or the dashboard. `marimo` was then removed from the development dependencies with the owner's approval (`uv lock` dropped it and the packages only it needed; `uv sync` rebuilt `.venv`, 2026-11-13).
+- **Rejected:** keeping the marimo files untested.
+
+### DD-25: The late-delivery model is registered in the Snowflake Model Registry from its own environment
+
+- **Context:** After the ML outputs were published to `ML` tables, the next step towards ML inside Snowflake was a registered, versioned model. `snowflake-ml-python` 2.8/2.9 needs pandas below 3 and `snowflake-connector-python` below 5; the root project uses pandas 3 and connector 5.
+- **Chosen:** a separate environment `snowflake/ml/` (Python 3.13, `snowflake-ml-python` 2.8.0, the newest in Snowflake's package channel, so client and in-warehouse runtime match; scikit-learn 1.9.1, the repo version). `register_model.py` trains the v1 pipeline on the Snowflake feature mart, logs it with the out-of-time backtest metrics and the git commit, names versions `V1_<date>_<commit>`, never replaces a version, pins dependencies exactly (`relax_version=False`) and checks in-warehouse scores against the local model. Grants: `CREATE MODEL` and `CREATE STAGE` on `ML` only (`06_model_registry_grants.sql`).
+- **Verified:** version `V1_20261113_CC90DC8` registered on 2026-11-13; 2,000 orders scored inside Snowflake equal the local model to 1.1e-16.
+- **Trade-offs:** a third Python environment to keep. Training still happens on the client; only the trained model lives in Snowflake. The first version was logged with the library's default `relax_version=True` before the script pinned it, so its pins (scikit-learn, `snowflake-ml-python`) are ranges; it stays (versions are immutable) and `--verify` can re-check it.
+- **Rejected:** upgrading or downgrading the root environment (would change the reference results); a model registry outside Snowflake such as MLflow (another service to run, and the model would not sit next to the data it scores); training inside Snowflake for now (the backtests and the dashboard depend on the client code; a stored procedure is the next step, not this one).
+
+### DD-26: ML inside Snowflake: notebooks for analysis and training, SQL for scheduled scoring and monitoring
+
+- **Context:** The owner asked whether the Jupyter notebooks could simply be ported to Snowflake's notebooks, since training and scoring still ran on the laptop and drift checks were Python over DuckDB.
+- **Options:**
+  - Port everything, including scheduled scoring and monitoring, to scheduled notebooks.
+  - Notebooks for the interactive work, and SQL for anything scheduled.
+  - Legacy warehouse-runtime notebooks. Not an option: their creation was disabled on 2026-09-01, and `EXECUTE NOTEBOOK` stops working in November 2026.
+- **Chosen:** the split.
+  - **Notebooks.** Notebooks 02 and 03 are generated from the originals with only the data access changed (`scripts/make_snowflake_notebooks.py`, `src/data_access/snowpark.py`), and notebook 04 trains and registers inside Snowflake. They run as `RETAIL_TRANSFORMER` in a Git-connected workspace on the CPU compute pool.
+  - **Scheduled scoring** is a SQL Task on `RETAIL_WH` that calls the registered model with `MODEL(...)!PREDICT_PROBA` and writes `ML.LATE_DELIVERY_SCORES_REGISTRY`.
+  - **Drift and calibration** are dbt views in `ML_MONITORING`.
+- **Reason:**
+  - A notebook service runs on a compute pool node: it bills while running (24 hours idle by default) and is not covered by the warehouse resource monitor.
+  - The scheduled parts need no Python, so they run on the warehouse, are cheaper, and are capped by `RETAIL_MONITOR`.
+  - SQL views are tested by dbt and readable by anyone with a role.
+- **Verified (2026-11-13):**
+  - The notebooks reproduce the committed metrics on Snowflake data (forecast 0.0, late delivery 0.0 against the Snowflake backtest and 6.04e-6 against DuckDB).
+  - The monitoring views equal the Python results (calibration exact, AUC to 5e-13).
+  - The scoring block scored 6,306 orders equal to the local model to 2.8e-16, and a rerun replaced them.
+  - In a Git-connected workspace (2026-11-13): notebooks 02 and 03 ran on Snowflake data. Notebook 04 trained inside Snowflake and registered `V1WS_20261113_7370C92`, equal to the laptop version to 1.1e-12. The workspace runtime's numpy and scipy moved the scipy-optimised results by up to 3.5e-7, so the notebook checks allow 1e-6 there and stay exact for closed-form results.
+- **Trade-offs:**
+  - **Separate scores table.** The registered model was trained on every month, so its 2018 scores are in-sample. They go to their own table and never replace the out-of-time backtest scores Power BI reads.
+  - **A replay, not a feed.** The dataset is static, so a scheduled run replays a month.
+  - **Not covered by SQL.** The smoothed-rate and lag experiments of `drift_analysis.py` stay in Python.
+- **Cost / Security:**
+  - **Pool cost.** Notebooks cost compute-pool credits while running; suspend the service after use, and consider the idle-timeout account parameter.
+  - **Approvals.** The Git API integration (`setup/07`) was approved and run on 2026-11-13. `EXECUTE TASK` (`setup/08`) was approved and run the same day, and the task was executed once and kept suspended. The account idle-timeout parameter is unchanged; each notebook service gets a 15-minute idle timeout instead. The branch was pushed with approval on 2026-11-13.
+  - **No credentials in notebooks.** They use the notebook's own session.
+- **Rejected:**
+  - Scheduled notebooks or code bundles for scoring: they bill the pool on every run.
+  - Legacy notebooks: being retired.
+  - Writing the registry's scores into `ML.LATE_DELIVERY_SCORES`: it would hide the backtest from Power BI, which reads the latest `run_id`.

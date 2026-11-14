@@ -45,7 +45,9 @@ with pop as (
 )
 select order_id, min(seller_key) as seller_key,
        coalesce(min(seller_state), 'unknown') || '>' || coalesce(min(customer_state), 'unknown') as route,
-       coalesce(arg_max(category, price), 'unknown') as category
+       -- most expensive item's category; ties on price -> alphabetically first (arg_max was arbitrary on ties and
+       -- changed with thread scheduling; same rule as sql/ml/late_delivery_features.sql and the Snowflake models)
+       coalesce(first(category order by price desc, category), 'unknown') as category
 from it group by order_id
 """
 

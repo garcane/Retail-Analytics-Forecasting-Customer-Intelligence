@@ -1,0 +1,11 @@
+version: 2
+
+sources:
+  - name: ml
+    description: >
+      Python-written model outputs (src/ml/publish_ml.py). One block of rows per run_id; consumers read the latest
+      run_id (text maximum; generated ids start with a UTC timestamp).
+    schema: ML
+    tables:
+      - name: late_delivery_scores
+        description: "Out-of-time v1 risk scores for the six test months (each month scored by a model trained only on earlier orders)."

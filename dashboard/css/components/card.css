@@ -1,0 +1,21 @@
+/* Card: lifted cream laid on the canvas cream ("paper on paper"), 40px corners, no shadow. */
+.card {
+  background: var(--surface-1);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+}
+.card-head { display: flex; align-items: flex-start; gap: 16px; }
+.card-head .titles { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+.card-head .subtitle { color: var(--text-muted); font-size: 15px; }
+.card-actions { display: flex; gap: 8px; flex-shrink: 0; }
+.card-body { min-width: 0; }
+.card-foot { color: var(--text-muted); font-size: 13px; line-height: 1.45; }
+.card.is-loading .card-body { opacity: 0.5; }
+@media (max-width: 767px) {
+  .card { padding: 24px 20px; border-radius: var(--radius-tile); }
+}

@@ -37,7 +37,10 @@ item_agg as (
            max(freight_value)                       as max_item_freight,
            min(seller_state)                        as seller_state,        -- deterministic pick when several sellers
            min(customer_state)                      as customer_state,
-           arg_max(category, price)                 as category,            -- category of the most expensive item
+           -- category of the most expensive item. Ties on price are broken by the alphabetically first category:
+           -- arg_max(category, price) picked an arbitrary tied row, and the pick changed with DuckDB's thread
+           -- scheduling (57 labelled orders tie), which made category_prior_* irreproducible. Same rule as Snowflake.
+           first(category order by price desc, category) as category,
            -- great-circle distance in km (haversine); null when either zip prefix is the unknown member
            max(2 * 6371 * asin(sqrt(
                pow(sin(radians(c_lat - s_lat) / 2), 2)
@@ -50,7 +53,8 @@ item_agg as (
 pay as (
     select order_id,
            max(payment_installments) as max_installments,
-           arg_max(payment_type, payment_value) as main_payment_type
+           -- highest-value payment; ties broken by the alphabetically first type (deterministic, same rule as Snowflake)
+           first(payment_type order by payment_value desc, payment_type) as main_payment_type
     from fact_payments
     group by order_id
 ),
@@ -82,7 +86,9 @@ seller_agg as (
     select order_id,
            min(n_prior)                                           as seller_prior_n,
            -- ignore sellers with fewer than 5 resolved orders; training code falls back to the global rate
-           avg(prior_late_rate) filter (where n_prior >= 5)       as seller_prior_late_rate
+           -- ordered aggregate: averaging the per-seller rates in a fixed order makes the float result bit-identical
+           -- across runs (without it, multi-seller orders differed by ~1e-17 between multi-threaded runs)
+           avg(prior_late_rate order by seller_key) filter (where n_prior >= 5) as seller_prior_late_rate
     from seller_hist
     group by order_id
 ),

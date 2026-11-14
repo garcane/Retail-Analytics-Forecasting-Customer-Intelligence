@@ -1,0 +1,546 @@
+version: 2
+
+# Core star schema: 5 dimensions and 4 facts, same names, grain and columns as the DuckDB
+# sql/dimensions and sql/facts tables. Primary and foreign keys are enforced here as dbt tests
+# (Snowflake does not enforce them). Every dimension carries a -1 "unknown" member, so the
+# relationships tests below include the -1 keys.
+# Descriptions feed the generated data dictionary.
+
+models:
+  # ---------------------------------------------------------------- dimensions
+  - name: dim_customer
+    description: >
+      One row per real customer (customer_unique_id), plus the -1 unknown member. The source customer_id is
+      per ORDER, so it is not the grain. Location attributes come from the customer's most recent order
+      (type-1); the location at the time of each order is carried on the facts via dim_geography.
+    columns:
+      - name: customer_key
+        description: "Surrogate key (row_number over customer_unique_id); -1 = unknown."
+        data_tests:
+          - unique
+          - not_null
+      - name: customer_unique_id
+        description: "Natural key: identifier of the real customer; 'UNKNOWN' for the -1 member."
+        data_tests:
+          - unique
+          - not_null
+      - name: customer_zip_code_prefix
+        description: "Zip-code prefix of the customer's latest order (text, leading zeros kept)."
+      - name: customer_city
+        description: "City of the customer's latest order; 'Unknown' for the -1 member."
+      - name: customer_state
+        description: "State of the customer's latest order; 'Unknown' for the -1 member."
+
+  - name: dim_date
+    description: >
+      One row per calendar day, covering whole calendar years around every date the facts use (2016-01-01 to
+      2020-12-31 on the Olist data), plus the -1 "Not applicable" member for missing dates. Built from a
+      generated calendar, not from order dates, so months with no orders (2016-11) still exist. Role-played by
+      the facts (purchase, approved, carrier, delivered, estimated, shipping limit, review dates).
+    columns:
+      - name: date_key
+        description: "Smart key yyyymmdd as an integer; -1 = not applicable."
+        data_tests:
+          - unique
+          - not_null
+      - name: full_date
+        description: "Calendar date; NULL for the -1 member."
+      - name: year
+        description: "Calendar year."
+      - name: quarter
+        description: "Calendar quarter, 1 to 4."
+        data_tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 1
+                max_value: 4
+      - name: month
+        description: "Month number, 1 to 12."
+        data_tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 1
+                max_value: 12
+      - name: month_name
+        description: "Full English month name (locale independent); 'Not applicable' for the -1 member."
+      - name: year_month
+        description: "Year and month as text, e.g. 2017-11."
+      - name: day_of_month
+        description: "Day of the month, 1 to 31."
+      - name: iso_week
+        description: "ISO-8601 week number, 1 to 53 (a date near new year can belong to the adjacent year's week)."
+        data_tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 1
+                max_value: 53
+      - name: day_of_week
+        description: "ISO day of week: 1 = Monday ... 7 = Sunday."
+        data_tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 1
+                max_value: 7
+      - name: day_name
+        description: "Full English day name (locale independent); 'Not applicable' for the -1 member."
+      - name: is_weekend
+        description: "True for Saturday and Sunday."
+
+  - name: dim_geography
+    description: >
+      One row per Brazilian zip-code prefix, plus the -1 unknown member (prefix not found in geolocation).
+      Role-played by the facts for customer location and seller location. About 1M geolocation points are
+      collapsed to one row per prefix: points outside a Brazil bounding box are dropped, latitude/longitude
+      are medians, city/state are the most frequent value (ties broken alphabetically).
+    columns:
+      - name: geography_key
+        description: "Surrogate key (row_number over zip_prefix); -1 = unknown."
+        data_tests:
+          - unique
+          - not_null
+      - name: zip_prefix
+        description: "Natural key: zip-code prefix as text (leading zeros kept); NULL for the -1 member."
+        data_tests:
+          - unique
+      - name: city
+        description: "Most frequent city among the prefix's points; 'Unknown' for the -1 member."
+      - name: state
+        description: "Most frequent state among the prefix's points; 'Unknown' for the -1 member."
+      - name: latitude
+        description: "Median latitude of the prefix's points (decimal degrees)."
+      - name: longitude
+        description: "Median longitude of the prefix's points (decimal degrees)."
+      - name: n_source_points
+        description: "Number of in-bounds source points collapsed into the row; 0 for the -1 member."
+
+  - name: dim_product
+    description: >
+      One row per product, plus the -1 unknown member. The English category falls back to the Portuguese
+      name when the translation file has no entry, and both fall back to 'unknown' when the product has
+      no category.
+    columns:
+      - name: product_key
+        description: "Surrogate key (row_number over product_id); -1 = unknown."
+        data_tests:
+          - unique
+          - not_null
+      - name: product_id
+        description: "Natural key: product identifier; 'UNKNOWN' for the -1 member."
+        data_tests:
+          - unique
+          - not_null
+      - name: product_category_name
+        description: "Portuguese category name, or 'unknown' when the product has none."
+      - name: product_category_name_english
+        description: "English category name, falling back to the Portuguese name and then 'unknown'."
+      - name: product_name_length
+        description: "Number of characters in the product name."
+      - name: product_description_length
+        description: "Number of characters in the product description."
+      - name: product_photos_qty
+        description: "Number of product photos."
+      - name: product_weight_g
+        description: "Product weight in grams."
+      - name: product_length_cm
+        description: "Packaged length in centimetres."
+      - name: product_height_cm
+        description: "Packaged height in centimetres."
+      - name: product_width_cm
+        description: "Packaged width in centimetres."
+      - name: product_volume_cm3
+        description: "length x height x width in cubic centimetres; NULL when any dimension is missing."
+
+  - name: dim_seller
+    description: "One row per seller, plus the -1 unknown member."
+    columns:
+      - name: seller_key
+        description: "Surrogate key (row_number over seller_id); -1 = unknown."
+        data_tests:
+          - unique
+          - not_null
+      - name: seller_id
+        description: "Natural key: seller identifier; 'UNKNOWN' for the -1 member."
+        data_tests:
+          - unique
+          - not_null
+      - name: seller_zip_code_prefix
+        description: "Seller zip-code prefix (text, leading zeros kept)."
+      - name: seller_city
+        description: "Seller city; 'Unknown' for the -1 member."
+      - name: seller_state
+        description: "Seller state; 'Unknown' for the -1 member."
+
+  # --------------------------------------------------------------------- facts
+  - name: fact_orders
+    description: >
+      One row per order, including orders that have no items. Order-level process measures: lifecycle dates,
+      delivery time, lateness. Items and payments are pre-aggregated to the order grain before joining so
+      item revenue is not overstated. Missing milestone dates map to date_key -1; raw timestamps stay nullable.
+    columns:
+      - name: order_id
+        description: "Primary key: order identifier (degenerate dimension)."
+        data_tests:
+          - unique
+          - not_null
+      - name: customer_id
+        description: "Source per-order customer id (degenerate)."
+        data_tests:
+          - not_null
+      - name: order_status
+        description: "Order lifecycle status (8 values, degenerate)."
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: [approved, canceled, created, delivered, invoiced, processing, shipped, unavailable]
+      - name: customer_key
+        description: "FK to dim_customer; -1 if unmatched."
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_customer')
+                field: customer_key
+      - name: customer_geography_key
+        description: "FK to dim_geography for the customer's location on this order; -1 if the zip prefix is unknown."
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_geography')
+                field: geography_key
+      - name: purchase_date_key
+        description: "FK to dim_date: purchase date."
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_date')
+                field: date_key
+      - name: approved_date_key
+        description: "FK to dim_date: payment approval date; -1 if not approved."
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_date')
+                field: date_key
+      - name: carrier_date_key
+        description: "FK to dim_date: handed-to-carrier date; -1 if not yet."
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_date')
+                field: date_key
+      - name: delivered_customer_date_key
+        description: "FK to dim_date: delivered-to-customer date; -1 if not delivered."
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_date')
+                field: date_key
+      - name: estimated_delivery_date_key
+        description: "FK to dim_date: estimated delivery date."
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_date')
+                field: date_key
+      - name: purchase_ts
+        description: "Purchase timestamp (TIMESTAMP_NTZ)."
+        data_tests:
+          - not_null
+      - name: approved_ts
+        description: "Payment approval timestamp; NULL if not approved."
+      - name: carrier_ts
+        description: "Handed-to-carrier timestamp; NULL if not yet."
+      - name: delivered_customer_ts
+        description: "Delivered-to-customer timestamp; NULL if not delivered."
+      - name: estimated_delivery_ts
+        description: "Estimated delivery timestamp promised at purchase."
+      - name: item_count
+        description: "Number of item rows in the order; 0 for orders with no items."
+        data_tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+      - name: items_price
+        description: "Sum of item prices in BRL, NUMBER(12,2); 0 when there are no items."
+        data_tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+      - name: items_freight
+        description: "Sum of item freight in BRL, NUMBER(12,2); 0 when there are no items."
+        data_tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+      - name: payment_count
+        description: "Number of payment records for the order; 0 when none."
+        data_tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+      - name: payment_total
+        description: "Sum of payment values in BRL, NUMBER(12,2); 0 when none. Not forced to tie to items + freight."
+        data_tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+      - name: delivery_days
+        description: "Purchase to customer delivery, in fractional days (FLOAT); NULL if not delivered."
+      - name: delivery_delay_days
+        description: "Delivered minus estimated, in fractional days (FLOAT); positive = late; NULL if not delivered."
+      - name: is_late
+        description: "True if delivered after the estimate; NULL if there is no delivery date."
+      - name: has_timestamp_anomaly
+        description: "True if the carrier date precedes the purchase, or the customer date precedes the carrier date."
+        data_tests:
+          - not_null
+
+  - name: fact_order_items
+    description: >
+      The core sales fact. One row per order item (order_id, order_item_id); all item revenue lives here.
+      Count orders with count(distinct order_id): an order has up to 21 item rows. order_status is copied onto
+      the row so revenue can be filtered by status without joining another fact.
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: [order_id, order_item_id]
+    columns:
+      - name: order_id
+        description: "Order identifier (degenerate)."
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('fact_orders')
+                field: order_id
+      - name: order_item_id
+        description: "Position of the item within the order (degenerate)."
+        data_tests:
+          - not_null
+      - name: order_status
+        description: "Status of the parent order (degenerate)."
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: [approved, canceled, created, delivered, invoiced, processing, shipped, unavailable]
+      - name: customer_key
+        description: "FK to dim_customer; -1 if unmatched."
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_customer')
+                field: customer_key
+      - name: product_key
+        description: "FK to dim_product; -1 if unmatched."
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_product')
+                field: product_key
+      - name: seller_key
+        description: "FK to dim_seller; -1 if unmatched."
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_seller')
+                field: seller_key
+      - name: customer_geography_key
+        description: "FK to dim_geography (role: customer location); -1 if unknown."
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_geography')
+                field: geography_key
+      - name: seller_geography_key
+        description: "FK to dim_geography (role: seller location); -1 if unknown."
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_geography')
+                field: geography_key
+      - name: purchase_date_key
+        description: "FK to dim_date: purchase date of the order."
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_date')
+                field: date_key
+      - name: shipping_limit_date_key
+        description: "FK to dim_date: seller shipping deadline."
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_date')
+                field: date_key
+      - name: price
+        description: "Item price in BRL, NUMBER(12,2)."
+        data_tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+      - name: freight_value
+        description: "Freight charged for the item in BRL, NUMBER(12,2)."
+        data_tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+      - name: item_total_value
+        description: "price + freight_value in BRL, NUMBER(12,2)."
+        data_tests:
+          - not_null
+
+  - name: fact_payments
+    description: >
+      One row per payment instalment record (order_id, payment_sequential); an order can have up to 29.
+      Payments carry no date of their own, so purchase_date_key is the order's purchase date. payment_value does
+      not always equal items + freight, so revenue is measured from fact_order_items and payments are analysed
+      here, never forced to tie.
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: [order_id, payment_sequential]
+    columns:
+      - name: order_id
+        description: "Order identifier (degenerate)."
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('fact_orders')
+                field: order_id
+      - name: payment_sequential
+        description: "Sequence number of the payment within the order (degenerate)."
+        data_tests:
+          - not_null
+      - name: customer_key
+        description: "FK to dim_customer; -1 if unmatched."
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_customer')
+                field: customer_key
+      - name: purchase_date_key
+        description: "FK to dim_date: purchase date of the order."
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_date')
+                field: date_key
+      - name: payment_type
+        description: "Payment method: credit_card, boleto, voucher, debit_card or not_defined (degenerate)."
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: [credit_card, boleto, voucher, debit_card, not_defined]
+      - name: payment_installments
+        description: "Number of instalments chosen."
+        data_tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+      - name: payment_value
+        description: "Amount of this payment record in BRL, NUMBER(12,2)."
+        data_tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+
+  - name: fact_reviews
+    description: >
+      One row per review (review_id, order_id). review_id alone is not unique, and some orders have 2-3
+      reviews, so never join this to the item fact on order_id; aggregate it first or filter to
+      is_latest_review_for_order. Comment text stays on the row as nullable degenerate columns.
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: [review_id, order_id]
+    columns:
+      - name: review_id
+        description: "Review identifier (degenerate)."
+        data_tests:
+          - not_null
+      - name: order_id
+        description: "Reviewed order (degenerate)."
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('fact_orders')
+                field: order_id
+      - name: customer_key
+        description: "FK to dim_customer; -1 if unmatched."
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_customer')
+                field: customer_key
+      - name: review_creation_date_key
+        description: "FK to dim_date: survey creation date."
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_date')
+                field: date_key
+      - name: review_answer_date_key
+        description: "FK to dim_date: survey answer date; -1 if missing."
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_date')
+                field: date_key
+      - name: review_creation_ts
+        description: "Survey creation timestamp (TIMESTAMP_NTZ)."
+      - name: review_answer_ts
+        description: "Survey answer timestamp (TIMESTAMP_NTZ)."
+      - name: review_score
+        description: "Satisfaction score from 1 (worst) to 5 (best)."
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: [1, 2, 3, 4, 5]
+                quote: false
+      - name: review_comment_title
+        description: "Optional comment title (NULL when absent)."
+      - name: review_comment_message
+        description: "Optional comment text (NULL when absent; not trimmed)."
+      - name: has_comment
+        description: "True when a title or a message is present."
+        data_tests:
+          - not_null
+      - name: is_latest_review_for_order
+        description: >
+          True for the single most recent review of an order (latest creation date, then latest answer
+          timestamp, then review_id ascending).
+        data_tests:
+          - not_null

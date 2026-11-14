@@ -9,6 +9,7 @@ docs/ml/LEAKAGE_ANALYSIS.md: time-ordered, no random split, no training label re
 
 import argparse
 import json
+import os
 import sys
 from pathlib import Path
 
@@ -51,8 +52,18 @@ HISTORY_COUNTS = ("_prior_n", "_prior_late", "_28d", "_prior_days")
 # purchase_month is deliberately not a feature: with under two years of history it only memorises calendar months.
 
 
+def _is_data_access(con) -> bool:
+    return getattr(con, "backend", None) is not None and callable(getattr(con, "read_sql", None))
+
+
 def load(con: duckdb.DuckDBPyConnection) -> pd.DataFrame:
-    df = con.execute(FEATURES_SQL.read_text(encoding="utf-8")).df()
+    """Accepts a raw DuckDB connection (as always) or a data_access wrapper (DuckDB or Snowflake)."""
+    if _is_data_access(con):
+        from data_access import datasets  # imported here so the plain DuckDB path needs no extra sys.path entry
+
+        df = datasets.late_delivery_features(con)
+    else:
+        df = con.execute(FEATURES_SQL.read_text(encoding="utf-8")).df()
     df["month"] = df["purchase_ts"].dt.to_period("M")
     counts = [c for c in df.columns if c.endswith(HISTORY_COUNTS)]
     to_float = list(dict.fromkeys(NUMERIC_V1 + counts))
@@ -87,6 +98,10 @@ def add_smoothed_rates(df: pd.DataFrame, prior: float, prior_days: float | None 
 
 def unlabelled_share(con: duckdb.DuckDBPyConnection) -> dict[str, float]:
     """Share of each month's orders with no usable label (not delivered, anomalous, or no delivery date)."""
+    if _is_data_access(con):
+        from data_access import datasets
+
+        return datasets.unlabelled_share(con)
     rows = con.execute(
         """select strftime(o.purchase_ts, '%Y-%m') ym, count(*) n,
                   count(*) filter (where o.order_status = 'delivered' and o.is_late is not null
@@ -196,10 +211,27 @@ def run(df: pd.DataFrame) -> tuple[dict[str, dict], dict[str, list[dict]], pd.Da
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--db", type=Path, default=ROOT / "warehouse.duckdb")
-    parser.add_argument("--out", type=Path, default=ROOT / "reports" / "late_delivery_metrics.json")
+    parser.add_argument("--out", type=Path, default=None,
+                        help="default: reports/late_delivery_metrics.json (DuckDB) or "
+                             "reports/snowflake/late_delivery_metrics.json")
+    parser.add_argument("--backend", choices=("duckdb", "snowflake"),
+                        default=os.environ.get("DATA_BACKEND", "duckdb").strip().lower() or "duckdb",
+                        help="data source; defaults to $DATA_BACKEND, then duckdb")
+    parser.add_argument("--yes", action="store_true",
+                        help="confirm the Snowflake target printed by data_access (required for --backend snowflake)")
     args = parser.parse_args()
+    if args.backend not in ("duckdb", "snowflake"):
+        parser.error(f"DATA_BACKEND must be 'duckdb' or 'snowflake', got {args.backend!r}")
+    if args.out is None:  # a Snowflake run must never overwrite the tracked DuckDB reference metrics
+        args.out = ROOT / "reports" / ("snowflake" if args.backend == "snowflake" else "") / "late_delivery_metrics.json"
 
-    con = duckdb.connect(str(args.db), read_only=True)
+    if args.backend == "snowflake":
+        sys.path.insert(0, str(ROOT / "src"))
+        from data_access import connect  # imported here: the DuckDB path needs no extra sys.path entry
+
+        con = connect("snowflake", confirm=args.yes)
+    else:
+        con = duckdb.connect(str(args.db), read_only=True)
     df = load(con)
     unl = unlabelled_share(con)
     con.close()

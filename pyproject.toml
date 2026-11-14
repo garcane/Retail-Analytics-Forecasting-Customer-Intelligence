@@ -15,20 +15,26 @@ dependencies = [
     "scikit-learn>=1.9.1",
     "scipy>=1.18.1",
     "seaborn>=0.13.2",
+    "snowflake-connector-python>=5.2.0",
+    "snowflake-snowpark-python>=0.12.0",
+    "snowflake-sqlalchemy>=2.1.0",
 ]
+
+[project.optional-dependencies]
+snowflake = ["snowflake-connector-python[pandas]"]
 
 [dependency-groups]
 dev = [
     "ipykernel>=7.4.0",
     "jsonschema>=4.26.0",
-    "marimo>=0.25.1",
     "nbclient>=0.11.0",
     "nbformat>=5.11.1",
     "pytest>=9.1.1",
     "referencing>=0.37.0",
+    "ruff>=0.9.0",
 ]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-pythonpath = ["src/ml", "src/transformation", "src/analytics", "src/powerbi", "tests"]
+pythonpath = ["src", "src/ml", "src/transformation", "src/analytics", "src/powerbi", "tests"]
 markers = ["warehouse: needs the built warehouse.duckdb (skipped when it is missing)"]

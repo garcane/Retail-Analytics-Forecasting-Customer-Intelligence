@@ -1,0 +1,14 @@
+[project]
+name = "retail-olist-dbt"
+version = "0.1.0"
+description = "Isolated dbt environment for the Snowflake implementation (kept apart from the root project, which targets Python 3.14 / DuckDB)."
+requires-python = ">=3.13,<3.14"
+dependencies = [
+    # ~=1.11.0 = the 1.11.x line. The plan named 1.10, but dbt itself prints "this version of dbt is deprecated"
+    # for 1.10.x on every command; `dbt parse` was verified clean on both lines. 1.12 exists on PyPI (untested here).
+    "dbt-core~=1.11.0",
+    "dbt-snowflake~=1.11.0",
+]
+
+[tool.uv]
+package = false
