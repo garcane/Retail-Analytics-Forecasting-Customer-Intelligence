@@ -105,8 +105,38 @@ def test_table_file_is_unchanged_outside_the_partition_source(patched, table):
     assert any("DataFolder" in line for line in orig_block)
     assert new_block != orig_block
     orig_raw, new_raw = (ORIGINAL / rel).read_bytes(), (patched["out"] / rel).read_bytes()
-    assert (b"\r\n" in orig_raw) == (b"\r\n" in new_raw), "line-ending style must be preserved"
-    assert new_raw.count(b"\n") - new_raw.count(b"\r\n") == orig_raw.count(b"\n") - orig_raw.count(b"\r\n")
+    _assert_same_line_endings(orig_raw, new_raw)
+
+
+def _assert_same_line_endings(orig_raw: bytes, new_raw: bytes) -> None:
+    """The patched file keeps the original's line-ending style throughout. The partition block itself may gain or lose
+    lines (the Snowflake M template is not as long as the file-based one), so line counts are not compared; everything
+    outside the block is compared byte for byte by the callers."""
+    if b"\r\n" in orig_raw:
+        assert new_raw.count(b"\n") == new_raw.count(b"\r\n"), "a CRLF file must not gain bare LF line ends"
+    else:
+        assert b"\r" not in new_raw, "an LF file must not gain CR characters"
+
+
+@pytest.mark.parametrize("eol", [b"\n", b"\r\n"], ids=["lf", "crlf"])
+def test_patch_keeps_either_line_ending_style(tmp_path, eol):
+    """The same checks on a copy of the project converted to LF and to CRLF, so a Linux checkout (LF) and a Windows
+    checkout (CRLF via core.autocrlf) are both covered whichever system the tests run on."""
+    import shutil
+
+    src = tmp_path / "src"
+    shutil.copytree(ORIGINAL / SM, src / SM, ignore=shutil.ignore_patterns(".pbi", "cache.abf", "localSettings.json"))
+    shutil.copytree(ORIGINAL / "RetailAnalytics.Report", src / "RetailAnalytics.Report")
+    shutil.copy2(ORIGINAL / "RetailAnalytics.pbip", src / "RetailAnalytics.pbip")
+    for f in (src / DEFINITION).rglob("*.tmdl"):
+        f.write_bytes(f.read_bytes().replace(b"\r\n", b"\n").replace(b"\n", eol))
+    out = tmp_path / "out"
+    script.apply(source=src, out=out)
+    for table in TABLES:
+        rel = DEFINITION / "tables" / f"{table}.tmdl"
+        orig_raw, new_raw = (src / rel).read_bytes(), (out / rel).read_bytes()
+        assert _split_outside_block(new_raw)[0] == _split_outside_block(orig_raw)[0], table
+        _assert_same_line_endings(orig_raw, new_raw)
 
 
 def test_original_project_is_not_modified(patched):
