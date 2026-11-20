@@ -20,7 +20,8 @@ import build_spec_html
 import model_spec as ms
 from conftest import ROOT
 
-pytestmark = pytest.mark.warehouse
+# Tests that read ROOT/warehouse.duckdb carry the `warehouse` marker (see conftest.py); the two that only read committed
+# files run everywhere.
 
 SCHEMA_HOST = "https://developer.microsoft.com/json-schemas/"
 SCHEMA_RAW = "https://raw.githubusercontent.com/microsoft/json-schemas/main/"
@@ -60,6 +61,7 @@ def _json_files(generated: dict[str, str]) -> dict[str, dict]:
 
 
 # ------------------------------------------------------------------------------------------------ schema validation
+@pytest.mark.warehouse
 def test_every_json_file_validates_against_its_published_schema(generated, registry):
     problems = []
     checked = 0
@@ -83,6 +85,7 @@ def _columns() -> dict[str, set[str]]:
     return {t: {c for c, _ in cols} for t, cols in ms.load_schema().items()}
 
 
+@pytest.mark.warehouse
 def test_names_are_unique_and_every_table_has_a_schema():
     """Power BI compares names ignoring case: a measure called Forecast clashes with a column called forecast (found in Desktop)."""
     columns = _columns()
@@ -98,6 +101,7 @@ def test_names_are_unique_and_every_table_has_a_schema():
     assert len(ids) == len(set(ids)) and len({p.id for p in ms.PAGES}) == len(ms.PAGES)
 
 
+@pytest.mark.warehouse
 def test_relationships_join_existing_columns_of_the_same_type():
     schema = {t: dict(cols) for t, cols in ms.load_schema().items()}
     for r in ms.RELATIONSHIPS:
@@ -108,6 +112,7 @@ def test_relationships_join_existing_columns_of_the_same_type():
     assert len(pairs) == len(set(pairs)), "two active relationships between the same pair of tables (ambiguous)"
 
 
+@pytest.mark.warehouse
 def test_measure_dax_only_references_existing_columns_and_measures():
     columns, measures = _columns(), {m.name for m in ms.MEASURES}
     for m in ms.MEASURES:
@@ -120,6 +125,7 @@ def test_measure_dax_only_references_existing_columns_and_measures():
             assert name in measures, f"{m.name}: [{name}]"
 
 
+@pytest.mark.warehouse
 def test_every_visual_field_exists():
     columns, measures = _columns(), {m.name: m.table for m in ms.MEASURES}
     for page in ms.PAGES:
@@ -133,6 +139,7 @@ def test_every_visual_field_exists():
             assert 0 <= v.x and v.x + v.w <= ms.PAGE_W and 0 <= v.y and v.y + v.h <= ms.PAGE_H, f"{v.id} sits outside the page"
 
 
+@pytest.mark.warehouse
 def test_generated_visuals_and_tmdl_use_the_same_names(generated):
     measure_lines = {m.name for m in ms.MEASURES}
     tmdl = "\n".join(t for p, t in generated.items() if p.endswith(".tmdl"))
@@ -148,6 +155,7 @@ def test_generated_visuals_and_tmdl_use_the_same_names(generated):
                 assert kind in ("Column", "Measure") and body["Expression"]["SourceRef"]["Entity"] in {t.name for t in ms.TABLES}
 
 
+@pytest.mark.warehouse
 def test_tmdl_is_tab_indented_and_has_no_trailing_whitespace(generated):
     for path, text in generated.items():
         if not path.endswith(".tmdl"):
@@ -157,6 +165,7 @@ def test_tmdl_is_tab_indented_and_has_no_trailing_whitespace(generated):
             assert not line.startswith(" "), f"{path}:{n} space indentation"
 
 
+@pytest.mark.warehouse
 def test_data_folder_placeholder_is_not_a_real_machine_path(generated):
     text = "\n".join(generated.values())
     assert pbip.DATA_FOLDER_PLACEHOLDER in text
@@ -164,6 +173,7 @@ def test_data_folder_placeholder_is_not_a_real_machine_path(generated):
 
 
 # ------------------------------------------------------------------------------------------------ determinism
+@pytest.mark.warehouse
 def test_generation_is_deterministic(generated):
     assert pbip.files() == generated
     assert build_spec_html.render() == build_spec_html.render()
