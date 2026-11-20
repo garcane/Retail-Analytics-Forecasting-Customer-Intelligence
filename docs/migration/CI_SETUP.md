@@ -40,8 +40,10 @@ Tests that read `ROOT/warehouse.duckdb` carry `@pytest.mark.warehouse` (per modu
 `tests/conftest.py` skips them when the file is missing, except when `REQUIRE_WAREHOUSE=1`, where a missing file stops
 the run with an error. So:
 
-- With Kaggle credentials (or a cached copy), every test runs, and a broken build cannot hide as skips.
-- Without them (for example a pull request from a fork, which receives no secrets), the warehouse tests are reported as
+- With Kaggle credentials or a cached copy, every test runs, and a broken build cannot hide as skips. A pull request
+  from a fork gets no secrets but can restore the cache saved by a run on its base branch, so once `main` has a cached
+  copy, fork PRs run the warehouse tests too.
+- With neither (no secret and no cache yet, or the cache evicted after 7 days unused), the warehouse tests are reported as
   skipped with a notice and the rest of the suite still gates the PR.
 
 In `tests/test_powerbi_project.py`, only the two tests that read committed files are unmarked:
@@ -59,7 +61,8 @@ Create a Kaggle API token (kaggle.com, *Settings > API*) and add it as a **repos
 
 The legacy pair `KAGGLE_USERNAME` + `KAGGLE_KEY` (the two fields of `kaggle.json`) also works. Secrets are passed to the
 step through `env`, never interpolated into the script. The dataset is CC BY-NC-SA 4.0: CI downloads it and keeps it only
-in the Actions cache, which is private to this repository's workflows; it is never committed.
+in the Actions cache. That cache is readable by this repository's workflow runs only, which includes pull requests from
+forks (they can restore it but not write it). It is never committed or published as an artifact.
 
 ### Power BI DataFolder after saving in Desktop
 

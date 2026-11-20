@@ -56,7 +56,7 @@ D-001 to D-008 (user) and DD-01 to DD-17 (design) are in [DECISIONS.md](DECISION
 | Power BI on Snowflake | patched-copy script + 12 M templates | 68 offline tests incl. byte-identical checks of report, measures and relationships | Not opened in Power BI Desktop; sign-in method |
 | CI | 3 workflows | YAML and `actionlint` locally; `dbt parse` on a clean copy | No workflow has run on GitHub |
 
-Full suite (2026-11-13): see the commit that records this update; the only failures are the 10 in `tests/test_powerbi_project.py` that predate this work.
+Full suite (2026-11-20, warehouse built, `REQUIRE_WAREHOUSE=1`): 424 passed, 0 failed. The 10 `tests/test_powerbi_project.py` failures were fixed on `fix/powerbi-ci-warehouse` (placeholder restored, warehouse tests skip when the file is missing, CI builds the warehouse).
 
 ## Open items (from the audit)
 
@@ -64,7 +64,7 @@ Full suite (2026-11-13): see the commit that records this update; the only failu
 |---|---|
 | Compare the Power BI cards with the first-open checklist | The project loads in Desktop; the numbers have not been compared |
 | Raw data in early commits of the public repository | History not rewritten (D-008); the owner decides whether to rewrite it |
-| Power BI `DataFolder` holds a local path | The committed `powerbi/RetailAnalytics.SemanticModel/definition/expressions.tmdl` points at `C:\Users\Student\GCP\powerbi\data` instead of the `C:\REPLACE\WITH\FULL\PATH\TO\powerbi\data` placeholder, so `test_committed_project_is_complete_and_holds_no_machine_path` fails. The other 9 failures in `tests/test_powerbi_project.py` need `warehouse.duckdb`, which is git-ignored and absent from a fresh clone. The CI workflow `python-ci` is therefore red until the placeholder is restored and the warehouse-dependent tests skip. Not changed: it alters what Desktop opens, so it is the owner's call |
+| Power BI `DataFolder` holds a local path | **Fixed 2026-11-20.** The committed `expressions.tmdl` holds the `C:\REPLACE\WITH\FULL\PATH\TO\powerbi\data` placeholder again; set your own path in Desktop and restore the placeholder before committing (see `docs/migration/CI_SETUP.md`). The 9 warehouse-dependent tests skip without `warehouse.duckdb` and run in CI, which builds it from Kaggle |
 | ~~DuckDB late-delivery feature query is not reproducible across multi-threaded runs~~ (fixed 2026-11-12, DD-21) | Cause: `arg_max` picked among 57 price-tied orders in thread order, which moved `category_prior_*` on about 26,000 rows; plus a float `avg` summed in thread order. Both are now deterministic (alphabetical tie-break, ordered aggregate), identical across 1/2/8/16 threads, and the same rule as Snowflake. The v2/v3 experiment metrics were regenerated; v1 is unchanged |
 | ~~Snowflake-backed runs of the two Tier 1 entry points~~ (run 2026-11-13) | `--backend snowflake --yes` wrote `reports/snowflake/*.json`: forecast identical to DuckDB, late-delivery within 6e-6. Tier 2 scripts (`drift_analysis`, `export_data`, `run_analytics`) stay DuckDB-only |
 | Power BI patched copy | Built and tested offline; not opened. Needs Desktop and a sign-in decision. All 12 source tables now exist in Snowflake (the `ML` tables since 2026-11-13) |

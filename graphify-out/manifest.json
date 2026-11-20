@@ -72,15 +72,15 @@
     "semantic_hash": ""
   },
   "PROJECT_STATUS.md": {
-    "mtime": 1794604234.1756124,
-    "seen": 1794604351.16572,
-    "ast_hash": "102d327eb94e0a05d6ce234e2adbd904",
+    "mtime": 1795146386.7092366,
+    "seen": 1795146414.877534,
+    "ast_hash": "7bad15615aa4a19521548cd1a0890bcc",
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1794604033.284148,
-    "seen": 1794604351.16572,
-    "ast_hash": "c3f6e7cd2c05f606c4524cc225d8ecdc",
+    "mtime": 1795146386.7032351,
+    "seen": 1795146414.877534,
+    "ast_hash": "8c9ef219afd71474a37893f86c935c83",
     "semantic_hash": ""
   },
   "docs/HANDOFF.md": {
@@ -144,10 +144,10 @@
     "semantic_hash": ""
   },
   "tests/conftest.py": {
-    "mtime": 1793974950.284955,
-    "seen": 1794172496.95836,
-    "ast_hash": "59c54603a7b4c804df40db94b361b0f5",
-    "semantic_hash": "59c54603a7b4c804df40db94b361b0f5"
+    "mtime": 1795145497.3349514,
+    "seen": 1795146414.876533,
+    "ast_hash": "d07ace999b31b3c12470df2705a1d2d0",
+    "semantic_hash": ""
   },
   "tests/test_feature_leakage.py": {
     "mtime": 1793974950.287955,
@@ -276,9 +276,9 @@
     "semantic_hash": ""
   },
   "SECURITY.md": {
-    "mtime": 1794604234.173612,
-    "seen": 1794604351.16572,
-    "ast_hash": "f600f4ee946bbfedfd7847d106ea17c5",
+    "mtime": 1795146386.720238,
+    "seen": 1795146414.877534,
+    "ast_hash": "56e51fd6d23547c3a2b34c6c1953ba42",
     "semantic_hash": ""
   },
   "docs/AUDIT.md": {
@@ -558,10 +558,10 @@
     "semantic_hash": "1c482193272cd77b9d3776b6ea2ea64c"
   },
   "tests/test_powerbi_project.py": {
-    "mtime": 1793974950.2959273,
-    "seen": 1794172496.95836,
-    "ast_hash": "1a6af4a158e5042645e8411df69d7613",
-    "semantic_hash": "1a6af4a158e5042645e8411df69d7613"
+    "mtime": 1795145497.333951,
+    "seen": 1795146414.876533,
+    "ast_hash": "ab813e9f3352e5871eff39ebb822dfa4",
+    "semantic_hash": ""
   },
   "docs/powerbi/DAX_SPECIFICATION.html": {
     "mtime": 1793974949.9205444,
@@ -1464,9 +1464,9 @@
     "semantic_hash": ""
   },
   "tests/test_powerbi_snowflake.py": {
-    "mtime": 1793980368.0241325,
-    "seen": 1794172496.95836,
-    "ast_hash": "a0a4a2c868a9e4417dd75525befa5bce",
+    "mtime": 1795145395.6246042,
+    "seen": 1795146414.876533,
+    "ast_hash": "fc7d6906c1684b6d75450c739adc6f51",
     "semantic_hash": ""
   },
   "tests/test_reconciliation.py": {
@@ -1494,9 +1494,9 @@
     "semantic_hash": ""
   },
   ".github/workflows/python-ci.yml": {
-    "mtime": 1793981954.008532,
-    "seen": 1794172496.95836,
-    "ast_hash": "c28a2043291d0d88f3a5662a36764db2",
+    "mtime": 1795145934.403018,
+    "seen": 1795146414.877534,
+    "ast_hash": "69dd0ecb609eda33eb0eef4bfab1ae7e",
     "semantic_hash": ""
   },
   "docs/architecture/SNOWFLAKE_ARCHITECTURE.md": {
@@ -1512,9 +1512,9 @@
     "semantic_hash": ""
   },
   "docs/migration/CI_SETUP.md": {
-    "mtime": 1793982232.112409,
-    "seen": 1794172496.95836,
-    "ast_hash": "56902804fdba3e601cefb36b0e777dba",
+    "mtime": 1795146386.7282372,
+    "seen": 1795146414.877534,
+    "ast_hash": "dfc36dfaf34dda48e36e1a6876f48ac0",
     "semantic_hash": ""
   },
   "docs/migration/INGESTION_RUNBOOK.md": {
@@ -1524,9 +1524,9 @@
     "semantic_hash": ""
   },
   "docs/migration/POWERBI_SWITCH_GUIDE.md": {
-    "mtime": 1794572846.7691865,
-    "seen": 1794573320.225459,
-    "ast_hash": "530deb89e84746c88a4330ce33479ca3",
+    "mtime": 1795146386.722237,
+    "seen": 1795146414.877534,
+    "ast_hash": "fec854b60a0c341b9b2cccd136ee036c",
     "semantic_hash": ""
   },
   "docs/migration/SNOWFLAKE_MIGRATION.md": {
@@ -2187,6 +2187,102 @@
     "mtime": 1794576169.6132636,
     "seen": 1794576638.7133415,
     "ast_hash": "45a45b63077cec66a736a450741e4f81",
+    "semantic_hash": ""
+  },
+  ".claude/skills/semantic-model-authoring/apm.yml": {
+    "mtime": 1795146266.0538027,
+    "seen": 1795146414.8755338,
+    "ast_hash": "cc16b8a54089f0216f2bf4f8931d62f9",
+    "semantic_hash": ""
+  },
+  ".claude/skills/semantic-model-authoring/SKILL.md": {
+    "mtime": 1795146266.0518038,
+    "seen": 1795146414.876533,
+    "ast_hash": "d77bf254c4c939753e8f456e9964ce4e",
+    "semantic_hash": ""
+  },
+  ".claude/skills/semantic-model-authoring/SOURCE.txt": {
+    "mtime": 1795146266.1988094,
+    "seen": 1795146414.876533,
+    "ast_hash": "1c337f43a6c3f20763c0a14ccc73cd03",
+    "semantic_hash": ""
+  },
+  ".claude/skills/semantic-model-authoring/references/connection-binding.md": {
+    "mtime": 1795146266.0568016,
+    "seen": 1795146414.876533,
+    "ast_hash": "0fa474995391968e21865d0824d95b97",
+    "semantic_hash": ""
+  },
+  ".claude/skills/semantic-model-authoring/references/dax-guidelines.md": {
+    "mtime": 1795146266.060804,
+    "seen": 1795146414.876533,
+    "ast_hash": "78aa08bc6067b68b80b08700101b4937",
+    "semantic_hash": ""
+  },
+  ".claude/skills/semantic-model-authoring/references/dax-perf-decision-guide.md": {
+    "mtime": 1795146266.062803,
+    "seen": 1795146414.876533,
+    "ast_hash": "b05e7917296be89ca6380c3f68c4a623",
+    "semantic_hash": ""
+  },
+  ".claude/skills/semantic-model-authoring/references/dax-perf-patterns.md": {
+    "mtime": 1795146266.064803,
+    "seen": 1795146414.876533,
+    "ast_hash": "9bb938c120a833cfc41356974500e95b",
+    "semantic_hash": ""
+  },
+  ".claude/skills/semantic-model-authoring/references/direct-lake-guidelines.md": {
+    "mtime": 1795146266.066805,
+    "seen": 1795146414.876533,
+    "ast_hash": "b2b5b402244880d342b6b311249983a9",
+    "semantic_hash": ""
+  },
+  ".claude/skills/semantic-model-authoring/references/field-parameters.md": {
+    "mtime": 1795146266.0688024,
+    "seen": 1795146414.877534,
+    "ast_hash": "3631086d11ff5290714c6fe8d78238ba",
+    "semantic_hash": ""
+  },
+  ".claude/skills/semantic-model-authoring/references/metadata-discovery.md": {
+    "mtime": 1795146266.0708025,
+    "seen": 1795146414.877534,
+    "ast_hash": "beca59792750ab3f49fb0c82efff7b19",
+    "semantic_hash": ""
+  },
+  ".claude/skills/semantic-model-authoring/references/modeling-guidelines.md": {
+    "mtime": 1795146266.072806,
+    "seen": 1795146414.877534,
+    "ast_hash": "57c2534a9d04ea062c18fb13c11e4134",
+    "semantic_hash": ""
+  },
+  ".claude/skills/semantic-model-authoring/references/naming-conventions.md": {
+    "mtime": 1795146266.0748055,
+    "seen": 1795146414.877534,
+    "ast_hash": "e55cf2d576c8198e4076b108c51493e7",
+    "semantic_hash": ""
+  },
+  ".claude/skills/semantic-model-authoring/references/pbip.md": {
+    "mtime": 1795146266.0788043,
+    "seen": 1795146414.877534,
+    "ast_hash": "4e71d492bdd289f40042605f0f385f36",
+    "semantic_hash": ""
+  },
+  ".claude/skills/semantic-model-authoring/references/semantic-model-ai-readiness.md": {
+    "mtime": 1795146266.0848036,
+    "seen": 1795146414.877534,
+    "ast_hash": "cce013ea202f3683553cd3c1f20a464a",
+    "semantic_hash": ""
+  },
+  ".claude/skills/semantic-model-authoring/references/semantic-model-rest-api.md": {
+    "mtime": 1795146266.0808022,
+    "seen": 1795146414.877534,
+    "ast_hash": "d5f67cdef27b0c744ae18c1e07353706",
+    "semantic_hash": ""
+  },
+  ".claude/skills/semantic-model-authoring/references/tmdl-guidelines.md": {
+    "mtime": 1795146266.0828035,
+    "seen": 1795146414.877534,
+    "ast_hash": "50db60b5339ea1a66d4c3a4065293184",
     "semantic_hash": ""
   }
 }
