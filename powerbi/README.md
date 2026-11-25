@@ -1,8 +1,9 @@
 # Power BI project
 
-A five-page dashboard over the local warehouse: overview, sales overview, delivery and reviews, late-delivery risk, weekly forecast.
-It is delivered as a Power BI Project (`RetailAnalytics.pbip`), built from the same definition as the two HTML documents
-in [docs/powerbi/](../docs/powerbi/):
+A five-page dashboard over the Olist data: overview, sales, delivery and reviews, late-delivery risk, weekly forecast.
+It is delivered as a Power BI Project (`RetailAnalytics.pbip`) that reads the exported files, plus a generated, git-ignored
+copy (`powerbi_snowflake/`) that reads Snowflake instead (see [Use it with Snowflake](#use-it-with-snowflake)). The project was
+first specified and pictured in two HTML documents built from the same definition, in [docs/powerbi/](../docs/powerbi/):
 
 | File | What it is |
 |---|---|
@@ -12,29 +13,41 @@ in [docs/powerbi/](../docs/powerbi/):
 
 ## Screenshots
 
-The four pages, rendered from the mock-up with the same numbers as the dashboard:
+The five pages as they render in Power BI Desktop with the theme below, on data read from Snowflake (2026-11-25). The order
+ids in the risk table are replaced by grey bars in the image.
+
+![Overview](images/overview.png)
+
+*Overview: net revenue, net orders, average order value, late deliveries, average review score and one-time customers, then net revenue and late rate by month (the late rate in orange), net revenue by customer state and review score by how late the order arrived.*
 
 ![Sales overview](images/sales.png)
 
-*Sales overview — net revenue, net orders, average order value, freight % of revenue and buying customers, with revenue by month, category and customer state.*
+*Sales overview: net revenue, net orders, average order value, freight % of revenue and buying customers, with revenue by month, category and customer state, and category, month and state filters.*
 
 ![Delivery and reviews](images/delivery.png)
 
-*Delivery and reviews — late rate, median delivery days, average review score, share promised under 20 days, review score by delay bucket and delivery by customer state.*
+*Delivery and reviews: late rate, median delivery days, average review score, share promised under 20 days, late rate by month, review score by delay bucket and delivery by customer state.*
 
 ![Late-delivery risk](images/risk.png)
 
-*Late-delivery risk — lift and recall when flagging the riskiest X% of orders, lift by month, the riskiest orders and late rate by state.*
+*Late-delivery risk: lift and recall when flagging the riskiest X% of orders, lift by month, the riskiest orders and late rate by state.*
 
 ![Weekly forecast](images/forecast.png)
 
-*Weekly forecast — forecast against actual by method, mean absolute error by method and the method comparison.*
+*Weekly forecast: forecast against actual by method, mean absolute error by method and the method comparison.*
 
-**Status: opens and loads in Power BI Desktop.** Two first-open problems were found and fixed (see below), and the committed files are now the ones Desktop saved, so **Desktop owns the report and model from here**: edit them there.  The project was generated on a machine without Desktop. On the first open Desktop rejected it with "The 'Forecast' measure cannot be created because a column with the same name already exists" (Power BI compares names ignoring case, and the table had a column `forecast`). The measures `Forecast` and `Actual` are now `Forecast Value` and `Actual Value`, and a test checks names ignoring case. Desktop reports one model error at a time, so another may still appear; the report pages have not been confirmed to load either.
-What was checked instead: every JSON file validates against Microsoft's published schemas, every table, column and measure
-named anywhere exists, and the exported data reproduces the warehouse figures (`tests/test_powerbi_project.py`,
-`tests/test_powerbi_export.py`). That does not prove Desktop will accept every file. If it shows an error on first open,
-send the exact message and the file it names.
+**Status: opens and loads in Power BI Desktop, from the exported files and from Snowflake.** The project was generated on a machine
+without Desktop and needed two fixes on its first open: Desktop rejected it with "The 'Forecast' measure cannot be created because a
+column with the same name already exists" (Power BI compares names ignoring case), so the measures `Forecast` and `Actual` are now
+`Forecast Value` and `Actual Value` and a test checks names ignoring case; and an empty key row in the date table (see "If the first
+refresh fails"). The committed files are now the ones Desktop saved, so **Desktop owns the report and model from here**: edit them
+there. On 2026-11-25 the Snowflake copy was opened and signed in, all five pages loaded, and the headline figures on them (R$ 13.49M
+net revenue, 98K net orders, 8.1% late) agree with the first-open checklist.
+
+Before Desktop was available the checks were: every JSON file of the generated project validates against Microsoft's published
+schemas, every table, column and measure named anywhere exists, and the exported data reproduces the warehouse figures
+(`tests/test_powerbi_project.py`, `tests/test_powerbi_export.py`). Those do not prove Desktop accepts every file; if it shows an error
+on open, send the exact message and the file it names.
 
 ## Theme and the Overview page (2026-11-25)
 
@@ -55,6 +68,17 @@ in `definition/report.json`; Desktop caches themes by file name. `powerbi-report
 checks the result. Two errors remain that were there before: `.pbip` and `definition.pbir` have no `$schema` line (Desktop
 wrote them that way).
 
+## Use it with Snowflake
+
+The Snowflake copy is generated, git-ignored and holds your account address, so it is never committed.
+
+1. Write the copy: `.\.venv\Scripts\python.exe powerbi\snowflake\apply_snowflake_source.py` (it refuses to overwrite an existing copy; `--force` replaces it and resets the parameters below).
+2. Open `powerbi_snowflake/RetailAnalytics.pbip` and set two parameters (*Home > Transform data > Manage parameters*): `SnowflakeServer` is your account address, `<account>.snowflakecomputing.com`, not the database name (`RETAIL_OLIST`) and not the repository name; `SnowflakeWarehouse` is `RETAIL_WH`.
+3. Sign in with a Snowflake user whose default role is `RETAIL_REPORTER`. If sign-in fails with `Failed to parse PEM block containing the private key`, type the user name and password again in *File > Options and settings > Data source settings*, for both the current file and the global permissions.
+4. Change the design in `powerbi/`, commit it there, then regenerate the copy. A change made only in the copy is not in Git.
+
+The full guide, with the table-to-view mapping and what is still unverified, is [docs/migration/POWERBI_SWITCH_GUIDE.md](../docs/migration/POWERBI_SWITCH_GUIDE.md).
+
 ## Open it
 
 1. Install **Power BI Desktop** (free, Windows), a recent version. If it does not offer to open `.pbip` files, enable *File > Options and settings > Options > Preview features > Power BI Project (.pbip) save option*, and the PBIR enhanced report format if listed, then restart.
@@ -73,8 +97,8 @@ wrote them that way).
 
 ## Optional
 
-- The colour theme is in `theme/RetailAnalytics.theme.json` (*View > Themes > Browse for themes*). The report already uses the
-  built-in base theme, so this is only for matching the project palette.
+- The report carries its own theme (see "Theme and the Overview page"). `theme/RetailAnalytics.theme.json` is the original optional
+  palette written by the generator; the report does not use it.
 - Nothing in the project holds credentials. The only machine-specific setting is the `DataFolder` path, which Desktop keeps in
   the model and which is not committed (the committed value is a placeholder).
 
@@ -101,4 +125,5 @@ Power BI reports the first failing table and marks the rest "Load was cancelled 
 - Row-level **review comments are not exported**; only the score and whether a comment exists.
 - The risk page uses out-of-time scores for 2018-03 to 2018-08 only (the test months of the model); other months show no scores.
 - Scores are for ranking, not probabilities (see `docs/ml/MODEL_CARD.md`).
-- Measures were written to mirror the SQL, but DAX results have not been computed here; the checklist is how to confirm them.
+- The measures mirror the SQL. The headline figures on the Snowflake-backed pages agree with the first-open checklist; the rest of the checklist was compared by the owner, and no test in this repository computes DAX.
+- The late-rate charts start with a 100% spike: the first month (2016-09) has only a few orders and months under 500 orders are not filtered out.
