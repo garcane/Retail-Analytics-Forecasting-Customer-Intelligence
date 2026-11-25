@@ -1,30 +1,30 @@
 # Graph Report - Retail-Analytics-Forecasting-Customer-Intelligence  (2026-11-25)
 
 ## Corpus Check
-- 393 files · ~455,945 words
+- 390 files · ~453,825 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 49 file(s) not represented in the graph (top: .tmdl 17, (none) 12, .csv 8)
 
 ## Summary
-- 3609 nodes · 5460 edges · 367 communities (213 shown, 154 thin omitted)
-- Extraction: 94% EXTRACTED · 6% INFERRED · 0% AMBIGUOUS · INFERRED: 306 edges (avg confidence: 0.89)
+- 3555 nodes · 5339 edges · 362 communities (207 shown, 155 thin omitted)
+- Extraction: 94% EXTRACTED · 6% INFERRED · 0% AMBIGUOUS · INFERRED: 303 edges (avg confidence: 0.89)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `8dc8fe67`
+- Built from commit: `12702bf2`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
 ## Community Hubs (Navigation)
-- build_spec_html.py
-- test_notebooks.py
+- Section 5: Tier 3 Model Optimization Patterns
+- stage_wrapper
 - Design decisions
 - Architecture Philosophy (Shared Across Cloud Projects)
-- fact_order_items (grain: order item, 112,650 rows)
+- Data model: Olist star schema
 - re
 - test_powerbi_project.py
 - base.json
-- numpy
+- recalibration.py
 - run_analytics.py
 - Late-delivery model (v1 logistic regression)
 - test_feature_leakage.py
@@ -35,7 +35,7 @@
 - DECISIONS.md
 - SnowparkAccess
 - fact_order_items
-- Measure
+- Expression Tree Templates
 - Recalibration and training window for the v1 late-delivery model
 - test_reconciliation.py
 - `${PROJECT}.staging.stg_customers`
@@ -54,7 +54,7 @@
 - Agentic Loop (PLAN to DECIDE)
 - Documentation Standard (README, ARCHITECTURE, DECISIONS, COST, SECURITY)
 - `${PROJECT}.staging.stg_order_items`
-- datasets.py
+- text
 - AGENTS.md
 - test_register_model.py
 - powerbi-report-cli/SKILL.md
@@ -81,7 +81,7 @@
 - `${PROJECT}.staging.stg_products`
 - `${PROJECT}.staging.stg_sellers`
 - `${PROJECT}.staging.stg_category_translation`
-- late_delivery_baseline.py
+- pandas
 - duckdb
 - Section 3: Tier 1 DAX Optimization Patterns
 - Check details
@@ -94,7 +94,7 @@
 - fetch.py
 - test_snowflake_ingestion.py
 - report.py
-- forecast_models.py
+- numpy
 - cli.py
 - checks.py
 - pytest
@@ -102,14 +102,14 @@
 - render_data_dictionary.py
 - test_data_access.py
 - load_table
-- apply_snowflake_source.py
+- model_spec.py
 - test_publish_ml.py
 - writeback.py
 - Semantic model (12 tables, 13 relationships, 38 measures)
-- validate_frame
-- json
+- datasets.py
+- test_warehouse.py
 - Snowflake + dbt implementation: setup and runbook
-- build_pbip.py
+- parametrize
 - 4. Procedure
 - Power BI Semantic Model Authoring — CLI Skill
 - .name
@@ -118,10 +118,10 @@
 - Unslop
 - Tokens
 - Snowflake Retail Project: Local vs. Cloud Architecture
-- model_spec.py
+- Row Banding (Table & Matrix)
 - Snowflake + dbt architecture
 - FakeCursor
-- test_dashboard.py
+- Brownfield Redesign — Entry Workflow
 - Signs of slop
 - test_feature_determinism.py
 - data_dir
@@ -129,7 +129,7 @@
 - Comparison
 - Executive Summary Dashboard
 - Color Strategy
-- load
+- 9. Step 5: Python on Snowflake - RUN 2026-11-13
 - dbt project: Olist on Snowflake
 - Marts, analytics (MARTS, tables)
 - FakeCursor
@@ -138,16 +138,16 @@
 - SKILL.md
 - Effects
 - Visuals
-- FakeConn
+- fake_connector
 - retail-olist-dbt
 - Version Control for PBIR Editing
 - MLOps Lifecycle
-- Security
+- Phase 2: baseline results
 - register_model.py
 - DAX Query Syntax Rules
 - Layout Composition
-- text
-- needs_real_data
+- Button Visual Authoring Guide - Part 2
+- FakeConn
 - DAX Performance Decision Guide
 - test_yes_flag_is_passed_to_connect_as_confirmation
 - make_snowflake_notebooks.py
@@ -158,14 +158,14 @@
 - Table & Matrix Visual Authoring Guide
 - Field Parameters Reference
 - Tone Catalog
-- pandas
-- Column audit for target A
+- test_drift_helpers.py
+- fact_order_items (grain: order item, 112,650 rows)
 - powerbi-report-cli planning mode -- Power BI Report Planning
 - Semantic Model Metadata Discovery — DAX INFO Functions
 - retail-olist-ml-registry
-- build_mockup_html.py
+- Power BI project
 - test_scoring_task_sql.py
-- conftest.py
+- Card Visual Authoring Guide
 - Card Visual Authoring Guide - Part 3
 - Lessons learned
 - Contents
@@ -173,22 +173,23 @@
 - scoring_task.sql
 - Semantic Model REST API Reference
 - Naming Conventions for Power BI Semantic Models
-- test_notebooks_snowflake.py
+- Typographic signatures
+- semantic-model-authoring/SKILL.md
 - Conditional Formatting Patterns - Part 7
 - parametrize
 - Properties Retrieval
 - Theme Authoring — theme.json Reference
 - Power BI Project file (PBIP)
 - Comparative Benchmark - Part 2
-- Direct Lake Modeling Guidelines
+- sql/bigquery — the same layers in GoogleSQL
 - EDA findings: Olist dataset discovery
-- Phase 2: Optimization Iterations
+- check_wrapped_equals_raw
 - Workflow
 - Examples: CRUD Operations
 - semantic-model-authoring
 - Anti-Patterns — The Dashboard Slop Catalog
 - Comparative / Benchmark Dashboard
-- Page layout contract
+- Design Brief Contract - Part 2
 - Authoring Workflows & Examples
 - Button Sizing & Placement (Required)
 - Card Sizing (Required)
@@ -199,7 +200,7 @@
 - Signatures
 - Typography for Data
 - Power BI Reports - CLI Skill
-- .read_sql
+- DataAccess
 - Custom Visuals (AppSource, Organizational, Private `.pbiviz`)
 - Add a Filter
 - Analytical Canvas
@@ -219,7 +220,7 @@
 - Contents
 - powerbi-report-cli management mode -- Power BI Report Items in Fabric
 - authoring.md
-- Selectors (Targeting Specific Data)
+- Model card
 - `definition.pbir` — Report → Semantic Model Binding
 - Pre-Flight Checklist
 - snapshot.mjs
@@ -239,24 +240,19 @@
 - Conditional Formatting Patterns - Part 6
 - Field Parameters (report-side pattern)
 - Power BI Desktop Preview Routing
-- Design Brief Contract
+- test_writeback_columns_match_export_schemas
 - Filter Pane & Filter Card Formatting
 - Textbox Visual Authoring Guide
 - 6. Visual Styles (`visualStyles`)
 - Archetype Composition & Variant Rotation
 - Must/Prefer/Avoid
-- _fetch
 - Contents
-- Field-Value Result Contracts and Support Guardrails
-- Formatting & Theming Overview
+- Conditional Formatting Patterns
 - PBI Formatting Reference
-- Chromatic signatures
-- Structural signatures
 - Section 2: Reading and Diagnosing Traces
-- kpi.md
+- Measure
 - Color & Typography
 - Layout Variants
-- Optimization Framework
 - Bookmark state
 - warn
 - powerbi-report-cli
@@ -271,19 +267,19 @@
 7. `run_main()` - 21 edges
 8. `Power BI Semantic Model Authoring — CLI Skill` - 19 edges
 9. `main()` - 18 edges
-10. `connect()` - 18 edges
+10. `validate_frame()` - 17 edges
 
 ## Surprising Connections (you probably didn't know these)
+- `Icon Options` --references--> `text()`  [INFERRED]
+  .claude/skills/powerbi-report-cli/references/authoring/button-part-02.md → scripts/make_snowflake_notebooks.py
+- `State Selectors` --references--> `text()`  [INFERRED]
+  .claude/skills/powerbi-report-cli/references/authoring/button-part-02.md → scripts/make_snowflake_notebooks.py
 - `Buttons and shapes` --references--> `text()`  [INFERRED]
   .claude/skills/powerbi-report-cli/references/authoring/conditional-formatting-part-03.md → scripts/make_snowflake_notebooks.py
 - `Page Objects vs Visual Container Objects` --references--> `text()`  [INFERRED]
   .claude/skills/powerbi-report-cli/references/authoring/formatting.md → scripts/make_snowflake_notebooks.py
 - `Step 2: Audit per-visual formatting for gaps` --references--> `text()`  [INFERRED]
   .claude/skills/powerbi-report-cli/references/authoring/re-theming-part-02.md → scripts/make_snowflake_notebooks.py
-- `Shape Text Caveat` --references--> `text()`  [INFERRED]
-  .claude/skills/powerbi-report-cli/references/authoring/shape.md → scripts/make_snowflake_notebooks.py
-- `Placements` --references--> `text()`  [INFERRED]
-  .claude/skills/powerbi-report-cli/references/design/design-brief-part-02.md → scripts/make_snowflake_notebooks.py
 
 ## Import Cycles
 - None detected.
@@ -300,42 +296,42 @@
 - **Leakage controls: purchase-time prediction, point-in-time stats, time-ordered split, planted-leak tests** — docs_ml_leakage_analysis_purchase_time_prediction, docs_ml_leakage_analysis_point_in_time_statistics, docs_ml_leakage_analysis_time_ordered_split, docs_audit_planted_leak_checks [INFERRED 0.85]
 - **Monthly KPIs chart: metrics, trend insight and data source** — docs_analytics_figures_monthly_kpis_net_revenue_per_month, docs_analytics_figures_monthly_kpis_average_order_value, docs_analytics_figures_monthly_kpis_olist_orders_data [INFERRED 0.85]
 
-## Communities (367 total, 154 thin omitted)
+## Communities (362 total, 155 thin omitted)
 
-### Community 0 - "build_spec_html.py"
-Cohesion: 0.17
-Nodes (9): edge_point(), field_text(), main(), manifest(), model_svg(), render(), wireframe(), compute_checks() (+1 more)
+### Community 0 - "Section 5: Tier 3 Model Optimization Patterns"
+Cohesion: 0.10
+Nodes (20): DAX Performance Pattern Catalog, DL001: V-Ordering Delta Tables for Direct Lake, DL002: Segment Size and Parallelism, General Data Layout Best Practices, MDL001: Many-to-Many Relationship Optimization, MDL002: Star Schema Conformance, MDL003: Column Cardinality and Data Type Optimization, MDL004: Aggregation Table Strategies (+12 more)
 
-### Community 1 - "test_notebooks.py"
-Cohesion: 0.27
-Nodes (5): code_cells(), notebook(), test_every_code_cell_was_executed_without_error(), test_notebook_code_parses_and_only_imports_modules_that_exist(), test_the_charts_are_stored_in_the_notebook()
+### Community 1 - "stage_wrapper"
+Cohesion: 0.14
+Nodes (17): backtest_frame(), scores_frame(), stage_wrapper(), test_create_table_sql_is_idempotent_ddl(), test_each_write_uses_a_fresh_stage_folder(), test_failed_copy_rolls_back_and_cleans_up(), test_failed_parquet_write_leaves_no_temp_files_and_no_staging(), test_local_temporary_file_is_deleted() (+9 more)
 
 ### Community 2 - "Design decisions"
-Cohesion: 0.12
-Nodes (30): dim_customer, dim_date, dim_geography, dim_product, dim_seller, Dimension SQL (sql/dimensions), fact_order_items, fact_orders (+22 more)
+Cohesion: 0.15
+Nodes (26): dim_customer, dim_date, dim_geography, dim_product, dim_seller, Dimension SQL (sql/dimensions), fact_order_items, fact_orders (+18 more)
 
 ### Community 3 - "Architecture Philosophy (Shared Across Cloud Projects)"
 Cohesion: 0.14
 Nodes (9): Cloud Portfolio Master Agent Prompt, Data Warehousing and Analytical Modelling (grain, star schema), Layered Data Architecture (RAW/STAGING/CURATED/ANALYTICAL), Local to Cloud Progression Lifecycle, Three-Project Cloud Portfolio (Azure Healthcare, AWS Finance, GCP Retail), Architecture Philosophy (Shared Across Cloud Projects), dbt as First-Class Component, Multi-Cloud View (three production targets of one philosophy) (+1 more)
 
-### Community 4 - "fact_order_items (grain: order item, 112,650 rows)"
-Cohesion: 0.12
-Nodes (22): Data model: Olist star schema, Design rules, dim_customer (grain: customer_unique_id, 96,097 rows), dim_date (generated calendar 2016-2020, 1,828 rows), dim_geography (one row per zip prefix, 19,012 rows), dim_product (32,952 rows), dim_seller (3,096 rows), Dimensions (+14 more)
+### Community 4 - "Data model: Olist star schema"
+Cohesion: 0.18
+Nodes (11): Data model: Olist star schema, Design rules, Dimensions, Entity-relationship diagram, `fact_order_items` - the core sales fact, `fact_orders` - order lifecycle, `fact_payments` - payments, `fact_reviews` - reviews (+3 more)
 
 ### Community 5 - "re"
 Cohesion: 0.18
 Nodes (14): local_columns(), read(), stems(), strip_comments(), test_each_raw_file_is_an_external_table_over_its_csv(), test_each_staging_file_is_a_view_over_its_raw_table_with_the_typed_casts(), test_every_local_column_reaches_the_view(), test_raw_columns_match_the_local_column_list_in_order_and_as_strings() (+6 more)
 
 ### Community 6 - "test_powerbi_project.py"
-Cohesion: 0.19
-Nodes (12): warehouse(), _columns(), _json_files(), test_data_folder_placeholder_is_not_a_real_machine_path(), test_every_json_file_validates_against_its_published_schema(), test_every_visual_field_exists(), test_generated_visuals_and_tmdl_use_the_same_names(), test_generation_is_deterministic() (+4 more)
+Cohesion: 0.14
+Nodes (16): warehouse(), _columns(), _fetch(), generated(), _json_files(), registry(), _retrieve(), test_data_folder_placeholder_is_not_a_real_machine_path() (+8 more)
 
 ### Community 7 - "base.json"
 Cohesion: 0.05
 Nodes (38): bad, color, fontFace, fontSize, center, dataColors, good, color (+30 more)
 
-### Community 8 - "numpy"
-Cohesion: 0.14
+### Community 8 - "recalibration.py"
+Cohesion: 0.13
 Nodes (22): calibration_split(), expected_calibration_error(), experiment_recalibration(), experiment_window(), fit_v1(), logit(), macro(), main() (+14 more)
 
 ### Community 9 - "run_analytics.py"
@@ -344,43 +340,43 @@ Nodes (12): draw(), load_graph(), main(), node_label(), fig_categories(), fig_mo
 
 ### Community 10 - "Late-delivery model (v1 logistic regression)"
 Cohesion: 0.09
-Nodes (33): ML layer (src/ml, sql/ml), DD-11: No recalibration or window tuning; use the model by rank, DD-12: Close the ML experiments; v1 and the simple forecasts are final, August 2018 delivery-promise policy shift, E1: single-feature skill, month by month, E2: persistence of route/category/seller lateness, E5: oracle true month late rate ceiling, E6: route history redundant with state and distance (+25 more)
+Nodes (30): ML layer (src/ml, sql/ml), DD-11: No recalibration or window tuning; use the model by rank, DD-12: Close the ML experiments; v1 and the simple forecasts are final, August 2018 delivery-promise policy shift, E1: single-feature skill, month by month, E2: persistence of route/category/seller lateness, E5: oracle true month late rate ceiling, E6: route history redundant with state and distance (+22 more)
 
 ### Community 11 - "test_feature_leakage.py"
-Cohesion: 0.13
-Nodes (19): Do richer history features help? No., Limits, Phase 2: baseline results, Suggested next steps, Target A: late delivery, Target B: weekly forecast, Tests, day() (+11 more)
+Cohesion: 0.22
+Nodes (12): day(), test_an_order_never_sees_its_own_outcome(), test_delivery_time_history_sums_only_resolved_orders(), test_history_counts_orders_delivered_before_purchase_not_purchased_before(), test_label_is_passed_through_as_integer(), test_one_row_per_order_with_multiple_items_and_sellers(), test_outcome_is_not_visible_at_the_instant_of_delivery(), test_output_has_no_post_outcome_columns() (+4 more)
 
 ### Community 12 - "Phase 0 — Discovery Report"
 Cohesion: 0.09
 Nodes (23): 10. Current GCP services, pricing and free-tier implications, 11. IAM and security requirements (to implement in Phase 3, not yet), 12. Cost risks and mitigations, 13. Evidence plan, 14. Items covered (child prompt §43 checklist), 15. Decisions, 16. Known limitations of this discovery, 1. Dataset source and licence (+15 more)
 
 ### Community 13 - "AUDIT.md"
-Cohesion: 0.08
-Nodes (28): Compute, Measured compute timings, Cost, If the project moved to the cloud, Total cloud cost $0, Late delivery vs review score association (4.29 on time, 2.57 late), 2018 delivery promise shortened (75% of August orders under 20 days), 97% of customers buy once (repeat = 5.6% of revenue) (+20 more)
+Cohesion: 0.07
+Nodes (31): DD-07: Customer segmentation is optional, Late delivery vs review score association (4.29 on time, 2.57 late), 2018 delivery promise shortened (75% of August orders under 20 days), 97% of customers buy once (repeat = 5.6% of revenue), Rio de Janeiro late-rate outlier (13.5% late, median 12 days), Seller concentration (top 10% of sellers = 67.5% of revenue), Insights correction: on-time orders produce ~70% of 1-2 star reviews, Current state (2026-10-13) (+23 more)
 
 ### Community 14 - "Architecture"
-Cohesion: 0.18
-Nodes (11): Architecture, Cost, Data flow, Deployment and monitoring, Failure points, ML (baselines built, D-007), Processing, Related documents (+3 more)
+Cohesion: 0.09
+Nodes (19): Architecture, Components, Cost, Data flow, Deployment and monitoring, Failure points, ML (baselines built, D-007), Processing (+11 more)
 
 ### Community 15 - "forecast_baseline.py"
-Cohesion: 0.16
-Nodes (11): backtest(), linear_trend(), f(), score(), weekly_series(), main(), series(), test_changing_future_weeks_does_not_change_earlier_forecasts() (+3 more)
+Cohesion: 0.12
+Nodes (15): backtest(), linear_trend(), f(), main(), moving_average(), naive(), score(), weekly_series() (+7 more)
 
 ### Community 16 - "DECISIONS.md"
-Cohesion: 0.12
-Nodes (20): Notebooks (01 discovery, 02 late-delivery, 03 forecast, marimo versions), Raw data (data/), Staging SQL (sql/staging), Validation checks (sql/validation/checks.sql, 22 checks), warehouse.duckdb, D-001: Implementations use DuckDB, D-002: Local only, D-003: Idiomatic DuckDB SQL (+12 more)
+Cohesion: 0.10
+Nodes (24): Raw data (data/), Staging SQL (sql/staging), Validation checks (sql/validation/checks.sql, 22 checks), Compute, Measured compute timings, Cost, If the project moved to the cloud, Total cloud cost $0 (+16 more)
 
 ### Community 17 - "SnowparkAccess"
-Cohesion: 0.07
-Nodes (17): Alternative not taken, Folders, How to run (untested, like the rest of the guide), sql/bigquery — the same layers in GoogleSQL, Tokens, Type mapping, SnowflakeTarget, _clean() (+9 more)
+Cohesion: 0.08
+Nodes (11): How to run (untested, like the rest of the guide), _clean(), from_active_session(), SnowparkAccess, FakeResult, FakeSession, test_datasets_take_the_snowflake_branch_through_the_adapter(), test_execute_runs_and_close_keeps_the_session() (+3 more)
 
 ### Community 18 - "fact_order_items"
 Cohesion: 0.14
 Nodes (9): dim_customer, dim_date, dim_geography, dim_product, dim_seller, fact_order_items, fact_orders, fact_payments (+1 more)
 
-### Community 19 - "Measure"
-Cohesion: 0.06
-Nodes (33): Authoring Workflow, Charts, Conditional Formatting Patterns, Contents, Data-Bound Expression Rules, Formatting Options by Visual Type, Choose gradient colors by measure meaning, Conditional Formatting Patterns - Part 4 (+25 more)
+### Community 19 - "Expression Tree Templates"
+Cohesion: 0.11
+Nodes (17): Aggregation Expression, Column Expression, Comparison Expression, Contains/StartsWith Expression, Contents, Entity Source Expression, Expansion state, Expression Tree Templates (+9 more)
 
 ### Community 20 - "Recalibration and training window for the v1 late-delivery model"
 Cohesion: 0.40
@@ -403,8 +399,8 @@ Cohesion: 0.17
 Nodes (12): 1. Correctness, 2. Reproducibility, 3. Security, 4. Cost, 5. Architecture, 6. Testing, 7. Documentation, 8. Evidence (+4 more)
 
 ### Community 27 - "powerbi/README.md"
-Cohesion: 0.14
-Nodes (18): Power BI generators and project (src/powerbi, powerbi/), DD-06: Convert geolocation CSV to Parquet in the build, Out-of-time late-delivery scores export (export_scores.py), DASHBOARD_MOCKUP.html, DataFolder parameter, export_data.py (Power BI data export), First-open checklist, If the first refresh fails (+10 more)
+Cohesion: 0.20
+Nodes (13): Notebooks (01 discovery, 02 late-delivery, 03 forecast, marimo versions), Power BI generators and project (src/powerbi, powerbi/), warehouse.duckdb, DD-06: Convert geolocation CSV to Parquet in the build, Out-of-time late-delivery scores export (export_scores.py), ML notebooks: Jupyter + marimo versions, DASHBOARD_MOCKUP.html, DataFolder parameter (+5 more)
 
 ### Community 28 - "Business insights: Olist retail analytics"
 Cohesion: 0.18
@@ -442,9 +438,9 @@ Nodes (4): Agentic Loop (PLAN to DECIDE), Development Phases 0-10, Human Approva
 Cohesion: 0.50
 Nodes (4): Documentation Standard (README, ARCHITECTURE, DECISIONS, COST, SECURITY), Evidence Requirement and Evidence Integrity, Failure Documentation, Security Principles (least privilege, no secrets in Git)
 
-### Community 38 - "datasets.py"
-Cohesion: 0.15
-Nodes (11): _kind_ok(), load_dataset(), _conform_column(), conform_frame(), _non_null(), normalise_frame(), _normalise_object_column(), _to_int() (+3 more)
+### Community 38 - "text"
+Cohesion: 0.17
+Nodes (12): Anti-Patterns and Pitfalls, Official Documentation, powerbi-report-cli authoring mode -- Power BI Report Authoring (PBIR/PBIP) - Part 4, Canvas, Date slicer example variants, Grid regions, Header and slicer band, Page layout contract (+4 more)
 
 ### Community 39 - "AGENTS.md"
 Cohesion: 0.50
@@ -455,8 +451,8 @@ Cohesion: 0.07
 Nodes (7): env(), FakeDB, FakeModelRef, FakeRegistry, FakeVersion, feature_frame(), test_failed_scoring_is_recorded_and_returns_nonzero()
 
 ### Community 41 - "powerbi-report-cli/SKILL.md"
-Cohesion: 0.06
-Nodes (23): Card Visual Authoring Guide, Contents, Multi-Value Template, Single-Value Template, Conditional Formatting Patterns - Part 5, Contents, Contents, Fallback: the `powerbi-desktop` bridge CLI (+15 more)
+Cohesion: 0.07
+Nodes (21): Formatting Cascade, Formatting & Theming Overview, Selector Types (Quick Reference), Static Property Value Encoding — Three Formats, Contents, Fallback: the `powerbi-desktop` bridge CLI, `powerbi-report-author` CLI Reference - Part 2, Report Preview - Part 3 (+13 more)
 
 ### Community 42 - "Narrative / Data Story"
 Cohesion: 0.07
@@ -474,17 +470,17 @@ Nodes (22): args, chrome, file, frame, frames, [frameX, frameY, frameWidth], htm
 Cohesion: 0.05
 Nodes (36): Access control, Batch inference, Customer, Data processing choice, dbt, Delivery, Dialect migration, Forecasting (+28 more)
 
-### Community 84 - "late_delivery_baseline.py"
-Cohesion: 0.12
-Nodes (9): add_smoothed_rates(), calibration_table(), evaluate(), mean_days_to_deliver(), run(), top_share_metrics(), test_smoothing_does_not_modify_the_input(), test_smoothing_returns_prior_without_history_and_raw_rate_with_lots() (+1 more)
+### Community 84 - "pandas"
+Cohesion: 0.09
+Nodes (17): 4. Python integration, build_from(), score_test_months(), add_smoothed_rates(), calibration_table(), evaluate(), _is_data_access(), load() (+9 more)
 
 ### Community 85 - "duckdb"
-Cohesion: 0.09
-Nodes (14): Components, check_raw_files(), main(), run_sql_file(), data_dir(), test_missing_raw_file_gives_a_clear_error(), test_no_parquet_is_read_or_written(), test_staging_keeps_leading_zeros_and_types() (+6 more)
+Cohesion: 0.10
+Nodes (10): main(), render(), build(), manifest(), test_exported_scores_reproduce_the_stored_pr_auc(), test_manifest_row_counts_equal_the_files(), test_mockup_cubes_add_up_to_the_specification_checks(), test_no_fact_key_is_missing_from_its_dimension() (+2 more)
 
 ### Community 86 - "Section 3: Tier 1 DAX Optimization Patterns"
-Cohesion: 0.05
-Nodes (42): DAX001: Use Simple Column Filter Predicates as CALCULATE Arguments, DAX002: Use SUMMARIZECOLUMNS for Grouped Calculations, DAX003: Cache Repeated Expressions in Variables, DAX004: Remove Redundant Filters, DAX005: Move Complex SUMMARIZE Inputs to CALCULATETABLE, DAX006: Precompute Iterator Inputs with SUMMARIZECOLUMNS, DAX007: Convert Boolean Tests Without IF, DAX008: Context Transition in Iterator (+34 more)
+Cohesion: 0.09
+Nodes (22): DAX001: Use Simple Column Filter Predicates as CALCULATE Arguments, DAX002: Use SUMMARIZECOLUMNS for Grouped Calculations, DAX003: Cache Repeated Expressions in Variables, DAX004: Remove Redundant Filters, DAX005: Move Complex SUMMARIZE Inputs to CALCULATETABLE, DAX006: Precompute Iterator Inputs with SUMMARIZECOLUMNS, DAX007: Convert Boolean Tests Without IF, DAX008: Context Transition in Iterator (+14 more)
 
 ### Community 87 - "Check details"
 Cohesion: 0.07
@@ -496,99 +492,99 @@ Nodes (8): add_relative_rates(), e1_feature_skill(), e2_persistence(), e_lag(), 
 
 ### Community 89 - "pathlib"
 Cohesion: 0.10
-Nodes (10): main(), main(), read_monitor(), main(), main(), NoCacheHandler, main(), compute() (+2 more)
+Nodes (11): 6. Inventory C: SQL embedded in Python and notebooks, main(), main(), read_monitor(), main(), main(), permutation_drop(), build() (+3 more)
 
 ### Community 90 - "Data dictionary: Snowflake + dbt implementation"
 Cohesion: 0.04
 Nodes (49): Data dictionary: Snowflake + dbt implementation, `dim_customer`, `dim_date`, `dim_geography`, `dim_product`, `dim_seller`, Documentation coverage, `fact_order_items` (+41 more)
 
 ### Community 91 - "load_raw.py"
-Cohesion: 0.10
+Cohesion: 0.11
 Nodes (21): build_parser(), check_files_exist(), _check_put_result(), count_records(), default_connect(), describe_files(), ident(), IngestError (+13 more)
 
 ### Community 92 - "compare.py"
-Cohesion: 0.11
-Nodes (21): _as_decimal(), _candidates(), _coerce(), _compare_expected(), ok(), compare_frames(), compare_values(), display_value() (+13 more)
+Cohesion: 0.12
+Nodes (20): _as_decimal(), _candidates(), _coerce(), _compare_expected(), ok(), compare_frames(), compare_values(), ExpectedResult (+12 more)
 
 ### Community 93 - "test_powerbi_snowflake.py"
 Cohesion: 0.10
 Nodes (15): patched(), patched_ml_files(), _project_files(), _scan(), test_expressions_define_the_two_snowflake_parameters(), test_ml_on_files_keeps_datafolder_beside_the_snowflake_parameters(), test_ml_on_files_patches_only_the_nine_pbi_tables(), test_no_real_looking_account_or_credential_strings() (+7 more)
 
 ### Community 94 - "fetch.py"
-Cohesion: 0.09
+Cohesion: 0.10
 Nodes (10): assert_read_only(), canon_value(), DuckDBFetcher, frame_from_dataframe(), frame_from_rows(), ReadOnlyViolation, redact_account(), SnowflakeFetcher (+2 more)
 
 ### Community 95 - "test_snowflake_ingestion.py"
-Cohesion: 0.14
-Nodes (21): expected_rows_for(), FakeConnection, run_main(), test_changed_file_into_nonempty_table_is_refused_not_appended(), test_copy_exception_is_logged_failed_and_stops(), test_dry_run_emits_sql_and_never_connects_or_needs_credentials(), test_dry_run_reload_shows_truncate_and_force(), test_first_load_runs_put_copy_verify_log_for_every_table() (+13 more)
+Cohesion: 0.12
+Nodes (24): expected_rows_for(), FakeConnection, run_main(), test_changed_file_into_nonempty_table_is_refused_not_appended(), test_copy_exception_is_logged_failed_and_stops(), test_dry_run_emits_sql_and_never_connects_or_needs_credentials(), test_dry_run_reload_shows_truncate_and_force(), test_first_load_runs_put_copy_verify_log_for_every_table() (+16 more)
 
 ### Community 96 - "report.py"
-Cohesion: 0.17
-Nodes (14): ColumnResult, _cell(), _col_rows(), collect_run_metadata(), _comparison_block(), _git(), _key_text(), _num() (+6 more)
+Cohesion: 0.19
+Nodes (14): ColumnResult, display_value(), _cell(), _col_rows(), collect_run_metadata(), _comparison_block(), _git(), _key_text() (+6 more)
 
-### Community 97 - "forecast_models.py"
-Cohesion: 0.08
-Nodes (15): moving_average(), naive(), ar1_with_trend(), beats_naive_share(), combination(), damped_trend(), simple_exponential_smoothing(), series() (+7 more)
+### Community 97 - "numpy"
+Cohesion: 0.12
+Nodes (12): ar1_with_trend(), beats_naive_share(), damped_trend(), simple_exponential_smoothing(), series(), test_ar1_trend_extends_an_exact_linear_series(), test_combination_is_the_mean_of_its_parts(), test_constant_series_is_forecast_as_constant_by_every_model() (+4 more)
 
 ### Community 98 - "cli.py"
 Cohesion: 0.13
-Nodes (13): render_snowflake(), build_parser(), main(), _print_progress(), _resolve_duckdb(), _split(), CheckResult, duckdb_side() (+5 more)
+Nodes (13): build_parser(), main(), _print_progress(), _resolve_duckdb(), _split(), CheckResult, duckdb_side(), snowflake_side() (+5 more)
 
 ### Community 99 - "checks.py"
-Cohesion: 0.18
-Nodes (18): absolute(), all_checks(), _analytics_checks(), Check, ColumnRule, _dimension_checks(), Expected, _fact_checks() (+10 more)
+Cohesion: 0.16
+Nodes (19): absolute(), all_checks(), _analytics_checks(), Check, ColumnRule, _dimension_checks(), Expected, _fact_checks() (+11 more)
 
 ### Community 100 - "pytest"
-Cohesion: 0.13
-Nodes (15): net(), table(), test_category_revenue_matches_and_shares_are_consistent(), test_delay_buckets_cover_every_reviewed_delivered_order(), test_delivery_trend_covers_the_same_population_as_the_ml_features(), test_monthly_growth_is_blank_next_to_thin_months(), test_monthly_kpis_add_up_to_net_revenue(), test_payment_shares_add_up_and_total_matches_the_fact() (+7 more)
+Cohesion: 0.23
+Nodes (12): pytest_collection_modifyitems(), net(), table(), test_category_revenue_matches_and_shares_are_consistent(), test_delay_buckets_cover_every_reviewed_delivered_order(), test_delivery_trend_covers_the_same_population_as_the_ml_features(), test_monthly_growth_is_blank_next_to_thin_months(), test_monthly_kpis_add_up_to_net_revenue() (+4 more)
 
 ### Community 101 - "backend.py"
-Cohesion: 0.15
-Nodes (13): ConfirmationRequired, _confirmed(), _connect_snowflake(), InvalidBackendError, _load_private_key_der(), _load_snowflake_connector(), MissingConfigError, resolve_backend() (+5 more)
+Cohesion: 0.12
+Nodes (16): ConfirmationRequired, _confirmed(), connect(), _connect_snowflake(), InvalidBackendError, _load_private_key_der(), _load_snowflake_connector(), MissingConfigError (+8 more)
 
 ### Community 102 - "render_data_dictionary.py"
 Cohesion: 0.15
 Nodes (13): collect(), describe_test(), first_comment(), layer_of(), load_manifest(), main(), md_cell(), mermaid_id() (+5 more)
 
 ### Community 103 - "test_data_access.py"
-Cohesion: 0.06
-Nodes (32): backtest_frame(), check_wrapped_equals_raw(), scores_frame(), sf_wrapper(), stage_wrapper(), test_create_table_sql_is_idempotent_ddl(), test_duckdb_sql_text_matches_the_ml_modules(), test_each_write_uses_a_fresh_stage_folder() (+24 more)
+Cohesion: 0.09
+Nodes (9): sf_wrapper(), test_conform_integral_floats_to_ints_and_numbers_to_float(), test_marts_schema_override_is_validated(), test_normalise_dtypes(), test_snowflake_execute_and_close(), test_snowflake_late_features_match_duckdb_after_load(), test_snowflake_unlabelled_share_matches_duckdb(), test_snowflake_weekly_series_through_the_ml_function() (+1 more)
 
 ### Community 104 - "load_table"
-Cohesion: 0.20
+Cohesion: 0.18
 Nodes (13): Executor, FileInfo, load_table(), _log_best_effort(), print_dry_run(), sql_copy(), sql_count(), sql_log_insert() (+5 more)
 
-### Community 105 - "apply_snowflake_source.py"
-Cohesion: 0.20
-Nodes (9): apply(), _is_inside(), main(), patch_table(), PatchError, _read(), split_partition(), typed_step_arguments() (+1 more)
+### Community 105 - "model_spec.py"
+Cohesion: 0.05
+Nodes (40): apply(), _is_inside(), main(), patch_table(), PatchError, _read(), split_partition(), typed_step_arguments() (+32 more)
 
 ### Community 106 - "test_publish_ml.py"
 Cohesion: 0.13
 Nodes (5): FakeDB, frames(), patched(), test_compute_rejects_a_frame_with_a_missing_column(), test_hand_picked_run_ids_are_refused_before_connecting()
 
 ### Community 107 - "writeback.py"
-Cohesion: 0.12
-Nodes (17): DataAccess, DataAccessError, copy_sql(), create_table_sql(), delete_sql(), _load(), new_run_id(), _prepare() (+9 more)
+Cohesion: 0.11
+Nodes (17): DataAccessError, copy_sql(), create_table_sql(), delete_sql(), _load(), new_run_id(), _prepare(), _qualified() (+9 more)
 
 ### Community 108 - "Semantic model (12 tables, 13 relationships, 38 measures)"
-Cohesion: 0.21
-Nodes (14): Use the model by rank, not probability, flag_share helper table, forecast_backtest table, late_delivery_scores table, DAX measure group: Delivery, DAX measure group: Forecast, DAX measure group: Reviews, DAX measure group: Risk (+6 more)
+Cohesion: 0.19
+Nodes (15): flag_share helper table, forecast_backtest table, late_delivery_scores table, DAX measure group: Customers, DAX measure group: Delivery, DAX measure group: Forecast, DAX measure group: Reviews, DAX measure group: Risk (+7 more)
 
-### Community 109 - "validate_frame"
-Cohesion: 0.15
-Nodes (15): _conn(), late_delivery_features(), order_category(), _schema_ident(), SchemaError, unlabelled_share(), validate_frame(), weekly_series() (+7 more)
+### Community 109 - "datasets.py"
+Cohesion: 0.10
+Nodes (21): _kind_ok(), late_delivery_features(), load_dataset(), order_category(), _schema_ident(), SchemaError, unlabelled_share(), validate_frame() (+13 more)
 
-### Community 110 - "json"
-Cohesion: 0.12
-Nodes (19): analytics_tables(), clean(), commit(), discard(), forecast_metrics(), forecasts(), git_sha(), headline_kpis() (+11 more)
+### Community 110 - "test_warehouse.py"
+Cohesion: 0.22
+Nodes (3): features(), test_seller_history_matches_a_direct_recount_on_real_data(), test_weekly_series_covers_the_documented_window()
 
 ### Community 111 - "Snowflake + dbt implementation: setup and runbook"
 Cohesion: 0.14
-Nodes (14): 10. Step 6: the HTML dashboard - RUN 2026-11-12, 11. Step 7: Power BI patched copy - NOT RUN, 12. Cost, 13. Where things stand, 1. Prerequisites, 2. Credentials and environment variables, 3. Offline checks (no Snowflake connection), 4. Step 1: preflight and setup - RUN 2026-11-12 (+6 more)
+Nodes (14): 10. Step 6: the HTML dashboard - RUN 2026-11-12, REMOVED 2026-11-25, 11. Step 7: Power BI patched copy - RUN 2026-11-25, 12. Cost, 13. Where things stand, 1. Prerequisites, 2. Credentials and environment variables, 3. Offline checks (no Snowflake connection), 4. Step 1: preflight and setup - RUN 2026-11-12 (+6 more)
 
-### Community 112 - "build_pbip.py"
-Cohesion: 0.21
-Nodes (11): dump(), field_json(), files(), lit(), main(), projection(), q(), relationships_tmdl() (+3 more)
+### Community 112 - "parametrize"
+Cohesion: 0.25
+Nodes (6): test_entry_points_reject_unknown_backend_from_env(), test_entry_points_snowflake_backend_needs_config_and_confirmation(), test_only_confirm_one_counts(), test_snowflake_read_sql_normalises_and_binds_params(), test_writeback_rejects_unsafe_run_ids_before_touching_snowflake(), test_writeback_statement_sequence_is_atomic_and_never_destructive()
 
 ### Community 113 - "4. Procedure"
 Cohesion: 0.17
@@ -622,9 +618,9 @@ Nodes (14): Accent, App layout, Buttons, Dark, Depth, Icons, Light, Motion (+6 m
 Cohesion: 0.17
 Nodes (12): 1. Cloud vs. Local Architecture Mapping, 2. End-to-End Pipeline Workflow, 3. Where the ML runs today, 4. Key Snowflake Technologies and Portability, Analytics engine: DuckDB vs Snowflake, Cost control, dbt instead of Dataflow, Local pipeline (reference) (+4 more)
 
-### Community 121 - "model_spec.py"
-Cohesion: 0.16
-Nodes (11): m_load(), prop(), table_tmdl(), Check, col(), column_hidden(), m_type(), mea() (+3 more)
+### Community 121 - "Row Banding (Table & Matrix)"
+Cohesion: 0.29
+Nodes (7): `backColor` vs `backColorPrimary` — Different Purposes, `fontColor` vs `fontColorPrimary` — Different Purposes (pivotTable), Full Table Example with Custom Styling, Row Banding (Table & Matrix), Style Presets for Tables, Table/Matrix Formatting Regions, Values Object Properties
 
 ### Community 122 - "Snowflake + dbt architecture"
 Cohesion: 0.25
@@ -634,9 +630,9 @@ Nodes (8): 1. End-to-end flow: DuckDB path and Snowflake path, 2. Snowflake obje
 Cohesion: 0.18
 Nodes (4): 9. UNVERIFIED until a live Snowflake run, FakeCursor, FakeCursorPandas, StageCursor
 
-### Community 124 - "test_dashboard.py"
-Cohesion: 0.10
-Nodes (6): _FakeSnowflake, test_every_js_file_parses(), test_failed_build_leaves_the_previous_build_intact(), test_no_innerhtml_in_dashboard_code(), test_order_category_reads_the_snowflake_intermediate_model(), test_snowflake_analytics_marts_are_put_in_the_reference_order()
+### Community 124 - "Brownfield Redesign — Entry Workflow"
+Cohesion: 0.29
+Nodes (6): Brownfield Redesign — Entry Workflow, Brownfield-specific Pre-Flight items, Entry workflow (6 steps), How each Step changes in brownfield mode, Theme-swap shortcut (light↔dark), When this file applies
 
 ### Community 125 - "Signs of slop"
 Cohesion: 0.18
@@ -655,8 +651,8 @@ Cohesion: 0.25
 Nodes (6): _statements(), test_grants_include_future_grants_and_are_additive(), test_objects_sql_matches_the_contract(), test_preflight_is_read_only(), test_private_key_and_env_files_are_git_ignored(), test_setup_files_have_no_replace_or_drop_even_in_comments()
 
 ### Community 129 - "Comparison"
-Cohesion: 0.31
-Nodes (5): Number vs percent thresholds (and percentile), Rule bounds: one-sided vs two-sided ranges, Type 2: Rules-Based Formatting, 4.5 ML features and validation (2 files), Comparison
+Cohesion: 0.22
+Nodes (7): Conditional Formatting Patterns - Part 5, Contents, Number vs percent thresholds (and percentile), Rule bounds: one-sided vs two-sided ranges, Type 2: Rules-Based Formatting, 4.5 ML features and validation (2 files), Comparison
 
 ### Community 130 - "Executive Summary Dashboard"
 Cohesion: 0.10
@@ -666,9 +662,9 @@ Nodes (20): Card / CardVisual, Chart Selection, Color & Typography, Contents, Co
 Cohesion: 0.10
 Nodes (19): Archetype Calibration, Categorical Palettes, Color Assignment Rules, Color Assignment Strategy, Color Strategy, Color Vision Deficiency (CVD) and WCAG Contrast, Conditional Formatting Techniques, Contents (+11 more)
 
-### Community 132 - "load"
-Cohesion: 0.13
-Nodes (12): 4. Python integration, 9. Step 5: Python on Snowflake - RUN 2026-11-13, ML inside Snowflake: notebooks, scheduled scoring, monitoring (DD-26), Publishing the ML outputs to Snowflake - RUN 2026-11-13, The model in the Snowflake Model Registry - RUN 2026-11-13, build(), build_from(), score_test_months() (+4 more)
+### Community 132 - "9. Step 5: Python on Snowflake - RUN 2026-11-13"
+Cohesion: 0.50
+Nodes (4): 9. Step 5: Python on Snowflake - RUN 2026-11-13, ML inside Snowflake: notebooks, scheduled scoring, monitoring (DD-26), Publishing the ML outputs to Snowflake - RUN 2026-11-13, The model in the Snowflake Model Registry - RUN 2026-11-13
 
 ### Community 133 - "dbt project: Olist on Snowflake"
 Cohesion: 0.33
@@ -679,8 +675,8 @@ Cohesion: 0.22
 Nodes (9): `mart_category_performance`, `mart_delivery_trend`, `mart_delivery_vs_reviews`, `mart_monthly_kpis`, `mart_payments`, `mart_repeat_customers`, `mart_seller_concentration`, `mart_state_performance` (+1 more)
 
 ### Community 136 - "README.md"
-Cohesion: 0.17
-Nodes (7): Test suite (96 pytest tests), Planted-leak checks, Join fan-out overstates revenue (+4.54% / +5.02%), Purchase-time (point-in-time) feature rule, Phase 0 cloud architecture proposal (GCS, BigQuery, Dataflow, Vertex AI), Olist Brazilian E-Commerce dataset (Kaggle, CC BY-NC-SA 4.0), Unverified BigQuery, Dataflow and Vertex AI pricing
+Cohesion: 0.18
+Nodes (6): Test suite (96 pytest tests), Planted-leak checks, Purchase-time (point-in-time) feature rule, Phase 0 cloud architecture proposal (GCS, BigQuery, Dataflow, Vertex AI), Olist Brazilian E-Commerce dataset (Kaggle, CC BY-NC-SA 4.0), Unverified BigQuery, Dataflow and Vertex AI pricing
 
 ### Community 137 - "Cartesian Visuals (Bar, Column, Line, Scatter)"
 Cohesion: 0.11
@@ -694,9 +690,9 @@ Nodes (7): Dithering, Duotone, Effects, Glyphs, Halftone dots, Implementation, P
 Cohesion: 0.29
 Nodes (7): Decide what the visual is, Generate it, Objects for moments, Prompt recipe, Put it on the page, Styles that work, Visuals
 
-### Community 141 - "FakeConn"
-Cohesion: 0.13
-Nodes (8): clean_env(), fake_connector(), connect(), FakeConn, _populate(), populated(), sf_env(), StageConn
+### Community 141 - "fake_connector"
+Cohesion: 0.22
+Nodes (6): clean_env(), fake_connector(), connect(), _populate(), populated(), sf_env()
 
 ### Community 235 - "Version Control for PBIR Editing"
 Cohesion: 0.11
@@ -706,13 +702,13 @@ Nodes (17): 1. Create a working branch, 2. Make changes, 3. Validate & verify, 4
 Cohesion: 0.50
 Nodes (3): ML Methodology (target, leakage, baseline first), MLOps Lifecycle, Model Evaluation and Explainability
 
-### Community 237 - "Security"
-Cohesion: 0.33
-Nodes (6): Data and privacy, Licence, Not applicable by design, Practices to keep, Security, What was checked (2026-10-13)
+### Community 237 - "Phase 2: baseline results"
+Cohesion: 0.29
+Nodes (7): Do richer history features help? No., Limits, Phase 2: baseline results, Suggested next steps, Target A: late delivery, Target B: weekly forecast, Tests
 
 ### Community 238 - "register_model.py"
-Cohesion: 0.14
-Nodes (15): backtest_metrics(), check_in_warehouse(), fit(), git_sha(), log_kwargs(), main(), parity_sample(), predict_proba_sql() (+7 more)
+Cohesion: 0.07
+Nodes (26): backtest_metrics(), check_in_warehouse(), fit(), git_sha(), log_kwargs(), main(), parity_sample(), predict_proba_sql() (+18 more)
 
 ### Community 239 - "DAX Query Syntax Rules"
 Cohesion: 0.08
@@ -722,17 +718,13 @@ Nodes (25): Best Practices, CALCULATE and CALCULATETABLE Filter Rules, DAX Codin
 Cohesion: 0.11
 Nodes (17): 12-Column Grid, 1–3 slicers — inline with title, 4+ slicers — vertical filter rail, 8-Point Base Grid, Bounds and overlap, Composition Templates, Concrete Arithmetic (FHD 1920 x 1080 canvas), Contents (+9 more)
 
-### Community 241 - "text"
-Cohesion: 0.12
-Nodes (15): Action Types, Button Visual Authoring Guide - Part 2, Conditional Formatting (Data-Driven Color), Contents, Data Function (translytical task flow), Dual-Entry Pattern (Required), Formatting Objects, Icon Options (+7 more)
-
-### Community 245 - "needs_real_data"
-Cohesion: 0.50
-Nodes (3): test_loader_column_specs_match_real_csv_headers(), test_real_files_record_counts_and_headers(), test_real_reviews_has_99224_records_not_line_count()
+### Community 241 - "Button Visual Authoring Guide - Part 2"
+Cohesion: 0.18
+Nodes (10): Action Types, Button Visual Authoring Guide - Part 2, Conditional Formatting (Data-Driven Color), Contents, Data Function (translytical task flow), Dual-Entry Pattern (Required), Formatting Objects, Icon Options (+2 more)
 
 ### Community 246 - "DAX Performance Decision Guide"
-Cohesion: 0.10
-Nodes (21): Compression, Segments, and Parallelism, Consult When Needed, DAX Performance Decision Guide, Decision Guide, Error Handling, Further Reading, Must Read — Every Optimization, Phase 1: Establish Baseline (+13 more)
+Cohesion: 0.07
+Nodes (29): Compression, Segments, and Parallelism, Consult When Needed, DAX Performance Decision Guide, Decision Guide, Error Handling, Further Reading, Must Read — Every Optimization, Optimization Framework (+21 more)
 
 ### Community 248 - "make_snowflake_notebooks.py"
 Cohesion: 0.29
@@ -747,16 +739,16 @@ Cohesion: 0.11
 Nodes (19): Calculation Groups, DAX User-Defined Functions (UDFs), Field parameter calculated tables, File: `cultures/fr-FR.tmdl`, File: `perspectives/Internet Sales.tmdl`, File: `roles/RegionalManager.tmdl`, Hierarchies, Key Rules (+11 more)
 
 ### Community 251 - "DuckDB to Snowflake + dbt: SQL migration inventory"
-Cohesion: 0.10
-Nodes (20): 10. Inventory D: SQL added for Snowflake (93 files), 1. Classification, 2. Reconciling `git ls-files "*.sql"`, 3. Summary counts, 4.1 Staging (9 files, class 3), 4.2 Dimensions (5 files), 4.3 Facts (4 files, class 2), 4.4 Analytics (8 files, class 2) (+12 more)
+Cohesion: 0.07
+Nodes (21): 10. Inventory D: SQL added for Snowflake (93 files), 1. Classification, 2. Reconciling `git ls-files "*.sql"`, 3. Summary counts, 4.1 Staging (9 files, class 3), 4.2 Dimensions (5 files), 4.3 Facts (4 files, class 2), 4.4 Analytics (8 files, class 2) (+13 more)
 
 ### Community 252 - "Semantic Model Modeling Guidelines"
 Cohesion: 0.11
 Nodes (18): Calculated Columns, Calculation Groups, Core Principles, Date/Calendar Table, Descriptions & Documentation, Format String Reference, Hierarchies, Maintenance (+10 more)
 
 ### Community 253 - "Table & Matrix Visual Authoring Guide"
-Cohesion: 0.12
-Nodes (16): `backColor` vs `backColorPrimary` — Different Purposes, Column width (static), Conditional Formatting, Contents, Default Rule — Grow to Fit, `fontColor` vs `fontColorPrimary` — Different Purposes (pivotTable), Full Table Example with Custom Styling, Matrix (`pivotTable`) (+8 more)
+Cohesion: 0.20
+Nodes (9): Column width (static), Conditional Formatting, Contents, Default Rule — Grow to Fit, Matrix (`pivotTable`), References, Table & Matrix Visual Authoring Guide, Table (`tableEx`) (+1 more)
 
 ### Community 254 - "Field Parameters Reference"
 Cohesion: 0.12
@@ -766,33 +758,33 @@ Nodes (16): AVOID, Common scenarios, Contents, Create a field parameter (Tier 1,
 Cohesion: 0.12
 Nodes (16): 10. Corporate Cool, 11. Scholarly Calm, 12. Brand-Forward (template), 1. Editorial Newsroom, 2. Industrial Cockpit, 3. Clinical Calm, 4. FT Pink Financial, 5. Bauhaus Catalog (+8 more)
 
-### Community 256 - "pandas"
-Cohesion: 0.29
-Nodes (7): main(), permutation_drop(), frame(), test_relative_rates_are_positive_for_a_late_route(), test_relative_rates_are_zero_when_route_matches_the_system(), test_system_counts_do_not_depend_on_row_order(), test_system_counts_use_only_orders_delivered_strictly_before_purchase()
+### Community 256 - "test_drift_helpers.py"
+Cohesion: 0.57
+Nodes (5): frame(), test_relative_rates_are_positive_for_a_late_route(), test_relative_rates_are_zero_when_route_matches_the_system(), test_system_counts_do_not_depend_on_row_order(), test_system_counts_use_only_orders_delivered_strictly_before_purchase()
 
-### Community 257 - "Column audit for target A"
-Cohesion: 0.13
-Nodes (16): Checklist from the brief, Column audit for target A, Customer history, `fact_order_items` (aggregate to order grain first, per DD-01), `fact_orders`, `fact_payments`, `fact_reviews`, Forecast leakage (target B) (+8 more)
+### Community 257 - "fact_order_items (grain: order item, 112,650 rows)"
+Cohesion: 0.09
+Nodes (28): dim_customer (grain: customer_unique_id, 96,097 rows), dim_date (generated calendar 2016-2020, 1,828 rows), dim_geography (one row per zip prefix, 19,012 rows), dim_product (32,952 rows), dim_seller (3,096 rows), fact_order_items (grain: order item, 112,650 rows), fact_orders (grain: order), fact_payments (grain: payment, 103,886 rows) (+20 more)
 
 ### Community 258 - "powerbi-report-cli planning mode -- Power BI Report Planning"
 Cohesion: 0.12
 Nodes (16): AVOID, Contents, Dependency Checklist, Entry modes — how the user is starting, Examples of When to Use, MUST, Must/Prefer/Avoid, powerbi-report-cli planning mode -- Power BI Report Planning (+8 more)
 
 ### Community 259 - "Semantic Model Metadata Discovery — DAX INFO Functions"
-Cohesion: 0.15
+Cohesion: 0.14
 Nodes (13): Complete INFO Function Catalog, Dependency Discovery, Dependency rowset for a DAX query, Dependency rowset scoped to a measure, Metadata Object → INFO Function Map, Narrowing Results (Projection + Filtering), Ordering Results, Recommended Discovery Order (+5 more)
 
-### Community 262 - "build_mockup_html.py"
-Cohesion: 0.32
-Nodes (3): main(), render(), build()
+### Community 262 - "Power BI project"
+Cohesion: 0.33
+Nodes (6): If the first refresh fails, Known limits, Open it, Optional, Power BI project, Regenerate (only to start over)
 
 ### Community 263 - "test_scoring_task_sql.py"
 Cohesion: 0.31
 Nodes (5): strip_comments(), test_predict_proba_arguments_match_the_shared_helper(), test_setup_files_are_additive_and_keep_placeholders(), test_task_is_idempotent_and_non_destructive(), test_task_never_writes_the_backtest_scores_table()
 
-### Community 264 - "conftest.py"
-Cohesion: 0.20
-Nodes (3): mini(), MiniWarehouse, pytest_collection_modifyitems()
+### Community 264 - "Card Visual Authoring Guide"
+Cohesion: 0.40
+Nodes (4): Card Visual Authoring Guide, Contents, Multi-Value Template, Single-Value Template
 
 ### Community 265 - "Card Visual Authoring Guide - Part 3"
 Cohesion: 0.12
@@ -818,9 +810,13 @@ Nodes (13): API Rules, Authentication & API Audiences, Create Semantic Model, Da
 Cohesion: 0.17
 Nodes (12): Anti-Patterns to Avoid, Column Names, Core Principle, Descriptions, Display Folder Organization, General Rules, Measure Names, Measure Variations (+4 more)
 
-### Community 279 - "test_notebooks_snowflake.py"
-Cohesion: 0.29
-Nodes (6): code_cells(), test_cells_parse_and_use_the_notebook_session(), test_notebooks_store_no_outputs(), test_ported_notebooks_keep_every_original_analysis_cell(), test_the_three_notebooks_exist_and_are_up_to_date(), test_train_register_notebook_never_sets_the_default_version()
+### Community 279 - "Typographic signatures"
+Cohesion: 0.40
+Nodes (5): S1. Tabular numerals throughout, S2. Display serif headlines, S3. All-caps tracked headlines, S4. Caption-style annotations under every visual, Typographic signatures
+
+### Community 280 - "semantic-model-authoring/SKILL.md"
+Cohesion: 0.20
+Nodes (5): Direct Lake Modeling Guidelines, Important, Partition Configuration, Process to create a direct lake model, TMDL example of a Direct Lake table configuration
 
 ### Community 281 - "Conditional Formatting Patterns - Part 7"
 Cohesion: 0.12
@@ -846,17 +842,17 @@ Nodes (5): definition.pbir, definition.pbism file, .pbip file, Power BI Project 
 Cohesion: 0.12
 Nodes (15): Color & Typography, Comparative Benchmark - Part 2, Comparison Charts, Contents, Decision Checklist, Diverging Palette, IBCS Purist Palette, Interaction Design (Moderate) (+7 more)
 
-### Community 287 - "Direct Lake Modeling Guidelines"
+### Community 287 - "sql/bigquery — the same layers in GoogleSQL"
 Cohesion: 0.40
-Nodes (5): Direct Lake Modeling Guidelines, Important, Partition Configuration, Process to create a direct lake model, TMDL example of a Direct Lake table configuration
+Nodes (5): Alternative not taken, Folders, sql/bigquery — the same layers in GoogleSQL, Tokens, Type mapping
 
 ### Community 288 - "EDA findings: Olist dataset discovery"
 Cohesion: 0.40
 Nodes (5): EDA findings: Olist dataset discovery, Issue log, Not yet covered, Patterns worth knowing (associational, not causal), The data
 
-### Community 289 - "Phase 2: Optimization Iterations"
-Cohesion: 0.50
-Nodes (4): Phase 2: Optimization Iterations, Step 1: Select and Apply Optimizations, Step 2: Execute and Compare, Step 3: Iterate and Escalate
+### Community 289 - "check_wrapped_equals_raw"
+Cohesion: 0.30
+Nodes (3): check_wrapped_equals_raw(), test_duckdb_sql_text_matches_the_ml_modules(), test_real_warehouse_wrapped_equals_raw_and_validates()
 
 ### Community 290 - "Workflow"
 Cohesion: 0.12
@@ -874,9 +870,9 @@ Nodes (14): Anti-Patterns — The Dashboard Slop Catalog, Cluster 1 — Visual N
 Cohesion: 0.13
 Nodes (14): Callout Evidence Rule, Chart Selection, Comparative / Benchmark Dashboard, Contents, Core Principles, Do NOT Use, IBCS Primer, Job To Be Done (+6 more)
 
-### Community 295 - "Page layout contract"
-Cohesion: 0.13
-Nodes (14): Analytical Canvas with filter rail, Canvas, Common region patterns, Contents, Date slicer example variants, Design Brief Contract - Part 2, Executive Summary with inline slicers, Grid regions (+6 more)
+### Community 295 - "Design Brief Contract - Part 2"
+Cohesion: 0.25
+Nodes (7): Analytical Canvas with filter rail, Common region patterns, Contents, Design Brief Contract - Part 2, Executive Summary with inline slicers, Operational Monitor, Validation checklist
 
 ### Community 296 - "Authoring Workflows & Examples"
 Cohesion: 0.14
@@ -891,8 +887,8 @@ Cohesion: 0.14
 Nodes (13): Card Sizing Anti-Patterns, Card Sizing (Required), Card Visual Authoring Guide - Part 2, Contents, Default values (cascade resolution), Quick-reference safe dimensions, Step 0: Read the canvas height, Step 1: Compute dimensions (+5 more)
 
 ### Community 299 - "Formatting Patterns"
-Cohesion: 0.14
-Nodes (13): Auto-Generated Subtitles, Color Strategy & Patterns, Conditional Formatting, Contents, Formatting JSON Structure, Formatting Patterns, Literal Values, Page Objects vs Visual Container Objects (+5 more)
+Cohesion: 0.09
+Nodes (22): Auto-Generated Subtitles, Color Strategy & Patterns, Conditional Formatting, Contents, DataViewWildcard Selector, Dual-Entry Pattern, Formatting JSON Structure, Formatting Patterns (+14 more)
 
 ### Community 300 - "Azure Map Visual Authoring Guide"
 Cohesion: 0.14
@@ -907,8 +903,8 @@ Cohesion: 0.14
 Nodes (13): Archetype Applicability, Cardinality Limits by Visual Type, Chart Selection Decision Framework, Contents, Core Principle, Decision Checklist, Edge Cases & Exceptions, Encoding Accuracy Hierarchy (+5 more)
 
 ### Community 303 - "Signatures"
-Cohesion: 0.14
-Nodes (13): Authoring fresh signatures, Composing tone + signature, Contents, Iconographic signatures, S13. Duotone iconography on KPI cards, S14. Channel/brand logos in cards, S15. Status icons in tables, S1. Tabular numerals throughout (+5 more)
+Cohesion: 0.11
+Nodes (18): Authoring fresh signatures, Chromatic signatures, Composing tone + signature, Contents, Iconographic signatures, S10. Hairline rules instead of borders, S11. Pill-shaped section labels, S12. Modular grid with consistent gutter (+10 more)
 
 ### Community 304 - "Typography for Data"
 Cohesion: 0.14
@@ -918,9 +914,9 @@ Nodes (13): Alignment Rules, Archetype Calibration, Contents, Core Principles, C
 Cohesion: 0.14
 Nodes (14): Authoring, AVOID, Complete Reference Index, Design, Examples, Mode Boundary Rules, Mode Guides, Mode Selection (+6 more)
 
-### Community 306 - ".read_sql"
-Cohesion: 0.20
-Nodes (3): is_data_access(), wrap_duckdb(), test_order_category_matches_keys_sql_on_the_mini_warehouse()
+### Community 306 - "DataAccess"
+Cohesion: 0.18
+Nodes (4): DataAccess, is_data_access(), wrap_duckdb(), _conn()
 
 ### Community 307 - "Custom Visuals (AppSource, Organizational, Private `.pbiviz`)"
 Cohesion: 0.15
@@ -998,9 +994,9 @@ Nodes (9): Authentication, Companion Skills, Contents, Deterministic PBIR Transp
 Cohesion: 0.22
 Nodes (8): AVOID, Contents, Critical notes, MUST, Must/Prefer/Avoid, powerbi-report-cli authoring mode -- Power BI Report Authoring (PBIR/PBIP), PREFER, Quick Start Workflow
 
-### Community 326 - "Selectors (Targeting Specific Data)"
-Cohesion: 0.22
-Nodes (9): DataViewWildcard Selector, Dual-Entry Pattern, ID Selector (Instance Selector), Metadata Selector, No Selector (Static / Base), Scope Identity Selector, Selector Types and Precedence, Selectors (Targeting Specific Data) (+1 more)
+### Community 326 - "Model card"
+Cohesion: 0.50
+Nodes (4): 1. Late-delivery model, 2. Weekly order forecast, 3. Reproducing, Model card
 
 ### Community 327 - "`definition.pbir` — Report → Semantic Model Binding"
 Cohesion: 0.22
@@ -1078,10 +1074,6 @@ Nodes (6): Contents, Ensure a slicer and a visual exist on the page, Field Param
 Cohesion: 0.29
 Nodes (6): Canonical entry point, Contents, Desktop operations, Failures and diagnostics, Model-aware reload, Power BI Desktop Preview Routing
 
-### Community 346 - "Design Brief Contract"
-Cohesion: 0.29
-Nodes (6): Contents, Design Brief Contract, Full template, Minimal-brief escape hatch, Required marker, Why the structure
-
 ### Community 347 - "Filter Pane & Filter Card Formatting"
 Cohesion: 0.33
 Nodes (5): Contents, Filter Cards (`filterCard`), Filter Pane & Filter Card Formatting, Filter Pane (`outspacePane`), Theme-Level Styling
@@ -1102,41 +1094,25 @@ Nodes (5): Archetype Composition & Variant Rotation, Avoid mono-archetype report
 Cohesion: 0.33
 Nodes (5): AVOID, MUST, Must/Prefer/Avoid, powerbi-report-cli management mode -- Power BI Report Items in Fabric - Part 3, PREFER
 
-### Community 352 - "_fetch"
-Cohesion: 0.40
-Nodes (4): _fetch(), generated(), registry(), _retrieve()
-
 ### Community 353 - "Contents"
 Cohesion: 0.40
 Nodes (4): Cartesian Visuals (Bar, Column, Line, Scatter) - Part 4, Contents, Line Chart with Y2 Secondary Axis and Per-Series Styling, Stacked Column Chart with Ribbons and Totals
 
-### Community 354 - "Field-Value Result Contracts and Support Guardrails"
-Cohesion: 0.40
-Nodes (5): Field-Value Result Contracts and Support Guardrails, Result contracts, Shared authoring checks, Support decision and fallbacks, Validation and diagnostics
-
-### Community 355 - "Formatting & Theming Overview"
-Cohesion: 0.40
-Nodes (4): Formatting Cascade, Formatting & Theming Overview, Selector Types (Quick Reference), Static Property Value Encoding — Three Formats
+### Community 354 - "Conditional Formatting Patterns"
+Cohesion: 0.17
+Nodes (11): Authoring Workflow, Charts, Conditional Formatting Patterns, Contents, Field-Value Result Contracts and Support Guardrails, Formatting Options by Visual Type, Result contracts, Shared authoring checks (+3 more)
 
 ### Community 356 - "PBI Formatting Reference"
 Cohesion: 0.40
 Nodes (5): Analytical Visuals, Page-Level Settings, PBI Formatting Reference, Slicers, size()
 
-### Community 357 - "Chromatic signatures"
-Cohesion: 0.40
-Nodes (5): Chromatic signatures, S5. Single-accent discipline, S6. Highlight-and-grey, S7. FT pink (or any tinted) surface, S8. Status-coded KPI cards
-
-### Community 358 - "Structural signatures"
-Cohesion: 0.40
-Nodes (5): S10. Hairline rules instead of borders, S11. Pill-shaped section labels, S12. Modular grid with consistent gutter, S9. Composite KPI focus, Structural signatures
-
 ### Community 359 - "Section 2: Reading and Diagnosing Traces"
 Cohesion: 0.40
 Nodes (5): Analyzing Trace Events, DAX vs. Data Layout: Reading the Signal, Section 2: Reading and Diagnosing Traces, Understanding Formula Engine (FE) vs. Storage Engine (SE) Metrics, What to Look For
 
-### Community 360 - "kpi.md"
-Cohesion: 0.50
-Nodes (3): Complete Example, Roles, Why KPI Goes Blank
+### Community 360 - "Measure"
+Cohesion: 0.15
+Nodes (13): Data-Bound Expression Rules, Choose gradient colors by measure meaning, Conditional Formatting Patterns - Part 4, Contents, SelectRef Expression, Type 1: Color Gradient (FillRule), VCO Conditional Formatting, NativeMeasure Expression (+5 more)
 
 ### Community 361 - "Color & Typography"
 Cohesion: 0.50
@@ -1145,10 +1121,6 @@ Nodes (4): Color & Typography, Focus + Context, Palette Strategy, Typography
 ### Community 362 - "Layout Variants"
 Cohesion: 0.50
 Nodes (4): Layout Variants, Variant A — Filter-Rail (default for dense exploration), Variant B — Inline-Slicers (1–3 slicers, content gets full width), Variant C — Small-Multiples-Grid
-
-### Community 363 - "Optimization Framework"
-Cohesion: 0.50
-Nodes (4): Optimization Framework, Requirements, Tiers and Autonomy, Trace Capture Methods
 
 ### Community 364 - "Bookmark state"
 Cohesion: 0.67
@@ -1160,24 +1132,24 @@ Nodes (3): Bookmark state, Options mapping, Target visuals
 
 ## Knowledge Gaps
 - **38 isolated node(s):** `powerbi-report-cli`, `semantic-model-authoring`, `gcp`, `retail-olist-dbt`, `retail-olist-ml-registry` (+33 more)
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 1972 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
-- **154 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 1947 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+- **155 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `Measure` connect `Measure` to `Comparison`, `model_spec.py`, `kpi.md`, `Cartesian Visuals (Bar, Column, Line, Scatter)`, `Conditional Formatting Patterns - Part 3`, `Page-Level Formatting (`page.json` objects)`, `text`, `Custom Visuals (AppSource, Organizational, Private `.pbiviz`)`, `Add a Filter`, `Contents`, `Conditional Formatting Patterns - Part 7`, `Table & Matrix Visual Authoring Guide`?**
-  _High betweenness centrality (0.203) - this node is a cross-community bridge._
+- **Why does `Measure` connect `Measure` to `Comparison`, `Conditional Formatting Patterns`, `text`, `Cartesian Visuals (Bar, Column, Line, Scatter)`, `model_spec.py`, `Conditional Formatting Patterns - Part 3`, `Page-Level Formatting (`page.json` objects)`, `Custom Visuals (AppSource, Organizational, Private `.pbiviz`)`, `Add a Filter`, `Contents`, `Conditional Formatting Patterns - Part 7`, `Table & Matrix Visual Authoring Guide`?**
+  _High betweenness centrality (0.195) - this node is a cross-community bridge._
 - **What connects `powerbi-report-cli`, `semantic-model-authoring`, `gcp` to the rest of the system?**
   _38 weakly-connected nodes found - possible documentation gaps or missing edges._
-- **Should `Design decisions` be split into smaller, more focused modules?**
-  _Cohesion score 0.125 - nodes in this community are weakly interconnected._
-- **Why does `Why KPI Goes Blank` connect `kpi.md` to `Measure`?**
-  _High betweenness centrality (0.162) - this node is a cross-community bridge._
+- **Should `Section 5: Tier 3 Model Optimization Patterns` be split into smaller, more focused modules?**
+  _Cohesion score 0.1 - nodes in this community are weakly interconnected._
+- **Why does `table()` connect `pytest` to `powerbi-report-cli authoring mode -- Power BI Report Authoring (PBIR/PBIP) - Part 3`, `Contents`, `Field Parameters Reference`, `DuckDB to Snowflake + dbt: SQL migration inventory`?**
+  _High betweenness centrality (0.067) - this node is a cross-community bridge._
+- **Should `stage_wrapper` be split into smaller, more focused modules?**
+  _Cohesion score 0.14035087719298245 - nodes in this community are weakly interconnected._
 - **Should `Architecture Philosophy (Shared Across Cloud Projects)` be split into smaller, more focused modules?**
   _Cohesion score 0.13725490196078433 - nodes in this community are weakly interconnected._
-- **Why does `table()` connect `pytest` to `powerbi-report-cli authoring mode -- Power BI Report Authoring (PBIR/PBIP) - Part 3`, `Contents`, `Field Parameters Reference`, `DuckDB to Snowflake + dbt: SQL migration inventory`?**
-  _High betweenness centrality (0.057) - this node is a cross-community bridge._
 
 ### Low-confidence Hints
 _AMBIGUOUS edges — the extractor was unsure. Verify before acting on these._
