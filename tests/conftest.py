@@ -1,5 +1,6 @@
 """Shared fixtures: a tiny hand-built warehouse for the feature SQL, and the real one when it has been built."""
 
+import os
 from datetime import datetime, timedelta
 from pathlib import Path
 
@@ -9,6 +10,19 @@ import pytest
 ROOT = Path(__file__).resolve().parents[1]
 FEATURES_SQL = ROOT / "sql" / "ml" / "late_delivery_features.sql"
 WAREHOUSE = ROOT / "warehouse.duckdb"
+
+
+def pytest_collection_modifyitems(config, items):
+    """Tests marked `warehouse` need ROOT/warehouse.duckdb. Without it they are skipped, except when REQUIRE_WAREHOUSE=1:
+    CI sets that after building the warehouse, so a missing file fails the run instead of quietly skipping the tests."""
+    if WAREHOUSE.exists():
+        return
+    if os.environ.get("REQUIRE_WAREHOUSE") == "1":
+        raise pytest.UsageError(f"REQUIRE_WAREHOUSE=1 but {WAREHOUSE} does not exist")
+    skip = pytest.mark.skip(reason="warehouse.duckdb not built; run src/transformation/build_warehouse.py")
+    for item in items:
+        if item.get_closest_marker("warehouse"):
+            item.add_marker(skip)
 
 
 class MiniWarehouse:

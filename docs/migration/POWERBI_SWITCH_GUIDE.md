@@ -100,11 +100,11 @@ Other points the views must reproduce from the export:
 
 `late_delivery_scores`, `forecast_backtest` and `flag_share` are not produced by dbt. They come from the Python model scoring and forecast backtests, which would write to `ML.LATE_DELIVERY_SCORES`, `ML.FORECAST_BACKTEST` and `ML.FLAG_SHARE` through the opt-in write-back (`src/data_access`). That has run (2026-11-13, `src/ml/publish_ml.py --yes --write`): the three tables exist, are readable by `RETAIL_REPORTER`, and hold one run whose values match the DuckDB-built files. Re-run `publish_ml.py` to publish a new run; the templates pick the latest `run_id`. The report's Risk and Forecast pages depend on them.
 
-## The `DataFolder` local-path issue
+## The `DataFolder` parameter
 
-The committed `RetailAnalytics.SemanticModel/definition/expressions.tmdl` holds a local path (`DataFolder = "C:\Users\Student\GCP\powerbi\data"`), saved by Desktop on one machine, not the placeholder the project documents. As a result `tests/test_powerbi_project.py` (`test_committed_project_is_complete_and_holds_no_machine_path`, which expects the placeholder `DATA_FOLDER_PLACEHOLDER`) is expected to fail; that module is also marked `warehouse` and needs `warehouse.duckdb`. This was read from the test and the file, not confirmed by running it (the repo venv used for this work has no `jsonschema`). **This guide documents the issue and does not fix it**; the original project is left as is, and nothing in the Snowflake tests depends on that file passing.
+Fixed on 2026-11-20: the committed `RetailAnalytics.SemanticModel/definition/expressions.tmdl` holds the placeholder `C:\REPLACE\WITH\FULL\PATH\TO\powerbi\data` again, and `test_committed_project_is_complete_and_holds_no_machine_path` checks it. Desktop writes your local path back on save, so restore the placeholder before committing (see `docs/migration/CI_SETUP.md`).
 
-The patched copy removes `DataFolder` entirely (or, with `--ml-on-files`, keeps the same committed value for the three ML tables, so set it to your own path in Desktop and never commit it).
+The patched copy removes `DataFolder` entirely (or, with `--ml-on-files`, keeps the committed placeholder for the three ML tables, so set it to your own path in Desktop and never commit that path).
 
 ## Known leftovers and limits
 
