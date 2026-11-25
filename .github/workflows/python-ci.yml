@@ -1,10 +1,9 @@
-# Python CI: lint (new Snowflake-related code only) + the offline pytest suite.
-# No secrets, no Snowflake connection, no DuckDB warehouse: tests that need warehouse.duckdb skip via the
-# `warehouse` fixture. Missing Snowflake credentials can never fail this workflow.
-#
-# KNOWN RED ON BASELINE (not hidden, nothing deselected): tests/test_powerbi_project.py builds its schema from a
-# ROOT/warehouse.duckdb that is git-ignored, and the committed expressions.tmdl holds a local DataFolder path.
-# See docs/migration/CI_SETUP.md ("Known baseline failures").
+# Python CI: lint (new Snowflake-related code only) + the pytest suite.
+# The test job downloads the Olist CSVs from Kaggle (secret: KAGGLE_API_TOKEN, or KAGGLE_USERNAME + KAGGLE_KEY),
+# builds warehouse.duckdb and the Power BI export, and then runs every test, the `warehouse`-marked ones included.
+# Without Kaggle credentials and without a cached copy, the `warehouse` tests are skipped (conftest.py) and the rest
+# still run. No Snowflake connection; missing Snowflake credentials can never fail this workflow.
+# See docs/migration/CI_SETUP.md.
 name: python-ci
 
 on:
@@ -62,5 +61,52 @@ jobs:
       # That is intentional: regenerate the lock with `uv lock` and commit it, rather than letting CI drift.
       - name: Install dependencies (locked, with dev group)
         run: uv sync --locked --group dev
+
+      # The warehouse-backed tests (DuckDB build, analytics, Power BI project and export) need the real Olist CSVs:
+      # the build's validation checks figures from the real data (e.g. 7,827 late deliveries), so a sample would fail.
+      # The CSVs come from Kaggle and are cached; bump the key suffix to force a fresh download.
+      - name: Restore Olist raw data (cache)
+        id: olist-cache
+        uses: actions/cache@v4
+        with:
+          path: data
+          key: olist-brazilian-ecommerce-v1
+
+      # Secrets go through env, never into the script. Either a KAGGLE_API_TOKEN (new-style token) or the legacy
+      # KAGGLE_USERNAME + KAGGLE_KEY pair works. Without them (e.g. a PR from a fork) and without a cache hit,
+      # nothing is downloaded and the warehouse tests are skipped with a notice.
+      - name: Download Olist raw data from Kaggle
+        if: steps.olist-cache.outputs.cache-hit != 'true'
+        env:
+          KAGGLE_API_TOKEN: ${{ secrets.KAGGLE_API_TOKEN }}
+          KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
+          KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
+        run: |
+          set -eu
+          [ -n "$KAGGLE_API_TOKEN" ] || unset KAGGLE_API_TOKEN
+          [ -n "$KAGGLE_USERNAME" ] && [ -n "$KAGGLE_KEY" ] || unset KAGGLE_USERNAME KAGGLE_KEY
+          if [ -z "${KAGGLE_API_TOKEN:-}" ] && [ -z "${KAGGLE_USERNAME:-}" ]; then
+            echo "::notice::No Kaggle credentials (KAGGLE_API_TOKEN, or KAGGLE_USERNAME + KAGGLE_KEY); warehouse tests will be skipped."
+            exit 0
+          fi
+          # kaggle 2.2.5 imports six without declaring it, hence --with six.
+          uvx --with six==1.17.0 kaggle@2.2.5 datasets download -d olistbr/brazilian-ecommerce -p data --unzip -q
+
+      - name: Build the DuckDB warehouse and the Power BI export
+        id: warehouse
+        run: |
+          set -eu
+          if [ ! -f data/olist_orders_dataset.csv ]; then
+            echo "built=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          sha256sum data/*.csv
+          uv run --no-sync python src/transformation/build_warehouse.py
+          uv run --no-sync python src/powerbi/export_data.py
+          echo "built=true" >> "$GITHUB_OUTPUT"
+
+      # REQUIRE_WAREHOUSE=1 turns "warehouse missing" into a failure, so a built run can never skip those tests quietly.
       - name: pytest
+        env:
+          REQUIRE_WAREHOUSE: ${{ steps.warehouse.outputs.built == 'true' && '1' || '0' }}
         run: uv run --no-sync python -m pytest -q -p no:cacheprovider

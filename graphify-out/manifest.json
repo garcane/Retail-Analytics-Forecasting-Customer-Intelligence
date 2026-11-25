@@ -72,15 +72,15 @@
     "semantic_hash": ""
   },
   "PROJECT_STATUS.md": {
-    "mtime": 1794604234.1756124,
-    "seen": 1794604351.16572,
-    "ast_hash": "102d327eb94e0a05d6ce234e2adbd904",
+    "mtime": 1795146386.7092366,
+    "seen": 1795146414.877534,
+    "ast_hash": "7bad15615aa4a19521548cd1a0890bcc",
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1794604033.284148,
-    "seen": 1794604351.16572,
-    "ast_hash": "c3f6e7cd2c05f606c4524cc225d8ecdc",
+    "mtime": 1795146386.7032351,
+    "seen": 1795146414.877534,
+    "ast_hash": "8c9ef219afd71474a37893f86c935c83",
     "semantic_hash": ""
   },
   "docs/HANDOFF.md": {
@@ -144,10 +144,10 @@
     "semantic_hash": ""
   },
   "tests/conftest.py": {
-    "mtime": 1793974950.284955,
-    "seen": 1794172496.95836,
-    "ast_hash": "59c54603a7b4c804df40db94b361b0f5",
-    "semantic_hash": "59c54603a7b4c804df40db94b361b0f5"
+    "mtime": 1795145497.3349514,
+    "seen": 1795146414.876533,
+    "ast_hash": "d07ace999b31b3c12470df2705a1d2d0",
+    "semantic_hash": ""
   },
   "tests/test_feature_leakage.py": {
     "mtime": 1793974950.287955,
@@ -276,9 +276,9 @@
     "semantic_hash": ""
   },
   "SECURITY.md": {
-    "mtime": 1794604234.173612,
-    "seen": 1794604351.16572,
-    "ast_hash": "f600f4ee946bbfedfd7847d106ea17c5",
+    "mtime": 1795146386.720238,
+    "seen": 1795146414.877534,
+    "ast_hash": "56e51fd6d23547c3a2b34c6c1953ba42",
     "semantic_hash": ""
   },
   "docs/AUDIT.md": {
@@ -558,10 +558,10 @@
     "semantic_hash": "1c482193272cd77b9d3776b6ea2ea64c"
   },
   "tests/test_powerbi_project.py": {
-    "mtime": 1793974950.2959273,
-    "seen": 1794172496.95836,
-    "ast_hash": "1a6af4a158e5042645e8411df69d7613",
-    "semantic_hash": "1a6af4a158e5042645e8411df69d7613"
+    "mtime": 1795145497.333951,
+    "seen": 1795146414.876533,
+    "ast_hash": "ab813e9f3352e5871eff39ebb822dfa4",
+    "semantic_hash": ""
   },
   "docs/powerbi/DAX_SPECIFICATION.html": {
     "mtime": 1793974949.9205444,
@@ -1464,9 +1464,9 @@
     "semantic_hash": ""
   },
   "tests/test_powerbi_snowflake.py": {
-    "mtime": 1794617452.5830114,
-    "seen": 1795144464.760871,
-    "ast_hash": "8256e84a3ee3beb02942c7542721cc47",
+    "mtime": 1795145395.6246042,
+    "seen": 1795146414.876533,
+    "ast_hash": "fc7d6906c1684b6d75450c739adc6f51",
     "semantic_hash": ""
   },
   "tests/test_reconciliation.py": {
@@ -1494,9 +1494,9 @@
     "semantic_hash": ""
   },
   ".github/workflows/python-ci.yml": {
-    "mtime": 1793981954.008532,
-    "seen": 1794172496.95836,
-    "ast_hash": "c28a2043291d0d88f3a5662a36764db2",
+    "mtime": 1795145934.403018,
+    "seen": 1795146414.877534,
+    "ast_hash": "69dd0ecb609eda33eb0eef4bfab1ae7e",
     "semantic_hash": ""
   },
   "docs/architecture/SNOWFLAKE_ARCHITECTURE.md": {
@@ -1512,9 +1512,9 @@
     "semantic_hash": ""
   },
   "docs/migration/CI_SETUP.md": {
-    "mtime": 1793982232.112409,
-    "seen": 1794172496.95836,
-    "ast_hash": "56902804fdba3e601cefb36b0e777dba",
+    "mtime": 1795146386.7282372,
+    "seen": 1795146414.877534,
+    "ast_hash": "dfc36dfaf34dda48e36e1a6876f48ac0",
     "semantic_hash": ""
   },
   "docs/migration/INGESTION_RUNBOOK.md": {
@@ -1524,9 +1524,9 @@
     "semantic_hash": ""
   },
   "docs/migration/POWERBI_SWITCH_GUIDE.md": {
-    "mtime": 1794572846.7691865,
-    "seen": 1794573320.225459,
-    "ast_hash": "530deb89e84746c88a4330ce33479ca3",
+    "mtime": 1795146386.722237,
+    "seen": 1795146414.877534,
+    "ast_hash": "fec854b60a0c341b9b2cccd136ee036c",
     "semantic_hash": ""
   },
   "docs/migration/SNOWFLAKE_MIGRATION.md": {
@@ -2189,538 +2189,100 @@
     "ast_hash": "45a45b63077cec66a736a450741e4f81",
     "semantic_hash": ""
   },
-  ".claude/skills/powerbi-report-cli/apm.yml": {
-    "mtime": 1794618356.1690543,
-    "seen": 1795144464.758869,
-    "ast_hash": "7404f83bfb385bebdbe581948107ee9e",
+  ".claude/skills/semantic-model-authoring/apm.yml": {
+    "mtime": 1795146266.0538027,
+    "seen": 1795146414.8755338,
+    "ast_hash": "cc16b8a54089f0216f2bf4f8931d62f9",
     "semantic_hash": ""
   },
-  ".claude/skills/powerbi-report-cli/references/design/assets/base.json": {
-    "mtime": 1794618356.3556025,
-    "seen": 1795144464.758869,
-    "ast_hash": "8a7496695d20bce1434e980359a1c952",
+  ".claude/skills/semantic-model-authoring/SKILL.md": {
+    "mtime": 1795146266.0518038,
+    "seen": 1795146414.876533,
+    "ast_hash": "d77bf254c4c939753e8f456e9964ce4e",
     "semantic_hash": ""
   },
-  ".claude/skills/powerbi-report-cli/SKILL.md": {
-    "mtime": 1794618356.4556024,
-    "seen": 1795144464.760871,
-    "ast_hash": "0ab701e2d81fe4c866e7b38cad846551",
+  ".claude/skills/semantic-model-authoring/SOURCE.txt": {
+    "mtime": 1795146266.1988094,
+    "seen": 1795146414.876533,
+    "ast_hash": "1c337f43a6c3f20763c0a14ccc73cd03",
     "semantic_hash": ""
   },
-  ".claude/skills/powerbi-report-cli/SOURCE.txt": {
-    "mtime": 1794618356.944602,
-    "seen": 1795144464.7618687,
-    "ast_hash": "c582aeadb4dd354dd8d1e33437bb236c",
+  ".claude/skills/semantic-model-authoring/references/connection-binding.md": {
+    "mtime": 1795146266.0568016,
+    "seen": 1795146414.876533,
+    "ast_hash": "0fa474995391968e21865d0824d95b97",
     "semantic_hash": ""
   },
-  ".claude/skills/powerbi-report-cli/references/authoring-part-02.md": {
-    "mtime": 1794618356.1720505,
-    "seen": 1795144464.7618687,
-    "ast_hash": "bf8bcaaca65094fced9bf2430255aa94",
+  ".claude/skills/semantic-model-authoring/references/dax-guidelines.md": {
+    "mtime": 1795146266.060804,
+    "seen": 1795146414.876533,
+    "ast_hash": "78aa08bc6067b68b80b08700101b4937",
     "semantic_hash": ""
   },
-  ".claude/skills/powerbi-report-cli/references/authoring-part-03.md": {
-    "mtime": 1794618356.1740577,
-    "seen": 1795144464.7618687,
-    "ast_hash": "e32f2a9150bb3e752fde033b311d7075",
+  ".claude/skills/semantic-model-authoring/references/dax-perf-decision-guide.md": {
+    "mtime": 1795146266.062803,
+    "seen": 1795146414.876533,
+    "ast_hash": "b05e7917296be89ca6380c3f68c4a623",
     "semantic_hash": ""
   },
-  ".claude/skills/powerbi-report-cli/references/authoring-part-04.md": {
-    "mtime": 1794618356.1770473,
-    "seen": 1795144464.7618687,
-    "ast_hash": "eb8554c877fdfe93c22850ca8240527f",
+  ".claude/skills/semantic-model-authoring/references/dax-perf-patterns.md": {
+    "mtime": 1795146266.064803,
+    "seen": 1795146414.876533,
+    "ast_hash": "9bb938c120a833cfc41356974500e95b",
     "semantic_hash": ""
   },
-  ".claude/skills/powerbi-report-cli/references/authoring.md": {
-    "mtime": 1794618356.1790478,
-    "seen": 1795144464.7618687,
-    "ast_hash": "90c71175c7acee5f796059c714111c1b",
+  ".claude/skills/semantic-model-authoring/references/direct-lake-guidelines.md": {
+    "mtime": 1795146266.066805,
+    "seen": 1795146414.876533,
+    "ast_hash": "b2b5b402244880d342b6b311249983a9",
     "semantic_hash": ""
   },
-  ".claude/skills/powerbi-report-cli/references/authoring/authoring-workflows.md": {
-    "mtime": 1794618356.1860504,
-    "seen": 1795144464.7618687,
-    "ast_hash": "3658e7931da48b482acca95ee195e925",
+  ".claude/skills/semantic-model-authoring/references/field-parameters.md": {
+    "mtime": 1795146266.0688024,
+    "seen": 1795146414.877534,
+    "ast_hash": "3631086d11ff5290714c6fe8d78238ba",
     "semantic_hash": ""
   },
-  ".claude/skills/powerbi-report-cli/references/authoring/bookmark.md": {
-    "mtime": 1794618356.1870496,
-    "seen": 1795144464.7618687,
-    "ast_hash": "0341b8777494a931cc3110d8656cba53",
+  ".claude/skills/semantic-model-authoring/references/metadata-discovery.md": {
+    "mtime": 1795146266.0708025,
+    "seen": 1795146414.877534,
+    "ast_hash": "beca59792750ab3f49fb0c82efff7b19",
     "semantic_hash": ""
   },
-  ".claude/skills/powerbi-report-cli/references/authoring/button-part-02.md": {
-    "mtime": 1794618356.1890652,
-    "seen": 1795144464.7618687,
-    "ast_hash": "2e1199990b3b844a7c153c47d54ad192",
+  ".claude/skills/semantic-model-authoring/references/modeling-guidelines.md": {
+    "mtime": 1795146266.072806,
+    "seen": 1795146414.877534,
+    "ast_hash": "57c2534a9d04ea062c18fb13c11e4134",
     "semantic_hash": ""
   },
-  ".claude/skills/powerbi-report-cli/references/authoring/button-part-03.md": {
-    "mtime": 1794618356.1900494,
-    "seen": 1795144464.7618687,
-    "ast_hash": "a99f7c52a3789287fbc7973ca7568ebc",
+  ".claude/skills/semantic-model-authoring/references/naming-conventions.md": {
+    "mtime": 1795146266.0748055,
+    "seen": 1795146414.877534,
+    "ast_hash": "e55cf2d576c8198e4076b108c51493e7",
     "semantic_hash": ""
   },
-  ".claude/skills/powerbi-report-cli/references/authoring/button.md": {
-    "mtime": 1794618356.191048,
-    "seen": 1795144464.7618687,
-    "ast_hash": "b8b6b91526a3ac05d984a9410f1a7278",
+  ".claude/skills/semantic-model-authoring/references/pbip.md": {
+    "mtime": 1795146266.0788043,
+    "seen": 1795146414.877534,
+    "ast_hash": "4e71d492bdd289f40042605f0f385f36",
     "semantic_hash": ""
   },
-  ".claude/skills/powerbi-report-cli/references/authoring/card-part-02.md": {
-    "mtime": 1794618356.1940484,
-    "seen": 1795144464.7618687,
-    "ast_hash": "0eb36e5fd167a203f141b0498d6b2dd7",
+  ".claude/skills/semantic-model-authoring/references/semantic-model-ai-readiness.md": {
+    "mtime": 1795146266.0848036,
+    "seen": 1795146414.877534,
+    "ast_hash": "cce013ea202f3683553cd3c1f20a464a",
     "semantic_hash": ""
   },
-  ".claude/skills/powerbi-report-cli/references/authoring/card-part-03.md": {
-    "mtime": 1794618356.1960495,
-    "seen": 1795144464.7618687,
-    "ast_hash": "b5d54e93d03e3d508703550d8f051097",
+  ".claude/skills/semantic-model-authoring/references/semantic-model-rest-api.md": {
+    "mtime": 1795146266.0808022,
+    "seen": 1795146414.877534,
+    "ast_hash": "d5f67cdef27b0c744ae18c1e07353706",
     "semantic_hash": ""
   },
-  ".claude/skills/powerbi-report-cli/references/authoring/card.md": {
-    "mtime": 1794618356.1970503,
-    "seen": 1795144464.7618687,
-    "ast_hash": "6fb77d9c9a9cee7d88bcfdf4b1300f13",
-    "semantic_hash": ""
-  },
-  ".claude/skills/powerbi-report-cli/references/authoring/cartesian-part-02.md": {
-    "mtime": 1794618356.1980503,
-    "seen": 1795144464.7618687,
-    "ast_hash": "aef2db0161eadcb8a895fb487c131b79",
-    "semantic_hash": ""
-  },
-  ".claude/skills/powerbi-report-cli/references/authoring/cartesian-part-03.md": {
-    "mtime": 1794618356.2000487,
-    "seen": 1795144464.7618687,
-    "ast_hash": "d37739670f93fee0e02c84d246444124",
-    "semantic_hash": ""
-  },
-  ".claude/skills/powerbi-report-cli/references/authoring/cartesian-part-04.md": {
-    "mtime": 1794618356.2010498,
-    "seen": 1795144464.7618687,
-    "ast_hash": "1af45908c9ee57e534654057dd80bde3",
-    "semantic_hash": ""
-  },
-  ".claude/skills/powerbi-report-cli/references/authoring/cartesian.md": {
-    "mtime": 1794618356.2030509,
-    "seen": 1795144464.7618687,
-    "ast_hash": "bb0c0996ea972434ad3fb34e386874e3",
-    "semantic_hash": ""
-  },
-  ".claude/skills/powerbi-report-cli/references/authoring/color-strategy.md": {
-    "mtime": 1794618356.2050495,
-    "seen": 1795144464.7618687,
-    "ast_hash": "0ebd0bf7649fe03e2b1bb9bbf4bf430a",
-    "semantic_hash": ""
-  },
-  ".claude/skills/powerbi-report-cli/references/authoring/conditional-formatting-part-02.md": {
-    "mtime": 1794618356.2060478,
-    "seen": 1795144464.7618687,
-    "ast_hash": "6a3de90a35e2b4e25d61c26a694d460c",
-    "semantic_hash": ""
-  },
-  ".claude/skills/powerbi-report-cli/references/authoring/conditional-formatting-part-03.md": {
-    "mtime": 1794618356.2080498,
-    "seen": 1795144464.7618687,
-    "ast_hash": "e9f9fc130838ab351a95a1a44a277904",
-    "semantic_hash": ""
-  },
-  ".claude/skills/powerbi-report-cli/references/authoring/conditional-formatting-part-04.md": {
-    "mtime": 1794618356.21005,
-    "seen": 1795144464.7618687,
-    "ast_hash": "6bdf79a808090c4c1c6ffb627a470ef8",
-    "semantic_hash": ""
-  },
-  ".claude/skills/powerbi-report-cli/references/authoring/conditional-formatting-part-05.md": {
-    "mtime": 1794618356.2110493,
-    "seen": 1795144464.7618687,
-    "ast_hash": "67d5696f91aa21f6a8b39f55cfac17e4",
-    "semantic_hash": ""
-  },
-  ".claude/skills/powerbi-report-cli/references/authoring/conditional-formatting-part-06.md": {
-    "mtime": 1794618356.2130506,
-    "seen": 1795144464.7618687,
-    "ast_hash": "295d30255547ad60c27513e2844c3110",
-    "semantic_hash": ""
-  },
-  ".claude/skills/powerbi-report-cli/references/authoring/conditional-formatting-part-07.md": {
-    "mtime": 1794618356.2140498,
-    "seen": 1795144464.7618687,
-    "ast_hash": "a89ec1b83e0efcd65d6af399d218b646",
-    "semantic_hash": ""
-  },
-  ".claude/skills/powerbi-report-cli/references/authoring/conditional-formatting.md": {
-    "mtime": 1794618356.2180452,
-    "seen": 1795144464.7618687,
-    "ast_hash": "a34e676d5ae0902eb30b21706472048c",
-    "semantic_hash": ""
-  },
-  ".claude/skills/powerbi-report-cli/references/authoring/custom-visuals.md": {
-    "mtime": 1794618356.22105,
-    "seen": 1795144464.7618687,
-    "ast_hash": "8596c25cc122ddc7e16c0366f1e0fc96",
-    "semantic_hash": ""
-  },
-  ".claude/skills/powerbi-report-cli/references/authoring/expressions.md": {
-    "mtime": 1794618356.223047,
-    "seen": 1795144464.7618687,
-    "ast_hash": "0a9cbb3eb2246d49d6615d8891d20dc3",
-    "semantic_hash": ""
-  },
-  ".claude/skills/powerbi-report-cli/references/authoring/field-parameters.md": {
-    "mtime": 1794618356.2240467,
-    "seen": 1795144464.7618687,
-    "ast_hash": "e71519000f85196429144b11ae4c39a6",
-    "semantic_hash": ""
-  },
-  ".claude/skills/powerbi-report-cli/references/authoring/filter-pane.md": {
-    "mtime": 1794618356.2260478,
-    "seen": 1795144464.7618687,
-    "ast_hash": "277af260b0986f784cd08db4dd3714ad",
-    "semantic_hash": ""
-  },
-  ".claude/skills/powerbi-report-cli/references/authoring/filters.md": {
-    "mtime": 1794618356.2280521,
-    "seen": 1795144464.7618687,
-    "ast_hash": "832362988975d9c237479cda86952b8d",
-    "semantic_hash": ""
-  },
-  ".claude/skills/powerbi-report-cli/references/authoring/formatting-overview.md": {
-    "mtime": 1794618356.2310495,
-    "seen": 1795144464.7618687,
-    "ast_hash": "b3fb5c9d48bc1e226e872ba830ecbdb2",
-    "semantic_hash": ""
-  },
-  ".claude/skills/powerbi-report-cli/references/authoring/formatting-part-02.md": {
-    "mtime": 1794618356.233049,
-    "seen": 1795144464.7618687,
-    "ast_hash": "5d9459fbe787141852c2cd5dea9bf0ed",
-    "semantic_hash": ""
-  },
-  ".claude/skills/powerbi-report-cli/references/authoring/formatting.md": {
-    "mtime": 1794618356.235059,
-    "seen": 1795144464.7618687,
-    "ast_hash": "d0d0eec924a75877fcf71485c6951cc1",
-    "semantic_hash": ""
-  },
-  ".claude/skills/powerbi-report-cli/references/authoring/image.md": {
-    "mtime": 1794618356.2380474,
-    "seen": 1795144464.7618687,
-    "ast_hash": "8ec31c904f0ff7ce7d683cbe7090484e",
-    "semantic_hash": ""
-  },
-  ".claude/skills/powerbi-report-cli/references/authoring/kpi.md": {
-    "mtime": 1794618356.2435806,
-    "seen": 1795144464.7618687,
-    "ast_hash": "56ca0a4b46dd5aeef88473248df4ca1a",
-    "semantic_hash": ""
-  },
-  ".claude/skills/powerbi-report-cli/references/authoring/map.md": {
-    "mtime": 1794618356.248605,
-    "seen": 1795144464.7618687,
-    "ast_hash": "c9dd766bdae135c3a33468aa3d59be41",
-    "semantic_hash": ""
-  },
-  ".claude/skills/powerbi-report-cli/references/authoring/model-binding.md": {
-    "mtime": 1794618356.2526095,
-    "seen": 1795144464.7618687,
-    "ast_hash": "676033d0bc0af5eb56887943f0d147a7",
-    "semantic_hash": ""
-  },
-  ".claude/skills/powerbi-report-cli/references/authoring/page-formatting.md": {
-    "mtime": 1794618356.2566042,
-    "seen": 1795144464.7618687,
-    "ast_hash": "a3c18bf3a75668bcefd29db6fc9627d8",
-    "semantic_hash": ""
-  },
-  ".claude/skills/powerbi-report-cli/references/authoring/powerbi-desktop.md": {
-    "mtime": 1794618356.258601,
-    "seen": 1795144464.7618687,
-    "ast_hash": "3a12382366dc034f434c1cae8c0d82fc",
-    "semantic_hash": ""
-  },
-  ".claude/skills/powerbi-report-cli/references/authoring/powerbi-report-author-cli-part-02.md": {
-    "mtime": 1794618356.2616053,
-    "seen": 1795144464.7618687,
-    "ast_hash": "9e25108b0494b420e1da613e7a496feb",
-    "semantic_hash": ""
-  },
-  ".claude/skills/powerbi-report-cli/references/authoring/powerbi-report-author-cli.md": {
-    "mtime": 1794618356.264601,
-    "seen": 1795144464.7618687,
-    "ast_hash": "ba21f007004a623a03f6ead0305c36a2",
-    "semantic_hash": ""
-  },
-  ".claude/skills/powerbi-report-cli/references/authoring/preview-part-02.md": {
-    "mtime": 1794618356.2726028,
-    "seen": 1795144464.7618687,
-    "ast_hash": "8808d230b1304ace2f0a2c8d0b8459f8",
-    "semantic_hash": ""
-  },
-  ".claude/skills/powerbi-report-cli/references/authoring/preview-part-03.md": {
-    "mtime": 1794618356.2745993,
-    "seen": 1795144464.7618687,
-    "ast_hash": "bd2058da1b6d6762f839d642f69dd83a",
-    "semantic_hash": ""
-  },
-  ".claude/skills/powerbi-report-cli/references/authoring/preview-part-04.md": {
-    "mtime": 1794618356.275602,
-    "seen": 1795144464.7618687,
-    "ast_hash": "cffc8df7edc31163b0f887bd73e9552b",
-    "semantic_hash": ""
-  },
-  ".claude/skills/powerbi-report-cli/references/authoring/preview.md": {
-    "mtime": 1794618356.2796338,
-    "seen": 1795144464.7618687,
-    "ast_hash": "05c72c0a00c49e67a1695963bf1477a4",
-    "semantic_hash": ""
-  },
-  ".claude/skills/powerbi-report-cli/references/authoring/re-theming-part-02.md": {
-    "mtime": 1794618356.2816043,
-    "seen": 1795144464.7618687,
-    "ast_hash": "36c4688ea36fb2ca27bcb67f30ae774c",
-    "semantic_hash": ""
-  },
-  ".claude/skills/powerbi-report-cli/references/authoring/re-theming-part-03.md": {
-    "mtime": 1794618356.285603,
-    "seen": 1795144464.7618687,
-    "ast_hash": "ab2f7de9554389ed1d5484f36ca34b85",
-    "semantic_hash": ""
-  },
-  ".claude/skills/powerbi-report-cli/references/authoring/re-theming.md": {
-    "mtime": 1794618356.2886033,
-    "seen": 1795144464.7618687,
-    "ast_hash": "9f820cb4468aa43579ed7282ef05d09a",
-    "semantic_hash": ""
-  },
-  ".claude/skills/powerbi-report-cli/references/authoring/screenshot-review.md": {
-    "mtime": 1794618356.292601,
-    "seen": 1795144464.7618687,
-    "ast_hash": "dcd4cee55aef879dfa4c7c45836450ba",
-    "semantic_hash": ""
-  },
-  ".claude/skills/powerbi-report-cli/references/authoring/shape.md": {
-    "mtime": 1794618356.2956085,
-    "seen": 1795144464.7618687,
-    "ast_hash": "20fd56faaad09a9972a3e621f3f677ec",
-    "semantic_hash": ""
-  },
-  ".claude/skills/powerbi-report-cli/references/authoring/slicers-part-02.md": {
-    "mtime": 1794618356.2985992,
-    "seen": 1795144464.7618687,
-    "ast_hash": "4f4e080987a208e5caf50e8d9e588a36",
-    "semantic_hash": ""
-  },
-  ".claude/skills/powerbi-report-cli/references/authoring/slicers.md": {
-    "mtime": 1794618356.2996018,
-    "seen": 1795144464.7618687,
-    "ast_hash": "e134a88d6dbac89309f21c2c71027783",
-    "semantic_hash": ""
-  },
-  ".claude/skills/powerbi-report-cli/references/authoring/table.md": {
-    "mtime": 1794618356.302604,
-    "seen": 1795144464.7618687,
-    "ast_hash": "4f145f8bc780619275d59c87ef8301c3",
-    "semantic_hash": ""
-  },
-  ".claude/skills/powerbi-report-cli/references/authoring/textbox.md": {
-    "mtime": 1794618356.3055995,
-    "seen": 1795144464.7618687,
-    "ast_hash": "2ca46b8fa74c9b08fb7b151dab8f3da0",
-    "semantic_hash": ""
-  },
-  ".claude/skills/powerbi-report-cli/references/authoring/theming-part-02.md": {
-    "mtime": 1794618356.3076005,
-    "seen": 1795144464.7618687,
-    "ast_hash": "9ad1a2d40c5525c3e929f77c5cf82354",
-    "semantic_hash": ""
-  },
-  ".claude/skills/powerbi-report-cli/references/authoring/theming.md": {
-    "mtime": 1794618356.309602,
-    "seen": 1795144464.7618687,
-    "ast_hash": "ca86dfa7f46d6d80eeff725e5dd0e34b",
-    "semantic_hash": ""
-  },
-  ".claude/skills/powerbi-report-cli/references/authoring/version-control.md": {
-    "mtime": 1794618356.3116019,
-    "seen": 1795144464.7618687,
-    "ast_hash": "4ad0e5dea85cdc60afeb0643f9cc857a",
-    "semantic_hash": ""
-  },
-  ".claude/skills/powerbi-report-cli/references/design.md": {
-    "mtime": 1794618356.4506013,
-    "seen": 1795144464.7618687,
-    "ast_hash": "c14ad43ce64d1a8b2ed9c2b6b42daeb4",
-    "semantic_hash": ""
-  },
-  ".claude/skills/powerbi-report-cli/references/design/accessibility.md": {
-    "mtime": 1794618356.3176022,
-    "seen": 1795144464.7618687,
-    "ast_hash": "ea2854fbf2dbe31510d5a8b352f4ea44",
-    "semantic_hash": ""
-  },
-  ".claude/skills/powerbi-report-cli/references/design/anti-patterns.md": {
-    "mtime": 1794618356.3226025,
-    "seen": 1795144464.7618687,
-    "ast_hash": "f229b743394faa7338765a6aa82b6af1",
-    "semantic_hash": ""
-  },
-  ".claude/skills/powerbi-report-cli/references/design/archetype-composition.md": {
-    "mtime": 1794618356.3266034,
-    "seen": 1795144464.7618687,
-    "ast_hash": "a7219060a2cdb062fab87caf129d4021",
-    "semantic_hash": ""
-  },
-  ".claude/skills/powerbi-report-cli/references/design/archetypes/analytical-canvas.md": {
-    "mtime": 1794618356.3306012,
-    "seen": 1795144464.7618687,
-    "ast_hash": "a29dca3864db5f2952b8854cd6886cf4",
-    "semantic_hash": ""
-  },
-  ".claude/skills/powerbi-report-cli/references/design/archetypes/comparative-benchmark-part-02.md": {
-    "mtime": 1794618356.3366015,
-    "seen": 1795144464.7618687,
-    "ast_hash": "6e4aaa143fb2f7e4a304cc7b88891877",
-    "semantic_hash": ""
-  },
-  ".claude/skills/powerbi-report-cli/references/design/archetypes/comparative-benchmark.md": {
-    "mtime": 1794618356.3415973,
-    "seen": 1795144464.7618687,
-    "ast_hash": "077f7659cba455a4fddf5e507d6b3ccd",
-    "semantic_hash": ""
-  },
-  ".claude/skills/powerbi-report-cli/references/design/archetypes/executive-summary.md": {
-    "mtime": 1794618356.3446004,
-    "seen": 1795144464.7618687,
-    "ast_hash": "a6853449ef4e148b0f1dc31fa9d66e7f",
-    "semantic_hash": ""
-  },
-  ".claude/skills/powerbi-report-cli/references/design/archetypes/narrative-story.md": {
-    "mtime": 1794618356.3465993,
-    "seen": 1795144464.7618687,
-    "ast_hash": "33bd07de65be766d103fd21b087668de",
-    "semantic_hash": ""
-  },
-  ".claude/skills/powerbi-report-cli/references/design/archetypes/operational-monitor.md": {
-    "mtime": 1794618356.3496006,
-    "seen": 1795144464.7618687,
-    "ast_hash": "e69b3436cb254d3e24b1bada0b8737a4",
-    "semantic_hash": ""
-  },
-  ".claude/skills/powerbi-report-cli/references/design/brownfield.md": {
-    "mtime": 1794618356.3595994,
-    "seen": 1795144464.7618687,
-    "ast_hash": "add433dd7fe8753e0f367559dadc71e1",
-    "semantic_hash": ""
-  },
-  ".claude/skills/powerbi-report-cli/references/design/chart-selection.md": {
-    "mtime": 1794618356.3616016,
-    "seen": 1795144464.7618687,
-    "ast_hash": "2e56d229a755f790a49c1d46e0129e1e",
-    "semantic_hash": ""
-  },
-  ".claude/skills/powerbi-report-cli/references/design/color.md": {
-    "mtime": 1794618356.364603,
-    "seen": 1795144464.7618687,
-    "ast_hash": "bdd665ecee7d932653cfd6c86d4619cb",
-    "semantic_hash": ""
-  },
-  ".claude/skills/powerbi-report-cli/references/design/design-brief-part-02.md": {
-    "mtime": 1794618356.3706012,
-    "seen": 1795144464.7618687,
-    "ast_hash": "5193a374140389e488ca3bf0fdb62001",
-    "semantic_hash": ""
-  },
-  ".claude/skills/powerbi-report-cli/references/design/design-brief.md": {
-    "mtime": 1794618356.3736012,
-    "seen": 1795144464.7618687,
-    "ast_hash": "806bf47434179dc6cc0116d1c7a9cbcf",
-    "semantic_hash": ""
-  },
-  ".claude/skills/powerbi-report-cli/references/design/interactivity.md": {
-    "mtime": 1794618356.376604,
-    "seen": 1795144464.7618687,
-    "ast_hash": "4152e6413a4a08b0c6db3632f6d98bf1",
-    "semantic_hash": ""
-  },
-  ".claude/skills/powerbi-report-cli/references/design/layout.md": {
-    "mtime": 1794618356.380605,
-    "seen": 1795144464.7618687,
-    "ast_hash": "222a3ee810447816e09df9ea079e03ff",
-    "semantic_hash": ""
-  },
-  ".claude/skills/powerbi-report-cli/references/design/pre-flight-checklist.md": {
-    "mtime": 1794618356.392425,
-    "seen": 1795144464.7618687,
-    "ast_hash": "e9c31978eb14cf837c6d4ec33f564adf",
-    "semantic_hash": ""
-  },
-  ".claude/skills/powerbi-report-cli/references/design/signatures.md": {
-    "mtime": 1794618356.394603,
-    "seen": 1795144464.7618687,
-    "ast_hash": "52c46d67784045bbce5b55da060def38",
-    "semantic_hash": ""
-  },
-  ".claude/skills/powerbi-report-cli/references/design/tone-catalog.md": {
-    "mtime": 1794618356.4006026,
-    "seen": 1795144464.7618687,
-    "ast_hash": "9d6c884e2bb8551d6ac49c1ea435b913",
-    "semantic_hash": ""
-  },
-  ".claude/skills/powerbi-report-cli/references/design/typography.md": {
-    "mtime": 1794618356.4066029,
-    "seen": 1795144464.7618687,
-    "ast_hash": "f1debc0933be712877c845402d86e3f5",
-    "semantic_hash": ""
-  },
-  ".claude/skills/powerbi-report-cli/references/design/visual-cookbook-part-02.md": {
-    "mtime": 1794618356.4216027,
-    "seen": 1795144464.7618687,
-    "ast_hash": "e15e17d46b943091919b8c5b8ffad001",
-    "semantic_hash": ""
-  },
-  ".claude/skills/powerbi-report-cli/references/design/visual-cookbook.md": {
-    "mtime": 1794618356.4246035,
-    "seen": 1795144464.7618687,
-    "ast_hash": "9c4d20ada7e9b35b9f9db072fd668bc7",
-    "semantic_hash": ""
-  },
-  ".claude/skills/powerbi-report-cli/references/management-part-02.md": {
-    "mtime": 1794618356.4276047,
-    "seen": 1795144464.7618687,
-    "ast_hash": "a43738fb9f926761dd7d4770ec6bb3ef",
-    "semantic_hash": ""
-  },
-  ".claude/skills/powerbi-report-cli/references/management-part-03.md": {
-    "mtime": 1794618356.4306023,
-    "seen": 1795144464.7618687,
-    "ast_hash": "acc7cbcecbc5a4fccef972f84247ee3e",
-    "semantic_hash": ""
-  },
-  ".claude/skills/powerbi-report-cli/references/management-part-04.md": {
-    "mtime": 1794618356.434611,
-    "seen": 1795144464.7618687,
-    "ast_hash": "abac172463b5b804562cb8f1c37ebba7",
-    "semantic_hash": ""
-  },
-  ".claude/skills/powerbi-report-cli/references/management.md": {
-    "mtime": 1794618356.4386055,
-    "seen": 1795144464.7618687,
-    "ast_hash": "1632baab739fde4e92068b8d96efc5c8",
-    "semantic_hash": ""
-  },
-  ".claude/skills/powerbi-report-cli/references/planning-part-02.md": {
-    "mtime": 1794618356.4426055,
-    "seen": 1795144464.7618687,
-    "ast_hash": "978a4f90e7c7d549151680ad1fca53be",
-    "semantic_hash": ""
-  },
-  ".claude/skills/powerbi-report-cli/references/planning.md": {
-    "mtime": 1794618356.4476042,
-    "seen": 1795144464.7618687,
-    "ast_hash": "57cbf8a04e3492c2633e05c19a613df1",
+  ".claude/skills/semantic-model-authoring/references/tmdl-guidelines.md": {
+    "mtime": 1795146266.0828035,
+    "seen": 1795146414.877534,
+    "ast_hash": "50db60b5339ea1a66d4c3a4065293184",
     "semantic_hash": ""
   }
 }

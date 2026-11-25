@@ -5,12 +5,13 @@ that only runs when you have configured Snowflake secrets.
 
 | Workflow | Trigger | Needs secrets | Purpose |
 |---|---|---|---|
-| `python-ci.yml` | every push, every pull request | no | `ruff` on the new Snowflake-related code, then the offline `pytest` suite |
+| `python-ci.yml` | every push, every pull request | Kaggle only (optional) | `ruff` on the new Snowflake-related code; download Olist from Kaggle, build the DuckDB warehouse and the Power BI export, then the full `pytest` suite |
 | `dbt-ci.yml` | push / PR touching `snowflake/dbt/**` (or the workflow file) | no | `dbt deps`, `dbt parse --target ci` (required gate), `dbt compile --no-populate-cache` (informational) |
 | `dbt-live.yml` | `workflow_dispatch` only | yes (environment-scoped) | `dbt build --target prod` against the real Snowflake account |
 
-Missing Snowflake credentials cannot fail PR CI: the two PR-triggered workflows never read a secret, and the live
-workflow cannot be triggered by a push or a pull request at all.
+Missing Snowflake credentials cannot fail PR CI: the two PR-triggered workflows never read a Snowflake secret, and the
+live workflow cannot be triggered by a push or a pull request at all. The only secret PR CI reads is the Kaggle token,
+and without it the warehouse tests skip rather than fail.
 
 ## python-ci
 
@@ -21,27 +22,55 @@ Two jobs, so lint and tests report separately.
   `tests/test_powerbi_snowflake.py` and `powerbi/snowflake`. Ruff is pinned and the rules are explicit because recent
   ruff releases (0.17.x) enable many more default rules and flag 56 style issues in this code that 0.12 does not.
   Legacy DuckDB code is deliberately not linted.
-- `test`: `uv sync --locked --group dev`, then `pytest -q`. `--locked` never rewrites `uv.lock`; it fails if the lock is
-  out of date with `pyproject.toml`. That is intentional. If it fails, run `uv lock` locally and commit the result.
-  `UV_PYTHON=3.13` is set because the root `.python-version` says 3.14 while the dbt side needs 3.13; `requires-python`
-  is `>=3.13`, so 3.13 is valid.
-- Tests that need `warehouse.duckdb` skip through the `warehouse` fixture (the file is git-ignored). Nothing is
-  deselected or marked `continue-on-error`.
+- `test`:
+  1. `uv sync --locked --group dev`. `--locked` never rewrites `uv.lock`; it fails if the lock is out of date with
+     `pyproject.toml`. That is intentional. If it fails, run `uv lock` locally and commit the result. `UV_PYTHON=3.13`
+     is set because the root `.python-version` says 3.14 while the dbt side needs 3.13; `requires-python` is `>=3.13`.
+  2. Restore `data/` from the Actions cache (key `olist-brazilian-ecommerce-v1`; bump the suffix to force a re-download).
+  3. On a cache miss, download the nine Olist CSVs with `kaggle@2.2.5` (`datasets download -d olistbr/brazilian-ecommerce
+     --unzip`). kaggle 2.2.5 imports `six` without declaring it, so the step adds `--with six==1.17.0`.
+  4. If the CSVs are there: print their SHA-256, run `src/transformation/build_warehouse.py` (which fails the job if any
+     of its validation checks fails, including the real-data figures such as 7,827 late deliveries), then
+     `src/powerbi/export_data.py` to write `powerbi/data/`.
+  5. `pytest -q` with `REQUIRE_WAREHOUSE=1` when step 4 built the warehouse.
 
-### Known baseline failures (CI will be red until fixed)
+### The `warehouse` marker
 
-`tests/test_powerbi_project.py` fails in a clean checkout, before any of the Snowflake work:
+Tests that read `ROOT/warehouse.duckdb` carry `@pytest.mark.warehouse` (per module or per test). A collection hook in
+`tests/conftest.py` skips them when the file is missing, except when `REQUIRE_WAREHOUSE=1`, where a missing file stops
+the run with an error. So:
 
-- It builds its schema from `ROOT/warehouse.duckdb` via `model_spec.load_schema()`. The file is git-ignored, and that
-  test module does not use the skipping `warehouse` fixture, so it errors instead of skipping (5 errors, 4 failures).
-- `test_committed_project_is_complete_and_holds_no_machine_path` fails because the committed
-  `powerbi/RetailAnalytics.SemanticModel/definition/expressions.tmdl` holds `C:\Users\Student\GCP\powerbi\data` instead
-  of the placeholder (1 failure).
+- With Kaggle credentials or a cached copy, every test runs, and a broken build cannot hide as skips. A pull request
+  from a fork gets no secrets but can restore the cache saved by a run on its base branch, so once `main` has a cached
+  copy, fork PRs run the warehouse tests too.
+- With neither (no secret and no cache yet, or the cache evicted after 7 days unused), the warehouse tests are reported as
+  skipped with a notice and the rest of the suite still gates the PR.
 
-So `python-ci / test` is expected to report `5 failed, 5 errors` on the current branch. Fixing it needs either a
-decision on the test (skip when the warehouse is missing) or a change to the committed Power BI file; neither was in
-scope for the CI task, and the workflow does not work around it. The `lint` job and every other test are independent of
-this.
+In `tests/test_powerbi_project.py`, only the two tests that read committed files are unmarked:
+`test_committed_project_is_complete_and_holds_no_machine_path` (the committed `expressions.tmdl` must hold the
+`DataFolder` placeholder, not a local path) and `test_generator_refuses_to_overwrite_a_project_saved_by_desktop`.
+
+### Kaggle secret
+
+Create a Kaggle API token (kaggle.com, *Settings > API*) and add it as a **repository** secret
+(*Settings > Secrets and variables > Actions*):
+
+| Secret | Value |
+|---|---|
+| `KAGGLE_API_TOKEN` | the new-style API token |
+
+The legacy pair `KAGGLE_USERNAME` + `KAGGLE_KEY` (the two fields of `kaggle.json`) also works. Secrets are passed to the
+step through `env`, never interpolated into the script. The dataset is CC BY-NC-SA 4.0: CI downloads it and keeps it only
+in the Actions cache. That cache is readable by this repository's workflow runs only, which includes pull requests from
+forks (they can restore it but not write it). It is never committed or published as an artifact.
+
+### Power BI DataFolder after saving in Desktop
+
+The committed `powerbi/RetailAnalytics.SemanticModel/definition/expressions.tmdl` holds the placeholder
+`C:\REPLACE\WITH\FULL\PATH\TO\powerbi\data`. When you open the project, set `DataFolder` to your local
+`powerbi/data` path. Saving in Desktop writes that local path back into the file: restore the placeholder before
+committing (`git checkout -- powerbi/RetailAnalytics.SemanticModel/definition/expressions.tmdl` if nothing else in it
+changed), or the test above fails.
 
 ## dbt-ci
 
@@ -118,7 +147,8 @@ Run on the Windows dev host on 2026-11-06, offline from Snowflake. Nothing was r
 | `actionlint` 1.7.12 (via `actionlint-py` in a scratch venv) on the three files | VERIFIED: exit 0, no findings. shellcheck was not installed, so `run:` script bodies were not shellchecked |
 | `ruff@0.12.0 check --select E4,E7,E9,F` on the listed paths | VERIFIED: All checks passed. Also passes with ruff 0.17.4 and the same `--select` |
 | `uv lock --check` on a copy of `pyproject.toml` + `uv.lock` | VERIFIED: exit 0, lock is consistent with `pyproject.toml` (94 packages) |
-| python-ci `test` steps on a clean copy of the working tree (`uv sync --locked --group dev` into a scratch env, Python 3.13.5, then `pytest -q`) | VERIFIED on Windows: `5 failed, 279 passed, 25 skipped, 5 errors`; all 10 are in `tests/test_powerbi_project.py` (the baseline failures above) |
+| python-ci `test` steps on a clean copy of the working tree (`uv sync --locked --group dev` into a scratch env, Python 3.13.5, then `pytest -q`) | VERIFIED on Windows (2026-11-06, before the Kaggle step): `5 failed, 279 passed, 25 skipped, 5 errors`, all in `tests/test_powerbi_project.py`. Fixed on 2026-11-20, see the next row |
+| 2026-11-20: warehouse built from the Olist CSVs, `export_data.py`, then `REQUIRE_WAREHOUSE=1 pytest -q` (Windows, project `.venv`, Python 3.14) | VERIFIED: `424 passed`, 0 skipped. Without the warehouse: the 9 marked Power BI tests skip and the 2 file-only ones pass |
 | dbt-ci steps on a clean copy of `snowflake/dbt`: `uv sync --locked`, `dbt deps`, `dbt parse --target ci` | VERIFIED: exit 0 each. dbt 1.11.17, adapter snowflake 1.11.6, dbt_utils 1.4.1. No `SNOWFLAKE_*` / `RETAIL_SF_*` variables set |
 | `dbt parse --target ci` and `dbt compile --no-populate-cache --target ci` with `HTTP(S)_PROXY` pointed at a dead port | VERIFIED: both exit 0; "Found 46 models, 321 data tests, 9 sources, 657 macros"; `logs/dbt.log` has no connection-open lines |
 
@@ -129,6 +159,10 @@ bundle (TLS inspection on this host). GitHub-hosted runners do not need that, an
 
 - None of the three workflows has run on GitHub. Runner behaviour (Ubuntu, Python 3.13 download, the setup-uv cache,
   `uvx` resolution of `ruff@0.12.0`) is untested.
+- The Kaggle step has not run: no Kaggle token was used here. `kaggle@2.2.5` (with `six`) was installed in a scratch
+  environment and its `datasets download` flags checked, but a real download, the unzip layout on Ubuntu and the
+  Actions cache save/restore are untested. The warehouse build and test run were done locally with the same Olist
+  CSVs instead.
 - The pytest result above is for Windows. A Linux run may differ (line endings, path handling); the CRLF files in the
   repo are the likeliest source.
 - `dbt-live.yml`: the `detect` / skip logic, environment secret release, key-file writing, `dbt build --target prod`
