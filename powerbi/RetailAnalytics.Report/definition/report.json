@@ -11,7 +11,7 @@
       "type": "SharedResources"
     },
     "customTheme": {
-      "name": "Custom01231714224837055.json",
+      "name": "CursorTheme-96720a1810.json",
       "reportVersionAtImport": {
         "visual": "2.13.0",
         "report": "3.4.0",
@@ -37,8 +37,8 @@
       "type": "RegisteredResources",
       "items": [
         {
-          "name": "Custom01231714224837055.json",
-          "path": "Custom01231714224837055.json",
+          "name": "CursorTheme-96720a1810.json",
+          "path": "CursorTheme-96720a1810.json",
           "type": "CustomTheme"
         }
       ]
