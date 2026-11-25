@@ -40,7 +40,7 @@ _Last updated: 2026-11-25_
 
 ## Decisions
 
-D-001 to D-008 (user) and DD-01 to DD-28 (design) are in [DECISIONS.md](DECISIONS.md). **Open decisions:** which registry version is the model's default. `V1_20261113_CC90DC8` (registered from the laptop) is the default and is pinned by the scoring task; `V1WS_20261113_7370C92` (trained inside Snowflake) matches it to 1e-12. Nothing uses the default, so it is left as is until the owner chooses.
+D-001 to D-008 (user) and DD-01 to DD-29 (design) are in [DECISIONS.md](DECISIONS.md). **Open decisions:** which registry version is the model's default. `V1_20261113_CC90DC8` (registered from the laptop) is the default and is pinned by the scoring task; `V1WS_20261113_7370C92` (trained inside Snowflake) matches it to 1e-12. Nothing uses the default, so it is left as is until the owner chooses.
 
 ## Snowflake + dbt implementation and Power BI on Snowflake (merged to `main` in pull request #1; updated 2026-11-25)
 
@@ -65,7 +65,7 @@ Full suite (2026-11-25, warehouse built, `REQUIRE_WAREHOUSE=1`): 385 passed, 0 f
 | Item | Why open |
 |---|---|
 | ~~Compare the Power BI cards with the first-open checklist~~ (done by the owner, 2026-11-25) | Screenshots of the Snowflake-backed report agree with the headline figures (R$ 13.49M, 98K orders, 8.1% late) |
-| Raw data in early commits of the public repository | History not rewritten (D-008); the owner decides whether to rewrite it |
+| Raw data in early commits of the public repository | The raw data is still in the early commits. The history was rewritten once, for the author name (DD-29), not to remove the data; whether to rewrite it for the data is still the owner's decision (D-008) |
 | Power BI `DataFolder` holds a local path | **Fixed 2026-11-20.** The committed `expressions.tmdl` holds the `C:\REPLACE\WITH\FULL\PATH\TO\powerbi\data` placeholder again; set your own path in Desktop and restore the placeholder before committing (see `docs/migration/CI_SETUP.md`). The 9 warehouse-dependent tests skip without `warehouse.duckdb` and run in CI, which builds it from Kaggle |
 | ~~DuckDB late-delivery feature query is not reproducible across multi-threaded runs~~ (fixed 2026-11-12, DD-21) | Cause: `arg_max` picked among 57 price-tied orders in thread order, which moved `category_prior_*` on about 26,000 rows; plus a float `avg` summed in thread order. Both are now deterministic (alphabetical tie-break, ordered aggregate), identical across 1/2/8/16 threads, and the same rule as Snowflake. The v2/v3 experiment metrics were regenerated; v1 is unchanged |
 | ~~Snowflake-backed runs of the two Tier 1 entry points~~ (run 2026-11-13) | `--backend snowflake --yes` wrote `reports/snowflake/*.json`: forecast identical to DuckDB, late-delivery within 6e-6. Tier 2 scripts (`drift_analysis`, `export_data`, `run_analytics`) stay DuckDB-only |
@@ -78,4 +78,4 @@ Full suite (2026-11-25, warehouse built, `REQUIRE_WAREHOUSE=1`): 385 passed, 0 f
 - The ML result is modest and documented as such; a better model would need information the dataset lacks (see the model card).
 - Six test months and 85 forecast weeks are small samples.
 - `Cloud Portfolio — Master Agent Prompt.md` still describes the original multi-cloud brief and is kept unchanged by design. The Google Cloud project brief and its local-vs-cloud mapping were replaced on 2026-11-13 by Snowflake rewrites (`Snowflake Project — Retail Analytics, Forecasting & Customer Intelligence Platform.md`, `Snowflake Retail Project Local vs Cloud Architecture.md`); the originals are in the git history up to commit `78027d2`.
-- The raw data remains in earlier commits (history not rewritten, D-008).
+- The raw data remains in earlier commits (D-008). The history was rewritten once, to change the author name (DD-29), not to remove the data.
