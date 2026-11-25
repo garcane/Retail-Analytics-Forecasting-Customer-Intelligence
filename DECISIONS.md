@@ -339,7 +339,7 @@ _Superseded by DD-27 (removed 2026-11-25)._
 ### DD-24: The marimo notebooks are removed
 
 - **Context:** DD-14 added interactive marimo versions of the two ML notebooks. Since then the HTML dashboard (DD-22) has taken over the interactive role: its risk page has a test-month picker and shows precision and recall across every flag share (where the marimo app had a "flag the riskiest X%" slider), and its forecast page has target and horizon pickers and method toggles.
-- **Chosen:** the project owner removed `notebooks/marimo/` (commit `0568c7d`). The Jupyter notebooks stay as the stored, charted walk-through of the ML; `tests/test_marimo.py` was removed with them.
+- **Chosen:** the project owner removed `notebooks/marimo/` (commit `2d92689`). The Jupyter notebooks stay as the stored, charted walk-through of the ML; `tests/test_marimo.py` was removed with them.
 - **Reason:** two copies of each notebook had to be kept in step, and the interactive exploration they offered is now in the dashboard.
 - **Trade-offs:** no notebook-style interactive environment over the live `src/ml` code; use the Jupyter notebooks or the dashboard. `marimo` was then removed from the development dependencies with the owner's approval (`uv lock` dropped it and the packages only it needed; `uv sync` rebuilt `.venv`, 2026-11-13).
 - **Rejected:** keeping the marimo files untested.
@@ -387,11 +387,11 @@ _Superseded by DD-27 (removed 2026-11-25)._
 
 ### DD-27: The HTML dashboard is removed; Power BI is the only BI layer
 
-- **Context:** DD-22 added a modular HTML dashboard next to Power BI and DD-23 made Snowflake its default data source. The owner then chose to keep Power BI as the single BI surface and deleted `dashboard/` (commit `402334f` on the working branch).
+- **Context:** DD-22 added a modular HTML dashboard next to Power BI and DD-23 made Snowflake its default data source. The owner then chose to keep Power BI as the single BI surface and deleted `dashboard/` (commit `0606a68` on the working branch).
 - **Chosen:** remove everything that depended on it: `src/dashboard/` (the data build and the local server), `tests/test_dashboard.py` (41 tests), the `!dashboard/data/` rule in `.gitignore`, and the dashboard sections of the README, PROJECT_STATUS, COST, ARCHITECTURE, the model card, the Snowflake README and the local-vs-cloud architecture. DD-22 and DD-23 are marked superseded; their text stays as the record.
 - **Reason:** one BI layer is less to keep current, and the deletion had already left four tests failing on a missing folder.
 - **Trade-offs:** the interactive views it offered (a test-month picker, risk operating points at every flag share, forecast pickers, the data-lineage page) now exist only as the charts in the Jupyter notebooks. Nothing else read its data.
-- **Recoverable:** the dashboard and its tests are in the git history; the last commit that has them is `39c32f3` on `main` (`git checkout 39c32f3 -- dashboard src/dashboard tests/test_dashboard.py`).
+- **Recoverable:** the dashboard and its tests are in the git history; the last commit that has them is `6b04ddf` on `main` (`git checkout 6b04ddf -- dashboard src/dashboard tests/test_dashboard.py`).
 
 ### DD-28: A Power BI theme from a design brief, and an Overview page
 
