@@ -42,6 +42,7 @@ Later decisions can supersede earlier ones; when that happens the entry says so.
 | DD-26 | 2026-11-13 | ML inside Snowflake: notebooks for analysis and training, SQL for scheduled scoring and monitoring | Active |
 | DD-27 | 2026-11-25 | Remove the HTML dashboard; Power BI is the only BI layer | Active |
 | DD-28 | 2026-11-25 | Power BI theme from a design brief, and an Overview page | Active |
+| DD-29 | 2026-11-25 | Rewrite the git history once to change the author name | Done |
 
 ---
 
@@ -400,3 +401,12 @@ _Superseded by DD-27 (removed 2026-11-25)._
 - **Reason:** the owner's request. Re-theming only the theme file was not enough: the cards and slicers carried overrides that beat it.
 - **Trade-offs:** Segoe UI instead of the brief's CursorGothic (licensed) or its substitute Inter (not installed on a default Windows machine; Power BI cannot embed fonts), and no letter-spacing. Chart series are ink first and orange second, then muted grey and four deepened hues, because the brief's pastel timeline colours are too light for chart marks on white and are reserved there for another purpose. Every chart colour is at least 3:1 against white and text at least 7:1.
 - **Verified:** `powerbi-report-author validate` reports only the two errors that were there before (no `$schema` line in the Desktop-written `.pbip` and `definition.pbir`) and fixes the old theme's name mismatch; all five pages were captured in Desktop with Snowflake data; the 88 Power BI tests pass.
+
+### DD-29: The git history is rewritten once, to change the author name
+
+- **Context:** D-008 chose not to rewrite history, to avoid a force-push and broken clones. The owner then asked for their full name to be replaced by their GitHub name (`garcane`) on every commit and in every file.
+- **Chosen:** with `git filter-repo`, every commit's author and committer identity became `garcane <114095068+garcane@users.noreply.github.com>` (the account's GitHub noreply address, which keeps the commits attributed to the account), and a name-derived test fixture value in `tests/test_reconciliation.py` became `garcane`. It was run in a scratch clone and verified (no occurrence of the old name or email in any file of any commit, 108 commits in and out, content changed only in that one fixture), then force-pushed with a lease. The global git identity was changed so new commits use the same name.
+- **Effects:** commit hashes changed from the first commit made under the old identity onward. The five hashes cited in the docs were repointed in a follow-up commit. Four hashes cited in older docs (`d8f6954`, `ac1ae8d`, `d5e8d1e`, `578c46f`) were already missing before the rewrite and were left alone.
+- **Not changed:** the raw data is still in the early commits. This rewrite was about the name, not the data, so D-008's reasoning about the data stands.
+- **Limits:** GitHub keeps the pre-rewrite commits behind pull requests #1 to #3 (`refs/pull/*/head`), so the old name can still be fetched from GitHub until GitHub Support removes them. Anyone who cloned before keeps the old history. The pull-request pages themselves show the account name, not the old name.
+- **Rejected:** leaving the history as it was; a new repository (it would remove the old pull requests but lose their history, the Actions history and the `KAGGLE_API_TOKEN` secret).
