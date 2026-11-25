@@ -60,27 +60,27 @@
     "semantic_hash": "21ceb6533048be51308e69e7b74a35cf"
   },
   "ARCHITECTURE.md": {
-    "mtime": 1794604033.2771473,
-    "seen": 1794604351.16572,
-    "ast_hash": "e265b7805cd90b6231bdcfa5aeb07618",
+    "mtime": 1795632429.8280754,
+    "seen": 1795632600.4767137,
+    "ast_hash": "688a4151cc0827d4189448d6b4af3f4e",
     "semantic_hash": ""
   },
   "DECISIONS.md": {
-    "mtime": 1794603696.6190896,
-    "seen": 1794603727.151246,
-    "ast_hash": "f476ff18e1b48fa5c1fbccaea8dbcc02",
+    "mtime": 1795632429.794986,
+    "seen": 1795632600.4767137,
+    "ast_hash": "c75150124daec7405238d916fbfb6f24",
     "semantic_hash": ""
   },
   "PROJECT_STATUS.md": {
-    "mtime": 1795630196.7630749,
-    "seen": 1795632063.6800535,
-    "ast_hash": "7bad15615aa4a19521548cd1a0890bcc",
+    "mtime": 1795632429.711505,
+    "seen": 1795632600.4767137,
+    "ast_hash": "43f843fe9d3ac32cfa5ec1ffe05a4e49",
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1795630196.7630749,
-    "seen": 1795632063.6800535,
-    "ast_hash": "8c9ef219afd71474a37893f86c935c83",
+    "mtime": 1795632429.533324,
+    "seen": 1795632600.4767137,
+    "ast_hash": "12ca0fb19508151e58872762c1f7f279",
     "semantic_hash": ""
   },
   "docs/HANDOFF.md": {
@@ -270,9 +270,9 @@
     "semantic_hash": "a76ebd8575a62b9bced5dc087839dd7c"
   },
   "COST.md": {
-    "mtime": 1794604033.2791522,
-    "seen": 1794604351.16572,
-    "ast_hash": "72a89b39115151666d35fb1dea0c157f",
+    "mtime": 1795632475.492212,
+    "seen": 1795632600.4767137,
+    "ast_hash": "dda0eb20ec72e1ecd3e63284de59be01",
     "semantic_hash": ""
   },
   "SECURITY.md": {
@@ -300,9 +300,9 @@
     "semantic_hash": "57f00118798684e39c1fcc27f0aa31fc"
   },
   "docs/ml/MODEL_CARD.md": {
-    "mtime": 1794584837.1271164,
-    "seen": 1794584933.7197971,
-    "ast_hash": "a6f8b3a8eb61823842ded42fe4fd78ff",
+    "mtime": 1795632429.8280754,
+    "seen": 1795632600.4767137,
+    "ast_hash": "0e77a01e348987c6da2fe0f6e90b2ba4",
     "semantic_hash": ""
   },
   "docs/analytics/figures/categories.png": {
@@ -1542,9 +1542,9 @@
     "semantic_hash": ""
   },
   "snowflake/README.md": {
-    "mtime": 1794603696.5510862,
-    "seen": 1794603727.151246,
-    "ast_hash": "6e34c4ef8ee4c6997c4cd9853cd7385f",
+    "mtime": 1795632475.471668,
+    "seen": 1795632600.4767137,
+    "ast_hash": "ccdbd9478fcb81bf1eb3d38433b7fd43",
     "semantic_hash": ""
   },
   "snowflake/dbt/README.md": {
@@ -1685,24 +1685,6 @@
     "ast_hash": "403b3777f9457b147adedd3ba608c33d",
     "semantic_hash": ""
   },
-  "src/dashboard/build_data.py": {
-    "mtime": 1794603927.6886878,
-    "seen": 1794604351.1647203,
-    "ast_hash": "16cb785a2bd1946c7be4c93fb3a1f2c8",
-    "semantic_hash": ""
-  },
-  "src/dashboard/serve.py": {
-    "mtime": 1794603946.36236,
-    "seen": 1794604351.1647203,
-    "ast_hash": "dd042abd74564ba583146f163addd6d1",
-    "semantic_hash": ""
-  },
-  "tests/test_dashboard.py": {
-    "mtime": 1794521641.8201387,
-    "seen": 1794567753.2985492,
-    "ast_hash": "28c672fffef709b8fe44f392e7ffff97",
-    "semantic_hash": ""
-  },
   "tests/test_feature_determinism.py": {
     "mtime": 1794498121.4732656,
     "seen": 1794567753.2985492,
@@ -1764,9 +1746,9 @@
     "semantic_hash": ""
   },
   "Snowflake Retail Project Local vs Cloud Architecture.md": {
-    "mtime": 1794603696.6000893,
-    "seen": 1794603727.151246,
-    "ast_hash": "6659e1fc9d66fa2f3aed47c1c6e85f73",
+    "mtime": 1795632475.471668,
+    "seen": 1795632600.4767137,
+    "ast_hash": "429c69d4aec24f53a9907b8cf178c097",
     "semantic_hash": ""
   },
   ".claude/skills/unslop/references/refs/beacon-engraving.webp": {
