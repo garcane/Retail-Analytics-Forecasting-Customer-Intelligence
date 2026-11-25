@@ -102,7 +102,7 @@ Other points the views must reproduce from the export:
 
 ## The `DataFolder` parameter
 
-Fixed on 2026-11-20: the committed `RetailAnalytics.SemanticModel/definition/expressions.tmdl` holds the placeholder `C:\REPLACE\WITH\FULL\PATH\TO\powerbi\data` again, and `test_committed_project_is_complete_and_holds_no_machine_path` checks it. Desktop writes your local path back on save, so restore the placeholder before committing (see `docs/migration/CI_SETUP.md`).
+Fixed on 2026-11-20: the committed `RetailAnalytics.SemanticModel/definition/expressions.tmdl` holds the placeholder `C:\REPLACE\WITH\FULL\PATH\TO\powerbi\data` again, and `test_committed_project_is_complete_and_holds_no_machine_path` (in `tests/test_powerbi_project.py`) checks it. Desktop writes your local path back on save, so restore the placeholder before committing (see `docs/migration/CI_SETUP.md`).
 
 The patched copy removes `DataFolder` entirely (or, with `--ml-on-files`, keeps the committed placeholder for the three ML tables, so set it to your own path in Desktop and never commit that path).
 
