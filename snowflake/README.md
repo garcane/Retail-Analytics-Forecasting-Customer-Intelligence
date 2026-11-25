@@ -1,10 +1,10 @@
 # Snowflake + dbt implementation: setup and runbook
 
-A second, cloud implementation of the Olist star schema: **RAW -> dbt staging -> intermediate -> marts -> Python forecasting, the HTML dashboard and Power BI** on Snowflake. The DuckDB implementation (`sql/`, `src/`, `warehouse.duckdb`) is unchanged and remains the reference; this folder sits next to it and does not replace it.
+A second, cloud implementation of the Olist star schema: **RAW -> dbt staging -> intermediate -> marts -> Python forecasting and Power BI** on Snowflake. The DuckDB implementation (`sql/`, `src/`, `warehouse.duckdb`) is unchanged and remains the reference; this folder sits next to it and does not replace it.
 
 > **Status (2026-11-13): the pipeline has run end to end on a live Snowflake account.** Setup, RAW load, `dbt build` (367 of 367 passed), the DuckDB-vs-Snowflake reconciliation (22 of 22 checks, 0 differences), both Tier 1 Python models and the dashboard data build have all run against `RETAIL_OLIST`. The ML outputs (scores, forecast backtest) are published to the `ML` schema. Not run yet: the Power BI patched copy. Each section below gives its own status, the date it ran and the measured result.
 
-Related pages: [architecture](../docs/architecture/SNOWFLAKE_ARCHITECTURE.md) | [SQL migration inventory](../docs/migration/SNOWFLAKE_MIGRATION.md) | [data dictionary](../docs/data_dictionary/DATA_DICTIONARY.md) | [ingestion runbook](../docs/migration/INGESTION_RUNBOOK.md) | [Power BI switch guide](../docs/migration/POWERBI_SWITCH_GUIDE.md) | [dbt project README](dbt/README.md) | [reconciliation report](../docs/validation/RECONCILIATION_REPORT.md) | [dashboard](../dashboard/README.md)
+Related pages: [architecture](../docs/architecture/SNOWFLAKE_ARCHITECTURE.md) | [SQL migration inventory](../docs/migration/SNOWFLAKE_MIGRATION.md) | [data dictionary](../docs/data_dictionary/DATA_DICTIONARY.md) | [ingestion runbook](../docs/migration/INGESTION_RUNBOOK.md) | [Power BI switch guide](../docs/migration/POWERBI_SWITCH_GUIDE.md) | [dbt project README](dbt/README.md) | [reconciliation report](../docs/validation/RECONCILIATION_REPORT.md)
 
 ## What is in this folder
 
@@ -23,7 +23,7 @@ Related pages: [architecture](../docs/architecture/SNOWFLAKE_ARCHITECTURE.md) | 
 | `dbt/` | The dbt project (46 models, 321 tests) in its own Python 3.13 environment | Creates views and tables in `STAGING` to `PBI` |
 | `dbt/make_ca_bundle.py` | Builds a CA bundle from the Windows root store, for dbt behind a TLS-inspecting proxy (section 7) | No |
 
-Related code outside this folder: `src/data_access/` (Python backend switch), `src/reconciliation/` (DuckDB vs Snowflake comparison), `src/dashboard/build_data.py` (dashboard data, Snowflake by default), `powerbi/snowflake/` (patched Power BI copy). None of the SQL uses `OR REPLACE` or `DROP`. The only account-level object is the resource monitor, created with the owner's approval.
+Related code outside this folder: `src/data_access/` (Python backend switch), `src/reconciliation/` (DuckDB vs Snowflake comparison), `powerbi/snowflake/` (patched Power BI copy). None of the SQL uses `OR REPLACE` or `DROP`. The only account-level object is the resource monitor, created with the owner's approval.
 
 ## 1. Prerequisites
 
@@ -58,8 +58,7 @@ Get-Content .env.retail | Where-Object { $_ -match '^\s*[A-Za-z_][A-Za-z0-9_]*\s
 | `RETAIL_DATA_DIR` | loader | `./data` |
 | `DBT_DEV_SUFFIX` | dbt dev/ci schema prefix; reconciliation `--schema-suffix`. **Leave it unset in `.env.retail`** when you work against the prod schemas, or the reconciliation looks for `<suffix>_MARTS` | `DBT_DEV` (dev), `DBT_CI` (ci) |
 | `DATA_BACKEND` | `src/data_access`, the ML scripts | `duckdb` |
-| `DASHBOARD_BACKEND` | `src/dashboard/build_data.py` | `snowflake` |
-| `DUCKDB_PATH` | `src/data_access`, reconciliation, dashboard build | `warehouse.duckdb` |
+| `DUCKDB_PATH` | `src/data_access`, reconciliation | `warehouse.duckdb` |
 | `FORECAST_WRITEBACK` | opt-in `ML` write-back for callers of `src/data_access/writeback.py` (`publish_ml.py` uses its own `--write` flag instead) | unset (off) |
 | `REQUESTS_CA_BUNDLE` | dbt only, behind a TLS-inspecting proxy (section 7) | unset |
 
@@ -114,7 +113,7 @@ cd snowflake\dbt
 
 Measured: `dbt build --target prod` finished with `PASS=367 WARN=0 ERROR=0 SKIP=0` (46 models, 321 tests) in about a minute on the XSMALL warehouse. The `ASOF JOIN ... MATCH_CONDITION` in `int_late_delivery_history` ran as written; the range-join fallback (`--vars '{late_delivery_history_method: range_join}'`) was not needed.
 
-- `dev` and `ci` write to prefixed schemas, `prod` to the plain ones. Python, the dashboard build, the reconciliation and the Power BI templates read the plain schemas by default.
+- `dev` and `ci` write to prefixed schemas, `prod` to the plain ones. Python, the reconciliation and the Power BI templates read the plain schemas by default.
 - Staging and intermediate models are views, marts are tables, Power BI models are views in `PBI`.
 - Run dbt with the absolute path to `dbt.exe` when you start it from a script; a relative path was not found by `subprocess` on Windows.
 
@@ -152,7 +151,7 @@ A Snowflake run writes to `reports/snowflake/`, so it never overwrites the track
 - **Weekly forecast:** identical, every value (0 differences).
 - **Late-delivery model:** the gradient-boosting results are identical. Seven logistic-regression values (v1 and v5) differ by at most 6e-6 (largest: one month's PR-AUC, 0.180318 vs 0.180324). The cause is floating-point rounding in the inputs, not different data: both backends return the same 96,282 rows, in the same order, with the same columns, but three averaged features are summed in a different order (`recent_days_28d` differs by at most 1.4e-9, `route_prior_days` by 2.3e-10, `distance_km` by 1.4e-12), and the logistic solver carries that into the sixth decimal.
 
-`drift_analysis`, `export_scores`, `export_data` and `run_analytics` stay DuckDB-only. `export_scores` reads the order category through `datasets.order_category`, which works on both backends, so the dashboard's risk page can be built from Snowflake.
+`drift_analysis`, `export_scores`, `export_data` and `run_analytics` stay DuckDB-only. `export_scores` reads the order category through `datasets.order_category`, which works on both backends, so the risk scores can be built from Snowflake.
 
 ### Publishing the ML outputs to Snowflake - RUN 2026-11-13
 
@@ -199,23 +198,23 @@ Notes:
 - **Why scheduled scoring writes its own table.** The registered model was trained on every month, so its 2018 scores are in-sample. They go to their own table, never to `ML.LATE_DELIVERY_SCORES`, which holds the out-of-time backtest that Power BI and the monitoring views read. The dataset ends in 2018, so a scheduled run replays the same month; `ML.SCORING_CONFIG` pins the model version and the month.
 - **Not changed:** the account-wide notebook idle-timeout parameter (each notebook service is given a 15-minute idle timeout instead).
 
-## 10. Step 6: the HTML dashboard - RUN 2026-11-12
+## 10. Step 6: the HTML dashboard - RUN 2026-11-12, REMOVED 2026-11-25
 
-`src/dashboard/build_data.py` builds `dashboard/data/*.json` from Snowflake by default (DD-22): KPIs and weekly series from `MARTS`, the analytics tables from `MARTS.mart_*`, risk roll-ups from a v1 retrain on the Snowflake features. A build from Snowflake and one from DuckDB (`--backend duckdb`) gave identical files for the KPIs, analytics, forecast and risk. See [`../dashboard/README.md`](../dashboard/README.md).
+The dashboard data build (`src/dashboard/build_data.py`, Snowflake by default, DD-22) was run on 2026-11-12 and gave files identical to a DuckDB build. The owner then removed the dashboard (DD-27); the code is in the git history (last at `39c32f3` on `main`). Power BI is the BI layer.
 
-## 11. Step 7: Power BI patched copy - NOT RUN
+## 11. Step 7: Power BI patched copy - RUN 2026-11-25
 
 ```powershell
 .\.venv\Scripts\python.exe powerbi\snowflake\apply_snowflake_source.py --ml-on-files
 ```
 
-This writes a git-ignored copy to `powerbi_snowflake/` and rewrites only `expressions.tmdl` and the data-source block of each import table. The `PBI` views it reads now exist. The copy has not been opened in Power BI Desktop and the sign-in method is undecided: follow [`../docs/migration/POWERBI_SWITCH_GUIDE.md`](../docs/migration/POWERBI_SWITCH_GUIDE.md). The `ML` tables now exist too (section 9), so the copy can be made without `--ml-on-files` and read all 12 tables from Snowflake.
+This writes a git-ignored copy to `powerbi_snowflake/` and rewrites only `expressions.tmdl` and the data-source block of each import table. The `PBI` views it reads now exist. On 2026-11-25 the copy was opened in Power BI Desktop and signed in to Snowflake, and all five pages loaded with Snowflake data (the sign-in method that worked is not recorded here). Change the committed `powerbi/` project, not the copy, and regenerate the copy afterwards: regenerating resets the `SnowflakeServer` parameter, which holds your account address and must never be committed.: follow [`../docs/migration/POWERBI_SWITCH_GUIDE.md`](../docs/migration/POWERBI_SWITCH_GUIDE.md). The `ML` tables now exist too (section 9), so the copy can be made without `--ml-on-files` and read all 12 tables from Snowflake.
 
 ## 12. Cost
 
 `RETAIL_WH` is XSMALL with a 60-second auto-suspend, and `RETAIL_MONITOR` suspends it at 5 credits a month. Everything above ran in a few minutes of warehouse time in total.
 
-**0.34 credits measured** (2026-11-13, `RETAIL_MONITOR`: 0.34 of the 5-credit monthly quota, 6.8%, 4.66 remaining). The monitor was created during setup, before the first load, so this covers everything that has run on `RETAIL_WH`: the RAW load and its idempotent rerun, every `dbt build`, the reconciliation runs, the dashboard data builds, the Snowflake ML runs and the ad hoc checks.
+**0.90 credits measured** (2026-11-13, `RETAIL_MONITOR`: 0.9 of the 5-credit monthly quota, 18%, about 4.1 remaining; 0.9035 on `RETAIL_WH` since 2026-11-12, plus 0.0396 on the compute pool for the morning notebook session). The monitor was created during setup, before the first load, so this covers everything that has run on `RETAIL_WH`: the RAW load and its idempotent rerun, every `dbt build`, the reconciliation runs, the Snowflake ML runs and the ad hoc checks.
 
 A resource monitor is visible only to roles that hold a privilege on it. To measure credits as the service user:
 
@@ -237,11 +236,11 @@ Without step 1 the script stops with a message rather than reporting zero. Witho
 | dbt project (46 models, 321 tests) | `dbt parse`/`compile` | RUN 2026-11-12: PASS=367 |
 | Reconciliation | fixture and perturbation tests | RUN: 22/22, 0 differences |
 | Python on Snowflake (Tier 1) | fake-connector tests | RUN 2026-11-13: forecast identical; late-delivery equal to 6e-6 |
-| Dashboard data build | unit tests | RUN 2026-11-12: identical to the DuckDB build |
+| Dashboard data build (removed, DD-27) | unit tests | Was run 2026-11-12: identical to the DuckDB build |
 | ML outputs in Snowflake (`publish_ml.py`) | stage-fake tests: statement order, rollback, clean-up | RUN 2026-11-13: run `20261113T122357Z-a99b8a21`, counts read back, matches DuckDB |
-| Power BI patched copy | byte-identity tests | NOT RUN (not opened in Desktop) |
+| Power BI patched copy | byte-identity tests | RUN 2026-11-25: opened in Desktop, signed in, five pages load with Snowflake data |
 | Model Registry (`ml/register_model.py`) | fake-registry tests: gate, no replacement, exact pin, verify | RUN 2026-11-13: `LATE_DELIVERY_RISK` `V1_20261113_CC90DC8`, scored inside Snowflake, equal to local to 1.1e-16 |
 | Notebooks in Snowflake (`notebooks/snowflake/`) | generator check, parse and hygiene tests; executed against Snowflake data | RUN in a workspace 2026-11-13, checks pass; 04 registered `V1WS_20261113_7370C92` |
 | Scheduled scoring (`ml/scoring_task.sql`) | statement-shape tests | RUN 2026-11-13: task created, EXECUTE TASK SUCCEEDED (6,306 orders); kept suspended |
 | Drift and calibration in SQL (`dbt/models/monitoring/`) | AUC formula test | RUN 2026-11-13: PASS=18, equal to the Python results |
-| Credit use | | MEASURED 2026-11-13: 0.34 credits of the 5-credit monthly quota (section 12) |
+| Credit use | | MEASURED 2026-11-13: 0.90 credits of the 5-credit monthly quota (section 12) |

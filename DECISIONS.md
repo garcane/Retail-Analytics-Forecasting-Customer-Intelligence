@@ -35,11 +35,13 @@ Later decisions can supersede earlier ones; when that happens the entry says so.
 | DD-19 | 2026-11-08 | Add a Snowflake + dbt implementation next to DuckDB (supersedes D-002 and D-004 for that implementation) | Active |
 | DD-20 | 2026-11-08 | Snowflake modelling choices (text RAW, DuckDB mart names, keys as dbt tests, patched Power BI copy) | Active |
 | DD-21 | 2026-11-12 | Make the late-delivery feature query deterministic | Active |
-| DD-22 | 2026-11-13 | Add a modular HTML dashboard next to Power BI | Active |
-| DD-23 | 2026-11-13 | Build the dashboard data from Snowflake by default | Active |
-| DD-24 | 2026-11-13 | Remove the marimo notebooks; the Jupyter notebooks and the HTML dashboard remain | Active |
+| DD-22 | 2026-11-13 | Add a modular HTML dashboard next to Power BI | Superseded by DD-27 |
+| DD-23 | 2026-11-13 | Build the dashboard data from Snowflake by default | Superseded by DD-27 |
+| DD-24 | 2026-11-13 | Remove the marimo notebooks; the Jupyter notebooks remain (the HTML dashboard it relied on was itself removed, DD-27) | Active |
 | DD-25 | 2026-11-13 | Register the late-delivery model in the Snowflake Model Registry from an isolated environment | Active |
 | DD-26 | 2026-11-13 | ML inside Snowflake: notebooks for analysis and training, SQL for scheduled scoring and monitoring | Active |
+| DD-27 | 2026-11-25 | Remove the HTML dashboard; Power BI is the only BI layer | Active |
+| DD-28 | 2026-11-25 | Power BI theme from a design brief, and an Overview page | Active |
 
 ---
 
@@ -317,6 +319,8 @@ Evidence for these entries is in [docs/data/EDA_FINDINGS.md](docs/data/EDA_FINDI
 
 ### DD-22: A modular HTML dashboard is added next to Power BI
 
+_Superseded by DD-27 (removed 2026-11-25)._
+
 - **Context:** The owner replaced "Decision 2" of the migration brief with an HTML dashboard: a more intuitive way to present the combined analytics and machine-learning outputs than Power BI allows, with CSS and JavaScript in separate files so it stays modular and easy to extend. The Power BI report stays as it is.
 - **Chosen:** a static site in `dashboard/` (one `index.html`, CSS split into tokens, base, layout and components, JavaScript as ES modules: `core/`, `components/`, `charts/`, `pages/`, `insights/`). Pages and insight rules register themselves (`registerPage`, `registerInsight` in `js/core/registry.js`), so a new view is one new module. Charts are hand-written SVG with a table view, keyboard access and a validated colour palette. The data is pre-aggregated by `src/dashboard/build_data.py` into small JSON files in `dashboard/data/`, served locally by `src/dashboard/serve.py`. The visual design follows the owner's design brief (warm cream and ink, Sofia Sans), without any third-party brand marks.
 - **Reason:** no build step and no framework to keep current; only aggregates leave the warehouse, so the committed data files hold no customer, order or seller identifiers (a test checks this); the ML outputs (model comparison, risk operating points, forecast backtests) sit next to the business figures they explain.
@@ -324,6 +328,8 @@ Evidence for these entries is in [docs/data/EDA_FINDINGS.md](docs/data/EDA_FINDI
 - **Rejected:** a JavaScript framework and bundler (a build toolchain for seven pages); a chart library from a CDN (a third-party script on every view, and its defaults fight the palette and accessibility rules); querying Snowflake from the browser (would expose credentials).
 
 ### DD-23: The dashboard data is built from Snowflake by default
+
+_Superseded by DD-27 (removed 2026-11-25)._
 
 - **Context:** With the Snowflake implementation verified (DD-19 update), the owner chose Snowflake as the default source of the dashboard data.
 - **Chosen:** `build_data.py` defaults to `--backend snowflake` (override with `--backend duckdb` or `DASHBOARD_BACKEND`). It prints the target and needs `--yes` before it connects; without credentials it stops with a hint to use DuckDB. KPIs, weekly series and analytics tables come from `MARTS`; the risk roll-ups retrain the v1 model on the Snowflake feature table. Model metrics still come from the tracked `reports/*.json`, which the Python ML scripts produce. Files are written to temporary names and swapped in only when the whole build succeeds; `manifest.json` goes last and records the source.
@@ -378,3 +384,19 @@ Evidence for these entries is in [docs/data/EDA_FINDINGS.md](docs/data/EDA_FINDI
   - Scheduled notebooks or code bundles for scoring: they bill the pool on every run.
   - Legacy notebooks: being retired.
   - Writing the registry's scores into `ML.LATE_DELIVERY_SCORES`: it would hide the backtest from Power BI, which reads the latest `run_id`.
+
+### DD-27: The HTML dashboard is removed; Power BI is the only BI layer
+
+- **Context:** DD-22 added a modular HTML dashboard next to Power BI and DD-23 made Snowflake its default data source. The owner then chose to keep Power BI as the single BI surface and deleted `dashboard/` (commit `402334f` on the working branch).
+- **Chosen:** remove everything that depended on it: `src/dashboard/` (the data build and the local server), `tests/test_dashboard.py` (41 tests), the `!dashboard/data/` rule in `.gitignore`, and the dashboard sections of the README, PROJECT_STATUS, COST, ARCHITECTURE, the model card, the Snowflake README and the local-vs-cloud architecture. DD-22 and DD-23 are marked superseded; their text stays as the record.
+- **Reason:** one BI layer is less to keep current, and the deletion had already left four tests failing on a missing folder.
+- **Trade-offs:** the interactive views it offered (a test-month picker, risk operating points at every flag share, forecast pickers, the data-lineage page) now exist only as the charts in the Jupyter notebooks. Nothing else read its data.
+- **Recoverable:** the dashboard and its tests are in the git history; the last commit that has them is `39c32f3` on `main` (`git checkout 39c32f3 -- dashboard src/dashboard tests/test_dashboard.py`).
+
+### DD-28: A Power BI theme from a design brief, and an Overview page
+
+- **Context:** the owner supplied a design brief (`DESIGN-cursor.md`: warm cream canvas, white cards with a hairline, warm near-black ink, one orange accent, no shadows) and asked for the report to follow it, plus a further page. The brief is the owner's file and is not stored in the repository.
+- **Chosen:** a new theme, `powerbi/RetailAnalytics.Report/StaticResources/RegisteredResources/CursorTheme-<id>.json`, that also styles the page canvas, cards, chart axes, slicers and tables. 22 visuals lost their own `background`, `border` and `dropShadow` overrides so the theme applies. A new first page, Overview (six KPI cards, net revenue and late rate by month, net revenue by state, review score by delay), cloned from existing visuals and using only tables and measures already in the model. Both were applied to the committed project and to the generated Snowflake copy; the details and the choices are in `powerbi/README.md`.
+- **Reason:** the owner's request. Re-theming only the theme file was not enough: the cards and slicers carried overrides that beat it.
+- **Trade-offs:** Segoe UI instead of the brief's CursorGothic (licensed) or its substitute Inter (not installed on a default Windows machine; Power BI cannot embed fonts), and no letter-spacing. Chart series are ink first and orange second, then muted grey and four deepened hues, because the brief's pastel timeline colours are too light for chart marks on white and are reserved there for another purpose. Every chart colour is at least 3:1 against white and text at least 7:1.
+- **Verified:** `powerbi-report-author validate` reports only the two errors that were there before (no `$schema` line in the Desktop-written `.pbip` and `definition.pbir`) and fixes the old theme's name mismatch; all five pages were captured in Desktop with Snowflake data; the 88 Power BI tests pass.

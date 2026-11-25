@@ -26,10 +26,9 @@ The least glamorous result is also the most useful one: **several well-motivated
 1. **Warehouse.** Plain DuckDB SQL builds a star schema (4 fact tables, 5 dimensions) in about 25 seconds and then runs 22 reconciliation checks, failing loudly if any break. Facts never join to facts, and every table states its grain ([docs/data/DATA_MODEL.md](docs/data/DATA_MODEL.md)).
 2. **Analytics.** Eight SQL queries produce the tables and charts behind the business findings, and tests tie them back to the warehouse.
 3. **Machine learning.** The prediction moment (purchase time) was fixed before any feature was written, in a leakage analysis ([docs/ml/LEAKAGE_ANALYSIS.md](docs/ml/LEAKAGE_ANALYSIS.md)). Models are scored by rolling-origin backtests, one test month at a time.
-4. **Notebooks.** The ML is presented with its charts in Jupyter notebooks that call the same tested code in `src/ml/`. The interactive views (a test-month picker, precision and recall at every flag share, forecast target, horizon and method pickers) are in the HTML dashboard.
-5. **Power BI.** A four-page dashboard (sales, delivery and reviews, late-delivery risk, weekly forecast) with 38 measures. It was specified first in HTML ([docs/powerbi/DAX_SPECIFICATION.html](docs/powerbi/DAX_SPECIFICATION.html)), pictured in an interactive mock-up ([docs/powerbi/DASHBOARD_MOCKUP.html](docs/powerbi/DASHBOARD_MOCKUP.html)), then delivered as a Power BI Project. See [powerbi/README.md](powerbi/README.md) for how to open it.
-6. **HTML dashboard.** A seven-page interactive dashboard ([dashboard/](dashboard/README.md)) that puts the analytics next to the model results, risk operating points, forecasts and data lineage. It is a static site with separate CSS and JavaScript modules, and new pages register themselves. Its data is aggregated from Snowflake by default (or DuckDB offline) by `src/dashboard/build_data.py`; run it with `python src/dashboard/serve.py`.
-7. **Quality.** 424 automated tests (2026-11-20, all passing with the warehouse built; CI builds it from Kaggle, see [docs/migration/CI_SETUP.md](docs/migration/CI_SETUP.md)), including tests for the leakage rules (which were shown to fail when leaks were planted deliberately), a clean-clone reproduction of the whole pipeline, and a written audit ([docs/AUDIT.md](docs/AUDIT.md)).
+4. **Notebooks.** The ML is presented with its charts in Jupyter notebooks that call the same tested code in `src/ml/`. (An interactive HTML dashboard once showed the same results; it was removed, DD-27.)
+5. **Power BI.** A five-page dashboard (overview, sales, delivery and reviews, late-delivery risk, weekly forecast) with 38 measures and a theme adapted from a design brief (DD-28). It reads the exported files, or Snowflake through a generated copy (`powerbi/snowflake/`). It was specified first in HTML ([docs/powerbi/DAX_SPECIFICATION.html](docs/powerbi/DAX_SPECIFICATION.html)), pictured in an interactive mock-up ([docs/powerbi/DASHBOARD_MOCKUP.html](docs/powerbi/DASHBOARD_MOCKUP.html)), then delivered as a Power BI Project. See [powerbi/README.md](powerbi/README.md) for how to open it.
+6. **Quality.** 385 automated tests (2026-11-25, all passing with the warehouse built; CI builds it from Kaggle, see [docs/migration/CI_SETUP.md](docs/migration/CI_SETUP.md)), including tests for the leakage rules (which were shown to fail when leaks were planted deliberately), a clean-clone reproduction of the whole pipeline, and a written audit ([docs/AUDIT.md](docs/AUDIT.md)).
 
 ## Data architecture
 
@@ -48,7 +47,7 @@ flowchart TB
     MOD["<b>7 MODEL</b><br/>Local: scikit-learn, src/ml<br/>Snowflake: Model Registry ML.LATE_DELIVERY_RISK<br/>(v1, scores equal to local to 1e-16)"]
     PRE["<b>8 PREDICTIONS</b><br/>Local: scores file + reports/*.json<br/>Snowflake: ML.LATE_DELIVERY_SCORES,<br/>FORECAST_BACKTEST, FLAG_SHARE"]
     MON["<b>9 MONITORING</b><br/>Local: drift_analysis.py<br/>Snowflake: dbt views in ML_MONITORING<br/>(calibration, feature AUC by month, score drift)"]
-    BI["<b>10 BI</b><br/>Local: Power BI on exported files, HTML dashboard<br/>Snowflake: PBI views for Power BI;<br/>dashboard data built from MARTS"]
+    BI["<b>10 BI</b><br/>Local: Power BI on exported files<br/>Snowflake: PBI views for Power BI<br/>(opened and signed in, 2026-11-25)"]
 
     NB["Training inside Snowflake<br/>notebooks/snowflake in a Git-connected workspace<br/>on a CPU compute pool (version V1WS_...)"]
     TSK["Scheduled scoring<br/>Task ML.SCORE_LATE_DELIVERY:<br/>SQL MODEL(...)!PREDICT_PROBA on RETAIL_WH<br/>(run once, kept suspended)"]
@@ -84,7 +83,7 @@ The project began as a Google Cloud design (BigQuery, Dataflow, Vertex AI). That
 
 ## Two implementations: DuckDB (local) and Snowflake + dbt (cloud)
 
-The same analytical workload exists twice. **DuckDB** is the complete, tested, reference implementation described above. **Snowflake + dbt** (branch `feature/snowflake-dbt-migration`, decisions DD-19 and DD-20) ports it to a cloud warehouse: `RAW` (stage + `COPY INTO`) -> dbt `STAGING` -> `INTERMEDIATE` -> `MARTS`, with Python and Power BI reading the marts. DuckDB stays where it is (`sql/`, `src/`, `tests/`) rather than moving under an `implementations/` folder, because moving it would break the test paths, notebooks and documents; the Snowflake code is in [snowflake/](snowflake/README.md).
+The same analytical workload exists twice. **DuckDB** is the complete, tested, reference implementation described above. **Snowflake + dbt** (merged to `main` in pull request #1, decisions DD-19 to DD-26) ports it to a cloud warehouse: `RAW` (stage + `COPY INTO`) -> dbt `STAGING` -> `INTERMEDIATE` -> `MARTS`, with Python and Power BI reading the marts. DuckDB stays where it is (`sql/`, `src/`, `tests/`) rather than moving under an `implementations/` folder, because moving it would break the test paths, notebooks and documents; the Snowflake code is in [snowflake/](snowflake/README.md).
 
 | Capability | State | How it was checked |
 |---|---|---|
@@ -94,19 +93,18 @@ The same analytical workload exists twice. **DuckDB** is the complete, tested, r
 | dbt project: staging, intermediate, dimensions, facts, 8 analytics marts, late-delivery features, weekly series, `PBI` views | **Run live** 2026-11-12 | `dbt build`: 46 models and 321 tests, PASS=367 |
 | DuckDB-vs-Snowflake reconciliation (`src/reconciliation`) | **Run live** | 22 of 22 checks pass with 0 differences ([report](docs/validation/RECONCILIATION_REPORT.md)) |
 | `DATA_BACKEND=duckdb` or `snowflake` switch for Python (`src/data_access`) | **Run live** 2026-11-13 | Forecast metrics identical to DuckDB; late-delivery metrics equal to within 6e-6 (floating-point summation order) |
-| HTML dashboard data from Snowflake | **Run live** 2026-11-12 | Identical to a DuckDB build |
-| ML outputs in Snowflake (`src/ml/publish_ml.py`) | **Run live** 2026-11-13 | Scores, forecast backtest and flag shares written to `ML.*` under one run id, read back, and matching the DuckDB outputs (backtest identical; scores within 8e-7). Models still train on the client; scheduled scoring inside Snowflake is not built yet ([what is and is not ported](Snowflake%20Retail%20Project%20Local%20vs%20Cloud%20Architecture.md)) |
+| ML outputs in Snowflake (`src/ml/publish_ml.py`) | **Run live** 2026-11-13 | Scores, forecast backtest and flag shares written to `ML.*` under one run id, read back, and matching the DuckDB outputs (backtest identical; scores within 8e-7). Training inside Snowflake and scheduled scoring are the next rows ([what is and is not ported](Snowflake%20Retail%20Project%20Local%20vs%20Cloud%20Architecture.md)) |
 | Snowflake Model Registry (`snowflake/ml/register_model.py`) | **Run live** 2026-11-13 | `ML.LATE_DELIVERY_RISK` version `V1_20261113_CC90DC8` with its backtest metrics and git commit; scoring 2,000 orders inside Snowflake matched the local model to 1.1e-16 |
 | ML inside Snowflake: notebooks, scoring task, SQL monitoring (DD-26) | **Run live** 2026-11-13 (Git-connected workspace; task run once, kept suspended) | Notebooks 02 and 03 pass their checks inside Snowflake. Notebook 04 trained and registered `V1WS_20261113_7370C92` (equal to the laptop version to 1e-12). Task `ML.SCORE_LATE_DELIVERY` SUCCEEDED, scoring 6,306 orders. Drift and calibration views equal the Python results ([details](snowflake/README.md)) |
-| Power BI on Snowflake | Patched-copy script and templates; **never opened in Desktop** | 68 offline tests that the report, measures and relationships stay byte-identical ([guide](docs/migration/POWERBI_SWITCH_GUIDE.md)) |
-| CI (`.github/workflows`) | Written; **has not run on GitHub**. `python-ci` downloads Olist from Kaggle (secret `KAGGLE_API_TOKEN`), builds the warehouse and runs every test; without the secret or a cached copy the warehouse tests skip | `actionlint` and the same commands locally |
+| Power BI on Snowflake | Patched-copy script and templates; **opened in Desktop and signed in 2026-11-25**, all five pages load with Snowflake data | 68 offline tests that the report, measures and relationships stay byte-identical, and screenshots of the pages in Desktop whose headline figures match the first-open checklist (R$ 13.49M, 98K orders, 8.1% late) ([guide](docs/migration/POWERBI_SWITCH_GUIDE.md)) |
+| CI (`.github/workflows`) | **Running on GitHub.** `python-ci` (ruff, then a Kaggle download with the secret `KAGGLE_API_TOKEN`, the warehouse build and every test) and `dbt-ci` pass; `python-ci` was first green on 2026-11-25 (run #29 on `main`). Without the secret or a cached copy the warehouse tests skip. `dbt-live` is manual and has never run | The GitHub runs, plus `actionlint` and the same commands locally |
 
 Where to read more: the [SQL migration inventory](docs/migration/SNOWFLAKE_MIGRATION.md), the [Snowflake architecture and lineage](docs/architecture/SNOWFLAKE_ARCHITECTURE.md), the [data dictionary](docs/data_dictionary/DATA_DICTIONARY.md), the [ingestion runbook](docs/migration/INGESTION_RUNBOOK.md) and [CI setup](docs/migration/CI_SETUP.md). To run the Snowflake side you need your own Snowflake account, key-pair credentials and the approval steps in [snowflake/README.md](snowflake/README.md); copy `.env.example` to a git-ignored `.env`. The DuckDB path needs none of that (`DATA_BACKEND` defaults to `duckdb`).
 
 ## Where it is honestly unfinished
 
-- **The Power BI project was generated, then opened in Power BI Desktop, where it needed two fixes** (a measure that shared a name with a column, ignoring case, and an empty key row in the date table). It now loads. The dashboard's headline numbers have not yet been compared with the expected values listed in the specification's first-open checklist, and the report layouts are being refined by hand in Desktop.
-- **The Google Cloud implementation is a plan, not a build.** The layers, the mapping and the migration steps are documented, but nothing has been run on Google Cloud, so the SQL translations and costs are untested. The Snowflake implementation, by contrast, has run end to end on a live account and reconciles with DuckDB; the Power BI switch has not run, and its credit use so far is 0.34 Snowflake credits, measured by the resource monitor (see the table above and [COST.md](COST.md)).
+- **Power BI.** The project was generated, then opened in Power BI Desktop, where it needed two fixes (a measure that shared a name with a column, ignoring case, and an empty key row in the date table). It now loads from the exported files and, through the generated copy, from Snowflake (opened and signed in 2026-11-25). The report has five pages and a new theme (DD-28). Still open: the late-rate charts start with a 100% spike because the first month has only a few orders and months under 500 orders are not filtered out.
+- **The Google Cloud implementation is a plan, not a build.** The layers, the mapping and the migration steps are documented, but nothing has been run on Google Cloud, so the SQL translations and costs are untested. The Snowflake implementation, by contrast, has run end to end on a live account and reconciles with DuckDB; the Power BI switch has run (opened and signed in), and its credit use so far is 0.90 of the 5-credit monthly quota, measured by the resource monitor (see the table above and [COST.md](COST.md)).
 - **The model is modest by design of the data.** A better late-delivery model would need information this dataset does not contain, such as carrier or warehouse data.
 - **Everything is a snapshot.** The data ends in 2018, and the forecast and model results describe that period only.
 
@@ -125,7 +123,6 @@ Where to read more: the [SQL migration inventory](docs/migration/SNOWFLAKE_MIGRA
 | `ARCHITECTURE.md`, `DECISIONS.md`, `SECURITY.md`, `COST.md` | Design, decision log, security and cost (the cost is $0) |
 | `snowflake/` | The Snowflake + dbt implementation: `setup/` (idempotent SQL), `ingestion/` (RAW loader), `dbt/` (models, tests, macros; its own Python environment) |
 | `src/data_access/`, `src/reconciliation/` | Backend switch for Python (DuckDB or Snowflake) and the DuckDB-vs-Snowflake comparison tool |
-| `dashboard/`, `src/dashboard/` | The HTML dashboard (HTML, CSS, JavaScript modules, built JSON data) and its data build and local server |
 | `powerbi/snowflake/` | M templates and the script that writes a Snowflake-sourced copy of the Power BI project |
 | `.github/workflows/` | Offline `dbt parse` CI, Python tests and a manual-only live dbt build |
 | `PROJECT_STATUS.md`, `docs/HANDOFF.md` | Where the project stands, for a new reader |
@@ -195,7 +192,6 @@ Metrics are written to `reports/`, and [docs/ml/PHASE2_BASELINES.md](docs/ml/PHA
 ### 4. Explore
 
 - `notebooks/02_late_delivery_model.ipynb` and `03_weekly_forecast.ipynb`: **the machine learning, with charts.** Open them in VS Code or JupyterLab with the project's `.venv` as the kernel. They are stored with their outputs.
-- [dashboard/](dashboard/README.md): the interactive views of the same results (run `python src/dashboard/serve.py`).
 - `notebooks/01_dataset_discovery.ipynb`: the exploratory analysis behind [docs/data/EDA_FINDINGS.md](docs/data/EDA_FINDINGS.md) and [docs/phase0/PHASE0_DISCOVERY.md](docs/phase0/PHASE0_DISCOVERY.md).
 - [docs/ml/MODEL_CARD.md](docs/ml/MODEL_CARD.md): the best single place to start for the ML results.
 
