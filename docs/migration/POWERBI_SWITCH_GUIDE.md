@@ -53,6 +53,10 @@ Report pages and visuals, relationships, measures, column definitions, formattin
 
 Never write credentials into the `.pbip` files, the parameters or the repo. Desktop stores them in its own per-user data-source settings.
 
+### What worked (owner, 2026-11-25): Snowflake user name and password
+
+The first sign-in failed with `ADBC: [snowflake] Failed to parse PEM block containing the private key`, a key-pair error, even though the user name and password option had been chosen. It was fixed by typing the user name and password again in **both** places in Desktop: *File > Options and settings > Data source settings*, for the **current file** and under **global permissions** (select the Snowflake source, *Edit Permissions*). The likely cause is a credential saved by an earlier attempt, but that was not confirmed. Entra ID and key-pair sign-in were not tried, so those two options above stay unverified.
+
 ## Table to Snowflake object mapping
 
 All objects are in database `RETAIL_OLIST`. Every template navigates `Snowflake.Databases(SnowflakeServer, SnowflakeWarehouse)` > database > schema > object, lower-cases the column names with `Table.TransformColumnNames(_, Text.Lower)` (Snowflake returns upper-case names) and then applies the table's **existing** `Table.TransformColumnTypes` step verbatim.

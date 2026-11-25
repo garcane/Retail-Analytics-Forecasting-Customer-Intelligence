@@ -28,7 +28,7 @@ Unlike the Google Cloud design, most of this mapping is built and has run: each 
 | **Orchestration** | Snowflake Task `ML.SCORE_LATE_DELIVERY` (SQL, warehouse); notebooks run by hand | run by hand | **Run** 2026-11-13: executed once (SUCCEEDED), kept suspended |
 | **Monitoring** | Resource monitor (`RETAIL_MONITOR`, 5 credits a month); dbt views in `ML_MONITORING` for calibration, single-feature AUC by month and score drift | `drift_analysis.py` | **Run** 2026-11-13: equal to the Python results |
 | **Access control** | Roles `RETAIL_LOADER`, `RETAIL_TRANSFORMER`, `RETAIL_REPORTER`; service user `RETAIL_SVC` with key-pair authentication | none needed | **Run** |
-| **BI** | Power BI on the `PBI` views; HTML dashboard built from `MARTS` | Power BI on exported files; HTML dashboard | Dashboard **run**; Power BI copy **not opened** |
+| **BI** | Power BI on the `PBI` views | Power BI on exported files | Power BI copy **opened in Desktop and signed in 2026-11-25**; the HTML dashboard was removed (DD-27) |
 
 ---
 
@@ -50,15 +50,14 @@ Olist CSV ──PUT──> internal stage ──COPY INTO──> RAW (all VARCHA
           ──dbt──> STAGING (typed views) ──> INTERMEDIATE ──> MARTS (dim_*, fact_*, mart_*) ──> PBI views
                                                                 │
                                                                 ├──> reconciliation against DuckDB (22 checks)
-                                                                ├──> HTML dashboard data (build_data.py)
                                                                 └──> Python on the client (connector) ──> scikit-learn ──> reports/snowflake/*.json
 ```
 
-### Snowflake pipeline (target for the ML layer, not built)
+### Snowflake pipeline for the ML layer (built 2026-11-13, DD-25 and DD-26)
 
 ```text
 MARTS.mart_late_delivery_features ──> Snowpark training (stored procedure) ──> Model Registry (versioned v1)
-                                  ──> scheduled Task: registry model scores new orders ──> ML.LATE_DELIVERY_SCORES ──> PBI / dashboard
+                                  ──> scheduled Task: registry model scores new orders ──> ML.LATE_DELIVERY_SCORES ──> PBI
                                   ──> drift and calibration SQL over ML tables ──> alert
 ```
 
@@ -104,4 +103,4 @@ Every translation is listed in [docs/migration/SNOWFLAKE_MIGRATION.md](docs/migr
 
 ### Cost control
 
-One XSMALL warehouse with a 60-second auto-suspend, capped by a 5-credit monthly resource monitor. There is no always-on compute and no endpoint. Measured on 2026-11-13: the whole build so far used 0.34 credits.
+One XSMALL warehouse with a 60-second auto-suspend, capped by a 5-credit monthly resource monitor. There is no always-on compute and no endpoint. Measured on 2026-11-13: the whole build so far used 0.90 credits.

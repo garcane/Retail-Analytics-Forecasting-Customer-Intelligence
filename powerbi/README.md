@@ -1,6 +1,6 @@
 # Power BI project
 
-A four-page dashboard over the local warehouse: sales overview, delivery and reviews, late-delivery risk, weekly forecast.
+A five-page dashboard over the local warehouse: overview, sales overview, delivery and reviews, late-delivery risk, weekly forecast.
 It is delivered as a Power BI Project (`RetailAnalytics.pbip`), built from the same definition as the two HTML documents
 in [docs/powerbi/](../docs/powerbi/):
 
@@ -35,6 +35,25 @@ What was checked instead: every JSON file validates against Microsoft's publishe
 named anywhere exists, and the exported data reproduces the warehouse figures (`tests/test_powerbi_project.py`,
 `tests/test_powerbi_export.py`). That does not prove Desktop will accept every file. If it shows an error on first open,
 send the exact message and the file it names.
+
+## Theme and the Overview page (2026-11-25)
+
+The report theme is `RetailAnalytics.Report/StaticResources/RegisteredResources/CursorTheme-<id>.json`, adapted from a design
+brief (`DESIGN-cursor.md`: warm cream canvas, white cards with a 1px hairline and 12px corners, no shadows, warm near-black
+ink, one orange accent). It also sets the page canvas and wallpaper, card, chart-axis, slicer and table styles, so a change
+to the theme file changes every page. What was decided where the brief did not reach:
+
+| Decision | Choice and reason |
+|---|---|
+| Fonts | Segoe UI and Segoe UI Semibold. The brief's CursorGothic is licensed and its substitute (Inter) is not installed on a default Windows machine, and Power BI cannot embed fonts. Change `fontFace` / `fontFamily` in the theme if you install Inter. Letter-spacing cannot be set in Power BI |
+| Series colours | Ink first, orange second (so the one series to look at is orange: the forecast, the flagged orders, the late rate), then muted warm grey and four deepened hues for charts with many series. The brief reserves its pastel timeline colours for a different purpose, and they are too light for chart marks on white. Every chart colour is at least 3:1 against white, text at least 7:1 |
+| Per-visual overrides | The cards and slicers hid their own background and border, which beats the theme. Those `background`, `border` and `dropShadow` overrides were removed from 22 visuals so the theme applies |
+| Overview page | New first page, cloned from existing visuals using only tables and measures already in the model: six KPI cards, net revenue and late rate by month, net revenue by state, review score by delay |
+
+When you change the theme file, rename it with a new short id (`CursorTheme-<new id>.json`) and update the three references
+in `definition/report.json`; Desktop caches themes by file name. `powerbi-report-author validate powerbi/RetailAnalytics.Report`
+checks the result. Two errors remain that were there before: `.pbip` and `definition.pbir` have no `$schema` line (Desktop
+wrote them that way).
 
 ## Open it
 
