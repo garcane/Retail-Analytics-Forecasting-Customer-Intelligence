@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document maps the **local stack** (DuckDB and Python on one laptop) onto the **Snowflake stack** for the Olist retail project. It replaces `GCP Retail Project Local vs Cloud Architecture.md`, the original Google Cloud mapping, which is in the git history up to commit `a00b0a5`.
+This document maps the **local stack** (DuckDB and Python on one laptop) onto the **Snowflake stack** for the Olist retail project. It replaces `GCP Retail Project Local vs Cloud Architecture.md`, the original Google Cloud mapping, which is in the git history up to commit `78027d2`.
 
 Unlike the Google Cloud design, most of this mapping is built and has run: each row says whether the Snowflake side exists, and the status column is dated. Measured results are in [snowflake/README.md](snowflake/README.md).
 

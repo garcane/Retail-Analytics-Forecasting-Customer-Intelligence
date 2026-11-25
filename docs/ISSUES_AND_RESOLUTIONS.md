@@ -124,7 +124,7 @@ Where a claim is not backed by a commit, a decision or a stored result, it says 
 
 **Documentation drift.** Docs said "never opened in Desktop", "has not run on GitHub", "0.34 credits" and "10 known failures" after those had changed. *Fix:* each claim was traced to a stored result and rewritten, and one test now fails if the switch guide drops required caveats. A test also caught a rewrite that removed a file name it required, which is how the check earned its place.
 
-**The HTML dashboard was removed on purpose (DD-27).** The folder had been deleted by the owner while code, tests and docs still referred to it, leaving four failing tests. *Fix:* removed `src/dashboard/` and its 41 tests, the ignore rule and every reference, and recorded that the last commit containing it is `39c32f3`.
+**The HTML dashboard was removed on purpose (DD-27).** The folder had been deleted by the owner while code, tests and docs still referred to it, leaving four failing tests. *Fix:* removed `src/dashboard/` and its 41 tests, the ignore rule and every reference, and recorded that the last commit containing it is `6b04ddf`.
 
 **Branch hygiene.** All feature and fix branches were already merged into `main`, so they were deleted (locally and on GitHub) after the last merge; merged pull-request pages keep a restore button.
 

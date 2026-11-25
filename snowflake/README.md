@@ -200,7 +200,7 @@ Notes:
 
 ## 10. Step 6: the HTML dashboard - RUN 2026-11-12, REMOVED 2026-11-25
 
-The dashboard data build (`src/dashboard/build_data.py`, Snowflake by default, DD-22) was run on 2026-11-12 and gave files identical to a DuckDB build. The owner then removed the dashboard (DD-27); the code is in the git history (last at `39c32f3` on `main`). Power BI is the BI layer.
+The dashboard data build (`src/dashboard/build_data.py`, Snowflake by default, DD-22) was run on 2026-11-12 and gave files identical to a DuckDB build. The owner then removed the dashboard (DD-27); the code is in the git history (last at `6b04ddf` on `main`). Power BI is the BI layer.
 
 ## 11. Step 7: Power BI patched copy - RUN 2026-11-25
 
